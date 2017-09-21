@@ -4,7 +4,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.ibm.cos</groupId>
   <artifactId>ibm-cos-java-sdk-pom</artifactId>
-  <version>1.0.1-SNAPSHOT</version>
+  <version>1.0.1</version>
   <packaging>pom</packaging>
   <name>IBM COS SDK for Java</name>
   <description>The IBM COS Web Services SDK for Java provides Java APIs
@@ -36,7 +36,9 @@
     <module>ibm-cos-java-sdk-kms</module>
     <module>ibm-cos-java-sdk</module>
     <module>ibm-cos-java-sdk-core</module>
+    <module>ibm-cos-java-sdk-bom</module>
     <module>ibm-cos-java-sdk-test-utils</module>
+    <module>ibm-cos-java-sdk-bundle</module>
 </modules>
   <!--<scm>
     <url>https://github.com/aws/aws-sdk-java.git</url>

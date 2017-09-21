@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>com.ibm.cos</groupId>
+    <artifactId>ibm-cos-java-sdk-pom</artifactId>
+    <version>1.0.1</version>
+  </parent>
+  <groupId>com.ibm.cos</groupId>
+  <artifactId>ibm-cos-java-sdk-bom</artifactId>
+  <packaging>pom</packaging>
+  <name>IBM COS SDK for Java - BOM</name>
+  <description>The COS SDK for Java - BOM module holds the dependency mangements for individual java clients.</description>
+  <url>https://github.com/ibm/ibm-cos-sdk-java</url>
+  <dependencyManagement>
+    <!-- The dependencies section in pom.xml is auto generated. No manual changes are allowed -->
+    <dependencies>
+    <dependency>
+        <artifactId>ibm-cos-java-sdk-s3</artifactId>
+        <groupId>com.ibm.cos</groupId>
+        <optional>false</optional>
+        <version>${ibmcosjavasdk.version}</version>
+    </dependency>
+    <dependency>
+        <artifactId>ibm-cos-java-sdk-kms</artifactId>
+        <groupId>com.ibm.cos</groupId>
+        <optional>false</optional>
+        <version>${ibmcosjavasdk.version}</version>
+    </dependency>
+    <dependency>
+        <artifactId>ibm-cos-java-sdk-core</artifactId>
+        <groupId>com.ibm.cos</groupId>
+        <optional>false</optional>
+        <version>${ibmcosjavasdk.version}</version>
+    </dependency>
+    <dependency>
+        <artifactId>ibm-cos-java-sdk-models</artifactId>
+        <groupId>com.ibm.cos</groupId>
+        <optional>false</optional>
+        <version>${ibmcosjavasdk.version}</version>
+    </dependency>
+</dependencies>
+  </dependencyManagement>
+</project>

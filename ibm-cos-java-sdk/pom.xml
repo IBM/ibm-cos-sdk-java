@@ -5,11 +5,10 @@
   <parent>
     <groupId>com.ibm.cos</groupId>
     <artifactId>ibm-cos-java-sdk-pom</artifactId>
-    <version>1.0.1-SNAPSHOT</version>
+    <version>1.0.1</version>
   </parent>
   <groupId>com.ibm.cos</groupId>
   <artifactId>ibm-cos-java-sdk</artifactId>
-  <packaging>pom</packaging>
   <name>IBM COS SDK For Java</name>
   <description>The IBM COS SDK for Java provides Java APIs for building software on IBM Cloud Object Storage. .</description>
   <url>https://github.com/ibm/ibm-cos-sdk-java</url>

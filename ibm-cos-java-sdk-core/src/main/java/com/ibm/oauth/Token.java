@@ -28,58 +28,110 @@ public class Token {
 	private String uaa_token;
 	private String ims_token;
 
+	/**
+	 * Returns the UAA Token.
+	 */
 	public String getUaa_token() {
 		return uaa_token;
 	}
 
+	/**
+	 * Sets the UAA token.
+	 */
 	public void setUaa_token(String uaa_token) {
 		this.uaa_token = uaa_token;
 	}
 
+	/**
+	 * Returns the IMS token.
+	 */
 	public String getIms_token() {
 		return ims_token;
 	}
 
+	/**
+	 * Sets the IMS token.
+	 */
 	public void setIms_token(String ims_token) {
 		this.ims_token = ims_token;
 	}
 
+	/**
+	 * Returns the access token.
+	 */
 	public String getAccess_token() {
 		return access_token;
 	}
 	
+	/**
+	 * Sets the access token.
+	 * @param access_token
+     *            The access token
+	 */
 	public void setAccess_token(String access_token) {
 		this.access_token = access_token;
 	}
 	
+	/**
+	 * Returns the refresh token.
+	 */
 	public String getRefresh_token() {
 		return refresh_token;
 	}
 	
+	/**
+	 * Sets the refresh token.
+	 * @param refresh_token
+     *            The refresh token.
+	 */
 	public void setRefresh_token(String refresh_token) {
 		this.refresh_token = refresh_token;
 	}
 	
+	/**
+	 * Returns the token type.
+	 */
 	public String getToken_type() {
 		return token_type;
 	}
 	
+	/**
+	 * Sets the token type.
+	 * @param token type
+     *            The token type.
+	 */
 	public void setToken_type(String token_type) {
 		this.token_type = token_type;
 	}
 	
+	/**
+	 * Returns the number of seconds remaining before the token expires.
+	 */
 	public String getExpires_in() {
 		return expires_in;
 	}
 	
+	/**
+	 * Sets the expiry timestamp.
+	 * @param expires_in
+     *            Number of seconds after which the token will expire.
+	 */
 	public void setExpires_in(String expires_in) {
 		this.expires_in = expires_in;
 	}
 	
+	/**
+	 * Returns the timestamp when the token will expire.
+	 */
 	public String getExpiration() {
 		return expiration;
 	}
 	
+	/**
+	 * Sets the expiry timestamp.
+	 * @param expiration
+     *            Timestamp when the token will expire.
+	 */
 	public void setExpiration(String expiration) {
 		this.expiration = expiration;
 	}
