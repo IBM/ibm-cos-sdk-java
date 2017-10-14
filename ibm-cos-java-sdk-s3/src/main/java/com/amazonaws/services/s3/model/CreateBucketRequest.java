@@ -28,8 +28,11 @@ public class CreateBucketRequest extends AmazonWebServiceRequest implements
 
     /** The name of the Amazon S3 bucket to create. */
     private String bucketName;
+    
+    /** The IBM Service Instance Id to apply to the bucket */
+    private String serviceInstanceId;
 
-    /** The name of the Amazon S3 region in which to create this bucket. */
+	/** The name of the Amazon S3 region in which to create this bucket. */
     @Deprecated
     private String region;
 
@@ -141,6 +144,27 @@ public class CreateBucketRequest extends AmazonWebServiceRequest implements
     public void setRegion(String region) {
         this.region = region;
     }
+    
+
+    /**
+     * Gets the IBM service instance Id
+     * 
+     * @return The IBM Service Instance Id
+     */
+    public String getServiceInstanceId() {
+		return serviceInstanceId;
+	}
+
+    /**
+     * Set the IBM service instance Id used on the header for the 
+     * CreateBucketRequest
+     * 
+     * @param serviceInstanceId
+     * 		IBM service instance Id
+     */
+	public void setServiceInstanceId(String serviceInstanceId) {
+		this.serviceInstanceId = serviceInstanceId;
+	}
 
     /**
      * Gets the name of the Amazon S3 region in which this bucket will be created.
@@ -217,6 +241,21 @@ public class CreateBucketRequest extends AmazonWebServiceRequest implements
      */
     public CreateBucketRequest withAccessControlList(AccessControlList accessControlList) {
         setAccessControlList(accessControlList);
+        return this;
+    }
+    
+    /**
+     * Sets the serviceInstanceId on the Request Object.
+     * This value will supersede any already set on by CredentialProvider
+     *
+     * @param serviceInstanceId
+     *            The IBM Service Instance Id
+     *         
+     * @return This updated object, so that additional method calls can be
+     *         chained together.
+     */
+    public CreateBucketRequest withServiceInstanceId(String serviceInstanceId) {
+        setServiceInstanceId(serviceInstanceId);
         return this;
     }
 

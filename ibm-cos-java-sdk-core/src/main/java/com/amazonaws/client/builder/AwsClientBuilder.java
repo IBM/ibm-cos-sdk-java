@@ -34,6 +34,9 @@ import com.amazonaws.regions.DefaultAwsRegionProviderChain;
 import com.amazonaws.regions.Region;
 import com.amazonaws.regions.RegionUtils;
 import com.amazonaws.regions.Regions;
+import com.ibm.oauth.DefaultTokenManager;
+import com.ibm.oauth.DefaultTokenProvider;
+import com.ibm.oauth.IBMOAuthCredentials;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -76,6 +79,7 @@ public abstract class AwsClientBuilder<Subclass extends AwsClientBuilder, TypeTo
     private Region region;
     private List<RequestHandler2> requestHandlers;
     private EndpointConfiguration endpointConfiguration;
+    private String iamEndpoint;
 
     protected AwsClientBuilder(ClientConfigurationFactory clientConfigFactory) {
         this(clientConfigFactory, DEFAULT_REGION_PROVIDER);
@@ -103,6 +107,16 @@ public abstract class AwsClientBuilder<Subclass extends AwsClientBuilder, TypeTo
      */
     public final void setCredentials(AWSCredentialsProvider credentialsProvider) {
         this.credentials = credentialsProvider;
+        
+        if (null != this.iamEndpoint){
+	        if ((this.credentials.getCredentials() instanceof IBMOAuthCredentials) &&
+        		((IBMOAuthCredentials)this.credentials.getCredentials()).getTokenManager() instanceof DefaultTokenManager){
+        			((DefaultTokenManager)((IBMOAuthCredentials)this.credentials.getCredentials()).getTokenManager()).setIamEndpoint(iamEndpoint);
+        			if (((DefaultTokenManager)((IBMOAuthCredentials)this.credentials.getCredentials()).getTokenManager()).getProvider() instanceof DefaultTokenProvider){
+        				((DefaultTokenProvider)((DefaultTokenManager)((IBMOAuthCredentials)this.credentials.getCredentials()).getTokenManager()).getProvider()).setIamEndpoint(iamEndpoint);
+        			}
+	        }
+        }
     }
 
     /**
@@ -117,6 +131,27 @@ public abstract class AwsClientBuilder<Subclass extends AwsClientBuilder, TypeTo
         return getSubclass();
     }
 
+    /**
+     * Sets the IAM endpoint to use for token retrieval by the DefaultTokenManager
+     * and the DefaultTokenProvider. This should only be over written 
+     * for a dev or staging environment
+     *
+     * @param iamEndpoint, http endpoint for token retrieval
+     * @return This object for method chaining.
+     */
+    public Subclass withIAMEndpoint(String iamEndpoint) {
+        this.iamEndpoint = iamEndpoint;
+
+        if ((this.credentials.getCredentials() instanceof IBMOAuthCredentials) &&
+        		((IBMOAuthCredentials)this.credentials.getCredentials()).getTokenManager() instanceof DefaultTokenManager){
+        			((DefaultTokenManager)((IBMOAuthCredentials)this.credentials.getCredentials()).getTokenManager()).setIamEndpoint(iamEndpoint);
+        			if (((DefaultTokenManager)((IBMOAuthCredentials)this.credentials.getCredentials()).getTokenManager()).getProvider() instanceof DefaultTokenProvider){
+        				((DefaultTokenProvider)((DefaultTokenManager)((IBMOAuthCredentials)this.credentials.getCredentials()).getTokenManager()).getProvider()).setIamEndpoint(iamEndpoint);
+        				((DefaultTokenProvider)((DefaultTokenManager)((IBMOAuthCredentials)this.credentials.getCredentials()).getTokenManager()).getProvider()).retrieveToken();
+        			}
+        }
+        return getSubclass();
+    }
     /**
      * If the builder isn't explicitly configured with credentials we use the {@link
      * DefaultAWSCredentialsProviderChain}.

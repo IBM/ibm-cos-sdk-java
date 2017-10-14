@@ -592,16 +592,6 @@ public class AmazonS3Client extends AmazonWebServiceClient implements AmazonS3 {
     @Override
     @Deprecated
     public synchronized void setEndpoint(String endpoint) {
-    	/*if (!Constants.S3_HOSTNAME.equals(endpoint)){
-	    	if(this.awsCredentialsProvider.getCredentials() instanceof IBMOAuthCredentials) {
-	        	IBMOAuthCredentials oAuthCreds = (IBMOAuthCredentials)this.awsCredentialsProvider.getCredentials();
-	    		if (oAuthCreds.getApiKey() != null || oAuthCreds.getTokenManager() != null) {
-	    			if (endpoint.startsWith("http://")) {
-	    				throw new SdkClientException("scheme should be https");
-	    			}
-	    		}
-	        }
-    	}*/
     	
         if (ServiceUtils.isS3AccelerateEndpoint(endpoint)) {
             throw new IllegalStateException("To enable accelerate mode, please use AmazonS3ClientBuilder.withAccelerateModeEnabled(true)");
@@ -915,13 +905,7 @@ public class AmazonS3Client extends AmazonWebServiceClient implements AmazonS3 {
 
         Request<CreateBucketRequest> request = createRequest(bucketName, null, createBucketRequest, HttpMethodName.PUT, requestEndpoint);
         
-        //Add IBM Service Instance Id to headers
-    	if ((null != this.awsCredentialsProvider ) && (this.awsCredentialsProvider.getCredentials() instanceof IBMOAuthCredentials)) {
-    		IBMOAuthCredentials oAuthCreds = (IBMOAuthCredentials)this.awsCredentialsProvider.getCredentials();
-    		if (oAuthCreds.getServiceInstanceId() != null) {
-            	request.addHeader(Headers.IBM_SERVICE_INSTANCE_ID, oAuthCreds.getServiceInstanceId());	
-    		}
-    	}
+        request = addIAMHeaders(request, createBucketRequest);
         
         if (createBucketRequest.getAccessControlList() != null) {
             addAclHeaders(request, createBucketRequest.getAccessControlList());
@@ -4036,5 +4020,29 @@ public class AmazonS3Client extends AmazonWebServiceClient implements AmazonS3 {
                 throw new AmazonClientException("Couldn't compute md5 sum", e);
             }
         }
+    }
+    
+    /**
+     * Add IAM specific headers based on the credentials set & any optional
+     * parameters added to the CreateBucketRequest object
+     * 
+     * @param request
+     * @param createBucketRequest
+     * @return Request<CreateBucketRequest>
+     */
+    protected Request<CreateBucketRequest> addIAMHeaders(Request<CreateBucketRequest> request, CreateBucketRequest createBucketRequest){
+
+    	if ((null != this.awsCredentialsProvider ) && (this.awsCredentialsProvider.getCredentials() instanceof IBMOAuthCredentials)) {
+    		if (null != createBucketRequest.getServiceInstanceId()) {
+    			request.addHeader(Headers.IBM_SERVICE_INSTANCE_ID, createBucketRequest.getServiceInstanceId());
+    		} else {
+	    		IBMOAuthCredentials oAuthCreds = (IBMOAuthCredentials)this.awsCredentialsProvider.getCredentials();
+	    		if (oAuthCreds.getServiceInstanceId() != null) {
+	            	request.addHeader(Headers.IBM_SERVICE_INSTANCE_ID, oAuthCreds.getServiceInstanceId());	
+	    		}
+    		}
+    	}
+    	
+    	return request;
     }
 }

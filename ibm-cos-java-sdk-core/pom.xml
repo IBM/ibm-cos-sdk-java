@@ -5,7 +5,7 @@
   <parent>
     <groupId>com.ibm.cos</groupId>
     <artifactId>ibm-cos-java-sdk-pom</artifactId>
-    <version>1.0.2-SNAPSHOT</version>
+    <version>1.0.2</version>
   </parent>
   <groupId>com.ibm.cos</groupId>
   <artifactId>ibm-cos-java-sdk-core</artifactId>
@@ -128,6 +128,22 @@
     </dependency>
   </dependencies>
   <build>
+	  <resources>
+	    <resource>
+	      <directory>src/main/resources</directory>
+	      <filtering>true</filtering>
+	      <includes>
+	        <include>**/versionInfo.properties</include>
+	      </includes>
+	    </resource>
+	    <resource>
+	      <directory>src/main/resources</directory>
+	      <filtering>false</filtering>
+	      <excludes>
+	        <exclude>**/versionInfo.properties</exclude>
+	      </excludes>
+	    </resource>
+	  </resources>
     <plugins>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>

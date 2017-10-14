@@ -1,6 +1,6 @@
 # IBM COS SDK for Java
 
-The **IBM COS SDK for Java** enables Java developers to work with IBM Cloud Object Storage] to
+The **IBM COS SDK for Java** enables Java developers to work with IBM Cloud Object Storage to
 build scalable solutions. You can get
 started in minutes using ***Maven*** or by downloading a [single zip file]().
 
@@ -28,7 +28,7 @@ dependencies:
 ```xml
 <dependencies>
   <dependency>
-    <groupId>ibm-cos</groupId>
+    <groupId>com.ibm.cos</groupId>
     <artifactId>ibm-cos-java-sdk</artifactId>
   </dependency>
 </dependencies>
@@ -44,10 +44,14 @@ mvn clean install
 ```
 
 ## Getting Help
-Please use these community resources for getting help. We use GitHub issues for tracking bugs and feature requests and have limited bandwidth to address them.
+Feel free to use GitHub issues for tracking bugs and feature requests, but for help please use one of the following resources:
 
 * Ask a question on [StackOverflow][stack-overflow] and tag it with `ibm` and `object-storage`
+* Open a support ticket with [IBM Bluemix Support][ibm-bluemix-support]
+* If it turns out that you may have found a bug, please [open an issue][open-an-issue]
 
 
 [changes-file]: ./CHANGELOG.md
 [stack-overflow]: http://stackoverflow.com/questions/tagged/object-storage+ibm
+[ibm-bluemix-support]: https://support.ng.bluemix.net/gethelp/
+[open-an-issue]: https://github.com/ibm/ibm-cos-sdk-java/issues/new

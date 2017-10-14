@@ -17,6 +17,8 @@ import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.net.ssl.SSLContext;
+
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -24,11 +26,15 @@ import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.conn.ssl.DefaultHostnameVerifier;
+import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.ssl.SSLContexts;
 import org.apache.http.util.EntityUtils;
 
 import com.amazonaws.SDKGlobalConfiguration;
+import com.amazonaws.http.conn.ssl.SdkTLSSocketFactory;
 import com.amazonaws.log.InternalLogApi;
 import com.amazonaws.log.InternalLogFactory;
 import com.ibm.oauth.OAuthServiceException;
@@ -55,6 +61,10 @@ public class DefaultTokenProvider implements TokenProvider {
 	
 	private String apiKey;
 	
+	/**variable to overwrite the global SDKGlobalConfiguration.IAM_ENDPOINT **/ 
+	private String iamEndpoint = SDKGlobalConfiguration.IAM_ENDPOINT; 
+
+	
 	/**
 	 * Default implmentation will use the apiKey to retrieve the Token from the
 	 * IAM Service
@@ -65,6 +75,17 @@ public class DefaultTokenProvider implements TokenProvider {
 	public DefaultTokenProvider(String apiKey) {
 		this.apiKey = apiKey;
 	}
+	
+	/**  
+	 * Over write the default IAM endpoint.   
+	 * This should only be done in a development or staging environment  
+     *   
+     * @param iamEndpoint  
+     * 			The http endpoint to retrieve the token  
+    */  
+     public void setIamEndpoint(String iamEndpoint) {  
+		this.iamEndpoint = iamEndpoint;   
+	}  
 
 	/**
 	 * Retrieve the token using the Apache httpclient in a synchronous manner
@@ -76,8 +97,13 @@ public class DefaultTokenProvider implements TokenProvider {
 
 		try {
 			
-			HttpClient client = HttpClientBuilder.create().build();
-			HttpPost post = new HttpPost(SDKGlobalConfiguration.IAM_ENDPOINT);
+			SSLContext sslContext = SSLContexts.createDefault();
+
+			SSLConnectionSocketFactory sslsf = new SdkTLSSocketFactory(sslContext, new DefaultHostnameVerifier());
+
+			HttpClient client = HttpClientBuilder.create().setSSLSocketFactory(sslsf).build();
+			
+			HttpPost post = new HttpPost(iamEndpoint);
 			post.setHeader("Authorization", BASIC_AUTH);
 			post.setHeader("Content-Type", CONTENT_TYPE);
 			post.setHeader("Accept", ACCEPT);
