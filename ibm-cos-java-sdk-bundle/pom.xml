@@ -5,7 +5,7 @@
     <parent>
         <groupId>com.ibm.cos</groupId>
         <artifactId>ibm-cos-java-sdk-pom</artifactId>
-        <version>1.0.2</version>
+        <version>1.0.3-SNAPSHOT</version>
     </parent>
     <groupId>com.ibm.cos</groupId>
     <artifactId>ibm-cos-java-sdk-bundle</artifactId>
@@ -24,7 +24,7 @@
         <artifactId>ibm-cos-java-sdk</artifactId>
         <groupId>com.ibm.cos</groupId>
         <optional>false</optional>
-        <version>1.0.2</version>
+        <version>1.0.3-SNAPSHOT</version>
     </dependency>
 </dependencies>
 
