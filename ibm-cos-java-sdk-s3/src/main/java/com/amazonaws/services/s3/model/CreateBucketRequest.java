@@ -29,8 +29,12 @@ public class CreateBucketRequest extends AmazonWebServiceRequest implements
     /** The name of the Amazon S3 bucket to create. */
     private String bucketName;
     
-    /** The IBM Service Instance Id to apply to the bucket */
-    private String serviceInstanceId;
+    /** The IBM Service Instance Id to apply to the bucket */ 
+    private String serviceInstanceId; 
+
+
+    /** The encryptionType of S3 bucket to create. */
+    private EncryptionType encryptionType;
 
 	/** The name of the Amazon S3 region in which to create this bucket. */
     @Deprecated
@@ -126,6 +130,35 @@ public class CreateBucketRequest extends AmazonWebServiceRequest implements
     public String getBucketName() {
         return bucketName;
     }
+    
+
+    /**
+     * Gets the encryptionType of the S3 bucket to create.
+     *
+     * @return The encryptionType of the S3 bucket to create.
+     *
+     * @see CreateBucketRequest#setEncryptionType(EncryptionType)
+     */
+    public EncryptionType getEncryptionType() {
+		return encryptionType;
+	}
+
+    /**
+     * Sets the encryptionType bucket to create.
+     *
+     * @param encryptionType
+     *              The encryptionType of the S3 bucket to create.
+     *
+     * @see CreateBucketRequest#getEncryptionType()
+     */
+	public void setEncryptionType(EncryptionType encryptionType) {
+		this.encryptionType = encryptionType;
+	}
+	
+	public CreateBucketRequest withEncryptionType(EncryptionType encryptionType) {
+		setEncryptionType(encryptionType);
+        return this;
+    }
 
     /**
      * Sets the name of the Amazon S3 region in which this bucket will be created.
@@ -144,27 +177,6 @@ public class CreateBucketRequest extends AmazonWebServiceRequest implements
     public void setRegion(String region) {
         this.region = region;
     }
-    
-
-    /**
-     * Gets the IBM service instance Id
-     * 
-     * @return The IBM Service Instance Id
-     */
-    public String getServiceInstanceId() {
-		return serviceInstanceId;
-	}
-
-    /**
-     * Set the IBM service instance Id used on the header for the 
-     * CreateBucketRequest
-     * 
-     * @param serviceInstanceId
-     * 		IBM service instance Id
-     */
-	public void setServiceInstanceId(String serviceInstanceId) {
-		this.serviceInstanceId = serviceInstanceId;
-	}
 
     /**
      * Gets the name of the Amazon S3 region in which this bucket will be created.
@@ -177,6 +189,26 @@ public class CreateBucketRequest extends AmazonWebServiceRequest implements
     public String getRegion() {
         return region;
     }
+    
+    /** 
+     * Gets the IBM service instance Id 
+     *  
+     * @return The IBM Service Instance Id 
+     */ 
+     public String getServiceInstanceId() { 
+	 return serviceInstanceId; 
+     } 
+     
+    /** 
+     * Set the IBM service instance Id used on the header for the  
+     * CreateBucketRequest 
+     *  
+     * @param serviceInstanceId 
+     * 		IBM service instance Id 
+     */ 
+    public void setServiceInstanceId(String serviceInstanceId) { 
+	this.serviceInstanceId = serviceInstanceId; 
+    } 
 
     /**
      * Returns the optional Canned ACL to set for the new bucket.

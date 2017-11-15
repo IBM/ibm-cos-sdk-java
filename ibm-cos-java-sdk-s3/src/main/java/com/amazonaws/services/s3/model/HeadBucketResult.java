@@ -22,8 +22,40 @@ import java.io.Serializable;
 public class HeadBucketResult implements Serializable {
 
     private String bucketRegion;
+    private boolean IBMSSEKPEnabled;
+    private String IBMSSEKPCrk;
 
     /**
+	 * Returns if KP has been enabled
+	 */
+    public boolean getIBMSSEKPEnabled() {
+		return IBMSSEKPEnabled;
+	}
+
+    /**
+     * Sets if KP is enabled
+     * @param iBMSSEKPEnabled
+     */
+	public void setIBMSSEKPEnabled(boolean iBMSSEKPEnabled) {
+		this.IBMSSEKPEnabled = iBMSSEKPEnabled;
+	}
+
+	/**
+	 * Returns the CRK header of the HEAD request
+	 */
+	public String getIBMSSEKPCrk() {
+		return IBMSSEKPCrk;
+	}
+
+	/**
+	 * Sets the CRK value
+	 * @param iBMSSEKPCrkName
+	 */
+	public void setIBMSSEKPCrk(String iBMSSEKPCrk) {
+		this.IBMSSEKPCrk = iBMSSEKPCrk;
+	}
+
+	/**
      * Returns the AWS region where the bucket is located.
      */
     public String getBucketRegion() {

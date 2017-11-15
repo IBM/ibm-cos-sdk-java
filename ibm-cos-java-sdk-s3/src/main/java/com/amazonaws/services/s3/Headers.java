@@ -43,6 +43,12 @@ public interface Headers {
     /** IBM Service instance header */
     public static final String IBM_SERVICE_INSTANCE_ID = "ibm-service-instance-id";
     
+    /** IBM Key Protect headers */
+    public static final String IBM_SSE_KP_ENCRYPTION_ALGORITHM = "ibm-sse-kp-encryption-algorithm";
+    public static final String IBM_SSE_KP_CUSTOMER_ROOT_KEY_CRN = "ibm-sse-kp-customer-root-key-crn";
+    public static final String IBM_SSE_KP_ENABLED = "ibm-sse-kp-enabled";
+    public static final String IBM_SSE_KP_CRK = "ibm-sse-kp-crk-id";
+    
     /*
      * Amazon HTTP Headers
      */

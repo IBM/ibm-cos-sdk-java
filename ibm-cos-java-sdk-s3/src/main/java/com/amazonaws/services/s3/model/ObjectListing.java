@@ -92,6 +92,46 @@ public class ObjectListing implements Serializable {
      * object listing was returned.
      */
     private String encodingType;
+    
+    /**
+     * The KP enabled header value returned from the GET operation on the bucket
+     */
+    private boolean IBMSSEKPEnabled;
+    
+    /**
+     * The CRK header value returned from the GET operation on the bucket
+     */
+    private String IBMSSEKPCrk;
+
+    /**
+	 * Returns if KP has been enabled
+	 */
+    public boolean getIBMSSEKPEnabled() {
+		return IBMSSEKPEnabled;
+	}
+
+    /**
+     * Sets if KP is enabled
+     * @param iBMSSEKPEnabled
+     */
+	public void setIBMSSEKPEnabled(boolean iBMSSEKPEnabled) {
+		this.IBMSSEKPEnabled = iBMSSEKPEnabled;
+	}
+
+	/**
+	 * Returns the CRK header of the GET Bucket request
+	 */
+	public String getIBMSSEKPCrk() {
+		return IBMSSEKPCrk;
+	}
+
+	/**
+	 * Sets the CRK value
+	 * @param iBMSSEKPCrkName
+	 */
+	public void setIBMSSEKPCrk(String iBMSSEKPCrk) {
+		this.IBMSSEKPCrk = iBMSSEKPCrk;
+	}
 
 
     /**

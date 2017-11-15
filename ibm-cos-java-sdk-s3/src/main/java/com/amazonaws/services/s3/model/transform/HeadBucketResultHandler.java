@@ -19,6 +19,7 @@ import com.amazonaws.http.HttpResponse;
 import com.amazonaws.services.s3.Headers;
 import com.amazonaws.services.s3.internal.AbstractS3ResponseHandler;
 import com.amazonaws.services.s3.model.HeadBucketResult;
+import com.amazonaws.util.StringUtils;
 
 public class HeadBucketResultHandler extends AbstractS3ResponseHandler<HeadBucketResult> {
 
@@ -28,6 +29,13 @@ public class HeadBucketResultHandler extends AbstractS3ResponseHandler<HeadBucke
         final AmazonWebServiceResponse<HeadBucketResult> awsResponse = new AmazonWebServiceResponse<HeadBucketResult>();
         final HeadBucketResult result = new HeadBucketResult();
         result.setBucketRegion(response.getHeaders().get(Headers.S3_BUCKET_REGION));
+
+        if (!StringUtils.isNullOrEmpty(response.getHeaders().get(Headers.IBM_SSE_KP_ENABLED))){
+        	result.setIBMSSEKPEnabled(Boolean.parseBoolean(response.getHeaders().get(Headers.IBM_SSE_KP_ENABLED)));
+        }
+        if (!StringUtils.isNullOrEmpty(response.getHeaders().get(Headers.IBM_SSE_KP_CUSTOMER_ROOT_KEY_CRN))){
+        	result.setIBMSSEKPCrk(response.getHeaders().get(Headers.IBM_SSE_KP_CUSTOMER_ROOT_KEY_CRN));
+        }
         awsResponse.setResult(result);
 
         return awsResponse;

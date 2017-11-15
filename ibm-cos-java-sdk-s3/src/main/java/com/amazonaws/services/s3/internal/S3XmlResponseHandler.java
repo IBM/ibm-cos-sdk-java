@@ -22,7 +22,10 @@ import org.apache.commons.logging.LogFactory;
 
 import com.amazonaws.AmazonWebServiceResponse;
 import com.amazonaws.http.HttpResponse;
+import com.amazonaws.services.s3.Headers;
+import com.amazonaws.services.s3.model.ObjectListing;
 import com.amazonaws.transform.Unmarshaller;
+import com.amazonaws.util.StringUtils;
 
 /**
  * S3 Implementation of HttpResponseHandler. Relies on a SAX unmarshaller for
@@ -62,6 +65,15 @@ public class S3XmlResponseHandler<T> extends AbstractS3ResponseHandler<T> {
             T result = responseUnmarshaller.unmarshall(response.getContent());
             log.trace("Done parsing service response XML");
             awsResponse.setResult(result);
+            
+            if (result instanceof ObjectListing) {
+            	if (!StringUtils.isNullOrEmpty(responseHeaders.get(Headers.IBM_SSE_KP_ENABLED))){
+            		((ObjectListing) result).setIBMSSEKPEnabled(Boolean.parseBoolean(responseHeaders.get(Headers.IBM_SSE_KP_ENABLED)));
+            	}
+            	if (!StringUtils.isNullOrEmpty(responseHeaders.get(Headers.IBM_SSE_KP_CUSTOMER_ROOT_KEY_CRN))) {
+            		((ObjectListing) result).setIBMSSEKPCrk(responseHeaders.get(Headers.IBM_SSE_KP_CUSTOMER_ROOT_KEY_CRN));
+            	} 
+            }
         }
 
         return awsResponse;

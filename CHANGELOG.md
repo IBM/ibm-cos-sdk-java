@@ -13,3 +13,7 @@
 * Bug fixes
 * Documentation updates
 
+## 1.1.0
+### Features
+* Added Key Protect support
+
