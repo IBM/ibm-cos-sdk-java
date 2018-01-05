@@ -208,9 +208,9 @@ public class DefaultTokenManager implements TokenManager {
 					retrieveIAMToken(token.getRefresh_token());
 					tokenRequest = false;
 				} catch (OAuthServiceException exception) {
-					log.debug("Exception refreshing IAM token. Retry attempt " + retryCount);
+					log.debug("Exception refreshing IAM token. Returned status code " + exception.getStatusCode() + "Retry attempt " + retryCount);
 					tokenRequest = shouldRetry(exception.getStatusCode()) ? true : false;
-					if(!tokenRequest)
+					if(!tokenRequest || retryCount == this.iamMaxRetry)
 						throw exception;
 				}
 			}
@@ -493,9 +493,9 @@ public class DefaultTokenManager implements TokenManager {
 					token = provider.retrieveToken();
 					tokenRequest = false;
 				} catch (OAuthServiceException exception) {
-					log.debug("Exception refreshing IAM token. Retry attempt " + retryCount);
+					log.debug("Exception retrieving IAM token. Returned status code " + exception.getStatusCode() + "Retry attempt " + retryCount);
 					tokenRequest = shouldRetry(exception.getStatusCode()) ? true : false;
-					if(!tokenRequest)
+					if(!tokenRequest || retryCount == this.iamMaxRetry)
 						throw exception;
 				}
 			}
