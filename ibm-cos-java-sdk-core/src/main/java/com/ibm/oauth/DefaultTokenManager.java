@@ -342,7 +342,8 @@ public class DefaultTokenManager implements TokenManager {
 
 				if (response.getStatusLine().getStatusCode() / 100 != 2) {
 					log.info("Response code= " + response.getStatusLine().getStatusCode()
-							+ ", throwing OAuthServiceException");
+							+ ", Reason= " + response.getStatusLine().getReasonPhrase()
+							+ ".Throwing OAuthServiceException");
 					OAuthServiceException exception = new OAuthServiceException("Token retrival from IAM service failed with refresh token");
 					exception.setStatusCode(response.getStatusLine().getStatusCode());
 					exception.setStatusMessage(response.getStatusLine().getReasonPhrase());
@@ -426,7 +427,8 @@ public class DefaultTokenManager implements TokenManager {
 
 			if (response.getStatusLine().getStatusCode() / 100 != 2) {
 				log.info("Response code= " + response.getStatusLine().getStatusCode()
-						+ ", throwing OAuthServiceException");
+						+ ", Reason= " + response.getStatusLine().getReasonPhrase()
+						+ ".Throwing OAuthServiceException");
 				OAuthServiceException exception = new OAuthServiceException("Token retrival from IAM service failed with refresh token");
 				exception.setStatusCode(response.getStatusLine().getStatusCode());
 				exception.setStatusMessage(response.getStatusLine().getReasonPhrase());

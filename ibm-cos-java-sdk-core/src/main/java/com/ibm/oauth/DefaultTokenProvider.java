@@ -136,7 +136,8 @@ public class DefaultTokenProvider implements TokenProvider {
 
 			if (response.getStatusLine().getStatusCode() != 200) {
 				log.info("Response code= " + response.getStatusLine().getStatusCode()
-						+ ", throwing OAuthServiceException");
+						+ ", Reason= " + response.getStatusLine().getReasonPhrase()
+						+ ".Throwing OAuthServiceException");
 				OAuthServiceException exception = new OAuthServiceException("Token retrival from IAM service failed with refresh token");
 				exception.setStatusCode(response.getStatusLine().getStatusCode());
 				exception.setStatusMessage(response.getStatusLine().getReasonPhrase());
