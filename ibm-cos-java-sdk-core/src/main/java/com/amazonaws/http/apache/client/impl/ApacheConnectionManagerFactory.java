@@ -197,7 +197,7 @@ public class ApacheConnectionManagerFactory implements
      * Simple implementation of X509TrustManager that trusts all certificates.
      * This class is only intended to be used for testing purposes.
      */
-    private static class TrustingX509TrustManager implements X509TrustManager {
+    public static class TrustingX509TrustManager implements X509TrustManager {
         private static final X509Certificate[] X509_CERTIFICATES = new X509Certificate[0];
 
         @Override
