@@ -29,7 +29,7 @@ public class OAuthServiceException extends SdkClientException {
      */
     private String errorMessage;
     private int statusCode;
-    private String statusMessage;
+    private String statusMessage; 
 
     /**
      * Constructs a new OAuthServiceException with the specified message.
