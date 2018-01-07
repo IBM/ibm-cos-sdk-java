@@ -80,6 +80,8 @@ public abstract class AwsClientBuilder<Subclass extends AwsClientBuilder, TypeTo
     private List<RequestHandler2> requestHandlers;
     private EndpointConfiguration endpointConfiguration;
     private String iamEndpoint;
+    private int iamTokenRefreshOffset;
+    private int iamMaxRetry;
 
     protected AwsClientBuilder(ClientConfigurationFactory clientConfigFactory) {
         this(clientConfigFactory, DEFAULT_REGION_PROVIDER);
@@ -117,6 +119,20 @@ public abstract class AwsClientBuilder<Subclass extends AwsClientBuilder, TypeTo
         			}
 	        }
         }
+        
+        if (this.iamTokenRefreshOffset > 0){
+	        if ((this.credentials.getCredentials() instanceof IBMOAuthCredentials) &&
+        		((IBMOAuthCredentials)this.credentials.getCredentials()).getTokenManager() instanceof DefaultTokenManager){
+        			((DefaultTokenManager)((IBMOAuthCredentials)this.credentials.getCredentials()).getTokenManager()).setIamRefreshOffset(iamTokenRefreshOffset);
+	        }
+        }
+        
+        if (this.iamMaxRetry > 0){
+	        if ((this.credentials.getCredentials() instanceof IBMOAuthCredentials) &&
+        		((IBMOAuthCredentials)this.credentials.getCredentials()).getTokenManager() instanceof DefaultTokenManager){
+        			((DefaultTokenManager)((IBMOAuthCredentials)this.credentials.getCredentials()).getTokenManager()).setIamMaxRetry(iamMaxRetry);;
+	        }
+        }
     }
 
     /**
@@ -152,6 +168,43 @@ public abstract class AwsClientBuilder<Subclass extends AwsClientBuilder, TypeTo
         }
         return getSubclass();
     }
+    
+    /**
+     * Sets the time offset used for IAM token refresh by the DefaultTokenManager.
+     * This should only be over written for a dev or staging environment
+     *
+     * @param offset, offset in seconds from token expiry time.  
+     * @return This object for method chaining.
+     */
+    public Subclass withIAMTokenRefresh(int offset) {
+        this.iamTokenRefreshOffset = offset;
+
+        if ((offset > 0) && 
+        		(this.credentials.getCredentials() instanceof IBMOAuthCredentials) &&
+        		((IBMOAuthCredentials)this.credentials.getCredentials()).getTokenManager() instanceof DefaultTokenManager){
+        			((DefaultTokenManager)((IBMOAuthCredentials)this.credentials.getCredentials()).getTokenManager()).setIamRefreshOffset(iamTokenRefreshOffset);
+        }
+        return getSubclass();
+    }
+    
+    /**
+     * Sets the maximum number of attempts for retrieving/refreshing IAM token by the DefaultTokenManager.
+     * This should only be over written for a dev or staging environment
+     *
+     * @param offset, offset in seconds from token expiry time.  
+     * @return This object for method chaining.
+     */
+    public Subclass withIAMMaxRetry(int retryCount) {
+        this.iamMaxRetry = retryCount;
+
+        if ((retryCount > 0) &&
+        		(this.credentials.getCredentials() instanceof IBMOAuthCredentials) &&
+        		((IBMOAuthCredentials)this.credentials.getCredentials()).getTokenManager() instanceof DefaultTokenManager){
+        			((DefaultTokenManager)((IBMOAuthCredentials)this.credentials.getCredentials()).getTokenManager()).setIamMaxRetry(iamMaxRetry);
+        }
+        return getSubclass();
+    }
+    
     /**
      * If the builder isn't explicitly configured with credentials we use the {@link
      * DefaultAWSCredentialsProviderChain}.
