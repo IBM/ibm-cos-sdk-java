@@ -80,7 +80,7 @@ public abstract class AwsClientBuilder<Subclass extends AwsClientBuilder, TypeTo
     private List<RequestHandler2> requestHandlers;
     private EndpointConfiguration endpointConfiguration;
     private String iamEndpoint;
-    private int iamTokenRefreshOffset;
+    private double iamTokenRefreshOffset;
     private int iamMaxRetry;
 
     protected AwsClientBuilder(ClientConfigurationFactory clientConfigFactory) {
@@ -173,10 +173,10 @@ public abstract class AwsClientBuilder<Subclass extends AwsClientBuilder, TypeTo
      * Sets the time offset used for IAM token refresh by the DefaultTokenManager.
      * This should only be over written for a dev or staging environment
      *
-     * @param offset, offset in seconds from token expiry time.  
+     * @param offset, percentage of token life before expiration that token should be refreshed.  
      * @return This object for method chaining.
      */
-    public Subclass withIAMTokenRefresh(int offset) {
+    public Subclass withIAMTokenRefresh(double offset) {
         this.iamTokenRefreshOffset = offset;
 
         if ((offset > 0) && 
@@ -253,13 +253,6 @@ public abstract class AwsClientBuilder<Subclass extends AwsClientBuilder, TypeTo
     }
 
     /**
-     * Gets the {@link RequestMetricCollector} in use by the builder.
-     */
-    public final RequestMetricCollector getMetricsCollector() {
-        return this.metricsCollector;
-    }
-
-    /**
      * Sets a custom RequestMetricCollector to use for the client.
      *
      * @param metrics Custom RequestMetricCollector to use.
@@ -315,6 +308,13 @@ public abstract class AwsClientBuilder<Subclass extends AwsClientBuilder, TypeTo
     }
 
     /**
+	 * Gets the {@link RequestMetricCollector} in use by the builder.
+	 */
+	public final RequestMetricCollector getMetricsCollector() {
+	    return this.metricsCollector;
+	}
+
+	/**
      * Sets the region to be used by the client. This will be used to determine both the
      * service endpoint (eg: https://sns.us-west-1.amazonaws.com) and signing region (eg: us-west-1)
      * for requests. If neither region or endpoint configuration {@link #setEndpointConfiguration(EndpointConfiguration)}

@@ -241,8 +241,8 @@ public class DefaultTokenManagerTest {
 	 * Token manager should recognize that token is expiring and attempt to refresh.
 	 */
 	@Test
-	public void shouldRefreshTokenAtOffset() {
-		long expiry = (System.currentTimeMillis() / 1000L) + SDKGlobalConfiguration.IAM_REFRESH_OFFSET/3;
+	public void shouldRefreshToken() {
+		long expiry = (System.currentTimeMillis() / 1000L);
 		Token expiringToken = new Token();
 		expiringToken.setAccess_token(accessToken);
 		expiringToken.setRefresh_token(refreshToken);
@@ -254,11 +254,11 @@ public class DefaultTokenManagerTest {
 		DefaultTokenManager defaultTokenManager = spy(new DefaultTokenManager(tokenProviderMock));
 		when(defaultTokenManager.getProvider()).thenReturn(tokenProviderMock);
 		when(tokenProviderMock.retrieveToken()).thenReturn(expiringToken);
-		Mockito.doNothing().when(defaultTokenManager).retrieveIAMToken(refreshToken);
+		Mockito.doNothing().when(defaultTokenManager).submitRefreshTask();
 		
 		defaultTokenManager.getToken();
 
-		verify(defaultTokenManager, times(1)).retrieveIAMToken(refreshToken);
+		verify(defaultTokenManager, times(1)).submitRefreshTask();
 	}
 	
 	/**
@@ -267,7 +267,8 @@ public class DefaultTokenManagerTest {
 	 */
 	@Test
 	public void shouldNotRefreshToken() {
-		long expiry = (System.currentTimeMillis() / 1000L) + SDKGlobalConfiguration.IAM_REFRESH_OFFSET * 3;
+		int extraTime = (int) (3600 * SDKGlobalConfiguration.IAM_REFRESH_OFFSET);
+		long expiry = (System.currentTimeMillis() / 1000L) + (extraTime * 3);
 		Token token = new Token();
 		token.setAccess_token(accessToken);
 		token.setRefresh_token(refreshToken);
@@ -279,9 +280,9 @@ public class DefaultTokenManagerTest {
 		DefaultTokenManager defaultTokenManager = spy(new DefaultTokenManager(tokenProviderMock));
 		when(defaultTokenManager.getProvider()).thenReturn(tokenProviderMock);
 		when(tokenProviderMock.retrieveToken()).thenReturn(token);
-		Mockito.doNothing().when(defaultTokenManager).retrieveIAMToken(refreshToken);
+		Mockito.doNothing().when(defaultTokenManager).submitRefreshTask();
 		
 		defaultTokenManager.getToken();
-		verify(defaultTokenManager, times(0)).retrieveIAMToken(refreshToken);
+		verify(defaultTokenManager, times(0)).submitRefreshTask();
 	}
 }

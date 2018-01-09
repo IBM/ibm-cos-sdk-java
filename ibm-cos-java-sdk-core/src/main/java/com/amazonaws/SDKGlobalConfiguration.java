@@ -214,7 +214,7 @@ public class SDKGlobalConfiguration {
     public static int IAM_MAX_RETRY = 2;
     
     /** Global variable IAM token refresh time offset in seconds **/
-    public static int IAM_REFRESH_OFFSET = 180;
+    public static double IAM_REFRESH_OFFSET = 0.25;
 
     /////////////////////// Environment Variables ///////////////////////
     /** Environment variable name for the AWS access key ID */

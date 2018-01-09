@@ -20,7 +20,10 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
 import javax.net.ssl.SSLContext;
@@ -37,8 +40,6 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.conn.ssl.DefaultHostnameVerifier;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.impl.client.HttpClientBuilder;
-import org.apache.http.impl.nio.client.CloseableHttpAsyncClient;
-import org.apache.http.impl.nio.client.HttpAsyncClients;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.ssl.SSLContexts;
 import org.apache.http.util.EntityUtils;
@@ -93,17 +94,22 @@ public class DefaultTokenManager implements TokenManager {
 	/**
 	 * variable to overwrite the global SDKGlobalConfiguration.IAM_MAX_RETRY
 	 **/
-	private int iamRefreshOffset = SDKGlobalConfiguration.IAM_REFRESH_OFFSET;
+	private double iamRefreshOffset = SDKGlobalConfiguration.IAM_REFRESH_OFFSET;
+	
+	// Executor service for token refresh
+	private final ExecutorService executor = Executors.newSingleThreadExecutor();
+
+	private Future<Token> refreshToken;
 	
 	/**
-	 * 
+	 * Set of HTTP response codes that should attempt retry.
 	 */
 	private static final Set<Integer> NON_RETRYABLE_STATUS_CODES = new HashSet<Integer>(4);
-	
+
 	static {
 		NON_RETRYABLE_STATUS_CODES.add(HttpStatus.SC_BAD_REQUEST);
 		NON_RETRYABLE_STATUS_CODES.add(HttpStatus.SC_UNAUTHORIZED);
-		NON_RETRYABLE_STATUS_CODES.add(HttpStatus.SC_FORBIDDEN);		
+		NON_RETRYABLE_STATUS_CODES.add(HttpStatus.SC_FORBIDDEN);
 		NON_RETRYABLE_STATUS_CODES.add(HttpStatus.SC_NOT_FOUND);
 	}
 
@@ -149,9 +155,10 @@ public class DefaultTokenManager implements TokenManager {
 	 * development or staging environment
 	 * 
 	 * @param offset
-	 *            The seconds prior to expiry that the token should be refreshed
+	 *            The percentage of token life that token should be refreshed
+	 *            before expiration.
 	 */
-	public void setIamRefreshOffset(int offset) {
+	public void setIamRefreshOffset(double offset) {
 		this.iamRefreshOffset = offset;
 	}
 
@@ -183,6 +190,19 @@ public class DefaultTokenManager implements TokenManager {
 
 		log.debug("DefaultTokenManager getToken()");
 
+		if (this.refreshToken != null && this.refreshToken.isDone() && !this.refreshToken.isCancelled()) {
+			try {
+				Token refreshedToken = this.refreshToken.get();
+				if(refreshedToken != null)
+					cacheToken(refreshedToken);
+				this.refreshToken = null;
+			} catch (InterruptedException e) {
+				log.debug("IAM Token refresh interrupted.", e);
+			} catch (ExecutionException e) {
+				log.debug("ExecutionException during IAM Token refresh.", e);
+			}
+		}
+
 		if (!checkCache()) {
 			retrieveToken();
 		}
@@ -196,24 +216,10 @@ public class DefaultTokenManager implements TokenManager {
 		if (hasTokenExpired(token)) {
 			token = retrieveTokenFromCache();
 		}
-		
+
 		// check if token should be refreshed
-		if (isTokenExpiring(token)) {
-			boolean tokenRequest = true;
-			int retryCount = 0;
-			
-			while(tokenRequest && retryCount < this.iamMaxRetry) {
-				try {
-					++retryCount;
-					retrieveIAMToken(token.getRefresh_token());
-					tokenRequest = false;
-				} catch (OAuthServiceException exception) {
-					log.debug("Exception refreshing IAM token. Returned status code " + exception.getStatusCode() + "Retry attempt " + retryCount);
-					tokenRequest = shouldRetry(exception.getStatusCode()) ? true : false;
-					if(!tokenRequest || retryCount == this.iamMaxRetry)
-						throw exception;
-				}
-			}
+		if (isTokenExpiring(token) && this.refreshToken == null) {
+			submitRefreshTask();
 		}
 
 		if (token.getAccess_token() != null && !token.getAccess_token().isEmpty()) {
@@ -249,6 +255,29 @@ public class DefaultTokenManager implements TokenManager {
 	protected void cacheToken(final Token token) {
 
 		log.debug("OAuthTokenManager.cacheToken");
+
+		// Parse token expires in seconds.
+		int tokenExpiresInSecs;
+		try {
+			tokenExpiresInSecs = Integer.parseInt(token.getExpires_in());
+		} catch (NumberFormatException exception) {
+			tokenExpiresInSecs = 0;
+		}
+
+		// Parse token expiration time
+		long tokenExpirationTime;
+		try {
+			tokenExpirationTime = Long.parseLong(token.getExpiration());
+		} catch (NumberFormatException exception) {
+			tokenExpirationTime = 0;
+		}
+
+		// Calculate token refresh time based on lifespan percentage offset.
+		long refreshBeforeExpirySecs = (long) (tokenExpiresInSecs * this.iamRefreshOffset);
+		long tokenRefreshTime = Long.valueOf(token.getExpiration()) - refreshBeforeExpirySecs;
+
+		token.setRefreshTime(tokenRefreshTime);
+		token.setExpirationTime(tokenExpirationTime);
 
 		setTokenCache(token);
 	}
@@ -289,9 +318,9 @@ public class DefaultTokenManager implements TokenManager {
 	}
 
 	/**
-	 * Check if the current cached token is expiring in less than the given offset. If
-	 * it is, an asynchronous call is made to the IAM service to update the
-	 * cache.
+	 * Check if the current cached token is expiring in less than the given
+	 * offset. If it is, an asynchronous call is made to the IAM service to
+	 * update the cache.
 	 * 
 	 * @param token
 	 *            The IAM Token object
@@ -304,157 +333,10 @@ public class DefaultTokenManager implements TokenManager {
 
 		final long currentTime = System.currentTimeMillis() / 1000L;
 
-		if (Long.valueOf(token.getExpiration()) - currentTime < this.iamRefreshOffset) {
+		if (currentTime > token.getRefreshTime()) {
 			return true;
 		}
 		return false;
-	}
-
-	/**
-	 * Retrieve the Token from IAM using a HttpClient asynchronously. The token
-	 * will replace the currently cached token
-	 * 
-	 * @param refreshToken
-	 */
-	protected void retrieveIAMTokenAsync(String refreshToken) {
-
-		log.debug("OAuthTokenManager.retrieveIAMTokenAsync");
-
-		CloseableHttpAsyncClient httpclient = HttpAsyncClients.createDefault();
-		if (!isAsyncInProgress()) {
-			try {
-				asyncInProgress = true;
-				httpclient.start();
-				HttpPost post = new HttpPost(SDKGlobalConfiguration.IAM_ENDPOINT);
-				post.setHeader("Authorization", BASIC_AUTH);
-				post.setHeader("Content-Type", CONTENT_TYPE);
-				post.setHeader("Accept", ACCEPT);
-
-				List<NameValuePair> urlParameters = new ArrayList<NameValuePair>();
-				urlParameters.add(new BasicNameValuePair("grant_type", REFRESH_GRANT_TYPE));
-				urlParameters.add(new BasicNameValuePair("response_type", RESPONSE_TYPE));
-				urlParameters.add(new BasicNameValuePair("refresh_token", refreshToken));
-
-				post.setEntity(new UrlEncodedFormEntity(urlParameters));
-
-				Future<HttpResponse> future = httpclient.execute(post, null);
-				HttpResponse response = future.get();
-
-				if (response.getStatusLine().getStatusCode() / 100 != 2) {
-					log.info("Response code= " + response.getStatusLine().getStatusCode()
-							+ ", Reason= " + response.getStatusLine().getReasonPhrase()
-							+ ".Throwing OAuthServiceException");
-					OAuthServiceException exception = new OAuthServiceException("Token retrival from IAM service failed with refresh token");
-					exception.setStatusCode(response.getStatusLine().getStatusCode());
-					exception.setStatusMessage(response.getStatusLine().getReasonPhrase());
-					throw exception;
-				}
-
-				HttpEntity entity = response.getEntity();
-				String resultStr = EntityUtils.toString(entity);
-
-				ObjectMapper mapper = new ObjectMapper();
-
-				Token token = mapper.readValue(resultStr, Token.class);
-
-				cacheToken(token);
-
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			} catch (ExecutionException e) {
-				e.printStackTrace();
-			} catch (UnsupportedEncodingException e) {
-				e.printStackTrace();
-			} catch (ClientProtocolException e) {
-				e.printStackTrace();
-			} catch (IOException e) {
-				e.printStackTrace();
-			} finally {
-				asyncInProgress = false;
-				try {
-					httpclient.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
-		}
-	}
-
-	/**
-	 * Retrieve the Token from IAM using a HttpClient synchronously. The token
-	 * will replace the currently cached token
-	 * 
-	 * @param refreshToken
-	 */
-	protected void retrieveIAMToken(String refreshToken) {
-
-		log.debug("OAuthTokenManager.retrieveIAMToken");
-
-		try {
-
-			SSLContext sslContext;
-			/*
-			 * If SSL cert checking for endpoints has been explicitly disabled,
-			 * register a new scheme for HTTPS that won't cause self-signed
-			 * certs to error out.
-			 */
-			if (SDKGlobalConfiguration.isCertCheckingDisabled()) {
-				if (log.isWarnEnabled()) {
-					log.warn("SSL Certificate checking for endpoints has been " + "explicitly disabled.");
-				}
-				sslContext = SSLContext.getInstance("TLS");
-				sslContext.init(null, new TrustManager[] { new TrustingX509TrustManager() }, null);
-			} else {
-				sslContext = SSLContexts.createDefault();
-			}
-
-			SSLConnectionSocketFactory sslsf = new SdkTLSSocketFactory(sslContext, new DefaultHostnameVerifier());
-
-			HttpClient client = HttpClientBuilder.create().setSSLSocketFactory(sslsf).build();
-			HttpPost post = new HttpPost(iamEndpoint);
-			post.setHeader("Authorization", BASIC_AUTH);
-			post.setHeader("Content-Type", CONTENT_TYPE);
-			post.setHeader("Accept", ACCEPT);
-
-			List<NameValuePair> urlParameters = new ArrayList<NameValuePair>();
-			urlParameters.add(new BasicNameValuePair("grant_type", REFRESH_GRANT_TYPE));
-			urlParameters.add(new BasicNameValuePair("response_type", RESPONSE_TYPE));
-			urlParameters.add(new BasicNameValuePair("refresh_token", refreshToken));
-
-			post.setEntity(new UrlEncodedFormEntity(urlParameters));
-
-			final HttpResponse response = client.execute(post);
-
-			if (response.getStatusLine().getStatusCode() / 100 != 2) {
-				log.info("Response code= " + response.getStatusLine().getStatusCode()
-						+ ", Reason= " + response.getStatusLine().getReasonPhrase()
-						+ ".Throwing OAuthServiceException");
-				OAuthServiceException exception = new OAuthServiceException("Token retrival from IAM service failed with refresh token");
-				exception.setStatusCode(response.getStatusLine().getStatusCode());
-				exception.setStatusMessage(response.getStatusLine().getReasonPhrase());
-				throw exception;
-			}
-
-			HttpEntity entity = response.getEntity();
-			String resultStr = EntityUtils.toString(entity);
-
-			ObjectMapper mapper = new ObjectMapper();
-
-			Token token = mapper.readValue(resultStr, Token.class);
-
-			cacheToken(token);
-
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
-		} catch (ClientProtocolException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (NoSuchAlgorithmException e) {
-			e.printStackTrace();
-		} catch (KeyManagementException e) {
-			e.printStackTrace();
-		}
 	}
 
 	/**
@@ -488,22 +370,34 @@ public class DefaultTokenManager implements TokenManager {
 			log.debug("Token is null, retrieving initial token from provider");
 			boolean tokenRequest = true;
 			int retryCount = 0;
-			
-			while(tokenRequest && retryCount < this.iamMaxRetry) {
+
+			while (tokenRequest && retryCount < this.iamMaxRetry) {
 				try {
 					++retryCount;
 					token = provider.retrieveToken();
 					tokenRequest = false;
 				} catch (OAuthServiceException exception) {
-					log.debug("Exception retrieving IAM token. Returned status code " + exception.getStatusCode() + "Retry attempt " + retryCount);
+					log.debug("Exception retrieving IAM token. Returned status code " + exception.getStatusCode()
+							+ "Retry attempt " + retryCount);
 					tokenRequest = shouldRetry(exception.getStatusCode()) ? true : false;
-					if(!tokenRequest || retryCount == this.iamMaxRetry)
+					if (!tokenRequest || retryCount == this.iamMaxRetry)
 						throw exception;
 				}
 			}
-			
+
 			cacheToken(token);
 		}
+	}
+	
+	/**
+	 * Submits a token refresh task
+	 * 
+	 * @return void
+	 */
+	protected void submitRefreshTask() {
+		TokenRefreshTask tokenRefreshTask = new TokenRefreshTask(iamEndpoint, token.getRefresh_token(),
+				token.getExpirationTime());
+		this.refreshToken = executor.submit(tokenRefreshTask);		
 	}
 
 	/**
@@ -515,11 +409,132 @@ public class DefaultTokenManager implements TokenManager {
 
 		return asyncInProgress;
 	}
-	
+
 	private boolean shouldRetry(int statusCode) {
-		if(NON_RETRYABLE_STATUS_CODES.contains(statusCode))
+		if (NON_RETRYABLE_STATUS_CODES.contains(statusCode))
 			return false;
 		else
 			return true;
+	}
+	
+	@Override
+    protected void finalize() throws Throwable {
+		if(this.refreshToken != null && !this.refreshToken.isDone() && !this.refreshToken.isCancelled())
+			refreshToken.cancel(true);
+		executor.shutdown();
+	}
+
+	class TokenRefreshTask implements Callable<Token> {
+		private String iamEndpoint;
+		private String refreshToken;
+		private long tokenExpirationTime;
+		private Token token;
+
+		TokenRefreshTask(String iamEndpoint, String refreshToken, long tokenExpirationTime) {
+			this.iamEndpoint = iamEndpoint;
+			this.refreshToken = refreshToken;
+			this.tokenExpirationTime = tokenExpirationTime;
+		}
+
+		@Override
+		public Token call() throws Exception {
+
+			while ((this.token == null) && (System.currentTimeMillis() / 1000 < tokenExpirationTime)) {
+				try {
+					token = retrieveIAMToken(refreshToken);
+				} catch (OAuthServiceException exception) {
+					log.info("Exception refreshing IAM token. Returned status code " + exception.getStatusCode());
+				}
+
+				if (token == null) {
+					try {
+						Thread.sleep(30000);
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+			}
+
+			return token;
+		}
+
+		/**
+		 * Retrieve the Token from IAM using a HttpClient synchronously. The
+		 * token will replace the currently cached token
+		 * 
+		 * @param refreshToken
+		 */
+		protected Token retrieveIAMToken(String refreshToken) {
+
+			log.debug("OAuthTokenManager.retrieveIAMToken");
+
+			try {
+
+				SSLContext sslContext;
+				/*
+				 * If SSL cert checking for endpoints has been explicitly
+				 * disabled, register a new scheme for HTTPS that won't cause
+				 * self-signed certs to error out.
+				 */
+				if (SDKGlobalConfiguration.isCertCheckingDisabled()) {
+					if (log.isWarnEnabled()) {
+						log.warn("SSL Certificate checking for endpoints has been " + "explicitly disabled.");
+					}
+					sslContext = SSLContext.getInstance("TLS");
+					sslContext.init(null, new TrustManager[] { new TrustingX509TrustManager() }, null);
+				} else {
+					sslContext = SSLContexts.createDefault();
+				}
+
+				SSLConnectionSocketFactory sslsf = new SdkTLSSocketFactory(sslContext, new DefaultHostnameVerifier());
+
+				HttpClient client = HttpClientBuilder.create().setSSLSocketFactory(sslsf).build();
+				HttpPost post = new HttpPost(iamEndpoint);
+				post.setHeader("Authorization", BASIC_AUTH);
+				post.setHeader("Content-Type", CONTENT_TYPE);
+				post.setHeader("Accept", ACCEPT);
+
+				List<NameValuePair> urlParameters = new ArrayList<NameValuePair>();
+				urlParameters.add(new BasicNameValuePair("grant_type", REFRESH_GRANT_TYPE));
+				urlParameters.add(new BasicNameValuePair("response_type", RESPONSE_TYPE));
+				urlParameters.add(new BasicNameValuePair("refresh_token", refreshToken));
+
+				post.setEntity(new UrlEncodedFormEntity(urlParameters));
+
+				final HttpResponse response = client.execute(post);
+
+				if (response.getStatusLine().getStatusCode() / 100 != 2) {
+					log.info("Response code= " + response.getStatusLine().getStatusCode() + ", Reason= "
+							+ response.getStatusLine().getReasonPhrase() + ".Throwing OAuthServiceException");
+					OAuthServiceException exception = new OAuthServiceException(
+							"Token retrival from IAM service failed with refresh token");
+					exception.setStatusCode(response.getStatusLine().getStatusCode());
+					exception.setStatusMessage(response.getStatusLine().getReasonPhrase());
+					throw exception;
+				}
+
+				HttpEntity entity = response.getEntity();
+				String resultStr = EntityUtils.toString(entity);
+
+				ObjectMapper mapper = new ObjectMapper();
+
+				Token token = mapper.readValue(resultStr, Token.class);
+
+				return token;
+
+			} catch (UnsupportedEncodingException e) {
+				e.printStackTrace();
+			} catch (ClientProtocolException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			} catch (NoSuchAlgorithmException e) {
+				e.printStackTrace();
+			} catch (KeyManagementException e) {
+				e.printStackTrace();
+			}
+			return null;
+		}
 	}
 }
