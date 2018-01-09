@@ -274,7 +274,7 @@ public class DefaultTokenManager implements TokenManager {
 
 		// Calculate token refresh time based on lifespan percentage offset.
 		long refreshBeforeExpirySecs = (long) (tokenExpiresInSecs * this.iamRefreshOffset);
-		long tokenRefreshTime = Long.valueOf(token.getExpiration()) - refreshBeforeExpirySecs;
+		long tokenRefreshTime = tokenExpirationTime - refreshBeforeExpirySecs;
 
 		token.setRefreshTime(tokenRefreshTime);
 		token.setExpirationTime(tokenExpirationTime);
