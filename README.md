@@ -158,12 +158,14 @@ mvn clean install
 ## Getting help
 Feel free to use GitHub issues for tracking bugs and feature requests, but for help please use one of the following resources:
 
+* Read a quick start guide in [Bluemix Docs][bluemix-docs]
 * Ask a question on [StackOverflow][stack-overflow] and tag it with `ibm` and `object-storage`
 * Open a support ticket with [IBM Bluemix Support][ibm-bluemix-support]
 * If it turns out that you may have found a bug, please [open an issue][open-an-issue]
 
 
 [changes-file]: ./CHANGELOG.md
+[bluemix-docs]: https://console.bluemix.net/docs/services/cloud-object-storage/libraries/java.html#java
 [stack-overflow]: http://stackoverflow.com/questions/tagged/object-storage+ibm
 [ibm-bluemix-support]: https://support.ng.bluemix.net/gethelp/
 [open-an-issue]: https://github.com/ibm/ibm-cos-sdk-java/issues/new
