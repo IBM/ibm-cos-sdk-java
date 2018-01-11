@@ -20,11 +20,8 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
 
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
@@ -79,9 +76,9 @@ public class DefaultTokenManager implements TokenManager {
 
 	private TokenProvider provider;
 
-	private Token token;
+	private volatile Token token;
 	// flag to signify if an async refresh process has already started
-	private boolean asyncInProgress = false;
+	private volatile boolean asyncInProgress = false;
 
 	/** variable to overwrite the global SDKGlobalConfiguration.IAM_ENDPOINT **/
 	private String iamEndpoint = SDKGlobalConfiguration.IAM_ENDPOINT;
@@ -95,12 +92,10 @@ public class DefaultTokenManager implements TokenManager {
 	 * variable to overwrite the global SDKGlobalConfiguration.IAM_MAX_RETRY
 	 **/
 	private double iamRefreshOffset = SDKGlobalConfiguration.IAM_REFRESH_OFFSET;
-	
+
 	// Executor service for token refresh
 	private final ExecutorService executor = Executors.newSingleThreadExecutor();
 
-	private Future<Token> refreshToken;
-	
 	/**
 	 * Set of HTTP response codes that should attempt retry.
 	 */
@@ -190,19 +185,6 @@ public class DefaultTokenManager implements TokenManager {
 
 		log.debug("DefaultTokenManager getToken()");
 
-		if (this.refreshToken != null && this.refreshToken.isDone() && !this.refreshToken.isCancelled()) {
-			try {
-				Token refreshedToken = this.refreshToken.get();
-				if(refreshedToken != null)
-					cacheToken(refreshedToken);
-				this.refreshToken = null;
-			} catch (InterruptedException e) {
-				log.debug("IAM Token refresh interrupted.", e);
-			} catch (ExecutionException e) {
-				log.debug("ExecutionException during IAM Token refresh.", e);
-			}
-		}
-
 		if (!checkCache()) {
 			retrieveToken();
 		}
@@ -218,7 +200,8 @@ public class DefaultTokenManager implements TokenManager {
 		}
 
 		// check if token should be refreshed
-		if (isTokenExpiring(token) && this.refreshToken == null) {
+		if (isTokenExpiring(token) && !isAsyncInProgress()) {
+			this.asyncInProgress = true;
 			submitRefreshTask();
 		}
 
@@ -252,7 +235,7 @@ public class DefaultTokenManager implements TokenManager {
 	 * @param token
 	 *            The IAM Token object
 	 */
-	protected void cacheToken(final Token token) {
+	protected synchronized void cacheToken(final Token token) {
 
 		log.debug("OAuthTokenManager.cacheToken");
 
@@ -334,9 +317,12 @@ public class DefaultTokenManager implements TokenManager {
 		final long currentTime = System.currentTimeMillis() / 1000L;
 
 		if (currentTime > token.getRefreshTime()) {
+			log.debug("Token is expiring");
 			return true;
+		} else {
+			log.debug("Token is not expiring." + token.getRefreshTime() + " > " + currentTime);
+			return false;
 		}
-		return false;
 	}
 
 	/**
@@ -388,16 +374,16 @@ public class DefaultTokenManager implements TokenManager {
 			cacheToken(token);
 		}
 	}
-	
+
 	/**
 	 * Submits a token refresh task
 	 * 
 	 * @return void
 	 */
 	protected void submitRefreshTask() {
-		TokenRefreshTask tokenRefreshTask = new TokenRefreshTask(iamEndpoint, token.getRefresh_token(),
-				token.getExpirationTime());
-		this.refreshToken = executor.submit(tokenRefreshTask);		
+		TokenRefreshTask tokenRefreshTask = new TokenRefreshTask(iamEndpoint, this);
+		executor.execute(tokenRefreshTask);
+		log.debug("Submitted token refresh task");
 	}
 
 	/**
@@ -406,7 +392,7 @@ public class DefaultTokenManager implements TokenManager {
 	 * @return boolean
 	 */
 	protected boolean isAsyncInProgress() {
-
+		log.debug("Aysnchrnonous job in progress : " + asyncInProgress);
 		return asyncInProgress;
 	}
 
@@ -416,47 +402,55 @@ public class DefaultTokenManager implements TokenManager {
 		else
 			return true;
 	}
-	
+
 	@Override
-    protected void finalize() throws Throwable {
-		if(this.refreshToken != null && !this.refreshToken.isDone() && !this.refreshToken.isCancelled())
-			refreshToken.cancel(true);
-		executor.shutdown();
+	protected void finalize() throws Throwable {
+		try {
+			executor.shutdown();
+		} catch (Throwable t) {
+			throw t;
+		} finally {
+			super.finalize();
+		}
 	}
 
-	class TokenRefreshTask implements Callable<Token> {
+	class TokenRefreshTask implements Runnable {
 		private String iamEndpoint;
-		private String refreshToken;
-		private long tokenExpirationTime;
-		private Token token;
+		private DefaultTokenManager tokenManager;
+		private Token refreshedToken = null;
 
-		TokenRefreshTask(String iamEndpoint, String refreshToken, long tokenExpirationTime) {
+		TokenRefreshTask(String iamEndpoint, DefaultTokenManager tokenManager) {
 			this.iamEndpoint = iamEndpoint;
-			this.refreshToken = refreshToken;
-			this.tokenExpirationTime = tokenExpirationTime;
+			this.tokenManager = tokenManager;
 		}
 
 		@Override
-		public Token call() throws Exception {
+		public void run() {
 
-			while ((this.token == null) && (System.currentTimeMillis() / 1000 < tokenExpirationTime)) {
+			while ((this.refreshedToken == null)
+					&& (System.currentTimeMillis() / 1000 < tokenManager.token.getExpirationTime())) {
 				try {
-					token = retrieveIAMToken(refreshToken);
+					refreshedToken = retrieveIAMToken(tokenManager.token.getRefresh_token());
 				} catch (OAuthServiceException exception) {
 					log.info("Exception refreshing IAM token. Returned status code " + exception.getStatusCode());
 				}
 
-				if (token == null) {
+				if (refreshedToken == null) {
 					try {
 						Thread.sleep(30000);
 					} catch (InterruptedException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
+						log.info("Token refresh task interrupted." + e.getMessage());
 					}
 				}
 			}
 
-			return token;
+			if (refreshedToken != null) {
+				tokenManager.cacheToken(refreshedToken);
+				log.info("Token refreshed");
+			} else {
+				log.info("Token could not be refreshed.");
+			}
+			tokenManager.asyncInProgress = false;
 		}
 
 		/**
