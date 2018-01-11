@@ -1,7 +1,7 @@
 # IBM Cloud Object Storage - Java SDK
 
 This package allows Java developers to write software that interacts with [IBM
-Cloud Object Storage](https://console.bluemix.net/docs/services/cloud-object-storage/about-cos.html). It is a fork of [the ``AWS SDK for Javascript`` library](https://github.com/aws/aws-sdk-js).
+Cloud Object Storage](https://console.bluemix.net/docs/services/cloud-object-storage/about-cos.html). It is a fork of [the ``AWS SDK for Java`` library](https://github.com/aws/aws-sdk-java).
 
 ## Documentation
 
