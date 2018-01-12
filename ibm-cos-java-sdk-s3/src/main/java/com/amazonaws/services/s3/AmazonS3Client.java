@@ -3659,8 +3659,9 @@ public class AmazonS3Client extends AmazonWebServiceClient implements AmazonS3 {
     		/**
     		 * Wrap OAuthServiceException as AmazonS3Exception and re-throw for backwards compatability.
     		 */
-        	AmazonS3Exception ase = new AmazonS3Exception(ose.getMessage());
+        	AmazonS3Exception ase = new AmazonS3Exception(ose.getErrorMessage());
         	ase.setStatusCode(ose.getStatusCode());
+        	ase.setServiceName("IAM");
         	ase.setStackTrace(ose.getStackTrace());
         	throw ase;
         } finally {
