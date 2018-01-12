@@ -28,6 +28,8 @@ public class OAuthServiceException extends SdkClientException {
      * The error message as returned by the service.
      */
     private String errorMessage;
+    private int statusCode;
+    private String statusMessage; 
 
     /**
      * Constructs a new OAuthServiceException with the specified message.
@@ -72,4 +74,33 @@ public class OAuthServiceException extends SdkClientException {
     public void setErrorMessage(String value) {
         errorMessage = value;
     }
+
+    /**
+     * @return the status code returned by server
+     */
+	public int getStatusCode() {
+		return statusCode;
+	}
+
+	/**
+     * Sets the status code returned by the server.
+     *
+     */
+	public void setStatusCode(int statusCode) {
+		this.statusCode = statusCode;
+	}
+
+	/**
+     * @return the status message returned by server
+     */
+	public String getStatusMessage() {
+		return statusMessage;
+	}
+
+	/**
+     * Sets the status message returned by the server.
+     */
+	public void setStatusMessage(String statusMessage) {
+		this.statusMessage = statusMessage;
+	}
 }

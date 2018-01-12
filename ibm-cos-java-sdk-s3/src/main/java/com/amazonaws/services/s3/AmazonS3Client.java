@@ -198,6 +198,7 @@ import com.amazonaws.util.AWSRequestMetrics;
 import com.amazonaws.util.AWSRequestMetrics.Field;
 import com.ibm.oauth.IBMOAuthCredentials;
 import com.ibm.oauth.IBMOAuthSigner;
+import com.ibm.oauth.OAuthServiceException;
 import com.amazonaws.util.AwsHostNameUtils;
 import com.amazonaws.util.Base16;
 import com.amazonaws.util.Base64;
@@ -3654,6 +3655,15 @@ public class AmazonS3Client extends AmazonWebServiceClient implements AmazonS3 {
                 }
             }
             throw ase;
+        } catch (OAuthServiceException ose) {
+    		/**
+    		 * Wrap OAuthServiceException as AmazonS3Exception and re-throw for backwards compatability.
+    		 */
+        	AmazonS3Exception ase = new AmazonS3Exception(ose.getErrorMessage());
+        	ase.setStatusCode(ose.getStatusCode());
+        	ase.setServiceName("IAM");
+        	ase.setStackTrace(ose.getStackTrace());
+        	throw ase;
         } finally {
             endClientExecution(awsRequestMetrics, request, response);
         }

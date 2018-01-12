@@ -209,6 +209,12 @@ public class SDKGlobalConfiguration {
     
     /** Global variable IAM Endpoint */
     public static String IAM_ENDPOINT = "https://iam.ng.bluemix.net/oidc/token";
+    
+    /** Global variable IAM token retrieval max retry **/
+    public static int IAM_MAX_RETRY = 2;
+    
+    /** Global variable IAM token refresh time offset in seconds **/
+    public static double IAM_REFRESH_OFFSET = 0.25;
 
     /////////////////////// Environment Variables ///////////////////////
     /** Environment variable name for the AWS access key ID */
