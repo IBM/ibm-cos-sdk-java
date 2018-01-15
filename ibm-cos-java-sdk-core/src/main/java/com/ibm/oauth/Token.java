@@ -27,6 +27,8 @@ public class Token {
 	private String expiration;
 	private String uaa_token;
 	private String ims_token;
+	private long refreshTime;
+	private long expirationTime;
 
 	/**
 	 * Returns the UAA Token.
@@ -134,6 +136,38 @@ public class Token {
 	 */
 	public void setExpiration(String expiration) {
 		this.expiration = expiration;
+	}
+
+	/**
+	 * Returns the refresh time for token.
+	 */
+	public long getRefreshTime() {
+		return refreshTime;
+	}
+
+	/**
+	 * Set the refresh time for token.
+	 * 
+	 * @param refreshTime
+	 */
+	public void setRefreshTime(long refreshTime) {
+		this.refreshTime = refreshTime;
+	}
+
+	/**
+	 * Returns the expiration time for token.
+	 */
+	public long getExpirationTime() {
+		return expirationTime;
+	}
+
+	/**
+	 * Set the expiration time for token.
+	 * 
+	 * @param refreshTime
+	 */
+	public void setExpirationTime(long expirationTime) {
+		this.expirationTime = expirationTime;
 	}
 
 }
