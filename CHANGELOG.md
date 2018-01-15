@@ -17,3 +17,7 @@
 ### Features
 * Added Key Protect support
 
+## 1.1.1
+### Feature
+* IAM Resiliency support
+* Documentation updates
