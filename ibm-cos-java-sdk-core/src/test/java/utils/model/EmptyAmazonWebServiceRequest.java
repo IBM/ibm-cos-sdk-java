@@ -14,7 +14,7 @@
  */
 package utils.model;
 
-import com.amazonaws.AmazonWebServiceRequest;
+import com.ibm.cloud.objectstorage.AmazonWebServiceRequest;
 
 public class EmptyAmazonWebServiceRequest extends AmazonWebServiceRequest {
 }

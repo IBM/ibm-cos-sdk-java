@@ -5,7 +5,7 @@
     <parent>
         <groupId>com.ibm.cos</groupId>
         <artifactId>ibm-cos-java-sdk-pom</artifactId>
-        <version>1.1.2-SNAPSHOT</version>
+        <version>2.0.0</version>
     </parent>
     <groupId>com.ibm.cos</groupId>
     <artifactId>ibm-cos-java-sdk-bundle</artifactId>
@@ -24,7 +24,7 @@
         <artifactId>ibm-cos-java-sdk</artifactId>
         <groupId>com.ibm.cos</groupId>
         <optional>false</optional>
-        <version>1.1.2-SNAPSHOT</version>
+        <version>2.0.0</version>
     </dependency>
 </dependencies>
 
@@ -50,27 +50,27 @@
                     <relocations>
                         <relocation>
                             <pattern>org.joda</pattern>
-                            <shadedPattern>com.amazonaws.thirdparty.joda</shadedPattern>
+                            <shadedPattern>com.ibm.cloud.objectstorage.thirdparty.joda</shadedPattern>
                         </relocation>
                         <relocation>
                             <pattern>com.fasterxml.jackson</pattern>
-                            <shadedPattern>com.amazonaws.thirdparty.jackson</shadedPattern>
+                            <shadedPattern>com.ibm.cloud.objectstorage.thirdparty.jackson</shadedPattern>
                         </relocation>
                         <relocation>
                             <pattern>org.apache.http</pattern>
-                            <shadedPattern>com.amazonaws.thirdparty.apache.http</shadedPattern>
+                            <shadedPattern>com.ibm.cloud.objectstorage.thirdparty.apache.http</shadedPattern>
                         </relocation>
                         <relocation>
                             <pattern>org.apache.commons.codec</pattern>
-                            <shadedPattern>com.amazonaws.thirdparty.apache.codec</shadedPattern>
+                            <shadedPattern>com.ibm.cloud.objectstorage.thirdparty.apache.codec</shadedPattern>
                         </relocation>
                         <relocation>
                             <pattern>software.amazon.ion</pattern>
-                            <shadedPattern>com.amazonaws.thirdparty.ion</shadedPattern>
+                            <shadedPattern>com.ibm.cloud.objectstorage.thirdparty.ion</shadedPattern>
                         </relocation>
                         <relocation>
                             <pattern>org.apache.commons.logging</pattern>
-                            <shadedPattern>com.amazonaws.thirdparty.apache.logging</shadedPattern>
+                            <shadedPattern>com.ibm.cloud.objectstorage.thirdparty.apache.logging</shadedPattern>
                         </relocation>
                     </relocations>
                     <shadedArtifactAttached>false</shadedArtifactAttached>

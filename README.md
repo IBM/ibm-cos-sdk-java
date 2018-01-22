@@ -6,7 +6,7 @@ Cloud Object Storage](https://console.bluemix.net/docs/services/cloud-object-sto
 ## Documentation
 
 * [Core documentation for IBM COS](https://console.bluemix.net/docs/services/cloud-object-storage/getting-started.html)
-* [Python API reference documentation](https://ibm.github.io/ibm-cos-sdk-java)
+* [Java API reference documentation](https://ibm.github.io/ibm-cos-sdk-java)
 * [REST API reference documentation](https://console.bluemix.net/docs/services/cloud-object-storage/api-reference/about-compatibility-api.html)
 
 Changes to the SDK are tracked in the [CHANGELOG.md][changes-file] file.
@@ -19,13 +19,13 @@ Changes to the SDK are tracked in the [CHANGELOG.md][changes-file] file.
 
 You'll need:
   * An instance of COS.
-  * An API key from [IBM Cloud Identity and Access Management](console.bluemix.net/docs/iam/users_roles.html) with at least `Writer` permissions.
+  * An API key from [IBM Cloud Identity and Access Management](https://console.bluemix.net/docs/iam/users_roles.html) with at least `Writer` permissions.
   * The ID of the instance of COS that you are working with.
   * Token acquisition endpoint
   * Service endpoint
   * **Java 1.6+**.
 
-These values can be found in the Bluemix UI by [generating a 'service credential'](console.bluemix.net/docs/services/cloud-object-storage/iam/service-credentials.html).
+These values can be found in the Bluemix UI by [generating a 'service credential'](https://console.bluemix.net/docs/services/cloud-object-storage/iam/service-credentials.html).
 
 ## Getting the SDK
 The recommended way to use the IBM COS SDK for Java in your project is to consume it from Maven. Import the `ibm-cos-java-sdk` and specify the SDK Maven modules that your project needs in the dependencies:
@@ -39,8 +39,13 @@ The recommended way to use the IBM COS SDK for Java in your project is to consum
 </dependencies>
 ```
 
+## Migrating from 1.x.x
+The 2.0 release of the SDK introduces a namespacing change that allows an application to make use of the original AWS library to connect to AWS resources within the same application or environment. To migrate from 1.x to 2.0 some changes are necessary:
 
-## Example code
+1. Update using Maven by changing all  `ibm-cos-java-sdk` dependency version tags to  `2.0.0` in the pom.xml. Verify that there are no SDK module dependencies in the pom.xml with a version earlier than  `2.0.0`.
+2. Update any import declarations from `amazonaws` to `ibm.cloud.objectstorage`.
+
+## Example code (Version 2.x)
 
 ```java
 package com.cos;
@@ -48,19 +53,19 @@ package com.cos;
 import java.sql.Timestamp;
 import java.util.List;
 
-import com.amazonaws.ClientConfiguration;
-import com.amazonaws.SDKGlobalConfiguration;
-import com.amazonaws.auth.AWSCredentials;
-import com.amazonaws.auth.AWSStaticCredentialsProvider;
-import com.amazonaws.auth.BasicAWSCredentials;
-import com.amazonaws.client.builder.AwsClientBuilder.EndpointConfiguration;
-import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.AmazonS3ClientBuilder;
-import com.amazonaws.services.s3.model.Bucket;
-import com.amazonaws.services.s3.model.ListObjectsRequest;
-import com.amazonaws.services.s3.model.ObjectListing;
-import com.amazonaws.services.s3.model.S3ObjectSummary;
-import com.ibm.oauth.BasicIBMOAuthCredentials;
+import com.ibm.cloud.objectstorage.ClientConfiguration;
+import com.ibm.cloud.objectstorage.SDKGlobalConfiguration;
+import com.ibm.cloud.objectstorage.auth.AWSCredentials;
+import com.ibm.cloud.objectstorage.auth.AWSStaticCredentialsProvider;
+import com.ibm.cloud.objectstorage.auth.BasicAWSCredentials;
+import com.ibm.cloud.objectstorage.client.builder.AwsClientBuilder.EndpointConfiguration;
+import com.ibm.cloud.objectstorage.services.s3.AmazonS3;
+import com.ibm.cloud.objectstorage.services.s3.AmazonS3ClientBuilder;
+import com.ibm.cloud.objectstorage.services.s3.model.Bucket;
+import com.ibm.cloud.objectstorage.services.s3.model.ListObjectsRequest;
+import com.ibm.cloud.objectstorage.services.s3.model.ObjectListing;
+import com.ibm.cloud.objectstorage.services.s3.model.S3ObjectSummary;
+import com.ibm.cloud.objectstorage.oauth.BasicIBMOAuthCredentials;
 
 public class CosExample
 {

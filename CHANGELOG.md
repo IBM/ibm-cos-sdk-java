@@ -18,6 +18,11 @@
 * Added Key Protect support
 
 ## 1.1.1
-### Feature
+### Features
 * IAM Resiliency support
 * Documentation updates
+
+## 2.0.0
+### Features
+* Namespace changes
+

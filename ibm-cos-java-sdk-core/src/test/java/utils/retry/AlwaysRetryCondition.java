@@ -14,9 +14,9 @@
  */
 package utils.retry;
 
-import com.amazonaws.AmazonClientException;
-import com.amazonaws.AmazonWebServiceRequest;
-import com.amazonaws.retry.RetryPolicy.RetryCondition;
+import com.ibm.cloud.objectstorage.AmazonClientException;
+import com.ibm.cloud.objectstorage.AmazonWebServiceRequest;
+import com.ibm.cloud.objectstorage.retry.RetryPolicy.RetryCondition;
 
 /**
  * {@link RetryCondition} used in tests to always retry regardless of exception

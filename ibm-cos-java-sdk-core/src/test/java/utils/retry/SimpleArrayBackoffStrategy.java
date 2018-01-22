@@ -14,9 +14,9 @@
  */
 package utils.retry;
 
-import com.amazonaws.AmazonClientException;
-import com.amazonaws.AmazonWebServiceRequest;
-import com.amazonaws.retry.RetryPolicy.BackoffStrategy;
+import com.ibm.cloud.objectstorage.AmazonClientException;
+import com.ibm.cloud.objectstorage.AmazonWebServiceRequest;
+import com.ibm.cloud.objectstorage.retry.RetryPolicy.BackoffStrategy;
 
 /**
  * Backoff strategy used in tests to pull backoff value from a backing array. Number of retries is

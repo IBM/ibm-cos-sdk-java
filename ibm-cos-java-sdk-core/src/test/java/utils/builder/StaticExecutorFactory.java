@@ -14,9 +14,9 @@
  */
 package utils.builder;
 
-import com.amazonaws.client.builder.ExecutorFactory;
-
 import java.util.concurrent.ExecutorService;
+
+import com.ibm.cloud.objectstorage.client.builder.ExecutorFactory;
 
 /**
  * Mock {@link ExecutorFactory} that just returns the same executor every time.

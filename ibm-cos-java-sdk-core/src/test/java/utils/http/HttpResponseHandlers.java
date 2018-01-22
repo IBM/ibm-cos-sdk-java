@@ -15,10 +15,10 @@
 
 package utils.http;
 
-import com.amazonaws.AmazonWebServiceResponse;
-import com.amazonaws.http.HttpResponse;
-import com.amazonaws.http.HttpResponseHandler;
-import com.amazonaws.util.IOUtils;
+import com.ibm.cloud.objectstorage.AmazonWebServiceResponse;
+import com.ibm.cloud.objectstorage.http.HttpResponse;
+import com.ibm.cloud.objectstorage.http.HttpResponseHandler;
+import com.ibm.cloud.objectstorage.util.IOUtils;
 
 public class HttpResponseHandlers {
 

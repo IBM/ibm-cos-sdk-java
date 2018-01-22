@@ -22,14 +22,14 @@ import java.net.URI;
 
 import org.junit.Rule;
 
-import com.amazonaws.AmazonServiceException;
-import com.amazonaws.DefaultRequest;
-import com.amazonaws.Request;
-import com.amazonaws.http.HttpMethodName;
-import com.amazonaws.http.HttpResponse;
-import com.amazonaws.http.HttpResponseHandler;
-import com.amazonaws.http.JsonErrorResponseHandler;
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
+import com.ibm.cloud.objectstorage.AmazonServiceException;
+import com.ibm.cloud.objectstorage.DefaultRequest;
+import com.ibm.cloud.objectstorage.Request;
+import com.ibm.cloud.objectstorage.http.HttpMethodName;
+import com.ibm.cloud.objectstorage.http.HttpResponse;
+import com.ibm.cloud.objectstorage.http.HttpResponseHandler;
+import com.ibm.cloud.objectstorage.http.JsonErrorResponseHandler;
 
 /**
  * Base class for tests that use a WireMock server
