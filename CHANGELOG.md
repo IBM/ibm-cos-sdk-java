@@ -21,3 +21,9 @@
 ### Feature
 * IAM Resiliency support
 * Documentation updates
+
+## 1.1.2
+### Feature
+* Bug fixes
+* Documentation updates
+

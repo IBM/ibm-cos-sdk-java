@@ -43,6 +43,7 @@ The recommended way to use the IBM COS SDK for Java in your project is to consum
 ## Example code
 
 ```java
+
 package com.cos;
 
 import java.sql.Timestamp;
@@ -65,7 +66,7 @@ import com.ibm.oauth.BasicIBMOAuthCredentials;
 public class CosExample
 {
 
-    private static AmazonS3 _s3Client;
+    private static AmazonS3 _cos;
 
     /**
      * @param args
@@ -82,9 +83,9 @@ public class CosExample
         String location = "us";
 
         System.out.println("Current time: " + new Timestamp(System.currentTimeMillis()).toString());
-        _s3Client = createClient(api_key, service_instance_id, endpoint_url, location);
-        listObjects(bucketName, _s3Client);
-        listBuckets(_s3Client);
+        _cos = createClient(api_key, service_instance_id, endpoint_url, location);
+        listObjects(bucketName, _cos);
+        listBuckets(_cos);
     }
 
     /**
@@ -111,20 +112,20 @@ public class CosExample
         ClientConfiguration clientConfig = new ClientConfiguration().withRequestTimeout(5000);
         clientConfig.setUseTcpKeepAlive(true);
 
-        AmazonS3 s3Client = AmazonS3ClientBuilder.standard().withCredentials(new AWSStaticCredentialsProvider(credentials))
+        AmazonS3 cos = AmazonS3ClientBuilder.standard().withCredentials(new AWSStaticCredentialsProvider(credentials))
                 .withEndpointConfiguration(new EndpointConfiguration(endpoint_url, location)).withPathStyleAccessEnabled(true)
                 .withClientConfiguration(clientConfig).build();
-        return s3Client;
+        return cos;
     }
 
     /**
      * @param bucketName
-     * @param s3Client
+     * @param cos
      */
-    public static void listObjects(String bucketName, AmazonS3 s3Client)
+    public static void listObjects(String bucketName, AmazonS3 cos)
     {
         System.out.println("Listing objects in bucket " + bucketName);
-        ObjectListing objectListing = s3Client.listObjects(new ListObjectsRequest().withBucketName(bucketName));
+        ObjectListing objectListing = cos.listObjects(new ListObjectsRequest().withBucketName(bucketName));
         for (S3ObjectSummary objectSummary : objectListing.getObjectSummaries()) {
             System.out.println(" - " + objectSummary.getKey() + "  " + "(size = " + objectSummary.getSize() + ")");
         }
@@ -132,12 +133,12 @@ public class CosExample
     }
 
     /**
-     * @param s3Client
+     * @param cos
      */
-    public static void listBuckets(AmazonS3 s3Client)
+    public static void listBuckets(AmazonS3 cos)
     {
         System.out.println("Listing buckets");
-        final List<Bucket> bucketList = _s3Client.listBuckets();
+        final List<Bucket> bucketList = cos.listBuckets();
         for (final Bucket bucket : bucketList) {
             System.out.println(bucket.getName());
         }
