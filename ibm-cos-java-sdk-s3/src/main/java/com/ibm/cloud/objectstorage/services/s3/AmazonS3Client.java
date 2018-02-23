@@ -907,17 +907,7 @@ public class AmazonS3Client extends AmazonWebServiceClient implements AmazonS3 {
 
         Request<CreateBucketRequest> request = createRequest(bucketName, null, createBucketRequest, HttpMethodName.PUT, requestEndpoint);
         
-        //Add IBM Service Instance Id & Encryption to headers
-    	if ((null != this.awsCredentialsProvider ) && (this.awsCredentialsProvider.getCredentials() instanceof IBMOAuthCredentials)) {
-    		IBMOAuthCredentials oAuthCreds = (IBMOAuthCredentials)this.awsCredentialsProvider.getCredentials();
-    		if (oAuthCreds.getServiceInstanceId() != null) {
-            	request.addHeader(Headers.IBM_SERVICE_INSTANCE_ID, oAuthCreds.getServiceInstanceId());
-            	if (null != createBucketRequest.getEncryptionType()) {
-	            	request.addHeader(Headers.IBM_SSE_KP_ENCRYPTION_ALGORITHM, createBucketRequest.getEncryptionType().getKmsEncryptionAlgorithm());
-	            	request.addHeader(Headers.IBM_SSE_KP_CUSTOMER_ROOT_KEY_CRN, createBucketRequest.getEncryptionType().getIBMSSEKMSCustomerRootKeyCrn());
-            	}
-            }
-    	}
+        request = addIAMHeaders(request, createBucketRequest);
         
         if (createBucketRequest.getAccessControlList() != null) {
             addAclHeaders(request, createBucketRequest.getAccessControlList());
@@ -2275,6 +2265,14 @@ public class AmazonS3Client extends AmazonWebServiceClient implements AmazonS3 {
         rejectNull(req,
             "The request parameter must be specified when generating a pre-signed URL");
         req.rejectIllegalArguments();
+
+        //Check if credentialProvider is instance of IBMOAuthCredentials
+        if (this.awsCredentialsProvider.getCredentials() instanceof IBMOAuthCredentials) {
+        	IBMOAuthCredentials creds = (IBMOAuthCredentials) this.awsCredentialsProvider.getCredentials();
+        	if (creds.getApiKey() != null || creds.getTokenManager() != null) {
+        		throw new AmazonS3Exception("generatePresignedUrl() is not supported with IAM credentials");
+        	}
+        }
 
         final String bucketName = req.getBucketName();
         final String key = req.getKey();
@@ -3657,14 +3655,14 @@ public class AmazonS3Client extends AmazonWebServiceClient implements AmazonS3 {
             }
             throw ase;
         } catch (OAuthServiceException ose) {
-    		/**
-    		 * Wrap OAuthServiceException as AmazonS3Exception and re-throw for backwards compatability.
-    		 */
-        	AmazonS3Exception ase = new AmazonS3Exception(ose.getErrorMessage());
-        	ase.setStatusCode(ose.getStatusCode());
-        	ase.setServiceName("IAM");
-        	ase.setStackTrace(ose.getStackTrace());
-        	throw ase;
+        	 /**
+        	  * Wrap OAuthServiceException as AmazonS3Exception and re-throw for backwards compatability.
+        	  */
+        	 AmazonS3Exception ase = new AmazonS3Exception(ose.getErrorMessage());
+        	 ase.setStatusCode(ose.getStatusCode());
+        	 ase.setServiceName("IAM");
+        	 ase.setStackTrace(ose.getStackTrace());
+        	 throw ase; 	        
         } finally {
             endClientExecution(awsRequestMetrics, request, response);
         }
@@ -4042,7 +4040,7 @@ public class AmazonS3Client extends AmazonWebServiceClient implements AmazonS3 {
             }
         }
     }
-    
+    	
     /**  
      * Add IAM specific headers based on the credentials set & any optional  
      * parameters added to the CreateBucketRequest object  
@@ -4056,14 +4054,22 @@ public class AmazonS3Client extends AmazonWebServiceClient implements AmazonS3 {
     	if ((null != this.awsCredentialsProvider ) && (this.awsCredentialsProvider.getCredentials() instanceof IBMOAuthCredentials)) {  
     		if (null != createBucketRequest.getServiceInstanceId()) {  
     			request.addHeader(Headers.IBM_SERVICE_INSTANCE_ID, createBucketRequest.getServiceInstanceId());  
+            	if (null != createBucketRequest.getEncryptionType()) {
+	            	request.addHeader(Headers.IBM_SSE_KP_ENCRYPTION_ALGORITHM, createBucketRequest.getEncryptionType().getKmsEncryptionAlgorithm());
+	            	request.addHeader(Headers.IBM_SSE_KP_CUSTOMER_ROOT_KEY_CRN, createBucketRequest.getEncryptionType().getIBMSSEKMSCustomerRootKeyCrn());
+            	}
     		} else {  
 	    		IBMOAuthCredentials oAuthCreds = (IBMOAuthCredentials)this.awsCredentialsProvider.getCredentials();  
 	    		if (oAuthCreds.getServiceInstanceId() != null) {  
-	            	request.addHeader(Headers.IBM_SERVICE_INSTANCE_ID, oAuthCreds.getServiceInstanceId());	  
+	            	request.addHeader(Headers.IBM_SERVICE_INSTANCE_ID, oAuthCreds.getServiceInstanceId());	
+	            	if (null != createBucketRequest.getEncryptionType()) {
+		            	request.addHeader(Headers.IBM_SSE_KP_ENCRYPTION_ALGORITHM, createBucketRequest.getEncryptionType().getKmsEncryptionAlgorithm());
+		            	request.addHeader(Headers.IBM_SSE_KP_CUSTOMER_ROOT_KEY_CRN, createBucketRequest.getEncryptionType().getIBMSSEKMSCustomerRootKeyCrn());
+	            	}  
 	    		}  
     		}  
-   	}  
+    	}  
     	  
     	return request;  
-    }
+    }  
 }

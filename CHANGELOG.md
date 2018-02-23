@@ -26,3 +26,8 @@
 ### Features
 * Namespace changes
 
+## 2.0.1
+### Features
+* Bug fixes
+* Documentation updates
+
