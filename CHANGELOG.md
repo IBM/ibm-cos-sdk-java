@@ -27,3 +27,7 @@
 * Bug fixes
 * Documentation updates
 
+## 1.1.3
+### Feature
+* Documentation updates
+
