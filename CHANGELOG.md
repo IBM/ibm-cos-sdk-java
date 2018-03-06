@@ -31,3 +31,7 @@
 * Bug fixes
 * Documentation updates
 
+## 2.0.2
+### Features
+* Documentation updates
+
