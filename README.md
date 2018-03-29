@@ -39,6 +39,30 @@ The recommended way to use the IBM COS SDK for Java in your project is to consum
 </dependencies>
 ```
 
+## SDK dependencies
+The below is a list of dependencies & their versions used within the SDK. If a client project has a different version of any of these libraries within its classpath it may have an adverse effect at compilation or runtime. 
+
+ * jackson - 2.6.6
+ * ehcache - 2.10.2
+ * slf4j - 1.7.7
+ * asynchttp - 4.1.3
+ * ion java- 1.0.2
+ * junit - 4.12
+ * easymock - 3.2
+ * commons logging - 1.1.3
+ * jodatime - 2.8.1
+ * wiremock - 1.55
+ * log4j - 1.2.17
+ * hamcrest - 1.3
+ * commons io - 2.4
+ * mockito - 1.10.19
+ * equalsverifier - 1.7.5
+ * httpcomponents httpclient - 4.5.2
+ * cucumber info cukes - 1.2.4
+ * cucumber guice - 4.0
+ * unitils - 3.3
+
+
 ## Deprecation Notice
 
 Deprecation Notice for IBM Cloud Object Storage Java and Python SDK Versions 1.x
@@ -62,6 +86,7 @@ The 2.0 release of the SDK introduces a namespacing change that allows an applic
 
 1. Update using Maven by changing all  `ibm-cos-java-sdk` dependency version tags to  `2.0.0` in the pom.xml. Verify that there are no SDK module dependencies in the pom.xml with a version earlier than  `2.0.0`.
 2. Update any import declarations from `amazonaws` to `ibm.cloud.objectstorage`.
+
 
 ## Example code
 
@@ -178,6 +203,9 @@ Once you check out the code from GitHub, you can build it using Maven:
 ```sh
 mvn clean install
 ```
+
+## Using a Service Credential (New)
+From Release 1.2.0 you can source credentials directly from a [Service Credential](https://console.bluemix.net/docs/services/cloud-object-storage/iam/service-credentials.html) JSON document generated in the IBM Cloud console saved to `~/.bluemix/cos_credentials`. The SDK will automatically load these providing you have not explicitly set other credentials during client creation. If the Service Credential contain [HMAC keys](https://console.bluemix.net/docs/services/cloud-object-storage/hmac/credentials.html) the client will use those and authenticate using a signature, otherwise the client will use the provided API key to authenticate using bearer tokens.
 
 ## Getting help
 Feel free to use GitHub issues for tracking bugs and feature requests, but for help please use one of the following resources:

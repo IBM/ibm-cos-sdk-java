@@ -16,6 +16,7 @@ package com.amazonaws.profile.path;
 
 import com.amazonaws.SdkClientException;
 import com.amazonaws.annotation.SdkInternalApi;
+import com.amazonaws.profile.path.AwsProfileFileLocationProvider;
 
 import java.io.File;
 
@@ -30,6 +31,13 @@ public abstract class AwsDirectoryBasePathProvider implements AwsProfileFileLoca
      */
     protected final File getAwsDirectory() {
         return new File(getHomeDirectory(), ".aws");
+    }
+    
+    /**
+     * @return File of ~/.bluemix directory.
+     */
+    protected final File getIbmDirectory() {
+        return new File(getHomeDirectory(), ".bluemix");
     }
 
     private String getHomeDirectory() {

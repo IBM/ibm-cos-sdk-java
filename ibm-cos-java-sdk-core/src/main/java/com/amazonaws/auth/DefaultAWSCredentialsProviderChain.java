@@ -15,6 +15,12 @@
 package com.amazonaws.auth;
 
 import com.amazonaws.auth.profile.ProfileCredentialsProvider;
+import com.amazonaws.auth.AWSCredentialsProviderChain;
+import com.amazonaws.auth.DefaultAWSCredentialsProviderChain;
+import com.amazonaws.auth.EC2ContainerCredentialsProviderWrapper;
+import com.amazonaws.auth.EnvironmentVariableCredentialsProvider;
+import com.amazonaws.auth.SystemPropertiesCredentialsProvider;
+import com.amazonaws.auth.json.JsonCredentialsProvider;
 
 /**
  * AWS credentials provider chain that looks for credentials in this order:
@@ -25,6 +31,7 @@ import com.amazonaws.auth.profile.ProfileCredentialsProvider;
  *      or <code>AWS_ACCESS_KEY</code> and <code>AWS_SECRET_KEY</code> (only recognized by Java SDK)
  *   </li>
  *   <li>Java System Properties - aws.accessKeyId and aws.secretKey</li>
+ *   <li>JSON credential file at the default location (~/.bluemix/cos_credentials)</li>
  *   <li>Credential profiles file at the default location (~/.aws/credentials) shared by all AWS SDKs and the AWS CLI</li>
  *   <li>Credentials delivered through the Amazon EC2 container service if AWS_CONTAINER_CREDENTIALS_RELATIVE_URI" environment variable is set
  *   and security manager has permission to access the variable,</li>
@@ -33,6 +40,7 @@ import com.amazonaws.auth.profile.ProfileCredentialsProvider;
  *
  * @see EnvironmentVariableCredentialsProvider
  * @see SystemPropertiesCredentialsProvider
+ * @see JsonCredentialsProvider
  * @see ProfileCredentialsProvider
  * @see EC2ContainerCredentialsProviderWrapper
  */
@@ -44,6 +52,7 @@ public class DefaultAWSCredentialsProviderChain extends AWSCredentialsProviderCh
     public DefaultAWSCredentialsProviderChain() {
         super(new EnvironmentVariableCredentialsProvider(),
               new SystemPropertiesCredentialsProvider(),
+              new JsonCredentialsProvider(),
               new ProfileCredentialsProvider(),
               new EC2ContainerCredentialsProviderWrapper());
     }

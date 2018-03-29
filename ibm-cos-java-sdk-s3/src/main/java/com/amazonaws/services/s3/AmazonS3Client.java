@@ -348,6 +348,7 @@ public class AmazonS3Client extends AmazonWebServiceClient implements AmazonS3 {
      * <ul>
      * <li>Environment Variables - AWS_ACCESS_KEY_ID and AWS_SECRET_KEY</li>
      * <li>Java System Properties - aws.accessKeyId and aws.secretKey</li>
+     * <li>Credential json file at the default location (~/.bluemix/cos_credentials)</li>
      * <li>Credential profiles file at the default location (~/.aws/credentials) shared by all AWS SDKs and the AWS CLI</li>
      * <li>Instance Profile Credentials - delivered through the Amazon EC2
      * metadata service</li>

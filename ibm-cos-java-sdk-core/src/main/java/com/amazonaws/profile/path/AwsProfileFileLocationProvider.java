@@ -20,6 +20,10 @@ import com.amazonaws.profile.path.config.ConfigEnvVarOverrideLocationProvider;
 import com.amazonaws.profile.path.cred.CredentialsDefaultLocationProvider;
 import com.amazonaws.profile.path.cred.CredentialsEnvVarOverrideLocationProvider;
 import com.amazonaws.profile.path.cred.CredentialsLegacyConfigLocationProvider;
+import com.amazonaws.profile.path.cred.IBMJsonCredentialsDefaultLocationProvider;
+import com.amazonaws.profile.path.cred.IBMJsonCredentialsEnvVarOverrideLocationProvider;
+import com.amazonaws.profile.path.AwsProfileFileLocationProvider;
+import com.amazonaws.profile.path.AwsProfileFileLocationProviderChain;
 
 import java.io.File;
 
@@ -46,6 +50,13 @@ public interface AwsProfileFileLocationProvider {
     AwsProfileFileLocationProvider DEFAULT_CONFIG_LOCATION_PROVIDER = new AwsProfileFileLocationProviderChain(
             new ConfigEnvVarOverrideLocationProvider(), new SharedConfigDefaultLocationProvider());
 
+    /**
+     * Location provider for the shared IBM credentials file. Checks the environment variable override
+     * first, then checks the default location (~/.bluemix/cos_credentials).
+     */
+    AwsProfileFileLocationProvider IBM_CREDENTIALS_LOCATION_PROVIDER = new AwsProfileFileLocationProviderChain(
+            new IBMJsonCredentialsEnvVarOverrideLocationProvider(), new IBMJsonCredentialsDefaultLocationProvider());
+    
     /**
      * @return Location of file containing profile data. Null if implementation cannot provide the
      * location.

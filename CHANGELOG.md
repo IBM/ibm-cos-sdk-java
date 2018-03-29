@@ -31,3 +31,8 @@
 ### Feature
 * Documentation updates
 
+## 1.2.0
+### Feature
+* Documentation updates
+* JSON Cut + Paste
+
