@@ -14,6 +14,7 @@
  */
 package com.ibm.cloud.objectstorage.auth;
 
+import com.ibm.cloud.objectstorage.auth.json.JsonCredentialsProvider;
 import com.ibm.cloud.objectstorage.auth.profile.ProfileCredentialsProvider;
 
 /**
@@ -25,6 +26,7 @@ import com.ibm.cloud.objectstorage.auth.profile.ProfileCredentialsProvider;
  *      or <code>AWS_ACCESS_KEY</code> and <code>AWS_SECRET_KEY</code> (only recognized by Java SDK)
  *   </li>
  *   <li>Java System Properties - aws.accessKeyId and aws.secretKey</li>
+ *   <li>JSON credential file at the default location (~/.bluemix/cos_credentials)</li>
  *   <li>Credential profiles file at the default location (~/.aws/credentials) shared by all AWS SDKs and the AWS CLI</li>
  *   <li>Credentials delivered through the Amazon EC2 container service if AWS_CONTAINER_CREDENTIALS_RELATIVE_URI" environment variable is set
  *   and security manager has permission to access the variable,</li>
@@ -33,6 +35,7 @@ import com.ibm.cloud.objectstorage.auth.profile.ProfileCredentialsProvider;
  *
  * @see EnvironmentVariableCredentialsProvider
  * @see SystemPropertiesCredentialsProvider
+ * @see JsonCredentialsProvider
  * @see ProfileCredentialsProvider
  * @see EC2ContainerCredentialsProviderWrapper
  */
@@ -44,6 +47,7 @@ public class DefaultAWSCredentialsProviderChain extends AWSCredentialsProviderCh
     public DefaultAWSCredentialsProviderChain() {
         super(new EnvironmentVariableCredentialsProvider(),
               new SystemPropertiesCredentialsProvider(),
+              new JsonCredentialsProvider(),
               new ProfileCredentialsProvider(),
               new EC2ContainerCredentialsProviderWrapper());
     }

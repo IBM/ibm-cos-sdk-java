@@ -4,7 +4,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.ibm.cos</groupId>
   <artifactId>ibm-cos-java-sdk-pom</artifactId>
-  <version>2.0.3-SNAPSHOT</version>
+  <version>2.1.0</version>
   <packaging>pom</packaging>
   <name>IBM COS SDK for Java</name>
   <description>The IBM COS Web Services SDK for Java provides Java APIs
@@ -61,14 +61,6 @@
       <mockito.all.version>1.10.19</mockito.all.version>
       <equalsverifier.version>1.7.5</equalsverifier.version>
       <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-      <!-- These properties are used by SWF for it's dependencies and also in the OSGI build to
-        generate the aggregate ZIP artifact -->
-      <spring.version>3.0.7.RELEASE</spring.version>
-      <freemarker.version>2.3.9</freemarker.version>
-      <aspectj.version>1.8.2</aspectj.version>
-      <!-- This property is used by SES for it's optional dependency and also in the OSGI build to generate
-        the aggregate ZIP artifact -->
-      <javax.mail.version>1.4.6</javax.mail.version>
       <jre.version>1.6</jre.version>
       <httpcomponents.httpclient.version>4.5.2</httpcomponents.httpclient.version>
       <!-- These properties are used by cucumber tests related code -->

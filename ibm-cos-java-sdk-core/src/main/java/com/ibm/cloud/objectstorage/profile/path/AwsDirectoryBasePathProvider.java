@@ -31,6 +31,13 @@ public abstract class AwsDirectoryBasePathProvider implements AwsProfileFileLoca
     protected final File getAwsDirectory() {
         return new File(getHomeDirectory(), ".aws");
     }
+    
+    /**
+     * @return File of ~/.bluemix directory.
+     */
+    protected final File getIbmDirectory() {
+        return new File(getHomeDirectory(), ".bluemix");
+    }
 
     private String getHomeDirectory() {
         String userHome = System.getProperty("user.home");
