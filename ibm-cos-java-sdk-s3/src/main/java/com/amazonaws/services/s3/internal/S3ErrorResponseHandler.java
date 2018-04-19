@@ -102,6 +102,8 @@ public class S3ErrorResponseHandler implements
             reader = xmlInputFactory
                     .createXMLStreamReader(new ByteArrayInputStream(content
                             .getBytes(UTF8)));
+			xmlInputFactory.setProperty(XMLInputFactory.IS_COALESCING,
+        	        Boolean.TRUE);
         }
 
         try {

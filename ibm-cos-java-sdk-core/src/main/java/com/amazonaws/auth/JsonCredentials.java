@@ -97,68 +97,78 @@ public class JsonCredentials implements IBMOAuthCredentials {
 	 *             If any problems occur while reading from the input stream.
 	 */
 	public JsonCredentials(InputStream stream) throws IOException {
-		
+
 		try {
 			JsonParser parser = jsonFactory.createParser(stream);
-            parse(parser);
-            parser.close();
-        } finally {
-            try {stream.close();} catch (Exception e) {}
-        }
+			parse(parser);
+			parser.close();
+		} finally {
+			try {
+				stream.close();
+			} catch (Exception e) {
+			}
+		}
 
-		if(!isNullOrEmpty(apiKey) && !isNullOrEmpty(serviceInstanceId))
+		if (!isNullOrEmpty(apiKey) && !isNullOrEmpty(serviceInstanceId))
 			iamEnabled = true;
-		if(!isNullOrEmpty(accessKey) && !isNullOrEmpty(secretAccessKey))
+		if (!isNullOrEmpty(accessKey) && !isNullOrEmpty(secretAccessKey))
 			hmacEnabled = true;
-		
+
 		if (!iamEnabled && !hmacEnabled) {
 			throw new IllegalArgumentException(
 					"The specified json doesn't contain the expected properties 'apikey', 'resource_instance_id', 'access_key_id' and 'secret_access_key'.");
 		}
-		
+
 		// HMAC takes precedence over IAM
-		if(hmacEnabled) {
+		if (hmacEnabled) {
 			this.apiKey = null;
 			this.serviceInstanceId = null;
+			this.iamEnabled = false;
+		} else {
+			this.accessKey = null;
+			this.secretAccessKey = null;
+			this.iamEnabled = true;
 		}
 
 	}
 
 	private void parse(JsonParser parser) throws JsonParseException, IOException {
 
-			while ( continueRead() && 
-					parser.nextToken() != JsonToken.END_OBJECT) {
-				String token = parser.getCurrentName();
+		JsonToken jt = parser.nextToken();
+		while (continueRead() && jt != null && jt != JsonToken.END_OBJECT) {
+			String token = parser.getCurrentName();
 
-				if(JsonKeyConstants.IBM_HMAC_KEYS.equals(token)) {
-					
-					while (parser.nextToken() != JsonToken.END_OBJECT) {
-						token = parser.getCurrentName();
-						
-						if (JsonKeyConstants.IBM_ACCESS_KEY_ID.equals(token)) {
-							parser.nextToken();
-							accessKey = parser.getText();
-						}
-	
-						if (JsonKeyConstants.IBM_SECRET_ACCESS_KEY.equals(token)) {
-							parser.nextToken();
-							secretAccessKey = parser.getText();
-						}
+			if (JsonKeyConstants.IBM_HMAC_KEYS.equals(token)) {
+
+				while (parser.nextToken() != JsonToken.END_OBJECT) {
+					token = parser.getCurrentName();
+
+					if (JsonKeyConstants.IBM_ACCESS_KEY_ID.equals(token)) {
+						parser.nextToken();
+						accessKey = parser.getText();
 					}
-					
-					parser.nextToken();
+
+					if (JsonKeyConstants.IBM_SECRET_ACCESS_KEY.equals(token)) {
+						parser.nextToken();
+						secretAccessKey = parser.getText();
+					}
 				}
 
-				if (JsonKeyConstants.IBM_API_KEY.equals(token)) {
-					parser.nextToken();
-					apiKey = parser.getText();
-				}
-
-				if (JsonKeyConstants.IBM_RESOURCE_INSTANCE_ID.equals(token)) {
-					parser.nextToken();
-					serviceInstanceId = parser.getText();
-				}
+				parser.nextToken();
 			}
+
+			if (JsonKeyConstants.IBM_API_KEY.equals(token)) {
+				parser.nextToken();
+				apiKey = parser.getText();
+			}
+
+			if (JsonKeyConstants.IBM_RESOURCE_INSTANCE_ID.equals(token)) {
+				parser.nextToken();
+				serviceInstanceId = parser.getText();
+			}
+
+			jt = parser.nextToken();
+		}
 	}
 
 	private boolean isNullOrEmpty(String attr) {
@@ -167,17 +177,15 @@ public class JsonCredentials implements IBMOAuthCredentials {
 		else
 			return false;
 	}
-	
-	private boolean continueRead( ) {
-		if(isNullOrEmpty(this.accessKey) ||
-				isNullOrEmpty(secretAccessKey) ||
-				isNullOrEmpty(apiKey) ||
-				isNullOrEmpty(serviceInstanceId))
+
+	private boolean continueRead() {
+		if (isNullOrEmpty(this.accessKey) || isNullOrEmpty(secretAccessKey) || isNullOrEmpty(apiKey)
+				|| isNullOrEmpty(serviceInstanceId))
 			return true;
 		else
 			return false;
 	}
-	
+
 	@Override
 	public String getAWSAccessKeyId() {
 		return accessKey;
@@ -202,7 +210,6 @@ public class JsonCredentials implements IBMOAuthCredentials {
 	public TokenManager getTokenManager() {
 		return tokenManager;
 	}
-	
 
 	public boolean isHmacEnabled() {
 		return hmacEnabled;

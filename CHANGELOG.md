@@ -36,3 +36,6 @@
 * Documentation updates
 * JSON Cut + Paste
 
+## 1.2.1
+### Feature
+* Bug fixes
