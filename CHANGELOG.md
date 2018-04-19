@@ -40,3 +40,7 @@
 * Documentation updates
 * JSON Cut + Paste
 
+## 2.1.0
+### Features
+* Bug fixes
+

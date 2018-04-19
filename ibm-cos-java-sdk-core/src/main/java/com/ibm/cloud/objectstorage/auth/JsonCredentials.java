@@ -121,46 +121,51 @@ public class JsonCredentials implements IBMOAuthCredentials {
 			this.apiKey = null;
 			this.serviceInstanceId = null;
 			this.iamEnabled = false;
+		} else {
+			this.accessKey = null;
+			this.secretAccessKey = null;
+			this.iamEnabled = true;
 		}
 
 	}
 
 	private void parse(JsonParser parser) throws JsonParseException, IOException {
 
-			while ( continueRead() &&
-					parser.nextToken() != null &&
-					parser.nextToken() != JsonToken.END_OBJECT) {
-				String token = parser.getCurrentName();
+		JsonToken jt = parser.nextToken();
+		while (continueRead() && jt != null && jt != JsonToken.END_OBJECT) {
+			String token = parser.getCurrentName();
 
-				if(JsonKeyConstants.IBM_HMAC_KEYS.equals(token)) {
-					
-					while (parser.nextToken() != JsonToken.END_OBJECT) {
-						token = parser.getCurrentName();
-						
-						if (JsonKeyConstants.IBM_ACCESS_KEY_ID.equals(token)) {
-							parser.nextToken();
-							accessKey = parser.getText();
-						}
-	
-						if (JsonKeyConstants.IBM_SECRET_ACCESS_KEY.equals(token)) {
-							parser.nextToken();
-							secretAccessKey = parser.getText();
-						}
+			if (JsonKeyConstants.IBM_HMAC_KEYS.equals(token)) {
+
+				while (parser.nextToken() != JsonToken.END_OBJECT) {
+					token = parser.getCurrentName();
+
+					if (JsonKeyConstants.IBM_ACCESS_KEY_ID.equals(token)) {
+						parser.nextToken();
+						accessKey = parser.getText();
 					}
-					
-					parser.nextToken();
+
+					if (JsonKeyConstants.IBM_SECRET_ACCESS_KEY.equals(token)) {
+						parser.nextToken();
+						secretAccessKey = parser.getText();
+					}
 				}
 
-				if (JsonKeyConstants.IBM_API_KEY.equals(token)) {
-					parser.nextToken();
-					apiKey = parser.getText();
-				}
-
-				if (JsonKeyConstants.IBM_RESOURCE_INSTANCE_ID.equals(token)) {
-					parser.nextToken();
-					serviceInstanceId = parser.getText();
-				}
+				parser.nextToken();
 			}
+
+			if (JsonKeyConstants.IBM_API_KEY.equals(token)) {
+				parser.nextToken();
+				apiKey = parser.getText();
+			}
+
+			if (JsonKeyConstants.IBM_RESOURCE_INSTANCE_ID.equals(token)) {
+				parser.nextToken();
+				serviceInstanceId = parser.getText();
+			}
+			
+			jt = parser.nextToken();
+		}
 	}
 
 	private boolean isNullOrEmpty(String attr) {
