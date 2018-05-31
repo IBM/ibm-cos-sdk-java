@@ -39,3 +39,8 @@
 ## 1.2.1
 ### Feature
 * Bug fixes
+
+## 1.2.2
+### Features
+* 38813: Bug fixes
+
