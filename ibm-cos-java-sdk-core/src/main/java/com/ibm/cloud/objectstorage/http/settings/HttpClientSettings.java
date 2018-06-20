@@ -176,4 +176,8 @@ public class HttpClientSettings {
     public boolean isAuthenticatedProxy() {
         return getProxyUsername() != null && getProxyPassword() != null;
     }
+
+    public boolean shouldCheckCertificates() {
+        return config.shouldCheckCertificates();
+    }
 }

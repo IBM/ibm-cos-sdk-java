@@ -123,6 +123,10 @@ public class ClientConfiguration {
 
     public static final int DEFAULT_MAX_CONSECUTIVE_RETRIES_BEFORE_THROTTLING = 100;
 
+    /**
+     * The default on if we should check ssl certificates
+     */
+    public static final boolean DEFAULT_CERT_CHECKING = true;
 
     /** A prefix to the HTTP user agent header passed with all HTTP requests.  */
     private String userAgentPrefix = DEFAULT_USER_AGENT;
@@ -320,6 +324,13 @@ public class ClientConfiguration {
     private int maxConsecutiveRetriesBeforeThrottling = DEFAULT_MAX_CONSECUTIVE_RETRIES_BEFORE_THROTTLING;
 
     /**
+     * If set to false, this will disable validation of server certificates when using the HTTPS protocol.
+     * This should ONLY be used to do quick smoke tests against endpoints which don't yet have valid certificates; it should NEVER be used in production.
+     * This property is treated as true by default (i.e. check certificates by default)
+     */
+    private boolean checkCertificates = DEFAULT_CERT_CHECKING;
+
+    /**
      * Can be used to specify custom specific Apache HTTP client configurations.
      */
     private final ApacheHttpClientConfig apacheHttpClientConfig;
@@ -368,6 +379,7 @@ public class ClientConfiguration {
         this.headers.clear();
         this.headers.putAll(other.headers);
         this.maxConsecutiveRetriesBeforeThrottling = other.maxConsecutiveRetriesBeforeThrottling;
+        this.checkCertificates = other.checkCertificates;
     }
 
     /**
@@ -2111,5 +2123,21 @@ public class ClientConfiguration {
      */
     public Map<String, String> getHeaders() {
         return Collections.unmodifiableMap(headers);
+    }
+
+
+    /**
+     * If set to false, this will disable validation of server certificates when using the HTTPS protocol.
+     * @param checkCerts
+     *              value if we should check certs or not
+     * @return The updated ClientConfiguration object.
+     */
+    public ClientConfiguration withCertificateChecking(final boolean checkCerts) {
+        this.checkCertificates = checkCerts;
+        return this;
+    }
+
+    public boolean shouldCheckCertificates() {
+        return this.checkCertificates;
     }
 }

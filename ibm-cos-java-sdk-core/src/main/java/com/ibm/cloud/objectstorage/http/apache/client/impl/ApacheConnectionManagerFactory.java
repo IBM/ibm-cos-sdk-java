@@ -64,7 +64,9 @@ public class ApacheConnectionManagerFactory implements
 
     @Override
     public HttpClientConnectionManager create(final HttpClientSettings settings) {
-        ConnectionSocketFactory sslsf = getPreferredSocketFactory(settings);
+        ConnectionSocketFactory sslsf = settings.shouldCheckCertificates()
+                ? getPreferredSocketFactory(settings)
+                : new TrustingSocketFactory();
 
         final PoolingHttpClientConnectionManager cm = new
                 PoolingHttpClientConnectionManager(
