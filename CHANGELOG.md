@@ -50,5 +50,6 @@
 
 ## 2.1.3
 ### Features
-* 39465, 38356: Bug fixes
+* 38356: null Token causes NPE
+* Bug fixes
 
