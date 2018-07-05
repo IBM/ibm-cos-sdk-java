@@ -39,30 +39,6 @@ The recommended way to use the IBM COS SDK for Java in your project is to consum
 </dependencies>
 ```
 
-## SDK dependencies
-The below is a list of dependencies & their versions used within the SDK. If a client project has a different version of any of these libraries within its classpath it may have an adverse effect at compilation or runtime. 
-
- * jackson - 2.6.6
- * ehcache - 2.10.2
- * slf4j - 1.7.7
- * asynchttp - 4.1.3
- * ion java- 1.0.2
- * junit - 4.12
- * easymock - 3.2
- * commons logging - 1.1.3
- * jodatime - 2.8.1
- * wiremock - 1.55
- * log4j - 1.2.17
- * hamcrest - 1.3
- * commons io - 2.4
- * mockito - 1.10.19
- * equalsverifier - 1.7.5
- * httpcomponents httpclient - 4.5.2
- * cucumber info cukes - 1.2.4
- * cucumber guice - 4.0
- * unitils - 3.3
-  
-
 ## Deprecation Notice
 
 Deprecation Notice for IBM Cloud Object Storage Java and Python SDK Versions 1.x

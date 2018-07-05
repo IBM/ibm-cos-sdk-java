@@ -372,6 +372,8 @@ public class DefaultTokenManager implements TokenManager {
 				}
 			}
 
+			if(null == token) throw new OAuthServiceException("Null token returned by the Token Provider");
+
 			cacheToken(token);
 		}
 	}

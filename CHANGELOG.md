@@ -48,3 +48,7 @@
 ### Features
 * 38813: Bug fixes
 
+## 2.1.3
+### Features
+* 39465, 38356: Bug fixes
+

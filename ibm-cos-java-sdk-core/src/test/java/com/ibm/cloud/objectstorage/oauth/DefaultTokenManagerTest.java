@@ -288,4 +288,17 @@ public class DefaultTokenManagerTest {
 		defaultTokenManager.getToken();
 		verify(defaultTokenManager, times(0)).submitRefreshTask();
 	}
+	
+	/**
+	 * TokenProvider to return null.
+	 * Token manager should throw an OAuthServiceException instead 
+	 * of a null pointer - CSAFE-38356.
+	 */
+	@Test(expected = OAuthServiceException.class)
+	public void shouldHandleNullTokenWithCorrectExcpetion() {
+		
+		DefaultTokenManager defaultTokenManager = new DefaultTokenManager(new TokenProviderNull());
+		
+		defaultTokenManager.getToken();
+	}
 }
