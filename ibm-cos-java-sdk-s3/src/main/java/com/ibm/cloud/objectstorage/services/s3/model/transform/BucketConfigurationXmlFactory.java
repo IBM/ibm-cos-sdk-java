@@ -21,6 +21,9 @@ import com.ibm.cloud.objectstorage.services.s3.internal.XmlWriter;
 import com.ibm.cloud.objectstorage.services.s3.model.BucketAccelerateConfiguration;
 import com.ibm.cloud.objectstorage.services.s3.model.BucketCrossOriginConfiguration;
 import com.ibm.cloud.objectstorage.services.s3.model.BucketLifecycleConfiguration;
+import com.ibm.cloud.objectstorage.services.s3.model.BucketLifecycleConfiguration.NoncurrentVersionTransition;
+import com.ibm.cloud.objectstorage.services.s3.model.BucketLifecycleConfiguration.Rule;
+import com.ibm.cloud.objectstorage.services.s3.model.BucketLifecycleConfiguration.Transition;
 import com.ibm.cloud.objectstorage.services.s3.model.BucketLoggingConfiguration;
 import com.ibm.cloud.objectstorage.services.s3.model.BucketNotificationConfiguration;
 import com.ibm.cloud.objectstorage.services.s3.model.BucketReplicationConfiguration;
@@ -28,6 +31,7 @@ import com.ibm.cloud.objectstorage.services.s3.model.BucketTaggingConfiguration;
 import com.ibm.cloud.objectstorage.services.s3.model.BucketVersioningConfiguration;
 import com.ibm.cloud.objectstorage.services.s3.model.BucketWebsiteConfiguration;
 import com.ibm.cloud.objectstorage.services.s3.model.CORSRule;
+import com.ibm.cloud.objectstorage.services.s3.model.CORSRule.AllowedMethods;
 import com.ibm.cloud.objectstorage.services.s3.model.CloudFunctionConfiguration;
 import com.ibm.cloud.objectstorage.services.s3.model.Filter;
 import com.ibm.cloud.objectstorage.services.s3.model.FilterRule;
@@ -43,10 +47,6 @@ import com.ibm.cloud.objectstorage.services.s3.model.S3KeyFilter;
 import com.ibm.cloud.objectstorage.services.s3.model.Tag;
 import com.ibm.cloud.objectstorage.services.s3.model.TagSet;
 import com.ibm.cloud.objectstorage.services.s3.model.TopicConfiguration;
-import com.ibm.cloud.objectstorage.services.s3.model.BucketLifecycleConfiguration.NoncurrentVersionTransition;
-import com.ibm.cloud.objectstorage.services.s3.model.BucketLifecycleConfiguration.Rule;
-import com.ibm.cloud.objectstorage.services.s3.model.BucketLifecycleConfiguration.Transition;
-import com.ibm.cloud.objectstorage.services.s3.model.CORSRule.AllowedMethods;
 import com.ibm.cloud.objectstorage.services.s3.model.analytics.AnalyticsAndOperator;
 import com.ibm.cloud.objectstorage.services.s3.model.analytics.AnalyticsConfiguration;
 import com.ibm.cloud.objectstorage.services.s3.model.analytics.AnalyticsExportDestination;
@@ -294,7 +294,7 @@ public class BucketConfigurationXmlFactory {
      * send to S3.
      *
      * Sample XML:
-     * <WebsiteConfiguration xmlns="http://s3.amazonaws.com/doc/2006-03-01/">
+     * <WebsiteConfiguration xmlns="http://s3.ibm.cloud.objectstorage.com/doc/2006-03-01/">
      *    <IndexDocument>
      *      <Suffix>index.html</Suffix>
      *    </IndexDocument>
@@ -424,8 +424,10 @@ public class BucketConfigurationXmlFactory {
         XmlWriter xml = new XmlWriter();
         xml.start("LifecycleConfiguration");
 
-        for (Rule rule : config.getRules()) {
-            writeRule(xml, rule);
+        if(config.getRules() != null) {
+	        for (Rule rule : config.getRules()) {
+	            writeRule(xml, rule);
+	        }
         }
 
         xml.end();
@@ -533,7 +535,7 @@ public class BucketConfigurationXmlFactory {
                 }
 
                 xml.start("StorageClass");
-                xml.value(t.getStorageClass().toString());
+                xml.value(t.getStorageClassAsString());
                 xml.end(); // <StorageClass>
                 xml.end(); // </Transition>
             }
@@ -736,7 +738,7 @@ public class BucketConfigurationXmlFactory {
      */
      /*
         <?xml version="1.0" encoding="UTF-8"?>
-        <InventoryConfiguration xmlns="http://s3.amazonaws.com/doc/2006-03-01/">
+        <InventoryConfiguration xmlns="http://s3.ibm.cloud.objectstorage.com/doc/2006-03-01/">
            <Destination>
               <S3BucketDestination>
                  <AccountId>A2OCNCIEQW9MSG</AccountId>
@@ -865,7 +867,7 @@ public class BucketConfigurationXmlFactory {
      *            The {@link com.ibm.cloud.objectstorage.services.s3.model.analytics.AnalyticsConfiguration}
      */
      /*
-      * <AnalyticsConfiguration xmlns="http://s3.amazonaws.com/doc/2006-03-01/">
+      * <AnalyticsConfiguration xmlns="http://s3.ibm.cloud.objectstorage.com/doc/2006-03-01/">
            <Id>XXX</Id>
            <Filter>
              <And>
@@ -996,7 +998,7 @@ public class BucketConfigurationXmlFactory {
      *            The {@link com.ibm.cloud.objectstorage.services.s3.model.metrics.MetricsConfiguration}.
      */
      /*
-      * <MetricsConfiguration xmlns="http://s3.amazonaws.com/doc/2006-03-01/">
+      * <MetricsConfiguration xmlns="http://s3.ibm.cloud.objectstorage.com/doc/2006-03-01/">
            <Id>metrics-id</Id>
            <Filter>
            <!-- A filter should have only one of Prefix, Tag or And-->

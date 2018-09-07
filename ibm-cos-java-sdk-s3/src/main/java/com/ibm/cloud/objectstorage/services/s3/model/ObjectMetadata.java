@@ -754,6 +754,20 @@ public class ObjectMetadata implements ServerSideEncryptionResult, S3RequesterCh
     public void setSSECustomerKeyMd5(String md5Digest) {
         metadata.put(Headers.SERVER_SIDE_ENCRYPTION_CUSTOMER_KEY_MD5, md5Digest);
     }
+    
+    /**
+     * {@inheritDoc}
+     */
+    public String getIbmTransition() {
+        return (String)metadata.get(Headers.IBM_TRANSITION);
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    public String getIbmRestoredCopyStorageClass() {
+        return (String)metadata.get(Headers.IBM_RESTORED_COPY_STORAGE_CLASS);
+    }
 
     /**
      * Returns the time this object will expire and be completely removed from

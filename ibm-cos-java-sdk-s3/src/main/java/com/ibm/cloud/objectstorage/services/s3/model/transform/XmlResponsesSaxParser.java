@@ -17,6 +17,8 @@
  */
 package com.ibm.cloud.objectstorage.services.s3.model.transform;
 
+import com.ibm.cloud.objectstorage.services.s3.model.*;
+
 import static com.ibm.cloud.objectstorage.util.StringUtils.UTF8;
 
 import java.io.BufferedReader;
@@ -31,22 +33,17 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import com.ibm.cloud.objectstorage.SdkClientException;
-import com.ibm.cloud.objectstorage.services.s3.internal.Constants;
-import com.ibm.cloud.objectstorage.services.s3.internal.DeleteObjectsResponse;
-import com.ibm.cloud.objectstorage.services.s3.internal.ObjectExpirationResult;
-import com.ibm.cloud.objectstorage.services.s3.internal.S3RequesterChargedResult;
-import com.ibm.cloud.objectstorage.services.s3.internal.S3VersionResult;
-import com.ibm.cloud.objectstorage.services.s3.internal.ServerSideEncryptionResult;
-import com.ibm.cloud.objectstorage.services.s3.internal.ServiceUtils;
-import com.ibm.cloud.objectstorage.services.s3.model.*;
-import com.ibm.cloud.objectstorage.services.s3.model.BucketLifecycleConfiguration.NoncurrentVersionTransition;
-import com.ibm.cloud.objectstorage.services.s3.model.BucketLifecycleConfiguration.Rule;
-import com.ibm.cloud.objectstorage.services.s3.model.BucketLifecycleConfiguration.Transition;
-import com.ibm.cloud.objectstorage.services.s3.model.CORSRule.AllowedMethods;
-import com.ibm.cloud.objectstorage.services.s3.model.DeleteObjectsResult.DeletedObject;
-import com.ibm.cloud.objectstorage.services.s3.model.MultiObjectDeleteException.DeleteError;
-import com.ibm.cloud.objectstorage.services.s3.model.RequestPaymentConfiguration.Payer;
+import com.ibm.cloud.objectstorage.services.s3.model.lifecycle.LifecycleAndOperator;
+import com.ibm.cloud.objectstorage.services.s3.model.lifecycle.LifecycleFilter;
+import com.ibm.cloud.objectstorage.services.s3.model.lifecycle.LifecycleFilterPredicate;
+import com.ibm.cloud.objectstorage.services.s3.model.lifecycle.LifecyclePrefixPredicate;
+import com.ibm.cloud.objectstorage.services.s3.model.lifecycle.LifecycleTagPredicate;
+import com.ibm.cloud.objectstorage.services.s3.model.metrics.MetricsAndOperator;
+import com.ibm.cloud.objectstorage.services.s3.model.metrics.MetricsConfiguration;
+import com.ibm.cloud.objectstorage.services.s3.model.metrics.MetricsFilter;
+import com.ibm.cloud.objectstorage.services.s3.model.metrics.MetricsFilterPredicate;
+import com.ibm.cloud.objectstorage.services.s3.model.metrics.MetricsPrefixPredicate;
+import com.ibm.cloud.objectstorage.services.s3.model.metrics.MetricsTagPredicate;
 import com.ibm.cloud.objectstorage.services.s3.model.analytics.AnalyticsAndOperator;
 import com.ibm.cloud.objectstorage.services.s3.model.analytics.AnalyticsConfiguration;
 import com.ibm.cloud.objectstorage.services.s3.model.analytics.AnalyticsExportDestination;
@@ -63,20 +60,6 @@ import com.ibm.cloud.objectstorage.services.s3.model.inventory.InventoryFilter;
 import com.ibm.cloud.objectstorage.services.s3.model.inventory.InventoryPrefixPredicate;
 import com.ibm.cloud.objectstorage.services.s3.model.inventory.InventoryS3BucketDestination;
 import com.ibm.cloud.objectstorage.services.s3.model.inventory.InventorySchedule;
-import com.ibm.cloud.objectstorage.services.s3.model.lifecycle.LifecycleAndOperator;
-import com.ibm.cloud.objectstorage.services.s3.model.lifecycle.LifecycleFilter;
-import com.ibm.cloud.objectstorage.services.s3.model.lifecycle.LifecycleFilterPredicate;
-import com.ibm.cloud.objectstorage.services.s3.model.lifecycle.LifecyclePrefixPredicate;
-import com.ibm.cloud.objectstorage.services.s3.model.lifecycle.LifecycleTagPredicate;
-import com.ibm.cloud.objectstorage.services.s3.model.metrics.MetricsAndOperator;
-import com.ibm.cloud.objectstorage.services.s3.model.metrics.MetricsConfiguration;
-import com.ibm.cloud.objectstorage.services.s3.model.metrics.MetricsFilter;
-import com.ibm.cloud.objectstorage.services.s3.model.metrics.MetricsFilterPredicate;
-import com.ibm.cloud.objectstorage.services.s3.model.metrics.MetricsPrefixPredicate;
-import com.ibm.cloud.objectstorage.services.s3.model.metrics.MetricsTagPredicate;
-import com.ibm.cloud.objectstorage.util.DateUtils;
-import com.ibm.cloud.objectstorage.util.SdkHttpUtils;
-import com.ibm.cloud.objectstorage.util.StringUtils;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -86,6 +69,25 @@ import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.DefaultHandler;
 import org.xml.sax.helpers.XMLReaderFactory;
+
+import com.ibm.cloud.objectstorage.SdkClientException;
+import com.ibm.cloud.objectstorage.services.s3.internal.Constants;
+import com.ibm.cloud.objectstorage.services.s3.internal.DeleteObjectsResponse;
+import com.ibm.cloud.objectstorage.services.s3.internal.ObjectExpirationResult;
+import com.ibm.cloud.objectstorage.services.s3.internal.S3RequesterChargedResult;
+import com.ibm.cloud.objectstorage.services.s3.internal.S3VersionResult;
+import com.ibm.cloud.objectstorage.services.s3.internal.ServerSideEncryptionResult;
+import com.ibm.cloud.objectstorage.services.s3.internal.ServiceUtils;
+import com.ibm.cloud.objectstorage.services.s3.model.BucketLifecycleConfiguration.NoncurrentVersionTransition;
+import com.ibm.cloud.objectstorage.services.s3.model.BucketLifecycleConfiguration.Rule;
+import com.ibm.cloud.objectstorage.services.s3.model.BucketLifecycleConfiguration.Transition;
+import com.ibm.cloud.objectstorage.services.s3.model.CORSRule.AllowedMethods;
+import com.ibm.cloud.objectstorage.services.s3.model.DeleteObjectsResult.DeletedObject;
+import com.ibm.cloud.objectstorage.services.s3.model.MultiObjectDeleteException.DeleteError;
+import com.ibm.cloud.objectstorage.services.s3.model.RequestPaymentConfiguration.Payer;
+import com.ibm.cloud.objectstorage.util.DateUtils;
+import com.ibm.cloud.objectstorage.util.SdkHttpUtils;
+import com.ibm.cloud.objectstorage.util.StringUtils;
 
 /**
  * XML Sax parser to read XML documents returned by S3 via the REST interface,
@@ -1622,8 +1624,8 @@ public class XmlResponsesSaxParser {
 
     /*
      * <?xml version="1.0" encoding="UTF-8"?>
-     * <CompleteMultipartUploadResult xmlns="http://s3.amazonaws.com/doc/2006-03-01/">
-     *     <Location>http://Example-Bucket.s3.amazonaws.com/Example-Object</Location>
+     * <CompleteMultipartUploadResult xmlns="http://s3.ibm.cloud.objectstorage.com/doc/2006-03-01/">
+     *     <Location>http://Example-Bucket.s3.ibm.cloud.objectstorage.com/Example-Object</Location>
      *     <Bucket>Example-Bucket</Bucket>
      *     <Key>Example-Object</Key>
      *     <ETag>"3858f62230ac3c915f300c664312c11f-9"</ETag>
@@ -1780,7 +1782,7 @@ public class XmlResponsesSaxParser {
 
     /*
      * <?xml version="1.0" encoding="UTF-8"?>
-     * <InitiateMultipartUploadResult xmlns="http://s3.amazonaws.com/doc/2006-03-01/">
+     * <InitiateMultipartUploadResult xmlns="http://s3.ibm.cloud.objectstorage.com/doc/2006-03-01/">
      *     <Bucket>example-bucket</Bucket>
      *     <Key>example-object</Key>
      *     <UploadId>VXBsb2FkIElEIGZvciA2aWWpbmcncyBteS1tb3ZpZS5tMnRzIHVwbG9hZA</UploadId>
@@ -1830,7 +1832,7 @@ public class XmlResponsesSaxParser {
      * Server: AmazonS3
      *
      * <?xml version="1.0" encoding="UTF-8"?>
-     * <ListMultipartUploadsResult xmlns="http://s3.amazonaws.com/doc/2006-03-01/">
+     * <ListMultipartUploadsResult xmlns="http://s3.ibm.cloud.objectstorage.com/doc/2006-03-01/">
      *     <Bucket>bucket</Bucket>
      *     <KeyMarker></KeyMarker>
      *     <Delimiter>/</Delimiter>
@@ -1984,7 +1986,7 @@ public class XmlResponsesSaxParser {
      * Server: AmazonS3
      *
      * <?xml version="1.0" encoding="UTF-8"?>
-     * <ListPartsResult xmlns="http://s3.amazonaws.com/doc/2006-03-01/">
+     * <ListPartsResult xmlns="http://s3.ibm.cloud.objectstorage.com/doc/2006-03-01/">
      *     <Bucket>example-bucket</Bucket>
      *     <Key>example-object</Key>
      *     <UploadId>XXBsb2FkIElEIGZvciBlbHZpbmcncyVcdS1tb3ZpZS5tMnRzEEEwbG9hZA</UploadId>
@@ -2780,7 +2782,7 @@ public class XmlResponsesSaxParser {
       Content-Length: ...
 
      <?xml version="1.0" encoding="UTF-8"?>
-     <MetricsConfiguration xmlns="http://s3.amazonaws.com/doc/2006-03-01/">
+     <MetricsConfiguration xmlns="http://s3.ibm.cloud.objectstorage.com/doc/2006-03-01/">
        <Id>metrics-id</Id>
        <Filter>
        <!-- A filter should have only one of Prefix, Tag or And predicate. ->
@@ -2893,7 +2895,7 @@ public class XmlResponsesSaxParser {
         Server: AmazonS3
         Content-Length: ...
 
-        <ListMetricsConfigurationsResult xmlns="http://s3.amazonaws.com/doc/2006-03-01/">
+        <ListMetricsConfigurationsResult xmlns="http://s3.ibm.cloud.objectstorage.com/doc/2006-03-01/">
           <MetricsConfiguration>
             ...
           </MetricsConfiguration>
@@ -3019,7 +3021,7 @@ public class XmlResponsesSaxParser {
          Content-Length: ...
 
         <?xml version="1.0" encoding="UTF-8"?>
-        <AnalyticsConfiguration xmlns="http://s3.amazonaws.com/doc/2006-03-01/">
+        <AnalyticsConfiguration xmlns="http://s3.ibm.cloud.objectstorage.com/doc/2006-03-01/">
            <Id>XXX</Id>
            <Filter>
              <And>
@@ -3194,7 +3196,7 @@ public class XmlResponsesSaxParser {
         Server: AmazonS3
         Content-Length: ...
 
-        <ListBucketAnalyticsConfigurationsResult xmlns="http://s3.amazonaws.com/doc/2006-03-01/">
+        <ListBucketAnalyticsConfigurationsResult xmlns="http://s3.ibm.cloud.objectstorage.com/doc/2006-03-01/">
           <AnalyticsConfiguration>
             ...
           </AnalyticsConfiguration>
@@ -3375,7 +3377,7 @@ public class XmlResponsesSaxParser {
       Connection: keep-alive
       Server: AmazonS3
 
-     <InventoryConfiguration xmlns="http://s3.amazonaws.com/doc/2006-03-01/">
+     <InventoryConfiguration xmlns="http://s3.ibm.cloud.objectstorage.com/doc/2006-03-01/">
         <Destination>
            <S3BucketDestination>
               <AccountId>A2OCNCIEQW9MSG</AccountId>
@@ -3517,7 +3519,7 @@ public class XmlResponsesSaxParser {
         Server: AmazonS3
         Content-Length: ...
 
-        <ListInventoryConfigurationsResult xmlns="http://s3.amazonaws.com/doc/2006-03-01/">
+        <ListInventoryConfigurationsResult xmlns="http://s3.ibm.cloud.objectstorage.com/doc/2006-03-01/">
           <InventoryConfiguration>
             ...
           </InventoryConfiguration>

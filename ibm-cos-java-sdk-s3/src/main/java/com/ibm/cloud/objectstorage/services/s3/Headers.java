@@ -49,6 +49,9 @@ public interface Headers {
     public static final String IBM_SSE_KP_ENABLED = "ibm-sse-kp-enabled";
     public static final String IBM_SSE_KP_CRK = "ibm-sse-kp-crk-id";
     
+    public static final String IBM_TRANSITION = "x-ibm-transition";
+    public static final String IBM_RESTORED_COPY_STORAGE_CLASS = "x-ibm-restored-copy-storage-class";
+    
     /*
      * Amazon HTTP Headers
      */

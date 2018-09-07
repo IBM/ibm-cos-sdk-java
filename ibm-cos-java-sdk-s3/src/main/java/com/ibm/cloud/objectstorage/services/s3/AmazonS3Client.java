@@ -107,6 +107,7 @@ import com.ibm.cloud.objectstorage.services.s3.model.AccessControlList;
 import com.ibm.cloud.objectstorage.services.s3.model.AmazonS3Exception;
 import com.ibm.cloud.objectstorage.services.s3.model.Bucket;
 import com.ibm.cloud.objectstorage.services.s3.model.BucketCrossOriginConfiguration;
+import com.ibm.cloud.objectstorage.services.s3.model.BucketLifecycleConfiguration;
 import com.ibm.cloud.objectstorage.services.s3.model.BucketTaggingConfiguration;
 import com.ibm.cloud.objectstorage.services.s3.model.BucketVersioningConfiguration;
 import com.ibm.cloud.objectstorage.services.s3.model.CannedAccessControlList;
@@ -118,6 +119,7 @@ import com.ibm.cloud.objectstorage.services.s3.model.CopyPartRequest;
 import com.ibm.cloud.objectstorage.services.s3.model.CopyPartResult;
 import com.ibm.cloud.objectstorage.services.s3.model.CreateBucketRequest;
 import com.ibm.cloud.objectstorage.services.s3.model.DeleteBucketCrossOriginConfigurationRequest;
+import com.ibm.cloud.objectstorage.services.s3.model.DeleteBucketLifecycleConfigurationRequest;
 import com.ibm.cloud.objectstorage.services.s3.model.DeleteBucketRequest;
 import com.ibm.cloud.objectstorage.services.s3.model.DeleteBucketTaggingConfigurationRequest;
 import com.ibm.cloud.objectstorage.services.s3.model.DeleteObjectRequest;
@@ -128,6 +130,7 @@ import com.ibm.cloud.objectstorage.services.s3.model.GeneratePresignedUrlRequest
 import com.ibm.cloud.objectstorage.services.s3.model.GenericBucketRequest;
 import com.ibm.cloud.objectstorage.services.s3.model.GetBucketAclRequest;
 import com.ibm.cloud.objectstorage.services.s3.model.GetBucketCrossOriginConfigurationRequest;
+import com.ibm.cloud.objectstorage.services.s3.model.GetBucketLifecycleConfigurationRequest;
 import com.ibm.cloud.objectstorage.services.s3.model.GetBucketTaggingConfigurationRequest;
 import com.ibm.cloud.objectstorage.services.s3.model.GetBucketVersioningConfigurationRequest;
 import com.ibm.cloud.objectstorage.services.s3.model.GetObjectAclRequest;
@@ -166,6 +169,7 @@ import com.ibm.cloud.objectstorage.services.s3.model.PutObjectResult;
 import com.ibm.cloud.objectstorage.services.s3.model.Region;
 import com.ibm.cloud.objectstorage.services.s3.model.RequestPaymentConfiguration;
 import com.ibm.cloud.objectstorage.services.s3.model.ResponseHeaderOverrides;
+import com.ibm.cloud.objectstorage.services.s3.model.RestoreObjectRequest;
 import com.ibm.cloud.objectstorage.services.s3.model.S3AccelerateUnsupported;
 import com.ibm.cloud.objectstorage.services.s3.model.S3Object;
 import com.ibm.cloud.objectstorage.services.s3.model.S3ObjectInputStream;
@@ -175,6 +179,7 @@ import com.ibm.cloud.objectstorage.services.s3.model.SSECustomerKey;
 import com.ibm.cloud.objectstorage.services.s3.model.SSECustomerKeyProvider;
 import com.ibm.cloud.objectstorage.services.s3.model.SetBucketAclRequest;
 import com.ibm.cloud.objectstorage.services.s3.model.SetBucketCrossOriginConfigurationRequest;
+import com.ibm.cloud.objectstorage.services.s3.model.SetBucketLifecycleConfigurationRequest;
 import com.ibm.cloud.objectstorage.services.s3.model.SetBucketTaggingConfigurationRequest;
 import com.ibm.cloud.objectstorage.services.s3.model.SetBucketVersioningConfigurationRequest;
 import com.ibm.cloud.objectstorage.services.s3.model.SetObjectAclRequest;
@@ -2071,6 +2076,93 @@ public class AmazonS3Client extends AmazonWebServiceClient implements AmazonS3 {
 
         return invoke(request, new Unmarshallers.BucketVersioningConfigurationUnmarshaller(), bucketName, null);
     }
+    
+    @Override
+    public BucketLifecycleConfiguration getBucketLifecycleConfiguration(String bucketName) {
+        return getBucketLifecycleConfiguration(new GetBucketLifecycleConfigurationRequest(bucketName));
+    }
+
+    @Override
+    public BucketLifecycleConfiguration getBucketLifecycleConfiguration(GetBucketLifecycleConfigurationRequest getBucketLifecycleConfigurationRequest) {
+        getBucketLifecycleConfigurationRequest = beforeClientExecution(getBucketLifecycleConfigurationRequest);
+        rejectNull(getBucketLifecycleConfigurationRequest, "The request object pamameter getBucketLifecycleConfigurationRequest must be specified.");
+        String bucketName = getBucketLifecycleConfigurationRequest.getBucketName();
+        rejectNull(bucketName, "The bucket name must be specifed when retrieving the bucket lifecycle configuration.");
+
+        Request<GetBucketLifecycleConfigurationRequest> request = createRequest(bucketName, null, getBucketLifecycleConfigurationRequest, HttpMethodName.GET);
+        request.addParameter("lifecycle", null);
+
+        try {
+            return invoke(request, new Unmarshallers.BucketLifecycleConfigurationUnmarshaller(), bucketName, null);
+        } catch (AmazonServiceException ase) {
+            switch (ase.getStatusCode()) {
+            case 404:
+                return null;
+            default:
+                throw ase;
+            }
+        }
+    }
+
+    @Override
+    public void setBucketLifecycleConfiguration(String bucketName, BucketLifecycleConfiguration bucketLifecycleConfiguration) {
+        setBucketLifecycleConfiguration(new SetBucketLifecycleConfigurationRequest(bucketName, bucketLifecycleConfiguration));
+    }
+
+    @Override
+    public void setBucketLifecycleConfiguration(
+            SetBucketLifecycleConfigurationRequest setBucketLifecycleConfigurationRequest) {
+        setBucketLifecycleConfigurationRequest = beforeClientExecution(setBucketLifecycleConfigurationRequest);
+        rejectNull(setBucketLifecycleConfigurationRequest,
+                "The set bucket lifecycle configuration request object must be specified.");
+
+        String bucketName = setBucketLifecycleConfigurationRequest.getBucketName();
+        BucketLifecycleConfiguration bucketLifecycleConfiguration = setBucketLifecycleConfigurationRequest.getLifecycleConfiguration();
+
+        rejectNull(bucketName,
+                "The bucket name parameter must be specified when setting bucket lifecycle configuration.");
+        rejectNull(bucketLifecycleConfiguration,
+                "The lifecycle configuration parameter must be specified when setting bucket lifecycle configuration.");
+
+        Request<SetBucketLifecycleConfigurationRequest> request = createRequest(bucketName, null, setBucketLifecycleConfigurationRequest, HttpMethodName.PUT);
+        request.addParameter("lifecycle", null);
+
+        byte[] content = new BucketConfigurationXmlFactory().convertToXmlByteArray(bucketLifecycleConfiguration);
+        request.addHeader("Content-Length", String.valueOf(content.length));
+        request.addHeader("Content-Type", "application/xml");
+        request.setContent(new ByteArrayInputStream(content));
+        try {
+            byte[] md5 = Md5Utils.computeMD5Hash(content);
+            String md5Base64 = BinaryUtils.toBase64(md5);
+            request.addHeader("Content-MD5", md5Base64);
+        } catch ( Exception e ) {
+            throw new SdkClientException("Couldn't compute md5 sum", e);
+        }
+
+        invoke(request, voidResponseHandler, bucketName, null);
+    }
+
+    @Override
+    public void deleteBucketLifecycleConfiguration(String bucketName) {
+        deleteBucketLifecycleConfiguration(new DeleteBucketLifecycleConfigurationRequest(bucketName));
+    }
+
+    @Override
+    public void deleteBucketLifecycleConfiguration(
+            DeleteBucketLifecycleConfigurationRequest deleteBucketLifecycleConfigurationRequest) {
+        deleteBucketLifecycleConfigurationRequest = beforeClientExecution(deleteBucketLifecycleConfigurationRequest);
+        rejectNull(deleteBucketLifecycleConfigurationRequest,
+                "The delete bucket lifecycle configuration request object must be specified.");
+
+        String bucketName = deleteBucketLifecycleConfigurationRequest.getBucketName();
+        rejectNull(bucketName,
+                "The bucket name parameter must be specified when deleting bucket lifecycle configuration.");
+
+        Request<DeleteBucketLifecycleConfigurationRequest> request = createRequest(bucketName, null, deleteBucketLifecycleConfigurationRequest, HttpMethodName.DELETE);
+        request.addParameter("lifecycle", null);
+
+        invoke(request, voidResponseHandler, bucketName, null);
+    }
 
     @Override
     public BucketCrossOriginConfiguration getBucketCrossOriginConfiguration(String bucketName) {
@@ -2702,6 +2794,50 @@ public class AmazonS3Client extends AmazonWebServiceClient implements AmazonS3 {
     @Override
     public S3ResponseMetadata getCachedResponseMetadata(AmazonWebServiceRequest request) {
         return (S3ResponseMetadata)client.getResponseMetadataForRequest(request);
+    }
+    
+    @Override
+    public void restoreObject(RestoreObjectRequest restoreObjectRequest)
+            throws AmazonServiceException {
+        restoreObjectRequest = beforeClientExecution(restoreObjectRequest);
+        String bucketName = restoreObjectRequest.getBucketName();
+        String key = restoreObjectRequest.getKey();
+        String versionId = restoreObjectRequest.getVersionId();
+        int expirationIndays = restoreObjectRequest.getExpirationInDays();
+
+        rejectNull(bucketName, "The bucket name parameter must be specified when copying a glacier object");
+        rejectNull(key, "The key parameter must be specified when copying a glacier object");
+        if (expirationIndays == -1) {
+            throw new IllegalArgumentException("The expiration in days parameter must be specified when copying a glacier object");
+        }
+
+        Request<RestoreObjectRequest> request = createRequest(bucketName, key, restoreObjectRequest, HttpMethodName.POST);
+        request.addParameter("restore", null);
+        if (versionId != null) {
+            request.addParameter("versionId", versionId);
+        }
+
+        populateRequesterPaysHeader(request, restoreObjectRequest.isRequesterPays());
+
+        byte[] content = RequestXmlFactory.convertToXmlByteArray(restoreObjectRequest);
+        request.addHeader("Content-Length", String.valueOf(content.length));
+        request.addHeader("Content-Type", "application/xml");
+        request.setContent(new ByteArrayInputStream(content));
+        try {
+            byte[] md5 = Md5Utils.computeMD5Hash(content);
+            String md5Base64 = BinaryUtils.toBase64(md5);
+            request.addHeader("Content-MD5", md5Base64);
+        } catch (Exception e) {
+            throw new SdkClientException("Couldn't compute md5 sum", e);
+        }
+
+        invoke(request, voidResponseHandler, bucketName, key);
+    }
+
+    @Override
+    public void restoreObject(String bucketName, String key, int expirationInDays)
+            throws AmazonServiceException {
+        restoreObject(new RestoreObjectRequest(bucketName, key, expirationInDays));
     }
 
     @Override

@@ -2953,7 +2953,79 @@ public interface AmazonS3 extends S3DirectSpi {
      */
     public void setBucketVersioningConfiguration(SetBucketVersioningConfigurationRequest setBucketVersioningConfigurationRequest)
         throws SdkClientException, AmazonServiceException;
+    
+    /**
+     * Gets the lifecycle configuration for the specified bucket, or null if
+     * the specified bucket does not exists, or an empty list if no
+     * configuration has been established.
+     *
+     * @param bucketName
+     *            The name of the bucket for which to retrieve lifecycle
+     *            configuration.
+     *
+     * @see AmazonS3#getBucketLifecycleConfiguration(GetBucketLifecycleConfigurationRequest)
+     * @see <a href="http://docs.aws.amazon.com/goto/WebAPI/s3-2006-03-01/GetBucketLifecycleConfiguration">AWS API Documentation</a>
+     */
+    public BucketLifecycleConfiguration getBucketLifecycleConfiguration(String bucketName);
 
+    /**
+     * Gets the lifecycle configuration for the specified bucket, or null if
+     * the specified bucket does not exists, or an empty list if no
+     * configuration has been established.
+     *
+     * @param getBucketLifecycleConfigurationRequest
+     *            The request object for retrieving the bucket lifecycle
+     *            configuration.
+     *
+     * @see AmazonS3#getBucketLifecycleConfiguration(String)
+     * @see <a href="http://docs.aws.amazon.com/goto/WebAPI/s3-2006-03-01/GetBucketLifecycleConfiguration">AWS API Documentation</a>
+     */
+    public BucketLifecycleConfiguration getBucketLifecycleConfiguration(
+            GetBucketLifecycleConfigurationRequest getBucketLifecycleConfigurationRequest);
+
+    /**
+     * Sets the lifecycle configuration for the specified bucket.
+     *
+     * @param bucketName
+     *            The name of the bucket for which to set the lifecycle
+     *            configuration.
+     * @param bucketLifecycleConfiguration
+     *            The new lifecycle configuration for this bucket, which
+     *            completely replaces any existing configuration.
+     * @see <a href="http://docs.aws.amazon.com/goto/WebAPI/s3-2006-03-01/PutBucketLifecycleConfiguration">AWS API Documentation</a>
+     */
+    public void setBucketLifecycleConfiguration(String bucketName, BucketLifecycleConfiguration bucketLifecycleConfiguration);
+
+    /**
+     * Sets the lifecycle configuration for the specified bucket.
+     *
+     * @param setBucketLifecycleConfigurationRequest
+     *            The request object containing all options for setting the
+     *            bucket lifecycle configuration.
+     * @see <a href="http://docs.aws.amazon.com/goto/WebAPI/s3-2006-03-01/PutBucketLifecycleConfiguration">AWS API Documentation</a>
+     */
+    public void setBucketLifecycleConfiguration(SetBucketLifecycleConfigurationRequest setBucketLifecycleConfigurationRequest);
+
+    /**
+     * Removes the lifecycle configuration for the bucket specified.
+     *
+     * @param bucketName
+     *            The name of the bucket for which to remove the lifecycle
+     *            configuration.
+     * @see <a href="http://docs.aws.amazon.com/goto/WebAPI/s3-2006-03-01/DeleteBucketLifecycleConfiguration">AWS API Documentation</a>
+     */
+    public void deleteBucketLifecycleConfiguration(String bucketName);
+
+    /**
+     * Removes the lifecycle configuration for the bucket specified.
+     *
+     * @param deleteBucketLifecycleConfigurationRequest
+     *            The request object containing all options for removing the
+     *            bucket lifecycle configuration.
+     * @see <a href="http://docs.aws.amazon.com/goto/WebAPI/s3-2006-03-01/DeleteBucketLifecycleConfiguration">AWS API Documentation</a>
+     */
+    public void deleteBucketLifecycleConfiguration(DeleteBucketLifecycleConfigurationRequest deleteBucketLifecycleConfigurationRequest);
+    
     /**
      * Gets the cross origin configuration for the specified bucket, or null if
      * the specified bucket does not exists, or an empty list if no
@@ -3522,6 +3594,55 @@ public interface AmazonS3 extends S3DirectSpi {
      */
     public S3ResponseMetadata getCachedResponseMetadata(AmazonWebServiceRequest request);
 
+    /**
+     * Restore an object, which was transitioned to Amazon Glacier from Amazon
+     * S3 when it was expired, into Amazon S3 again. This copy is by nature temporary
+     * and is always stored as RRS in Amazon S3. The customer will be able to set /
+     * re-adjust the lifetime of this copy. By re-adjust we mean the customer
+     * can call this API to shorten or extend the lifetime of the copy. Note the
+     * request will only be accepted when there is no ongoing restore request. One
+     * needs to have the new s3:RestoreObject permission to perform this
+     * operation.
+     *
+     * @param request
+     *            The request object containing all the options for restoring an
+     *            Amazon S3 object.
+     *
+     * @throws AmazonServiceException
+     *             If any errors occurred in Amazon S3 while processing the
+     *             request.
+     *
+     * @see AmazonS3Client#restoreObject(String, String, int)
+     */
+    public void restoreObject(RestoreObjectRequest request)
+            throws AmazonServiceException;
+
+    /**
+     * Restore an object, which was transitioned to Amazon Glacier from Amazon
+     * S3 when it was expired, into Amazon S3 again. This copy is by nature temporary
+     * and is always stored as RRS in Amazon S3. The customer will be able to set /
+     * re-adjust the lifetime of this copy. By re-adjust we mean the customer
+     * can call this API to shorten or extend the lifetime of the copy. Note the
+     * request will only accepted when there is no ongoing restore request. One
+     * needs to have the new s3:RestoreObject permission to perform this
+     * operation.
+     *
+     * @param bucketName
+     *            The name of an existing bucket.
+     * @param key
+     *            The key under which to store the specified file.
+     * @param expirationInDays
+     *            The number of days after which the object will expire.
+     *
+     * @throws AmazonServiceException
+     *             If any errors occurred in Amazon S3 while processing the
+     *             request.
+     *
+     * @see AmazonS3Client#restoreObject(RestoreObjectRequest)
+     */
+    public void restoreObject(String bucketName, String key, int expirationInDays)
+            throws AmazonServiceException;
+    
     /**
      * @param bucketName
      *            Name of bucket that presumably contains object

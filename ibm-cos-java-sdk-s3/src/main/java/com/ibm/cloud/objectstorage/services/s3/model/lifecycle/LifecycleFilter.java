@@ -14,9 +14,9 @@
  */
 package com.ibm.cloud.objectstorage.services.s3.model.lifecycle;
 
-import java.io.Serializable;
-
 import com.ibm.cloud.objectstorage.services.s3.model.BucketLifecycleConfiguration;
+
+import java.io.Serializable;
 
 /**
  * The {@link LifecycleFilter} is used to identify objects that a Lifecycle Rule applies to.

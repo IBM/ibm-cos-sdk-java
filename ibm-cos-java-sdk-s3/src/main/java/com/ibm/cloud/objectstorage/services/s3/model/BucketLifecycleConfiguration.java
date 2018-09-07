@@ -14,13 +14,13 @@
  */
 package com.ibm.cloud.objectstorage.services.s3.model;
 
+import com.ibm.cloud.objectstorage.services.s3.model.lifecycle.LifecycleFilter;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
-
-import com.ibm.cloud.objectstorage.services.s3.model.lifecycle.LifecycleFilter;
 
 /**
  * Container for bucket lifecycle configuration operations.
