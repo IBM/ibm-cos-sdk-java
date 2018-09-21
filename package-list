@@ -59,6 +59,8 @@ com.ibm.cloud.objectstorage.regions
 com.ibm.cloud.objectstorage.retry
 com.ibm.cloud.objectstorage.retry.internal
 com.ibm.cloud.objectstorage.retry.v2
+com.ibm.cloud.objectstorage.services.aspera.transfer
+com.ibm.cloud.objectstorage.services.aspera.transfer.internal
 com.ibm.cloud.objectstorage.services.kms
 com.ibm.cloud.objectstorage.services.kms.model
 com.ibm.cloud.objectstorage.services.s3
