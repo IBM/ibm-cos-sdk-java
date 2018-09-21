@@ -117,6 +117,17 @@ public class Unmarshallers {
     }
 
     /**
+     * Unmarshaller for the FASPConnectionInfo XML response.
+     */
+    public static final class FASPConnectionInfoUnmarshaller implements
+            Unmarshaller<FASPConnectionInfo, InputStream> {
+        public FASPConnectionInfo unmarshall(InputStream in) throws Exception {
+            return new XmlResponsesSaxParser()
+                    .parseFASPConnectionInfoResponse(in).getFASPConnectionInfo();
+        }
+    }
+
+    /**
      * Unmarshaller for the BucketLoggingStatus XML response.
      */
     public static final class BucketLoggingConfigurationnmarshaller implements

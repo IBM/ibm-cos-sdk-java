@@ -126,10 +126,12 @@ import com.ibm.cloud.objectstorage.services.s3.model.DeleteObjectRequest;
 import com.ibm.cloud.objectstorage.services.s3.model.DeleteObjectsRequest;
 import com.ibm.cloud.objectstorage.services.s3.model.DeleteObjectsResult;
 import com.ibm.cloud.objectstorage.services.s3.model.DeleteVersionRequest;
+import com.ibm.cloud.objectstorage.services.s3.model.FASPConnectionInfo;
 import com.ibm.cloud.objectstorage.services.s3.model.GeneratePresignedUrlRequest;
 import com.ibm.cloud.objectstorage.services.s3.model.GenericBucketRequest;
 import com.ibm.cloud.objectstorage.services.s3.model.GetBucketAclRequest;
 import com.ibm.cloud.objectstorage.services.s3.model.GetBucketCrossOriginConfigurationRequest;
+import com.ibm.cloud.objectstorage.services.s3.model.GetBucketFaspConnectionInfoRequest;
 import com.ibm.cloud.objectstorage.services.s3.model.GetBucketLifecycleConfigurationRequest;
 import com.ibm.cloud.objectstorage.services.s3.model.GetBucketTaggingConfigurationRequest;
 import com.ibm.cloud.objectstorage.services.s3.model.GetBucketVersioningConfigurationRequest;
@@ -4207,5 +4209,33 @@ public class AmazonS3Client extends AmazonWebServiceClient implements AmazonS3 {
     	}  
     	  
     	return request;  
-    }  
+    }
+
+	@Override
+	public FASPConnectionInfo getBucketFaspConnectionInfo(String bucketName)
+			throws SdkClientException, AmazonServiceException {
+		return getBucketFaspConnectionInfo(new GetBucketFaspConnectionInfoRequest(bucketName));
+	}
+
+	@Override
+	public FASPConnectionInfo getBucketFaspConnectionInfo(
+			GetBucketFaspConnectionInfoRequest getBucketFaspConnectionInfoRequest)
+			throws SdkClientException, AmazonServiceException {
+		getBucketFaspConnectionInfoRequest = beforeClientExecution(getBucketFaspConnectionInfoRequest);
+        String bucketName = getBucketFaspConnectionInfoRequest.getBucketName();
+        rejectNull(bucketName, "The bucket name parameter must be specified when requesting a bucket's FASP Connection Info");
+        
+        Request<GetBucketFaspConnectionInfoRequest> request = createRequest(bucketName, null, getBucketFaspConnectionInfoRequest, HttpMethodName.GET);
+        request.addParameter("faspConnectionInfo", null);
+
+        populateRequesterPaysHeader(request, false);
+        
+        @SuppressWarnings("unchecked")
+        ResponseHeaderHandlerChain<FASPConnectionInfo> responseHandler = new ResponseHeaderHandlerChain<FASPConnectionInfo>(
+                new Unmarshallers.FASPConnectionInfoUnmarshaller(),
+                new S3RequesterChargedHeaderHandler<FASPConnectionInfo>());
+
+        return invoke(request, responseHandler, bucketName, null);
+
+	}  
 }

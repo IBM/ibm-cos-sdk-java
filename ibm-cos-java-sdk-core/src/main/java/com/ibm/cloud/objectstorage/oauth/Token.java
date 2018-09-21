@@ -27,6 +27,8 @@ public class Token {
 	private String expiration;
 	private String uaa_token;
 	private String ims_token;
+	private String delegated_refresh_token;
+
 	private long refreshTime;
 	private long expirationTime;
 
@@ -168,6 +170,23 @@ public class Token {
 	 */
 	public void setExpirationTime(long expirationTime) {
 		this.expirationTime = expirationTime;
+	}
+
+	/**
+	 * 
+	 * @return delegated_refresh_token
+	 */
+	public String getDelegated_refresh_token() {
+		return delegated_refresh_token;
+	}
+
+	/**
+	 * Set the delegated refresh token
+	 * 
+	 * @param delegated_refresh_token
+	 */
+	public void setDelegated_refresh_token(String delegated_refresh_token) {
+		this.delegated_refresh_token = delegated_refresh_token;
 	}
 
 }

@@ -368,6 +368,24 @@ public class XmlResponsesSaxParser {
     }
 
     /**
+     * Parses an FASPConnectionInfoHandler response XML document from an input
+     * stream.
+     *
+     * @param inputStream
+     *            XML data input stream.
+     * @return the XML handler object populated with data parsed from the XML
+     *         stream.
+     *
+     * @throws SdkClientException
+     */
+    public FASPConnectionInfoHandler parseFASPConnectionInfoResponse(InputStream inputStream)
+            throws IOException {
+        FASPConnectionInfoHandler handler = new FASPConnectionInfoHandler();
+        parseXmlInputStream(handler, inputStream);
+        return handler;
+    }
+
+    /**
      * Parses a LoggingStatus response XML document for a bucket from an input
      * stream.
      *
@@ -1056,6 +1074,69 @@ public class XmlResponsesSaxParser {
                     ((CanonicalGrantee) currentGrantee)
                         .setDisplayName(getText());
                 }
+            }
+        }
+    }
+
+    /**
+     * Handler for FASPConnectionInfo response XML documents. The document is
+     * parsed into an {@link FASPConnectionInfo} object available via the
+     * {@link #getFASPConnectionInfoInfo()} method.
+     */
+    public static class FASPConnectionInfoHandler extends AbstractHandler {
+
+        private final FASPConnectionInfo connectionInfo =
+            new FASPConnectionInfo();
+
+        /**
+         * @return an object representing the ACL document.
+         */
+        public FASPConnectionInfo getFASPConnectionInfo() {
+            return connectionInfo;
+        }
+
+        @Override
+        protected void doStartElement(
+                String uri,
+                String name,
+                String qName,
+                Attributes attrs) {
+
+        	if (in("FASPConnectionInfo")) {
+            	if (in("AccessKey")) {
+	                if (name.equals("Id")) {
+	                	connectionInfo.setAccessKeyId(null);
+	
+	                }
+	                if (name.equals("Secret")) {
+	                	connectionInfo.setAccessKeySecret(null);
+	
+	                }
+            	}
+
+                if (name.equals("ATSEndpoint")) {
+                	connectionInfo.setAtsEndpoint(null);
+
+                }
+            }
+        }
+
+        @Override
+        protected void doEndElement(String uri, String name, String qName) {
+ 
+	       if (name.equals("Id")) {
+            	connectionInfo.setAccessKeyId(getText());
+
+            }
+            if (name.equals("Secret")) {
+            	connectionInfo.setAccessKeySecret(getText());
+
+            }
+        	
+
+            if (name.equals("ATSEndpoint")) {
+            	connectionInfo.setAtsEndpoint(getText());
+
             }
         }
     }

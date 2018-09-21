@@ -1659,6 +1659,57 @@ public interface AmazonS3 extends S3DirectSpi {
      */
     public AccessControlList getBucketAcl(String bucketName) throws SdkClientException,
             AmazonServiceException;
+    
+    /**
+     * <p>
+     * Gets the FASP Connection Info for a particular bucket.
+     * </p>
+     * <p>
+     * Each bucket COS has associated FASP connection information
+     * this will return Access Key & Secret, along with an
+     * ATS Endpoint
+     * </p>
+     *
+     * @param bucketName
+     *            The name of the bucket whose FASPConnectionInfo is being retrieved.
+     *
+     * @return The <code> FASPConnectionInfo</code> for the specified S3 bucket.
+     *
+     * @throws SdkClientException
+     *             If any errors are encountered in the client while making the
+     *             request or handling the response.
+     * @throws AmazonServiceException
+     *             If any errors occurred in Amazon S3 while processing the
+     *             request.
+     */
+    public FASPConnectionInfo getBucketFaspConnectionInfo(String bucketName) throws SdkClientException,
+            AmazonServiceException;
+    
+    /**
+     * <p>
+     * Gets the FASP Connection Info for a particular bucket.
+     * </p>
+     * <p>
+     * Each bucket COS has associated FASP connection information
+     * this will return Access Key & Secret, along with an
+     * ATS Endpoint
+     * </p>
+     *
+     * @param getBucketFASPConnectionInfoRequest
+     *            The request containing the name of the bucket whose FASPConnectionInfo is
+     *            being retrieved.
+     *
+     * @return The <code> FASPConnectionInfo</code> for the specified S3 bucket.
+     *
+     * @throws SdkClientException
+     *             If any errors are encountered in the client while making the
+     *             request or handling the response.
+     * @throws AmazonServiceException
+     *             If any errors occurred in Amazon S3 while processing the
+     *             request.
+     */
+    public FASPConnectionInfo getBucketFaspConnectionInfo(GetBucketFaspConnectionInfoRequest getBucketFASPConnectionInfoRequest) throws SdkClientException,
+            AmazonServiceException;
 
     /**
      * Sets the {@link AccessControlList} for the specified Amazon S3 bucket.

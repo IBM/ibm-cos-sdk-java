@@ -200,14 +200,21 @@ public class DefaultTokenManager implements TokenManager {
 			token = retrieveTokenFromCache();
 		}
 
-		// check if token should be refreshed
+		// check if token should be refreshed. If a refreshtoken is not present, the token manager will call upon the original tokenprovider retrieve a fresh token
 		if (isTokenExpiring(token) && !isAsyncInProgress()) {
-			this.asyncInProgress = true;
-			submitRefreshTask();
+			if (null != token.getRefresh_token()) {
+				this.asyncInProgress = true;
+				submitRefreshTask();
+			} else {
+				retrieveToken();
+				token = retrieveTokenFromCache();
+			}
 		}
 
 		if (token.getAccess_token() != null && !token.getAccess_token().isEmpty()) {
 			return token.getAccess_token();
+		} else if (token.getDelegated_refresh_token()!= null && !token.getDelegated_refresh_token().isEmpty()) {
+			return token.getDelegated_refresh_token();
 		} else if (token.getIms_token() != null && !token.getIms_token().isEmpty()) {
 			return token.getIms_token();
 		} else {

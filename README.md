@@ -167,6 +167,9 @@ If the Service Credential contain [HMAC keys](https://console.bluemix.net/docs/s
 the client will use those and authenticate using a signature, otherwise the client will use the provided API key to authenticate 
 using bearer tokens.
 
+## Aspera high-speed transfer (New)
+It is now possible to use IBM Aspera as an alternative to managing multipart transfers of larger objects. Aspera is especially effective across long distances or in environments with high rates of packet loss. For more details, check out the [IBM Cloud documentation](https://console.bluemix.net/docs/services/cloud-object-storage/basics/aspera.html#using-libraries-and-sdks)
+
 ## Archive Tier Support (New)
 You can automatically archive objects after a specified length of time or after a specified date.  Once archived, a temporary copy of an object can be restored for access as needed.  Restore time may take up to 15 hours.
 

@@ -265,6 +265,31 @@ public class DefaultTokenManagerTest {
 	}
 	
 	/**
+	 * Mock TokenProvider to return expiring token.
+	 * Token manager should recognize that token is expiring and attempt to refresh.
+	 * The Delegate token has an expiry time of 6 days/518400 seconds
+	 * It should attempt to refresh within 0.25 of the expiry time left on token
+	 */
+	@Test
+	public void shouldRefreshDelegateToken() {
+		//518400 * 0.25 = 129600
+		long expiry = (System.currentTimeMillis()/1000) + 129599L;
+		Token expiringToken = new Token();
+		expiringToken.setDelegated_refresh_token("lblsklvbasoib");
+		expiringToken.setExpires_in("518400");
+		expiringToken.setExpiration(String.valueOf(expiry));
+		
+		TokenProvider tokenProviderMock = mock(TokenProvider.class);
+		DefaultTokenManager defaultTokenManager = spy(new DefaultTokenManager(tokenProviderMock));
+		when(defaultTokenManager.getProvider()).thenReturn(tokenProviderMock);
+		when(tokenProviderMock.retrieveToken()).thenReturn(expiringToken);
+		
+		defaultTokenManager.getToken();
+
+		verify(defaultTokenManager, times(2)).retrieveToken();
+	}
+	
+	/**
 	 * Mock TokenProvider to return non expiring token.
 	 * Token manager should not attempt to refresh.
 	 */
