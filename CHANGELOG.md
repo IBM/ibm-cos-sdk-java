@@ -1,3 +1,7 @@
+## 2.3.1
+### Features
+* Documentation updates
+
 ## 2.3.0
 ### Features
 * Aspera High-Speed Transfer Support
