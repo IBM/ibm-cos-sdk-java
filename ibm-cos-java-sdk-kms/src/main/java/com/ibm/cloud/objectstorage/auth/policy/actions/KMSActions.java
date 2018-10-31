@@ -22,7 +22,6 @@ public enum KMSActions implements Action {
 
     /** Represents any action executed on KMS. */
     AllKMSActions("kms:*"),
-
     /** Action for the CancelKeyDeletion operation. */
     CancelKeyDeletion("kms:CancelKeyDeletion"),
     /** Action for the CreateAlias operation. */

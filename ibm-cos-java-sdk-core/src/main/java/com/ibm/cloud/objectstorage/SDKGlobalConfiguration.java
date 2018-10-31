@@ -51,6 +51,7 @@ public class SDKGlobalConfiguration {
     public  static final String SECRET_KEY_SYSTEM_PROPERTY = "aws.secretKey";
 
     /**
+     * @exclude
      * System property for overriding the Amazon EC2 Instance Metadata Service
      * endpoint.
      */

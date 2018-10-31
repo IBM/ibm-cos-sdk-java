@@ -515,12 +515,18 @@ public abstract class AbstractAmazonS3 implements AmazonS3 {
 
     }
 
+    /**
+     * @exclude
+     */
     @Override
     public BucketTaggingConfiguration getBucketTaggingConfiguration(
             String bucketName) {
         return getBucketTaggingConfiguration(new GetBucketTaggingConfigurationRequest(bucketName));
     }
 
+    /**
+     * @exclude
+     */
     @Override
     public BucketTaggingConfiguration getBucketTaggingConfiguration(
             GetBucketTaggingConfigurationRequest getBucketTaggingConfigurationRequest) {
@@ -528,12 +534,18 @@ public abstract class AbstractAmazonS3 implements AmazonS3 {
 
     }
 
+    /**
+     * @exclude
+     */
     @Override
     public void setBucketTaggingConfiguration(String bucketName,
             BucketTaggingConfiguration bucketTaggingConfiguration) {
         setBucketTaggingConfiguration(new SetBucketTaggingConfigurationRequest(bucketName, bucketTaggingConfiguration));
     }
 
+    /**
+     * @exclude
+     */
     @Override
     public void setBucketTaggingConfiguration(
             SetBucketTaggingConfigurationRequest setBucketTaggingConfigurationRequest) {
@@ -541,11 +553,17 @@ public abstract class AbstractAmazonS3 implements AmazonS3 {
 
     }
 
+    /**
+     * @exclude
+     */
     @Override
     public void deleteBucketTaggingConfiguration(String bucketName) {
         deleteBucketTaggingConfiguration(new DeleteBucketTaggingConfigurationRequest(bucketName));
     }
 
+    /**
+     * @exclude
+     */
     @Override
     public void deleteBucketTaggingConfiguration(
             DeleteBucketTaggingConfigurationRequest deleteBucketTaggingConfigurationRequest) {

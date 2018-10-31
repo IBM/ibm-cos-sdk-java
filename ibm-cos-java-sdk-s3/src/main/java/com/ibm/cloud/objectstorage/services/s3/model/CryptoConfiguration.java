@@ -43,6 +43,7 @@ public class CryptoConfiguration implements Cloneable,Serializable {
      */
     private boolean ignoreMissingInstructionFile = true;
     /**
+     * @exclude
      * Used to specify the KMS region for the AWS KMS client when such client
      * is internally instantiated instead of externally passed in by users; or
      * null if no explicit KMS region is specified.
@@ -314,6 +315,7 @@ public class CryptoConfiguration implements Cloneable,Serializable {
     }
 
     /**
+     * @exclude
      * Returns the the KMS region explicitly specified for the AWS KMS client
      * when such client is internally instantiated; or null if no explicit KMS
      * region is specified. This KMS region parameter is ignored when the AWS
@@ -332,6 +334,7 @@ public class CryptoConfiguration implements Cloneable,Serializable {
     }
 
     /**
+     * @exclude
      * Sets the KMS region for the AWS KMS client when such client is internally
      * instantiated instead of externally passed in by users; or null if no
      * explicit KMS region is explicitly configured.This KMS region parameter is
@@ -353,6 +356,7 @@ public class CryptoConfiguration implements Cloneable,Serializable {
     }
 
     /**
+     * @exclude
      * Fluent API for setting the KMS region for the AWS KMS client when such
      * client is internally instantiated instead of externally passed in by
      * users; or null if no explicit KMS region is explicitly configured.This
@@ -373,7 +377,8 @@ public class CryptoConfiguration implements Cloneable,Serializable {
     }
 
     /**
-     * Returns the the KMS region explicitly specified for the AWS KMS client
+     * @exclude
+     *  Returns the the KMS region explicitly specified for the AWS KMS client
      * when such client is internally instantiated; or null if no explicit KMS
      * region is specified. This KMS region parameter is ignored when the AWS
      * KMS client of the S3 encryption client is explicitly passed in by the
@@ -384,6 +389,7 @@ public class CryptoConfiguration implements Cloneable,Serializable {
     }
 
     /**
+     * @exclude
      * Sets the KMS region for the AWS KMS client when such client is internally
      * instantiated instead of externally passed in by users; or null if no
      * explicit KMS region is explicitly configured.This KMS region parameter is
@@ -395,6 +401,7 @@ public class CryptoConfiguration implements Cloneable,Serializable {
     }
 
     /**
+     * @exclude
      * Fluent API for setting the KMS region for the AWS KMS client when such
      * client is internally instantiated instead of externally passed in by
      * users; or null if no explicit KMS region is explicitly configured.This

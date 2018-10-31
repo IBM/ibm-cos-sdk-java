@@ -100,12 +100,14 @@ public class GeneratePresignedUrlRequest extends AmazonWebServiceRequest
     private String sseAlgorithm;
 
     /**
+     * @exclude
      * Used to specify the KMS CMS Key ID when KMS server side encryption is in
      * use.
      */
     private String kmsCmkId;
 
     /**
+     * @exclude
      * Returns the KMS customer key id used for server side encryption; or null
      * if there is none.
      */
@@ -114,6 +116,7 @@ public class GeneratePresignedUrlRequest extends AmazonWebServiceRequest
     }
 
     /**
+     * @exclude
      * Sets the KMS customer key id used for server side encryption.
      * <p>
      * Note S3 does not require HTTP header
@@ -128,6 +131,7 @@ public class GeneratePresignedUrlRequest extends AmazonWebServiceRequest
     }
 
     /**
+     * @exclude
      * Fluent API for {@link #setKmsCmkId(String)}
      */
     public GeneratePresignedUrlRequest withKmsCmkId(String kmsCmkId) {

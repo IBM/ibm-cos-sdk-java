@@ -3148,6 +3148,7 @@ public interface AmazonS3 extends S3DirectSpi {
     public void deleteBucketCrossOriginConfiguration(DeleteBucketCrossOriginConfigurationRequest deleteBucketCrossOriginConfigurationRequest);
 
     /**
+     * @exclude
      * Gets the tagging configuration for the specified bucket, or null if
      * the specified bucket does not exists, or an empty list if no
      * configuration has been established.
@@ -3162,6 +3163,7 @@ public interface AmazonS3 extends S3DirectSpi {
     public BucketTaggingConfiguration getBucketTaggingConfiguration(String bucketName);
 
     /**
+     * @exclude
      * Gets the tagging configuration for the specified bucket, or null if
      * the specified bucket does not exists, or an empty list if no
      * configuration has been established.
@@ -3177,6 +3179,7 @@ public interface AmazonS3 extends S3DirectSpi {
             GetBucketTaggingConfigurationRequest getBucketTaggingConfigurationRequest);
 
     /**
+     * @exclude
      * Sets the tagging configuration for the specified bucket.
      *
      * @param bucketName
@@ -3190,6 +3193,7 @@ public interface AmazonS3 extends S3DirectSpi {
     public void setBucketTaggingConfiguration(String bucketName, BucketTaggingConfiguration bucketTaggingConfiguration);
 
     /**
+     * @exclude
      * Sets the tagging configuration for the specified bucket.
      *
      * @param setBucketTaggingConfigurationRequest
@@ -3200,6 +3204,7 @@ public interface AmazonS3 extends S3DirectSpi {
     public void setBucketTaggingConfiguration(SetBucketTaggingConfigurationRequest setBucketTaggingConfigurationRequest);
 
     /**
+     * @exclude
      * Removes the tagging configuration for the bucket specified.
      *
      * @param bucketName
@@ -3210,6 +3215,7 @@ public interface AmazonS3 extends S3DirectSpi {
     public void deleteBucketTaggingConfiguration(String bucketName);
 
     /**
+     * @exclude
      * Removes the tagging configuration for the bucket specified.
      *
      * @param deleteBucketTaggingConfigurationRequest

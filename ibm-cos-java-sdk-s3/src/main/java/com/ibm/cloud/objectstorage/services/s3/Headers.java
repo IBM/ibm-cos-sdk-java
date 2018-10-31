@@ -211,6 +211,7 @@ public interface Headers {
     public static final String REQUESTER_CHARGED_HEADER = "x-amz-request-charged";
 
     /**
+     * @exclude
      * Header in the request and response indicating the AWS Key Management
      * System key id used for Server Side Encryption.
      */

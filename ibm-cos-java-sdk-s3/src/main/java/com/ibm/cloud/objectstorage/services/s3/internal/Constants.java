@@ -135,7 +135,7 @@ public class Constants {
 
     // Constant indicating the requester pays for data transfer cost for a bucket.
     public static final String REQUESTER_PAYS = "requester";
-
+    /**@exclude*/
     public static final String SSE_AWS_KMS_ENCRYPTION_SCHEME =
             SSEAlgorithm.KMS.getAlgorithm();
 }

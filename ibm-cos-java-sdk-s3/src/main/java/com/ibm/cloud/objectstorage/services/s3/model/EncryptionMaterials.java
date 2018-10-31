@@ -114,6 +114,7 @@ public class EncryptionMaterials implements Serializable {
     }
 
     /**
+     * @exclude
      * Returns true if this is a KMS material description; false otherwise.
      * 
      * @return false by default

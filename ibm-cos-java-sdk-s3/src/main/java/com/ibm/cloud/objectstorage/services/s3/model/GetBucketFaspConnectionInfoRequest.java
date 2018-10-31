@@ -18,18 +18,18 @@ import java.io.Serializable;
 import com.ibm.cloud.objectstorage.services.s3.AmazonS3;
 
 /**
- * Request object for the parameters to get a bucket's tagging configuration.
+ * Request object for the parameters to get a bucket's FASP info.
  *
  * @see AmazonS3#getBucketFaspConnectionInfo(GetBucketFaspConnectionInfoRequest)
  */
 public class GetBucketFaspConnectionInfoRequest extends GenericBucketRequest implements Serializable {
 
     /**
-     * Creates request object, ready to be executed to fetch the tagging
-     * configuration for the specified bucket.
+     * Creates request object, ready to be executed to fetch the FASP 
+     * info for the specified bucket.
      *
      * @param bucketName
-     *            The name of the bucket whose tagging configuration is being
+     *            The name of the bucket whose FASP info is being
      *            fetched.
      */
     public GetBucketFaspConnectionInfoRequest(String bucketName) {

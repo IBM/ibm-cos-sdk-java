@@ -892,6 +892,7 @@ public class ObjectMetadata implements ServerSideEncryptionResult, S3RequesterCh
     }
 
     /**
+     * @exclude
      * Returns the AWS Key Management System key id used for Server Side
      * Encryption of the Amazon S3 object.
      */

@@ -2252,11 +2252,17 @@ public class AmazonS3Client extends AmazonWebServiceClient implements AmazonS3 {
         invoke(request, voidResponseHandler, bucketName, null);
     }
 
+    /**
+     * @exclude
+     */
     @Override
     public BucketTaggingConfiguration getBucketTaggingConfiguration(String bucketName) {
         return getBucketTaggingConfiguration(new GetBucketTaggingConfigurationRequest(bucketName));
     }
 
+    /**
+     * @exclude
+     */
     @Override
     public BucketTaggingConfiguration getBucketTaggingConfiguration(GetBucketTaggingConfigurationRequest getBucketTaggingConfigurationRequest) {
         getBucketTaggingConfigurationRequest = beforeClientExecution(getBucketTaggingConfigurationRequest);
@@ -2279,11 +2285,17 @@ public class AmazonS3Client extends AmazonWebServiceClient implements AmazonS3 {
         }
     }
 
+    /**
+     * @exclude
+     */
     @Override
     public void setBucketTaggingConfiguration(String bucketName, BucketTaggingConfiguration bucketTaggingConfiguration) {
         setBucketTaggingConfiguration(new SetBucketTaggingConfigurationRequest(bucketName, bucketTaggingConfiguration));
     }
 
+    /**
+     * @exclude
+     */
     @Override
     public void setBucketTaggingConfiguration(
             SetBucketTaggingConfigurationRequest setBucketTaggingConfigurationRequest) {
@@ -2317,11 +2329,17 @@ public class AmazonS3Client extends AmazonWebServiceClient implements AmazonS3 {
         invoke(request, voidResponseHandler, bucketName, null);
     }
 
+    /**
+     * @exclude
+     */
     @Override
     public void deleteBucketTaggingConfiguration(String bucketName) {
         deleteBucketTaggingConfiguration(new DeleteBucketTaggingConfigurationRequest(bucketName));
     }
 
+    /**
+     * @exclude
+     */
     @Override
     public void deleteBucketTaggingConfiguration(
             DeleteBucketTaggingConfigurationRequest deleteBucketTaggingConfigurationRequest) {

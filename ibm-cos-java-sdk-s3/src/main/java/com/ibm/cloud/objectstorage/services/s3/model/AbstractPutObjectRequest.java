@@ -98,6 +98,9 @@ public abstract class AbstractPutObjectRequest extends AmazonWebServiceRequest i
      */
     private SSEAwsKeyManagementParams sseAwsKeyManagementParams;
 
+    /**
+     * @exclude
+     */
     private ObjectTagging tagging;
 
     /**
@@ -761,14 +764,23 @@ public abstract class AbstractPutObjectRequest extends AmazonWebServiceRequest i
         return t;
     }
 
+    /**
+     * @exclude
+     */
     public ObjectTagging getTagging() {
         return tagging;
     }
 
+    /**
+     * @exclude
+     */
     public void setTagging(ObjectTagging tagging) {
         this.tagging = tagging;
     }
 
+    /**
+     * @exclude
+     */
     public <T extends PutObjectRequest> T withTagging(ObjectTagging tagSet) {
         setTagging(tagSet);
         T t = (T)this;

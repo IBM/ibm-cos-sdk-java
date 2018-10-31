@@ -5,7 +5,7 @@
   <parent>
     <groupId>com.ibm.cos</groupId>
     <artifactId>ibm-cos-java-sdk-pom</artifactId>
-    <version>2.3.2-SNAPSHOT</version>
+    <version>2.3.2</version>
   </parent>
   <groupId>com.ibm.cos</groupId>
   <artifactId>ibm-cos-java-sdk-test-utils</artifactId>
@@ -20,18 +20,6 @@
         <groupId>com.ibm.cos</groupId>
         <optional>false</optional>
         <version>${ibmcosjavasdk.version}</version>
-    </dependency>
-    <dependency>
-        <artifactId>junit</artifactId>
-        <groupId>junit</groupId>
-        <optional>false</optional>
-        <version>${junit.version}</version>
-    </dependency>
-    <dependency>
-        <artifactId>cucumber-java</artifactId>
-        <groupId>info.cukes</groupId>
-        <optional>false</optional>
-        <version>${cucumber.info.cukes.version}</version>
     </dependency>
     <dependency>
         <artifactId>cucumber-junit</artifactId>

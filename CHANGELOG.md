@@ -1,3 +1,7 @@
+## 2.3.2
+### Features 
+* COSSDK-37669: https://github.ibm.com/objectstore/objectstorage-issues/issues/344
+
 ## 2.3.1
 ### Features
 * Documentation updates

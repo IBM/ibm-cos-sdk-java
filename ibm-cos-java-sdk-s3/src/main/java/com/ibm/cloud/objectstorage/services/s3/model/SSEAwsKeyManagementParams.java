@@ -17,10 +17,11 @@ import java.io.Serializable;
 
 public class SSEAwsKeyManagementParams implements Serializable {
 
-    /**
-     * The AWS Key Management Key id to be used for Server Side Encryption of
-     * the Amazon S3 object.
-     */
+	/**
+	 * @exclude
+	 * The AWS Key Management Key id to be used for Server Side Encryption of
+	 * the Amazon S3 object.
+	 */
     private final String awsKmsKeyId;
 
     /**
@@ -32,6 +33,7 @@ public class SSEAwsKeyManagementParams implements Serializable {
     }
 
     /**
+	 * @exclude
      * Constructs a new instance of SSEAwsKeyManagementParams with the user
      * specified AWS Key Management System Key Id.
      */
@@ -44,7 +46,8 @@ public class SSEAwsKeyManagementParams implements Serializable {
     }
 
     /**
-     * Returns the AWS Key Management System Key Id used for encryption. Returns
+	 * @exclude
+	 * Returns the AWS Key Management System Key Id used for encryption. Returns
      * null if default Key Id is used.
      */
     public String getAwsKmsKeyId() {

@@ -103,9 +103,9 @@ public class UploadObjectObserver {
     }
 
     /**
-     * Notified from
+     * <!--- Notified from
      * {@link AmazonS3EncryptionClient#uploadObject(UploadObjectRequest)} to
-     * initiate a multi-part upload.
+     * initiate a multi-part upload.--->
      *
      * @param req
      *            the upload object request
@@ -165,9 +165,9 @@ public class UploadObjectObserver {
     }
 
     /**
-     * Notified from
-     * {@link AmazonS3EncryptionClient#uploadObject(UploadObjectRequest)} when
-     * all parts have been successfully uploaded to S3. This method is
+     * <!--- Notified from
+     *  {@link AmazonS3EncryptionClient#uploadObject(UploadObjectRequest)} when
+     * all parts have been successfully uploaded to S3.---> This method is
      * responsible for finishing off the upload by making a complete multi-part
      * upload request to S3 with the given list of etags.
      * 
@@ -183,9 +183,9 @@ public class UploadObjectObserver {
     }
 
     /**
-     * Notified from
+     * <!--- Notified from
      * {@link AmazonS3EncryptionClient#uploadObject(UploadObjectRequest)} when
-     * failed to upload any part. This method is responsible for cancelling
+     * failed to upload any part.---> This method is responsible for cancelling
      * ongoing uploads and aborting the multi-part upload request.
      */
     public void onAbort() {

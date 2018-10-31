@@ -106,6 +106,7 @@ public abstract class S3CryptoModuleBase<T extends MultipartUploadCryptoContext>
     protected final  Map<String, T> multipartUploadContexts =
         Collections.synchronizedMap(new HashMap<String,T>());
     protected final S3Direct s3;
+    /**@exclude**/
     protected final AWSKMS kms;
 
     /**
