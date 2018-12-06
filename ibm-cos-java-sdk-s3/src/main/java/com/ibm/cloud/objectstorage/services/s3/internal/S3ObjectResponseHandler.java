@@ -50,6 +50,18 @@ public class S3ObjectResponseHandler extends AbstractS3ResponseHandler<S3Object>
         if (response.getHeaders().get(Headers.S3_TAGGING_COUNT) != null) {
             object.setTaggingCount(Integer.parseInt(response.getHeaders().get(Headers.S3_TAGGING_COUNT)));
         }
+        
+        if (response.getHeaders().get(Headers.RETENTION_EXPIRATION_DATE) != null) {
+            object.setRetentionExpirationDate(ServiceUtils.parseRfc822Date(response.getHeaders().get(Headers.RETENTION_EXPIRATION_DATE)));
+        }
+        
+        if (response.getHeaders().get(Headers.RETENTION_LEGAL_HOLD_COUNT) != null) {
+            object.setRetentionLegalHoldCount(Integer.parseInt(response.getHeaders().get(Headers.RETENTION_LEGAL_HOLD_COUNT)));
+        }
+        
+        if (response.getHeaders().get(Headers.RETENTION_PERIOD) != null) {
+            object.setRetentionPeriod(Long.parseLong(response.getHeaders().get(Headers.RETENTION_PERIOD)));
+        }
 
         ObjectMetadata metadata = object.getObjectMetadata();
         populateObjectMetadata(response, metadata);

@@ -104,9 +104,11 @@ import com.ibm.cloud.objectstorage.services.s3.internal.auth.S3SignerProvider;
 import com.ibm.cloud.objectstorage.services.s3.metrics.S3ServiceMetric;
 import com.ibm.cloud.objectstorage.services.s3.model.AbortMultipartUploadRequest;
 import com.ibm.cloud.objectstorage.services.s3.model.AccessControlList;
+import com.ibm.cloud.objectstorage.services.s3.model.AddLegalHoldRequest;
 import com.ibm.cloud.objectstorage.services.s3.model.AmazonS3Exception;
 import com.ibm.cloud.objectstorage.services.s3.model.Bucket;
 import com.ibm.cloud.objectstorage.services.s3.model.BucketCrossOriginConfiguration;
+import com.ibm.cloud.objectstorage.services.s3.model.BucketProtectionConfiguration;
 import com.ibm.cloud.objectstorage.services.s3.model.BucketLifecycleConfiguration;
 import com.ibm.cloud.objectstorage.services.s3.model.BucketTaggingConfiguration;
 import com.ibm.cloud.objectstorage.services.s3.model.BucketVersioningConfiguration;
@@ -122,15 +124,18 @@ import com.ibm.cloud.objectstorage.services.s3.model.DeleteBucketCrossOriginConf
 import com.ibm.cloud.objectstorage.services.s3.model.DeleteBucketLifecycleConfigurationRequest;
 import com.ibm.cloud.objectstorage.services.s3.model.DeleteBucketRequest;
 import com.ibm.cloud.objectstorage.services.s3.model.DeleteBucketTaggingConfigurationRequest;
+import com.ibm.cloud.objectstorage.services.s3.model.DeleteLegalHoldRequest;
 import com.ibm.cloud.objectstorage.services.s3.model.DeleteObjectRequest;
 import com.ibm.cloud.objectstorage.services.s3.model.DeleteObjectsRequest;
 import com.ibm.cloud.objectstorage.services.s3.model.DeleteObjectsResult;
 import com.ibm.cloud.objectstorage.services.s3.model.DeleteVersionRequest;
+import com.ibm.cloud.objectstorage.services.s3.model.ExtendObjectRetentionRequest;
 import com.ibm.cloud.objectstorage.services.s3.model.FASPConnectionInfo;
 import com.ibm.cloud.objectstorage.services.s3.model.GeneratePresignedUrlRequest;
 import com.ibm.cloud.objectstorage.services.s3.model.GenericBucketRequest;
 import com.ibm.cloud.objectstorage.services.s3.model.GetBucketAclRequest;
 import com.ibm.cloud.objectstorage.services.s3.model.GetBucketCrossOriginConfigurationRequest;
+import com.ibm.cloud.objectstorage.services.s3.model.GetBucketProtectionConfigurationRequest;
 import com.ibm.cloud.objectstorage.services.s3.model.GetBucketFaspConnectionInfoRequest;
 import com.ibm.cloud.objectstorage.services.s3.model.GetBucketLifecycleConfigurationRequest;
 import com.ibm.cloud.objectstorage.services.s3.model.GetBucketTaggingConfigurationRequest;
@@ -148,6 +153,8 @@ import com.ibm.cloud.objectstorage.services.s3.model.HeadBucketResult;
 import com.ibm.cloud.objectstorage.services.s3.model.InitiateMultipartUploadRequest;
 import com.ibm.cloud.objectstorage.services.s3.model.InitiateMultipartUploadResult;
 import com.ibm.cloud.objectstorage.services.s3.model.ListBucketsRequest;
+import com.ibm.cloud.objectstorage.services.s3.model.ListLegalHoldsRequest;
+import com.ibm.cloud.objectstorage.services.s3.model.ListLegalHoldsResult;
 import com.ibm.cloud.objectstorage.services.s3.model.ListMultipartUploadsRequest;
 import com.ibm.cloud.objectstorage.services.s3.model.ListNextBatchOfObjectsRequest;
 import com.ibm.cloud.objectstorage.services.s3.model.ListNextBatchOfVersionsRequest;
@@ -181,6 +188,7 @@ import com.ibm.cloud.objectstorage.services.s3.model.SSECustomerKey;
 import com.ibm.cloud.objectstorage.services.s3.model.SSECustomerKeyProvider;
 import com.ibm.cloud.objectstorage.services.s3.model.SetBucketAclRequest;
 import com.ibm.cloud.objectstorage.services.s3.model.SetBucketCrossOriginConfigurationRequest;
+import com.ibm.cloud.objectstorage.services.s3.model.SetBucketProtectionConfigurationRequest;
 import com.ibm.cloud.objectstorage.services.s3.model.SetBucketLifecycleConfigurationRequest;
 import com.ibm.cloud.objectstorage.services.s3.model.SetBucketTaggingConfigurationRequest;
 import com.ibm.cloud.objectstorage.services.s3.model.SetBucketVersioningConfigurationRequest;
@@ -250,6 +258,7 @@ import java.util.regex.Matcher;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.client.methods.HttpRequestBase;
+
 
 /**
  * <p>
@@ -1539,6 +1548,22 @@ public class AmazonS3Client extends AmazonWebServiceClient implements AmazonS3 {
             // Populate the SSE AWS KMS parameters to the request header
             populateSSE_KMS(request,
                     putObjectRequest.getSSEAwsKeyManagementParams());
+            
+            // Populate the object retention parameters to the request header
+            if (putObjectRequest.getRetentionExpirationDate() != null) {
+                request.addHeader(Headers.RETENTION_EXPIRATION_DATE,
+                		DateUtils.formatRFC822Date(putObjectRequest.getRetentionExpirationDate()));
+            }
+            
+            if (putObjectRequest.getRetentionLegalHoldId() != null) {
+                request.addHeader(Headers.RETENTION_LEGAL_HOLD_ID,
+                		putObjectRequest.getRetentionLegalHoldId());
+            }
+            
+            if (putObjectRequest.getRetentionPeriod() != null) {
+                request.addHeader(Headers.RETENTION_PERIOD,
+                		putObjectRequest.getRetentionPeriod().toString());
+            }
 
             // Use internal interface to differentiate 0 from unset.
             final Long contentLength = (Long)metadata.getRawMetadataValue(Headers.CONTENT_LENGTH);
@@ -2517,8 +2542,28 @@ public class AmazonS3Client extends AmazonWebServiceClient implements AmazonS3 {
             byte[] xml = RequestXmlFactory.convertToXmlByteArray(completeMultipartUploadRequest.getPartETags());
             request.addHeader("Content-Type", "application/xml");
             request.addHeader("Content-Length", String.valueOf(xml.length));
+            if(completeMultipartUploadRequest.getRetentionExpirationDate() != null) {
+            request.addHeader(Headers.RETENTION_EXPIRATION_DATE, 
+            		DateUtils.formatRFC822Date(completeMultipartUploadRequest.getRetentionExpirationDate()));
+            }
+            if(completeMultipartUploadRequest.getRetentionPeriod() != null) {
+            request.addHeader(Headers.RETENTION_PERIOD, 
+            		completeMultipartUploadRequest.getRetentionPeriod().toString());
+            }
+            addHeaderIfNotNull(request, Headers.RETENTION_LEGAL_HOLD_ID, 
+            		completeMultipartUploadRequest.getRetentionLegalHoldId());
+            
 
             request.setContent(new ByteArrayInputStream(xml));
+            
+            // Calculate Content MD5
+            try {
+                byte[] md5 = Md5Utils.computeMD5Hash(new ByteArrayInputStream(xml));
+                String md5Base64 = BinaryUtils.toBase64(md5);
+                request.addHeader("Content-MD5", md5Base64);
+            } catch ( Exception e ) {
+                throw new SdkClientException("Couldn't compute md5 sum", e);
+            }
 
             @SuppressWarnings("unchecked")
             ResponseHeaderHandlerChain<CompleteMultipartUploadHandler> responseHandler = new ResponseHeaderHandlerChain<CompleteMultipartUploadHandler>(
@@ -2741,6 +2786,19 @@ public class AmazonS3Client extends AmazonWebServiceClient implements AmazonS3 {
                     uploadPartRequest.getFileOffset(),
                     partSize,
                     uploadPartRequest.isLastPart());
+            
+            // Calculate Content MD5 on part upload if requested.  
+            if(uploadPartRequest.getMd5Digest() == null
+            		&& uploadPartRequest.isCalculateMD5()) {
+	            try {
+					request.addHeader("Content-MD5", Md5Utils.md5AsBase64(isCurr));
+					isCurr.reset();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}     
+            }          
+            
             MD5DigestCalculatingInputStream md5DigestStream = null;
             if (uploadPartRequest.getMd5Digest() == null
                     && !skipMd5CheckStrategy.skipClientSideValidationPerRequest(uploadPartRequest)) {
@@ -3313,6 +3371,23 @@ public class AmazonS3Client extends AmazonWebServiceClient implements AmazonS3 {
 
         if (copyObjectRequest.getRedirectLocation() != null) {
             request.addHeader(Headers.REDIRECT_LOCATION, copyObjectRequest.getRedirectLocation());
+        }
+        
+        if (copyObjectRequest.getRetentionDirective() != null) {
+        	request.addHeader(Headers.RETENTION_DIRECTIVE, copyObjectRequest.getRetentionDirective().toString());
+        }
+        
+        if (copyObjectRequest.getRetentionExpirationDate() != null) {
+        	request.addHeader(Headers.RETENTION_EXPIRATION_DATE, 
+        			DateUtils.formatRFC822Date(copyObjectRequest.getRetentionExpirationDate()));
+        }
+        
+        if (copyObjectRequest.getRetentionLegalHoldId() != null) {
+        	request.addHeader(Headers.RETENTION_LEGAL_HOLD_ID, copyObjectRequest.getRetentionLegalHoldId());
+        }
+        
+        if (copyObjectRequest.getRetentionPeriod() != null) {
+        	request.addHeader(Headers.RETENTION_PERIOD, copyObjectRequest.getRetentionPeriod().toString());
         }
 
         populateRequesterPaysHeader(request, copyObjectRequest.isRequesterPays());
@@ -4230,6 +4305,268 @@ public class AmazonS3Client extends AmazonWebServiceClient implements AmazonS3 {
     }
 
 	@Override
+	public void setBucketProtectionConfiguration(SetBucketProtectionConfigurationRequest setBucketProtectionConfigurationRequest)
+			throws SdkClientException, AmazonServiceException {
+		setBucketProtectionConfigurationRequest = beforeClientExecution(setBucketProtectionConfigurationRequest);
+        rejectNull(setBucketProtectionConfigurationRequest,
+                "The set bucket protection configuration request object must be specified.");
+        
+        String bucketName = setBucketProtectionConfigurationRequest.getBucketName();
+        BucketProtectionConfiguration bucketProtectionConfiguration = setBucketProtectionConfigurationRequest.getProtectionConfiguration();
+
+        rejectNull(bucketName,
+                "The bucket name parameter must be specified when setting bucket protection configuration.");
+        rejectNull(bucketProtectionConfiguration,
+                "The protection configuration parameter must be specified when setting bucket protection configuration.");
+
+        Request<SetBucketProtectionConfigurationRequest> request = createRequest(bucketName, null, setBucketProtectionConfigurationRequest, HttpMethodName.PUT);
+        request.addParameter("protection", null);
+        
+        byte[] content = new BucketConfigurationXmlFactory().convertToXmlByteArray(bucketProtectionConfiguration);
+        request.addHeader("Content-Length", String.valueOf(content.length));
+        request.addHeader("Content-Type", "application/xml");
+        request.setContent(new ByteArrayInputStream(content));
+        try {
+            byte[] md5 = Md5Utils.computeMD5Hash(content);
+            String md5Base64 = BinaryUtils.toBase64(md5);
+            request.addHeader("Content-MD5", md5Base64);
+        } catch ( Exception e ) {
+            throw new SdkClientException("Couldn't compute md5 sum", e);
+        }
+
+        invoke(request, voidResponseHandler, bucketName, null);
+		
+	}
+
+	@Override
+	public void setBucketProtection(String bucketName, BucketProtectionConfiguration protectionConfiguration)
+			throws SdkClientException, AmazonServiceException {
+		setBucketProtectionConfiguration(new SetBucketProtectionConfigurationRequest()
+				.withBucketName(bucketName)
+				.withProtectionConfiguration(protectionConfiguration));
+	}
+
+	@Override
+	public BucketProtectionConfiguration getBucketProtection(String bucketName)
+			throws SdkClientException, AmazonServiceException {
+		return getBucketProtectionConfiguration(new GetBucketProtectionConfigurationRequest(bucketName));
+	}
+
+	@Override
+	public BucketProtectionConfiguration getBucketProtectionConfiguration(
+			GetBucketProtectionConfigurationRequest getBucketProtectionRequest)
+			throws SdkClientException, AmazonServiceException {
+		getBucketProtectionRequest = beforeClientExecution(getBucketProtectionRequest);
+        rejectNull(getBucketProtectionRequest, "The request object parameter GetBucketProtectionConfigurationRequest must be specified.");
+        String bucketName = getBucketProtectionRequest.getBucketName();
+        rejectNull(bucketName, "The bucket name must be specified when retrieving the bucket protection configuration.");
+
+        Request<GetBucketProtectionConfigurationRequest> request = createRequest(bucketName, null, getBucketProtectionRequest, HttpMethodName.GET);
+        request.addParameter("protection", null);
+
+        try {
+            return invoke(request, new Unmarshallers.BucketProtectionConfigurationUnmarshaller(), bucketName, null);
+        } catch (AmazonServiceException ase) {
+            switch (ase.getStatusCode()) {
+            case 404:
+                return null;
+            default:
+                throw ase;
+            }
+        }
+	}
+
+	@Override
+	public void addLegalHold(String bucketName, String key, String legalHoldId)
+			throws SdkClientException, AmazonServiceException {
+		addLegalHold(new AddLegalHoldRequest(bucketName, key, legalHoldId));
+		
+	}
+
+	@Override
+	public void addLegalHold(AddLegalHoldRequest addLegalHoldRequest)
+			throws SdkClientException, AmazonServiceException {
+		addLegalHoldRequest = beforeClientExecution(addLegalHoldRequest);
+        rejectNull(addLegalHoldRequest,
+                "The add legal hold configuration request object must be specified.");
+        
+        String bucketName = addLegalHoldRequest.getBucketName();
+        String key = addLegalHoldRequest.getKey();
+        String legalHoldId = addLegalHoldRequest.getLegalHoldId();
+
+        rejectNull(bucketName,
+                "The bucket name must be specified when adding a legal hold id.");
+        rejectNull(key,
+                "The bucket name must be specified when adding a legal hold id.");
+        rejectNull(legalHoldId,
+        		"The legal hold id must be specified when adding a legal hold id.");
+
+        Request<AddLegalHoldRequest> request = createRequest(bucketName, key, addLegalHoldRequest, HttpMethodName.POST);
+        request.addParameter("legalHold", null);
+        request.addParameter("add", legalHoldId);
+        
+        byte[] content = addLegalHoldRequest.getLegalHoldId().getBytes();
+        request.addHeader("Content-Length", String.valueOf(content.length));
+        request.addHeader("Content-Type", "application/xml");
+        request.setContent(new ByteArrayInputStream(content));
+        try {
+            byte[] md5 = Md5Utils.computeMD5Hash(content);
+            String md5Base64 = BinaryUtils.toBase64(md5);
+            request.addHeader("Content-MD5", md5Base64);
+        } catch ( Exception e ) {
+            throw new SdkClientException("Couldn't compute md5 sum", e);
+        }
+
+        invoke(request, voidResponseHandler, bucketName, key);
+		
+	}
+
+	@Override
+	public ListLegalHoldsResult listLegalHolds(String bucketName, String key)
+			throws SdkClientException, AmazonServiceException {
+		return listLegalHolds(new ListLegalHoldsRequest(bucketName, key));
+	}
+
+	@Override
+	public ListLegalHoldsResult listLegalHolds(ListLegalHoldsRequest listLegalHoldsRequest)
+			throws SdkClientException, AmazonServiceException {
+		listLegalHoldsRequest = beforeClientExecution(listLegalHoldsRequest);
+        rejectNull(listLegalHoldsRequest, "The request object parameter ListLegalHoldsRequest must be specified.");
+        String bucketName = listLegalHoldsRequest.getBucketName();
+        rejectNull(bucketName, "The bucket name must be specified when retrieving the list of legal holds.");
+        String key = listLegalHoldsRequest.getKey();
+        rejectNull(key, "The object key must be specified when retrieving the list of legal holds.");
+        
+        Request<ListLegalHoldsRequest> request = createRequest(bucketName, key, listLegalHoldsRequest, HttpMethodName.GET);
+        request.addParameter("legalHold", null);
+
+        try {
+            return invoke(request, new Unmarshallers.ListLegalHoldsRequestUnmarshaller(), bucketName, key);
+        } catch (AmazonServiceException ase) {
+            switch (ase.getStatusCode()) {
+            case 404:
+                return null;
+            default:
+                throw ase;
+            }
+        }
+	}
+
+	@Override
+	public void deleteLegalHold(String bucketName, String key, String legalHoldId)
+			throws SdkClientException, AmazonServiceException {
+		deleteLegalHold(new DeleteLegalHoldRequest(bucketName, key, legalHoldId));
+		
+	}
+
+	@Override
+	public void deleteLegalHold(DeleteLegalHoldRequest deleteLegalHoldRequest)
+			throws SdkClientException, AmazonServiceException {
+		deleteLegalHoldRequest = beforeClientExecution(deleteLegalHoldRequest);
+        rejectNull(deleteLegalHoldRequest,
+                "The delete legal hold configuration request object must be specified.");
+        
+        String bucketName = deleteLegalHoldRequest.getBucketName();
+        String key = deleteLegalHoldRequest.getKey();
+        String legalHoldId = deleteLegalHoldRequest.getLegalHoldId();
+
+        rejectNull(bucketName,
+                "The bucket name must be specified when deleting a legal hold id.");
+        rejectNull(key,
+                "The bucket name must be specified when deleting a legal hold id.");
+        rejectNull(legalHoldId,
+        		"The legal hold id must be specified when deleting a legal hold id.");
+
+        Request<DeleteLegalHoldRequest> request = createRequest(bucketName, key, deleteLegalHoldRequest, HttpMethodName.POST);
+        request.addParameter("legalHold", null);
+        request.addParameter("remove", legalHoldId);
+        
+        byte[] content = "".getBytes();
+        request.addHeader("Content-Length", String.valueOf(content.length));
+        request.addHeader("Content-Type", "text/plain");
+        request.setContent(new ByteArrayInputStream(content));
+
+        invoke(request, voidResponseHandler, bucketName, key);
+		
+	}
+
+	@Override
+	public void extendObjectRetention(String bucketName, String key, Long additionalRetentionPeriod,
+			Long extendRetentionFromCurrentTime, Date newRetentionExpirationDate, Long newRetentionPeriod)
+			throws SdkClientException, AmazonServiceException {
+		extendObjectRetention(new ExtendObjectRetentionRequest()
+		.withBucketName(bucketName)
+		.withKey(key)
+		.withAdditionalRetentionPeriod(additionalRetentionPeriod)
+		.withExtendRetentionFromCurrentTime(extendRetentionFromCurrentTime)
+		.withNewRetentionExpirationDate(newRetentionExpirationDate)
+		.withNewRetentionPeriod(newRetentionPeriod));
+		
+	}
+
+	@Override
+	public void extendObjectRetention(ExtendObjectRetentionRequest extendObjectRetentionRequest)
+			throws SdkClientException, AmazonServiceException {
+		extendObjectRetentionRequest = beforeClientExecution(extendObjectRetentionRequest);
+        rejectNull(extendObjectRetentionRequest,
+                "The extend object retention request object must be specified.");
+        
+        String bucketName = extendObjectRetentionRequest.getBucketName();
+        String key = extendObjectRetentionRequest.getKey();
+        Long additionalRetentionPeriod = extendObjectRetentionRequest.getAdditionalRetentionPeriod();
+        Long extendRetentionFromCurrentTime = extendObjectRetentionRequest.getExtendRetentionFromCurrentTime();
+        Date newRetentionExpirationDate = extendObjectRetentionRequest.getNewRetentionExpirationDate();
+        Long newRetentionPeriod = extendObjectRetentionRequest.getNewRetentionPeriod();
+
+        rejectNull(bucketName,
+                "The bucket name must be specified when adding a legal hold id.");
+        rejectNull(key,
+                "The bucket name must be specified when adding a legal hold id.");
+        
+        // Only one of the extend retention headers can be populated
+        String argumentExceptionMessage = "Only one of additionalRetentionPeriod, extendRetentionFromCurrentTime, newRetentionExpirationDate"
+        		+ " or newRetentionPeriod can be specified.";
+        if(additionalRetentionPeriod != null && 
+        		(extendRetentionFromCurrentTime != null
+        		|| newRetentionExpirationDate != null
+        		|| newRetentionPeriod != null)) {
+        	throw new IllegalArgumentException(argumentExceptionMessage);
+        }
+        
+        if(extendRetentionFromCurrentTime != null && 
+        		(newRetentionExpirationDate != null
+        		|| newRetentionPeriod != null)) {
+        	throw new IllegalArgumentException(argumentExceptionMessage);
+        }
+        
+        if(newRetentionExpirationDate != null && newRetentionPeriod != null) {
+        	throw new IllegalArgumentException(argumentExceptionMessage);
+        }
+        
+
+        Request<ExtendObjectRetentionRequest> request = createRequest(bucketName, key, extendObjectRetentionRequest, HttpMethodName.POST);
+        request.addParameter("extendRetention", null);
+        if(additionalRetentionPeriod != null) {
+        	request.addHeader("additional-retention-period", extendObjectRetentionRequest.getAdditionalRetentionPeriod().toString());
+        }
+        if(extendRetentionFromCurrentTime != null) {
+        	request.addHeader("extend-retention-from-current-time", extendRetentionFromCurrentTime.toString());
+        }
+        if(newRetentionExpirationDate != null) {
+        	request.addHeader("new-retention-expiration-date", DateUtils.formatRFC822Date(newRetentionExpirationDate));
+        }
+        if(newRetentionPeriod != null) {
+        	request.addHeader("new-retention-period", newRetentionPeriod.toString());
+        }
+        
+        byte[] content = new byte[0];
+        request.addHeader("Content-Length", String.valueOf(content.length));
+        request.addHeader("Content-Type", "text/plain");
+        request.setContent(new ByteArrayInputStream(content));
+        invoke(request, voidResponseHandler, bucketName, key);
+		
+	}
+
 	public FASPConnectionInfo getBucketFaspConnectionInfo(String bucketName)
 			throws SdkClientException, AmazonServiceException {
 		return getBucketFaspConnectionInfo(new GetBucketFaspConnectionInfoRequest(bucketName));

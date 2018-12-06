@@ -17,6 +17,7 @@ package com.ibm.cloud.objectstorage.services.s3.model;
 import java.io.File;
 import java.io.InputStream;
 import java.io.Serializable;
+import java.util.Date;
 
 import com.ibm.cloud.objectstorage.AmazonWebServiceRequest;
 import com.ibm.cloud.objectstorage.event.ProgressListener;
@@ -97,6 +98,30 @@ public abstract class AbstractPutObjectRequest extends AmazonWebServiceRequest i
      * the the object on the server side.
      */
     private SSEAwsKeyManagementParams sseAwsKeyManagementParams;
+    
+    /**
+     * Date on which it will be legal to delete or modify the object.
+     * You can only specify this or the Retention-Period header.
+     * If both are specified a 400 error will be returned.
+     * If neither is specified the bucket's DefaultRetention period will be used.
+     * This header should be used to calculate a retention period in seconds and then stored in that manner.
+     */
+    private Date retentionExpirationDate;
+    
+    /**
+     * A single legal hold to apply to the object.
+     * A legal hold is a Y character long string.
+     * The object cannot be overwritten or deleted until all legal holds associated with the object are removed.
+     */
+    private String retentionLegalHoldId;
+    
+    /**
+     * Retention period to store on the object in seconds.
+     * If this field and Retention-Expiration-Date are specified a 400 error is returned.
+     * If neither is specified the bucket's DefaultRetention period will be used.
+     * 0 is a legal value assuming the bucket's minimum retention period is also 0.
+     */
+    private Long retentionPeriod;
 
     /**
      * @exclude
@@ -893,4 +918,28 @@ public abstract class AbstractPutObjectRequest extends AmazonWebServiceRequest i
             .withSSECustomerKey(getSSECustomerKey())
             ;
     }
+
+	public Date getRetentionExpirationDate() {
+		return retentionExpirationDate;
+	}
+
+	public void setRetentionExpirationDate(Date retentionExpirationDate) {
+		this.retentionExpirationDate = retentionExpirationDate;
+	}
+
+	public String getRetentionLegalHoldId() {
+		return retentionLegalHoldId;
+	}
+
+	public void setRetentionLegalHoldId(String retentionLegalHoldId) {
+		this.retentionLegalHoldId = retentionLegalHoldId;
+	}
+
+	public Long getRetentionPeriod() {
+		return retentionPeriod;
+	}
+
+	public void setRetentionPeriod(long retentionPeriod) {
+		this.retentionPeriod = retentionPeriod;
+	}
 }

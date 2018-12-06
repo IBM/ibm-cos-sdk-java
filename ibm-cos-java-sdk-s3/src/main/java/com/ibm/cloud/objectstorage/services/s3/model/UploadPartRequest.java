@@ -112,7 +112,12 @@ public class UploadPartRequest extends AmazonWebServiceRequest implements
      * Requester Pays Buckets.
      */
     private boolean isRequesterPays;
-
+    
+    /**
+     * Allows the caller to indicate that SDK should calculate the Content-MD5
+     * for part. Defaults to true. 
+     */
+    private boolean isCalculateMD5 = true;
 
     /**
      * Sets the stream containing the data to upload for the new part.
@@ -686,6 +691,43 @@ public class UploadPartRequest extends AmazonWebServiceRequest implements
      */
     public UploadPartRequest withRequesterPays(boolean isRequesterPays) {
         setRequesterPays(isRequesterPays);
+        return this;
+    }
+    
+    /**
+     * Returns true if the creator of this request has indicated this content
+     * MD5 should be calculated for this part.
+     *
+     * @return True if the creator of this request has indicated this content
+     *             MD5 should be calculated for this part.   
+     */
+    public boolean isCalculateMD5() {
+        return isCalculateMD5;
+    }
+
+    /**
+    * Indicates that Content MD5 should be calculated for this part.
+    *
+    * @param isCalculateMD5
+    *            Whether or not Content MD5 should be calculated for this part.
+    */
+    public void setCalculateMD5(boolean isCalculateMD5) {
+        this.isCalculateMD5 = isCalculateMD5;
+    }
+
+    /**
+     * Indicates that Content MD5 should be calculated for this part,
+     * and returns this updated request object so that additional method calls
+     * can be chained together.
+     *
+     * @param isCalculateMD5
+     *            Whether or not Content MD5 should be calculated for this part.
+     *
+     * @return This updated request object so that additional method calls can
+     *         be chained together.
+     */
+    public UploadPartRequest withCalculateMD5(boolean isCalculateMD5) {
+        setCalculateMD5(isCalculateMD5);
         return this;
     }
 }

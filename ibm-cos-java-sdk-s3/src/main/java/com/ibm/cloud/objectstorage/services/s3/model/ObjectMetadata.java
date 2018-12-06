@@ -29,6 +29,7 @@ import com.ibm.cloud.objectstorage.services.s3.internal.ObjectExpirationResult;
 import com.ibm.cloud.objectstorage.services.s3.internal.ObjectRestoreResult;
 import com.ibm.cloud.objectstorage.services.s3.internal.S3RequesterChargedResult;
 import com.ibm.cloud.objectstorage.services.s3.internal.ServerSideEncryptionResult;
+import com.ibm.cloud.objectstorage.services.s3.internal.ServiceUtils;
 
 /**
  * Represents the object metadata that is stored with Amazon S3. This includes custom
@@ -91,6 +92,21 @@ public class ObjectMetadata implements ServerSideEncryptionResult, S3RequesterCh
      * accessed. Null if this object has not been restored from Glacier.
      */
     private Date restoreExpirationTime;
+    
+    /**
+     * Date on which it will be legal to delete or modify the object.
+     */
+    private Date retentionExpirationDate;
+    
+    /**
+     * The number of legal holds applied to the object.
+     */
+    private Integer retentionLegalHoldCount;
+    
+    /**
+     * Retention period to store on the object in seconds.
+     */
+    private Long retentionPeriod;
 
     public ObjectMetadata() {}
 
@@ -107,6 +123,9 @@ public class ObjectMetadata implements ServerSideEncryptionResult, S3RequesterCh
         this.httpExpiresDate = cloneDate(from.httpExpiresDate);
         this.ongoingRestore = from.ongoingRestore;
         this.restoreExpirationTime = cloneDate(from.restoreExpirationTime);
+        this.retentionExpirationDate = cloneDate(from.retentionExpirationDate);
+        this.retentionLegalHoldCount = from.retentionLegalHoldCount;
+        this.retentionPeriod = from.retentionPeriod;
     }
 
     /**
@@ -913,7 +932,31 @@ public class ObjectMetadata implements ServerSideEncryptionResult, S3RequesterCh
         }
     }
 
-    /**
+    public Date getRetentionExpirationDate() {
+    	return this.retentionExpirationDate;
+	}
+
+	public void setRetentionExpirationDate(Date retentionExpirationDate) {
+		this.retentionExpirationDate = retentionExpirationDate;
+	}
+
+	public Integer getRetentionLegalHoldCount() {
+		return this.retentionLegalHoldCount;
+	}
+	
+	public void setRetentionLegalHoldCount(Integer retentionLegalHoldCount) {
+		this.retentionLegalHoldCount = retentionLegalHoldCount;
+	}
+
+	public Long getRetentionPeriod() {
+		return this.retentionPeriod;
+	}
+	
+	public void setRetentionPeriod(Long retentionPeriod) {
+		this.retentionPeriod = retentionPeriod;
+	}
+
+	/**
      * <p>
      * Returns the value of x-amz-mp-parts-count header.
      * </p>

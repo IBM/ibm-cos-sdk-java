@@ -4,7 +4,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.ibm.cos</groupId>
   <artifactId>ibm-cos-java-sdk-pom</artifactId>
-  <version>2.3.3-SNAPSHOT</version>
+  <version>2.4.0</version>
   <packaging>pom</packaging>
   <name>IBM COS SDK for Java</name>
   <description>The IBM COS Web Services SDK for Java provides Java APIs
@@ -255,7 +255,7 @@
 	                <artifactId>ibm-cos-java-sdk-core</artifactId>
 	                <version>${ibmcosjavasdk.version}</version>
 	              </docletArtifact>
-	            <excludePackageNames>*.transform:com.ibm.cloud.objectstorage.services.kms:com.ibm.cloud.objectstorage.services.kms.model</excludePackageNames>
+	            <excludePackageNames>*.transform:com.ibm.cloud.objectstorage.services.kms.model</excludePackageNames>
 	           	<sourceFileExcludes>
 				    <exclude>com/ibm/cloud/objectstorage/services/s3/AmazonS3Encryption.java</exclude>
 				    <exclude>com/ibm/cloud/objectstorage/services/s3/AmazonS3EncryptionClient.java</exclude>
@@ -299,6 +299,13 @@
 				    <exclude>com/ibm/cloud/objectstorage/services/s3/model/RequestPaymentConfiguration.java</exclude>
 				    <exclude>com/ibm/cloud/objectstorage/services/s3/model/RequestPaymentConfiguration/Payer.java</exclude>
 				    <exclude>com/ibm/cloud/objectstorage/regions/ServiceAbbreviations.java</exclude>
+				    <exclude>com/ibm/cloud/objectstorage/services/kms/AbstractAWSKMS.java</exclude>
+				    <exclude>com/ibm/cloud/objectstorage/services/kms/AbstractAWSKMSAsync.java</exclude>
+				    <exclude>com/ibm/cloud/objectstorage/services/kms/AWSKMSAsync.java</exclude>
+				    <exclude>com/ibm/cloud/objectstorage/services/kms/AWSKMSAsyncClient.java</exclude>
+				    <exclude>com/ibm/cloud/objectstorage/services/kms/AWSKMSAsyncClientBuilder.java</exclude>
+				    <exclude>com/ibm/cloud/objectstorage/services/kms/AWSKMSClient.java</exclude>
+				    <exclude>com/ibm/cloud/objectstorage/services/kms/AWSKMS.java</exclude>
 				</sourceFileExcludes>
 	            <minmemory>128m</minmemory>
 	            <maxmemory>1024m</maxmemory>

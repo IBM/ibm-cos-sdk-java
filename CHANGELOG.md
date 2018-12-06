@@ -1,70 +1,110 @@
-## 2.3.2
+# CHANGELOG
+
+
+# 2.4.0
+## Content
+### Features
+* Immutable Object Storage
+### Defect Fixes
+
+# 2.3.2
+## Content
 ### Features 
 * COSSDK-37669: https://github.ibm.com/objectstore/objectstorage-issues/issues/344
+### Defect Fixes
 
-## 2.3.1
+# 2.3.1
+## Content
 ### Features
+### Defect Fixes
 * Documentation updates
 
-## 2.3.0
+# 2.3.0
+## Content
 ### Features
 * Aspera High-Speed Transfer Support
+### Defect Fixes
 
-## 2.2.0
+# 2.2.0
+## Content
 ### Features
 * Archive Tier Support
+### Defect Fixes
 
-## 2.1.3
+# 2.1.3
+## Content
 ### Features
+### Defect Fixes
 * 38356: null Token causes NPE
 * Bug fixes
 
-## 2.1.2
+# 2.1.2
+## Content
 ### Features
+### Defect Fixes
 * 38813: Bug fixes
 
-## 2.1.1
+# 2.1.1
+## Content
 ### Features
+### Defect Fixes
 * Bug fixes
 
-## 2.1.0
+# 2.1.0
+## Content
 ### Features
-* Documentation updates
 * JSON Cut + Paste
-
-## 2.0.2
-### Features
+### Defect Fixes
 * Documentation updates
 
-## 2.0.1
+# 2.0.2
+## Content
 ### Features
+### Defect Fixes
+* Documentation updates
+
+# 2.0.1
+## Content
+### Features
+### Defect Fixes
 * Bug fixes
 * Documentation updates
 
-## 2.0.0
+# 2.0.0
+## Content
 ### Features
 * Namespace changes
 
-## 1.1.1
+# 1.1.1
+## Content
 ### Features
 * IAM Resiliency support
+### Defect Fixes
 * Documentation updates
 
-## 1.1.0
+# 1.1.0
+## Content
 ### Features
 * Added Key Protect support
+### Defect Fixes
 
-## 1.0.2
+# 1.0.2
+## Content
 ### Features
+### Defect Fixes
 * Add support for additional JVM platforms
 * Bug fixes
 * Documentation updates
 
-## 1.0.1
+# 1.0.1
+## Content
 ### Features
 * Host generated API docs
+### Defect Fixes
 
-## 1.0.0
+# 1.0.0
+## Content
 ### Features
 * Initial release
 * IAM support
+### Defect Fixes

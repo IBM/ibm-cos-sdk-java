@@ -17,6 +17,7 @@
  */
 package com.ibm.cloud.objectstorage.services.s3.model;
 import java.io.Serializable;
+import java.util.Date;
 
 import com.ibm.cloud.objectstorage.services.s3.AmazonS3;
 import com.ibm.cloud.objectstorage.services.s3.internal.S3RequesterChargedResult;
@@ -59,6 +60,21 @@ public class S3Object implements Closeable,Serializable, S3RequesterChargedResul
      * Requester Pays Buckets.
      */
     private boolean isRequesterCharged;
+    
+    /**
+     * Date on which it will be legal to delete or modify the object.
+     */
+    private Date retentionExpirationDate;
+    
+    /**
+     * The number of legal holds applied to the object.
+     */
+    private Integer retentionLegalHoldCount;
+    
+    /**
+     * Retention period to store on the object in seconds.
+     */
+    private Long retentionPeriod;
 
     /**
      * Gets the metadata stored by Amazon S3 for this object. The {@link ObjectMetadata} object
@@ -236,4 +252,27 @@ public class S3Object implements Closeable,Serializable, S3RequesterChargedResul
         this.isRequesterCharged = isRequesterCharged;
     }
 
+	public Date getRetentionExpirationDate() {
+		return retentionExpirationDate;
+	}
+
+	public void setRetentionExpirationDate(Date retentionExpirationDate) {
+		this.retentionExpirationDate = retentionExpirationDate;
+	}
+
+	public Integer getRetentionLegalHoldCount() {
+		return retentionLegalHoldCount;
+	}
+
+	public void setRetentionLegalHoldCount(Integer retentionLegalHoldCount) {
+		this.retentionLegalHoldCount = retentionLegalHoldCount;
+	}
+
+	public Long getRetentionPeriod() {
+		return retentionPeriod;
+	}
+
+	public void setRetentionPeriod(Long retentionPeriod) {
+		this.retentionPeriod = retentionPeriod;
+	}
 }

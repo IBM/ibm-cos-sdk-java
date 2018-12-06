@@ -150,6 +150,24 @@ public abstract class AbstractS3ResponseHandler<T>
                     throw new SdkClientException(
                             "Unable to parse part count. Header x-amz-mp-parts-count has corrupted data" + nfe.getMessage(), nfe);
                 }
+            } else if (key.equalsIgnoreCase(Headers.RETENTION_EXPIRATION_DATE)) {
+            	try {
+                    metadata.setRetentionExpirationDate(ServiceUtils.parseRfc822Date(header.getValue()));
+                } catch (Exception pe) {
+                    log.warn("Unable to parse retention expiration date: " + header.getValue(), pe);
+                }
+            } else if (key.equalsIgnoreCase(Headers.RETENTION_LEGAL_HOLD_COUNT)) {
+            	try {
+                    metadata.setRetentionLegalHoldCount(Integer.parseInt(header.getValue()));
+                } catch (NumberFormatException nfe) {
+                    log.warn("Unable to parse legal hold count: " + header.getValue(), nfe);
+                }
+            } else if (key.equalsIgnoreCase(Headers.RETENTION_PERIOD)) {
+            	try {
+                    metadata.setRetentionPeriod(Long.parseLong(header.getValue()));
+                } catch (NumberFormatException nfe) {
+                    log.warn("Unable to parse retention period: " + header.getValue(), nfe);
+                }
             } else {
                 metadata.setHeader(key, header.getValue());
             }

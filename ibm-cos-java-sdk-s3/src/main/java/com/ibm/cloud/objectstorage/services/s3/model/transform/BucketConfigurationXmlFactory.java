@@ -26,6 +26,7 @@ import com.ibm.cloud.objectstorage.services.s3.model.BucketLifecycleConfiguratio
 import com.ibm.cloud.objectstorage.services.s3.model.BucketLifecycleConfiguration.Transition;
 import com.ibm.cloud.objectstorage.services.s3.model.BucketLoggingConfiguration;
 import com.ibm.cloud.objectstorage.services.s3.model.BucketNotificationConfiguration;
+import com.ibm.cloud.objectstorage.services.s3.model.BucketProtectionConfiguration;
 import com.ibm.cloud.objectstorage.services.s3.model.BucketReplicationConfiguration;
 import com.ibm.cloud.objectstorage.services.s3.model.BucketTaggingConfiguration;
 import com.ibm.cloud.objectstorage.services.s3.model.BucketVersioningConfiguration;
@@ -461,6 +462,72 @@ public class BucketConfigurationXmlFactory {
             writeRule(xml, rule);
         }
 
+        xml.end();
+
+        return xml.getBytes();
+    }
+    
+    /**
+     * Converts the specified {@link BucketProtectionConfiguration} object to an XML fragment that
+     * can be sent to Amazon S3.
+     *
+     * @param config
+     *            The {@link BucketProtectionConfiguration}
+     */
+    /*
+    * <ProtectionConfiguration>
+     		<Status>Retention</Status>
+      		<MinimumRetention>
+      			<Days>10</Days>
+      		</MinimumRetention>
+     		<DefaultRetention>
+     			<Days>100</Days>
+     		</DefaultRetention>
+     		<MaximumRetention>
+     			<Days>1000</Days>
+     		</MaximumRetention>
+     		<EnablePermanentRetention>True</EnablePermanentRetention>
+      </ProtectionConfiguration>
+     */
+    public byte[] convertToXmlByteArray(BucketProtectionConfiguration config) throws SdkClientException {
+
+        XmlWriter xml = new XmlWriter();
+        xml.start("ProtectionConfiguration");
+
+        // Status
+        addParameterIfNotNull(xml, "Status", config.getStatus());
+        
+        // Minimum retention
+        xml.start("MinimumRetention");
+        if(config.getMinimumRetentionInDays() != null) {
+        	String days = Integer.toString(config.getMinimumRetentionInDays());
+        	addParameterIfNotNull(xml, "Days", days);
+        }
+        xml.end();
+        
+        // Default retention
+        xml.start("DefaultRetention");
+        if(config.getDefaultRetentionInDays() != null) {
+        	String days = Integer.toString(config.getDefaultRetentionInDays());
+        	addParameterIfNotNull(xml, "Days", days);
+        }
+        xml.end();
+        
+        // Maximum retention
+        xml.start("MaximumRetention");
+        if(config.getMaximumRetentionInDays() != null) {
+        	String days = Integer.toString(config.getMaximumRetentionInDays());
+        	addParameterIfNotNull(xml, "Days", days);
+        }
+        xml.end();
+        
+        // Permanent retention
+        Boolean permanentRetentionEnabled = config.isPermanentRetentionEnabled();
+        if (permanentRetentionEnabled != null) {
+        	xml.start("EnablePermanentRetention")
+        		.value(permanentRetentionEnabled.toString()).end();
+        }
+        
         xml.end();
 
         return xml.getBytes();

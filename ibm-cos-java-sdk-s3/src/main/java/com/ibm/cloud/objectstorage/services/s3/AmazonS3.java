@@ -3715,6 +3715,225 @@ public interface AmazonS3 extends S3DirectSpi {
      */
     boolean doesObjectExist(String bucketName, String objectName)
             throws AmazonServiceException, SdkClientException;
+    
+    /**
+    * Set the protection configuration for the specified bucket.
+    *
+    * @param setBucketProtectionRequest
+    *                 The request object containing all options for setting the
+    *                 bucket protection configuration
+    * @throws SdkClientException
+    *                 If any errors are encountered in the client while making the
+    *                 request or handling the response.
+    * @throws AmazonServiceException
+    *                 If any errors occurred in Amazon S3 while processing the
+    *                 request.
+    */
+    public void setBucketProtectionConfiguration(SetBucketProtectionConfigurationRequest setBucketProtectionRequest)
+                throws SdkClientException, AmazonServiceException;
+    
+    /**
+     * Gets the protection configuration for the specified bucket.
+     *
+     * @param bucketName
+     *                 The bucket whose protection configuration will be retrieved.
+     * @return The bucket protection configuration for the specified bucket.
+     * @throws SdkClientException
+     *                 If any errors are encountered in the client while making the
+     *                 request or handling the response.
+     * @throws AmazonServiceException
+     *                 If any errors occurred in Amazon S3 while processing the
+     *                 request.
+     */
+    public BucketProtectionConfiguration getBucketProtection(String bucketName)
+            throws SdkClientException, AmazonServiceException;
+     
+    /**
+     *
+     * @param getBucketProtectionRequest
+     *                 The request object for retrieving the bucket protection configuration.
+     * @return The bucket protection configuration for the specified bucket.
+     * @throws SdkClientException
+     *                 If any errors are encountered in the client while making the
+     *                 request or handling the response.
+     * @throws AmazonServiceException
+     *                 If any errors occurred in Amazon S3 while processing the
+     *                 request.
+     */
+    public BucketProtectionConfiguration getBucketProtectionConfiguration(GetBucketProtectionConfigurationRequest getBucketProtectionRequest)
+            throws SdkClientException, AmazonServiceException;
+     
+    /**
+    *
+    * @param bucketName
+    *                 The name of the bucket for which to set protection configuration
+    * @param bucketProtection
+    *                 The new protection configuration for this bucket, which
+    *                 completely replaces any existing configuration.
+    * @throws SdkClientException
+    *                 If any errors are encountered in the client while making the
+    *                 request or handling the response.
+    * @throws AmazonServiceException
+    *                 If any errors occurred in Amazon S3 while processing the
+    *                 request.
+    */
+    public void setBucketProtection(String bucketName, BucketProtectionConfiguration protectionConfiguration)
+                throws SdkClientException, AmazonServiceException;
+    
+    /**
+     * Adds a legal hold to the specified object in the specified bucket.
+     *
+     * @param bucketName
+     *            The name of the Amazon S3 bucket containing the object to
+     *            add a legal hold to.
+     * @param key
+     *            The key of the object to add a legal hold to.
+     * @param legalHoldId
+     *            The id of the legal hold to add.
+     * @throws SdkClientException
+     *             If any errors are encountered in the client while making the
+     *             request or handling the response.
+     * @throws AmazonServiceException
+     *             If any errors occurred in Amazon S3 while processing the
+     *             request.
+     */
+    public void addLegalHold(String bucketName, String key, String legalHoldId)
+        throws SdkClientException, AmazonServiceException;
+     
+    /**
+     * Adds a legal hold to the specified object in the specified bucket.
+     *
+     * @param addLegalHoldRequest
+     *            The request object containing all options for adding a legal hold to an
+     *            object.
+     *
+     * @throws SdkClientException
+     *             If any errors are encountered in the client while making the
+     *             request or handling the response.
+     * @throws AmazonServiceException
+     *             If any errors occurred in Amazon S3 while processing the
+     *             request.
+     *
+     * @see AmazonS3Client#addLegalHold(String, String, String)
+     */
+    public void addLegalHold(AddLegalHoldRequest addLegalHoldRequest)
+        throws SdkClientException, AmazonServiceException;
+    
+    /**
+     * Returns a list of legal holds for the specified key in the specified bucket.
+     *
+     * @param bucketName
+     *             The name of the bucket containing the object.
+     * @param key
+     *             The name of the object to list legal holds for.
+     * @return A listing of legal holds for the specified object. If no legal holds exist, an empty
+     *          list will be returned.
+     * @throws SdkClientException
+     *             If any errors are encountered in the client while making the
+     *             request or handling the response.
+     * @throws AmazonServiceException
+     *             If any errors occurred in Amazon S3 while processing the
+     *             request.
+     */
+    public ListLegalHoldsResult listLegalHolds(String bucketName, String key) throws SdkClientException,
+            AmazonServiceException;
+     
+    /**
+     * Returns a list of legal holds for the specified key in the specified bucket.
+     *
+     * @param listLegalHoldsRequest
+     *            The request object containing all options for listing the
+     *            legal holds for a specified object in a specified bucket.
+     * @return A listing of legal holds for the specified object. If no legal holds exist, an empty
+     *          list will be returned.
+     * @throws SdkClientException
+     *             If any errors are encountered in the client while making the
+     *             request or handling the response.
+     * @throws AmazonServiceException
+     *             If any errors occurred in Amazon S3 while processing the
+     *             request. 
+     */
+    public ListLegalHoldsResult listLegalHolds(ListLegalHoldsRequest listLegalHoldsRequest) throws SdkClientException,
+    AmazonServiceException;
+    
+
+	/**
+	 * Deletes a legal hold for the specified object in the specified bucket.
+	 *
+	 * @param bucketName
+	 *            The name of the Amazon S3 bucket containing the object to
+	 *            delete a legal hold from.
+	 * @param key
+	 *            The key of the object to delete a legal hold from.
+	 * @param legalHoldId
+	 *            The id of the legal hold to delete.
+	 * @throws SdkClientException
+	 *             If any errors are encountered in the client while making the
+	 *             request or handling the response.
+	 * @throws AmazonServiceException
+	 *             If any errors occurred in Amazon S3 while processing the
+	 *             request.
+	 */
+	public void deleteLegalHold(String bucketName, String key, String legalHoldId)
+	    throws SdkClientException, AmazonServiceException;
+	 
+	/**
+	 * Deletes a legal hold for the specified object in the specified bucket.
+	 *
+	 * @param deleteLegalHoldRequest
+	 *            The request object containing all options for deleting a legal hold from an
+	 *            object.
+	 *
+	 * @throws SdkClientException
+	 *             If any errors are encountered in the client while making the
+	 *             request or handling the response.
+	 * @throws AmazonServiceException
+	 *             If any errors occurred in Amazon S3 while processing the
+	 *             request.
+	 *
+	 * @see AmazonS3Client#deleteLegalHold(String, String, String)
+	 */
+	public void deleteLegalHold(DeleteLegalHoldRequest deleteLegalHoldRequest)
+	    throws SdkClientException, AmazonServiceException;
+	
+	/**
+	 * Extends the retention period of a protected object in a protected vault.
+	 *
+	 * @param bucketName
+	 *            The name of the Amazon S3 bucket containing the object to
+	 *            delete a legal hold from.
+	 * @param key
+	 *            The key of the object to delete a legal hold from.
+	 * @throws SdkClientException
+	 *             If any errors are encountered in the client while making the
+	 *             request or handling the response.
+	 * @throws AmazonServiceException
+	 *             If any errors occurred in Amazon S3 while processing the
+	 *             request.
+	 */
+	public void extendObjectRetention(String bucketName, String key,
+			Long additionalRetentionPeriod, Long extendRetentionFromCurrentTime,
+			Date newRetentionExpirationDate, Long newRetentionPeriod)
+	    throws SdkClientException, AmazonServiceException;
+	 
+	/**
+	 * Extends the retention period of a protected object in a protected vault.
+	 *
+	 * @param extendObjectRetentionRequest
+	 *            The request object containing all options for extending the retention period
+	 *            of a protected object.
+	 *
+	 * @throws SdkClientException
+	 *             If any errors are encountered in the client while making the
+	 *             request or handling the response.
+	 * @throws AmazonServiceException
+	 *             If any errors occurred in Amazon S3 while processing the
+	 *             request.
+	 *
+	 * @see AmazonS3Client#deleteLegalHold(String, String, String)
+	 */
+	public void extendObjectRetention(ExtendObjectRetentionRequest extendObjectRetentionRequest)
+	    throws SdkClientException, AmazonServiceException;
 
     /**
      * Shuts down this client object, releasing any resources that might be held

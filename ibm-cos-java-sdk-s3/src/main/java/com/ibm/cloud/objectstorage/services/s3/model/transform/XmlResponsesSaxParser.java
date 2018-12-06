@@ -138,7 +138,7 @@ public class XmlResponsesSaxParser {
             BufferedReader breader = new BufferedReader(new InputStreamReader(inputStream,
                 Constants.DEFAULT_ENCODING));
             xr.setContentHandler(handler);
-            xr.setErrorHandler(handler);
+            xr.setErrorHandler(handler);          
             xr.parse(new InputSource(breader));
 
         } catch (IOException e) {
@@ -413,6 +413,20 @@ public class XmlResponsesSaxParser {
     public BucketCrossOriginConfigurationHandler parseBucketCrossOriginConfigurationResponse(InputStream inputStream)
             throws IOException {
         BucketCrossOriginConfigurationHandler handler = new BucketCrossOriginConfigurationHandler();
+        parseXmlInputStream(handler, inputStream);
+        return handler;
+    }
+    
+    public BucketProtectionConfigurationHandler parseBucketProtectionConfigurationResponse(InputStream inputStream)
+            throws IOException {
+        BucketProtectionConfigurationHandler handler = new BucketProtectionConfigurationHandler();
+        parseXmlInputStream(handler, inputStream);
+        return handler;
+    }
+    
+    public ListLegalHoldsResultHandler parseListLegalHoldsResponse(InputStream inputStream)
+            throws IOException {
+    	ListLegalHoldsResultHandler handler = new ListLegalHoldsResultHandler();
         parseXmlInputStream(handler, inputStream);
         return handler;
     }
@@ -2853,6 +2867,115 @@ public class XmlResponsesSaxParser {
             }
         }
     }
+    
+    /*
+    HTTP/1.1 200 OK
+    x-amz-id-2: Uuag1LuByRx9e6j5Onimru9pO4ZVKnJ2Qz7/C1NPcfTWAtRPfTaOFg==
+    x-amz-request-id: 656c76696e6727732072657175657374
+    Date: Tue, 20 Sep 2011 20:34:56 GMT
+    Content-Length: Some Length
+    Connection: keep-alive
+    Server: AmazonS3
+    <CORSConfiguration>
+       <CORSRule>
+         <AllowedOrigin>http://www.foobar.com</AllowedOrigin>
+         <AllowedMethod>GET</AllowedMethod>
+         <MaxAgeSeconds>3000</MaxAgeSec>
+         <ExposeHeader>x-amz-server-side-encryption</ExposeHeader>
+       </CORSRule>
+    </CORSConfiguration>
+    */
+    public static class BucketProtectionConfigurationHandler extends AbstractHandler {
+
+        private final BucketProtectionConfiguration configuration =
+                new BucketProtectionConfiguration();
+
+        public BucketProtectionConfiguration getConfiguration() {
+            return configuration;
+        }
+
+        @Override
+        protected void doStartElement(
+                String uri,
+                String name,
+                String qName,
+                Attributes attrs) {
+        }
+
+        @Override
+        protected void doEndElement(String uri, String name, String qName) {
+            if (in("ProtectionConfiguration")) {
+                if (name.equals("Status")) {
+                    configuration.setStatus(getText());
+                }
+            } else if (in("ProtectionConfiguration", "DefaultRetention")) {
+                if (name.equals("Days")) {
+                    configuration.setDefaultRetentionInDays(parseInt(getText()));
+                }
+            } else if (in("ProtectionConfiguration", "MinimumRetention")) {
+                if (name.equals("Days")) {
+                    configuration.setMinimumRetentionInDays(parseInt(getText()));
+                }
+            } else if (in("ProtectionConfiguration", "MaximumRetention")) {
+                if (name.equals("Days")) {
+                    configuration.setMaximumRetentionInDays(parseInt(getText()));
+                }
+            }
+        }
+    }
+    
+    public static class ListLegalHoldsResultHandler extends AbstractHandler {
+
+        private final ListLegalHoldsResult listLegalHoldsResult =
+                new ListLegalHoldsResult().withLegalHolds(new ArrayList<LegalHold>());
+
+        public ListLegalHoldsResult getlegalHolds() {
+            return listLegalHoldsResult;
+        }
+        
+        LegalHold newLegalHold = null;
+
+        @Override
+        protected void doStartElement(
+                String uri,
+                String name,
+                String qName,
+                Attributes attrs) {
+
+            if (in("RetentionState", "LegalHolds")) {
+            	if (name.equals("LegalHold")) {
+            		newLegalHold = new LegalHold();
+            	}
+            }
+        }
+
+        @Override
+        protected void doEndElement(String uri, String name, String qName) {
+        	if (in("RetentionState")) {
+        		if (name.equals("CreateTime")) {
+            		listLegalHoldsResult.setCreateTime(ServiceUtils.parseRfc822Date(getText()));
+                }
+        		if (name.equals("RetentionPeriod")) {
+            		listLegalHoldsResult.setRetentionPeriod(parseLong(getText()));
+                }
+        		if (name.equals("RetentionPeriodExpirationDate")) {
+            		listLegalHoldsResult.setRetentionExpirationDate(ServiceUtils.parseRfc822Date(getText()));
+                }
+        	} else if (in("RetentionState", "LegalHolds")) {
+            	if (name.equals("LegalHold")) {
+            		listLegalHoldsResult.getLegalHolds().add(newLegalHold);
+                }
+            } else if (in("RetentionState", "LegalHolds", "LegalHold")) {
+                if (name.equals("ID")) {
+                    newLegalHold.setId(getText());
+                }
+                if (name.equals("Date")) {
+                	newLegalHold.setDate(ServiceUtils.parseRfc822Date(getText()));
+                }
+            } 
+        }
+    }
+
 
     /*
       HTTP/1.1 200 OK

@@ -286,6 +286,26 @@ public class Unmarshallers {
             return new XmlResponsesSaxParser().parseBucketCrossOriginConfigurationResponse(in).getConfiguration();
         }
     }
+    
+    /**
+     * Unmarshaller for the BucketProtectionConfiguration XML response.
+     */
+    public static final class BucketProtectionConfigurationUnmarshaller implements
+	    Unmarshaller<BucketProtectionConfiguration, InputStream> {
+	    public BucketProtectionConfiguration unmarshall(InputStream in) throws Exception {
+	        return new XmlResponsesSaxParser().parseBucketProtectionConfigurationResponse(in).getConfiguration();
+	    }
+    }
+    
+    /**
+     * Unmarshaller for the ListLegalHolds XML response.
+     */
+    public static final class ListLegalHoldsRequestUnmarshaller implements
+    	Unmarshaller<ListLegalHoldsResult, InputStream> {
+    	public ListLegalHoldsResult unmarshall(InputStream in) throws Exception {
+    		return new XmlResponsesSaxParser().parseListLegalHoldsResponse(in).getlegalHolds();
+    	}
+    }
 
     /**
      * Unmarshaller for the RequestPaymentConfiguration XML response.

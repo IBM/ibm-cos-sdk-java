@@ -17,6 +17,7 @@ import java.io.Serializable;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 
 import com.ibm.cloud.objectstorage.AmazonWebServiceRequest;
@@ -51,6 +52,30 @@ public class CompleteMultipartUploadRequest extends AmazonWebServiceRequest impl
 
     /** The list of part numbers and ETags to use when completing the multipart upload */
     private List<PartETag> partETags = new ArrayList<PartETag>();
+    
+    /**
+     * Date on which it will be legal to delete or modify the object.
+     * You can only specify this or the Retention-Period header.
+     * If both are specified a 400 error will be returned.
+     * If neither is specified the bucket's DefaultRetention period will be used.
+     * This header should be used to calculate a retention period in seconds and then stored in that manner.
+     */
+    private Date retentionExpirationDate;
+    
+    /**
+     * A single legal hold to apply to the object.
+     * A legal hold is a Y character long string.
+     * The object cannot be overwritten or deleted until all legal holds associated with the object are removed.
+     */
+    private String retentionLegalHoldId;
+    
+    /**
+     * Retention period to store on the object in seconds.
+     * If this field and Retention-Expiration-Date are specified a 400 error is returned.
+     * If neither is specified the bucket's DefaultRetention period will be used.
+     * 0 is a legal value assuming the bucket's minimum retention period is also 0.
+     */
+    private Long retentionPeriod;
 
     /**
      * If enabled, the requester is charged for conducting this operation from
@@ -263,8 +288,47 @@ public class CompleteMultipartUploadRequest extends AmazonWebServiceRequest impl
         }
         return this;
     }
-
-    /**
+    
+    public Date getRetentionExpirationDate() {
+		return retentionExpirationDate;
+	}
+    
+	public void setRetentionExpirationDate(Date retentionExpirationDate) {
+		this.retentionExpirationDate = retentionExpirationDate;
+	}
+	
+	public CompleteMultipartUploadRequest withRetentionExpirationDate(Date retentionExpirationDate) {
+		this.retentionExpirationDate = retentionExpirationDate;
+		return this;
+	}
+	
+	public String getRetentionLegalHoldId() {
+		return retentionLegalHoldId;
+	}
+	
+	public void setRetentionLegalHoldId(String retentionLegalHoldId) {
+		this.retentionLegalHoldId = retentionLegalHoldId;
+	}
+	
+	public CompleteMultipartUploadRequest withRetentionLegalHoldId(String retentionLegalHoldId) {
+		this.retentionLegalHoldId = retentionLegalHoldId;
+		return this;
+	}
+	
+	public Long getRetentionPeriod() {
+		return retentionPeriod;
+	}
+	
+	public void setRetentionPeriod(Long retentionPeriod) {
+		this.retentionPeriod = retentionPeriod;
+	}
+	
+	public CompleteMultipartUploadRequest withRetentionPeriod(Long retentionPeriod) {
+		this.retentionPeriod = retentionPeriod;
+		return this;
+	}
+	
+	/**
      * Returns true if the user has enabled Requester Pays option when
      * conducting this operation from Requester Pays Bucket; else false.
      *

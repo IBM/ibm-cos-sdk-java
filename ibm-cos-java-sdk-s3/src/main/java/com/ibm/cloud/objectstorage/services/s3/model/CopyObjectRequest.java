@@ -143,6 +143,38 @@ public class CopyObjectRequest extends AmazonWebServiceRequest implements
      * the the object on the server side.
      */
     private SSEAwsKeyManagementParams sseAwsKeyManagementParams;
+    
+    /**
+     *  Controls how the Protection state of the source object is copied to the destination object.
+     *  If copied, the retention period and all legal holds are copied onto the new object.
+     *  The legal hold date's is set to the date of the copy.
+     */
+    private RetentionDirective retentionDirective;
+    
+    /**
+     * Date on which it will be legal to delete or modify the object.
+     * You can only specify this or the Retention-Period header.
+     * If both are specified a 400 error will be returned.
+     * If neither is specified the bucket's DefaultRetention period will be used.
+     * This header should be used to calculate a retention period in seconds and then stored in that manner.
+     */
+    private Date retentionExpirationDate;
+    
+    /**
+     * A single legal hold to apply to the object.
+     * A legal hold is a Y character long string.
+     * The object cannot be overwritten or deleted until all legal holds associated with the object are removed.
+     */
+    private String retentionLegalHoldId;
+    
+    /**
+     * Retention period to store on the object in seconds.
+     * If this field and Retention-Expiration-Date are specified a 400 error is returned.
+     * If neither is specified the bucket's DefaultRetention period will be used.
+     * 0 is a legal value assuming the bucket's minimum retention period is also 0.
+     */
+    private Long retentionPeriod;
+    
 
     /**
      * If enabled, the requester is charged for conducting this operation from
@@ -1211,4 +1243,37 @@ public class CopyObjectRequest extends AmazonWebServiceRequest implements
         setNewObjectTagging(newObjectTagging);
         return this;
     }
+
+	public RetentionDirective getRetentionDirective() {
+		return retentionDirective;
+	}
+
+	public void setRetentionDirective(RetentionDirective retentionDirective) {
+		this.retentionDirective = retentionDirective;
+	}
+
+	public Date getRetentionExpirationDate() {
+		return retentionExpirationDate;
+	}
+
+	public void setRetentionExpirationDate(Date retentionExpirationDate) {
+		this.retentionExpirationDate = retentionExpirationDate;
+	}
+
+	public String getRetentionLegalHoldId() {
+		return retentionLegalHoldId;
+	}
+
+	public void setRetentionLegalHoldId(String retentionLegalHoldId) {
+		this.retentionLegalHoldId = retentionLegalHoldId;
+	}
+
+	public Long getRetentionPeriod() {
+		return retentionPeriod;
+	}
+
+	public void setRetentionPeriod(Long retentionPeriod) {
+		this.retentionPeriod = retentionPeriod;
+	}
+	
 }
