@@ -1,5 +1,9 @@
 # CHANGELOG
 
+# 2.4.1
+## Content
+### Features
+* GET Bucket (List Objects) Version 2
 
 # 2.4.0
 ## Content
