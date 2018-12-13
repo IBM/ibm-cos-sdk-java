@@ -61,6 +61,7 @@ com.ibm.cloud.objectstorage.retry.internal
 com.ibm.cloud.objectstorage.retry.v2
 com.ibm.cloud.objectstorage.services.aspera.transfer
 com.ibm.cloud.objectstorage.services.aspera.transfer.internal
+com.ibm.cloud.objectstorage.services.kms
 com.ibm.cloud.objectstorage.services.s3
 com.ibm.cloud.objectstorage.services.s3.event
 com.ibm.cloud.objectstorage.services.s3.internal
