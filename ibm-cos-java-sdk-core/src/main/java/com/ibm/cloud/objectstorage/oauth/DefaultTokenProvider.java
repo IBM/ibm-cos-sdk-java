@@ -39,6 +39,7 @@ import org.apache.http.util.EntityUtils;
 import com.ibm.cloud.objectstorage.SDKGlobalConfiguration;
 import com.ibm.cloud.objectstorage.http.apache.client.impl.ApacheConnectionManagerFactory.TrustingX509TrustManager;
 import com.ibm.cloud.objectstorage.http.conn.ssl.SdkTLSSocketFactory;
+import com.ibm.cloud.objectstorage.http.settings.HttpClientSettings;
 import com.ibm.cloud.objectstorage.log.InternalLogApi;
 import com.ibm.cloud.objectstorage.log.InternalLogFactory;
 import com.ibm.cloud.objectstorage.oauth.OAuthServiceException;
@@ -68,6 +69,9 @@ public class DefaultTokenProvider implements TokenProvider {
 	/** variable to overwrite the global SDKGlobalConfiguration.IAM_ENDPOINT **/
 	private String iamEndpoint = SDKGlobalConfiguration.IAM_ENDPOINT;
 
+	/** The client http setting */
+	private HttpClientSettings httpClientSettings;
+
 	/**
 	 * Default implmentation will use the apiKey to retrieve the Token from the
 	 * IAM Service
@@ -88,6 +92,16 @@ public class DefaultTokenProvider implements TokenProvider {
 	 */
 	public void setIamEndpoint(String iamEndpoint) {
 		this.iamEndpoint = iamEndpoint;
+	}
+
+	/**
+	 * Apply http Settings when available to match those set on the s3Client. 
+	 * This is needed for proxy host & port config
+	 * 
+	 * @param httpClientSettings
+	 */
+	public void setHttpClientSettings(HttpClientSettings httpClientSettings) {
+		this.httpClientSettings = httpClientSettings;
 	}
 
 	/**
@@ -118,7 +132,12 @@ public class DefaultTokenProvider implements TokenProvider {
 
 			SSLConnectionSocketFactory sslsf = new SdkTLSSocketFactory(sslContext, new DefaultHostnameVerifier());
 
-			HttpClient client = HttpClientBuilder.create().setSSLSocketFactory(sslsf).build();
+			HttpClientBuilder builder = HttpClientBuilder.create();	
+			if (httpClientSettings != null){
+				DefaultTokenManager.addProxyConfig(builder, httpClientSettings);
+			}
+
+			HttpClient client = builder.setSSLSocketFactory(sslsf).build();
 
 			HttpPost post = new HttpPost(iamEndpoint);
 			post.setHeader("Authorization", BASIC_AUTH);

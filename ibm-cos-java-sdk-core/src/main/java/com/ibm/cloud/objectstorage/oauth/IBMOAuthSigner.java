@@ -14,6 +14,7 @@ package com.ibm.cloud.objectstorage.oauth;
 
 import static com.ibm.cloud.objectstorage.auth.internal.SignerConstants.AUTHORIZATION;
 
+import com.ibm.cloud.objectstorage.ClientConfiguration;
 import com.ibm.cloud.objectstorage.SignableRequest;
 import com.ibm.cloud.objectstorage.auth.AWSCredentials;
 import com.ibm.cloud.objectstorage.auth.AWSSessionCredentials;
@@ -28,6 +29,27 @@ import com.ibm.cloud.objectstorage.log.InternalLogFactory;
 public class IBMOAuthSigner extends AbstractAWSSigner  {
 
     protected static final InternalLogApi log = InternalLogFactory.getLog(IBMOAuthSigner.class);
+    
+    /** The client configuration */
+    private ClientConfiguration clientConfiguration;
+
+    /**
+     * Public constructor to accept clientconfiguration parameter, which is then passed 
+     * through to DefaultTokenManager and used for proxy config on IAM calls for token retrieval
+     *   
+     * @param clientConfiguration
+     * 			This config is used in IAM token retrieval to determine if request should go through a proxy
+     */
+    public IBMOAuthSigner (ClientConfiguration clientConfiguration) {
+    	this.clientConfiguration = clientConfiguration;
+    }
+
+    /**
+     * Default public constructor
+     */
+    public IBMOAuthSigner () {
+
+    }
 
     @Override
     public void sign(SignableRequest<?> request, AWSCredentials credentials) {
@@ -35,9 +57,16 @@ public class IBMOAuthSigner extends AbstractAWSSigner  {
     	log.debug("++ OAuth signer");
     	
     	IBMOAuthCredentials oAuthCreds = (IBMOAuthCredentials)credentials;
+    	if (oAuthCreds.getTokenManager() instanceof DefaultTokenManager) {
+    		DefaultTokenManager tokenManager = (DefaultTokenManager)oAuthCreds.getTokenManager();
+    		tokenManager.setClientConfiguration(clientConfiguration);
+        	request.addHeader(
+                    AUTHORIZATION,"Bearer " + tokenManager.getToken());
+    	} else {
+        	request.addHeader(
+                    AUTHORIZATION,"Bearer " + oAuthCreds.getTokenManager().getToken());
+    	}
 
-    	request.addHeader(
-                AUTHORIZATION,"Bearer " + oAuthCreds.getTokenManager().getToken());
     }
 
 

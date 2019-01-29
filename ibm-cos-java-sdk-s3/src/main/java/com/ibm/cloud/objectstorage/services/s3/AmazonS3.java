@@ -915,9 +915,42 @@ public interface AmazonS3 extends S3DirectSpi {
      *             request.
      *
      * @see AmazonS3#createBucket(CreateBucketRequest)
+     * @deprecated By {@link #doesBucketExistV2(String)} which will correctly throw an exception when
+     * credentials are invalid instead of returning true. See
+     * <a href="https://github.com/aws/aws-sdk-java/issues/1256">Issue #1256</a>.
      */
+    @Deprecated
     public boolean doesBucketExist(String bucketName)
         throws SdkClientException, AmazonServiceException;
+
+    /**
+     * Checks if the specified bucket exists. Amazon S3 buckets are named in a
+     * global namespace; use this method to determine if a specified bucket name
+     * already exists, and therefore can't be used to create a new bucket.
+     *
+     * <p>
+     * Internally this uses the {@link #getBucketAcl(String)} operation to determine
+     * whether the bucket exists.
+     * </p>
+     *
+     * @param bucketName
+     *            The name of the bucket to check.
+     *
+     * @return The value <code>true</code> if the specified bucket exists in
+     *         Amazon S3; the value <code>false</code> if there is no bucket in
+     *         Amazon S3 with that name.
+     *
+     * @throws SdkClientException
+     *             If any errors are encountered in the client while making the
+     *             request or handling the response.
+     * @throws AmazonServiceException
+     *             If any errors occurred in Amazon S3 while processing the
+     *             request.
+     *
+     * @see AmazonS3#createBucket(CreateBucketRequest)
+     */
+    public boolean doesBucketExistV2(String bucketName)
+            throws SdkClientException, AmazonServiceException;
 
     /**
      * Performs a head bucket operation on the requested bucket name. This operation is useful to

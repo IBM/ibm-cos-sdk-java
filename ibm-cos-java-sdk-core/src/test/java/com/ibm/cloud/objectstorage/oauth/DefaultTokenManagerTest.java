@@ -5,14 +5,23 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.Mockito;
 
+import com.ibm.cloud.objectstorage.ClientConfiguration;
 import com.ibm.cloud.objectstorage.SDKGlobalConfiguration;
+import com.ibm.cloud.objectstorage.http.settings.HttpClientSettings;
 import com.ibm.cloud.objectstorage.oauth.DefaultTokenManager;
 import com.ibm.cloud.objectstorage.oauth.Token;
 import com.ibm.cloud.objectstorage.oauth.TokenProvider;
 
 import static org.mockito.Mockito.*;
 
+import java.lang.reflect.Field;
+
+import org.apache.http.conn.routing.HttpRoutePlanner;
+import org.apache.http.impl.client.HttpClientBuilder;
+
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -325,5 +334,56 @@ public class DefaultTokenManagerTest {
 		DefaultTokenManager defaultTokenManager = new DefaultTokenManager(new TokenProviderNull());
 		
 		defaultTokenManager.getToken();
+	}
+	
+	/**
+	 * Ensure proxy settings are applied to http client
+	 * @throws SecurityException 
+	 * @throws NoSuchFieldException 
+	 * @throws IllegalAccessException 
+	 * @throws IllegalArgumentException 
+	 */
+	@Test
+	public void shouldAddProxyToClient() throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException{
+		
+		HttpClientBuilder builder = HttpClientBuilder.create();
+		
+		ClientConfiguration config = new ClientConfiguration().withProxyHost("127.0.0.1").withProxyPort(8080);
+
+		HttpClientSettings settings = HttpClientSettings.adapt(config);
+		
+		DefaultTokenManager.addProxyConfig(builder, settings);
+		builder.build();
+		Field field = builder.getClass().getDeclaredField("routePlanner");    
+		field.setAccessible(true);
+		HttpRoutePlanner httpRoutePlanner = (HttpRoutePlanner) field.get(builder);
+		
+		assertNotNull(httpRoutePlanner);
+	}
+
+	
+	/**
+	 * Ensure proxy settings are NOT applied to http client
+	 * @throws SecurityException 
+	 * @throws NoSuchFieldException 
+	 * @throws IllegalAccessException 
+	 * @throws IllegalArgumentException 
+	 */
+	@Test
+	public void shouldNotAddProxyToClient() throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException{
+		
+		HttpClientBuilder builder = HttpClientBuilder.create();
+		
+		ClientConfiguration config = new ClientConfiguration();
+
+		HttpClientSettings settings = HttpClientSettings.adapt(config);
+		
+		DefaultTokenManager.addProxyConfig(builder, settings);
+		builder.build();
+		Field field = builder.getClass().getDeclaredField("routePlanner");    
+		field.setAccessible(true);
+		HttpRoutePlanner httpRoutePlanner = (HttpRoutePlanner) field.get(builder);
+		
+		assertNull(httpRoutePlanner);
 	}
 }

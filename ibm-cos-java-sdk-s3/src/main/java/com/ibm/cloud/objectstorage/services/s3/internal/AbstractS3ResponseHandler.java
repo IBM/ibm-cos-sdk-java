@@ -141,6 +141,9 @@ public abstract class AbstractS3ResponseHandler<T>
                 new ObjectExpirationHeaderHandler<ObjectMetadata>().handle(metadata, response);
             } else if (key.equalsIgnoreCase(Headers.RESTORE)) {
                 new ObjectRestoreHeaderHandler<ObjectRestoreResult>().handle(metadata, response);
+            } else if (key.equalsIgnoreCase(Headers.IBM_TRANSITION)) {
+                new ObjectTransitionHeaderHandler<ObjectTransitionResult>().handle(metadata, response);
+                metadata.setHeader(key, header.getValue());
             } else if (key.equalsIgnoreCase(Headers.REQUESTER_CHARGED_HEADER)) {
                 new S3RequesterChargedHeaderHandler<S3RequesterChargedResult>().handle(metadata, response);
             } else if (key.equalsIgnoreCase(Headers.S3_PARTS_COUNT)) {

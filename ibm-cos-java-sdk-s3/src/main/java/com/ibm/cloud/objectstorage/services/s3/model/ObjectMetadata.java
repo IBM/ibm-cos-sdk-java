@@ -27,6 +27,7 @@ import com.ibm.cloud.objectstorage.services.s3.Headers;
 import com.ibm.cloud.objectstorage.services.s3.internal.Constants;
 import com.ibm.cloud.objectstorage.services.s3.internal.ObjectExpirationResult;
 import com.ibm.cloud.objectstorage.services.s3.internal.ObjectRestoreResult;
+import com.ibm.cloud.objectstorage.services.s3.internal.ObjectTransitionResult;
 import com.ibm.cloud.objectstorage.services.s3.internal.S3RequesterChargedResult;
 import com.ibm.cloud.objectstorage.services.s3.internal.ServerSideEncryptionResult;
 import com.ibm.cloud.objectstorage.services.s3.internal.ServiceUtils;
@@ -37,7 +38,7 @@ import com.ibm.cloud.objectstorage.services.s3.internal.ServiceUtils;
  * sends and receives (Content-Length, ETag, Content-MD5, etc.).
  */
 public class ObjectMetadata implements ServerSideEncryptionResult, S3RequesterChargedResult,
-        ObjectExpirationResult, ObjectRestoreResult, Cloneable, Serializable
+        ObjectExpirationResult, ObjectRestoreResult, ObjectTransitionResult, Cloneable, Serializable
 {
     /*
      * TODO: Might be nice to get as many of the internal use only methods out
@@ -107,6 +108,10 @@ public class ObjectMetadata implements ServerSideEncryptionResult, S3RequesterCh
      * Retention period to store on the object in seconds.
      */
     private Long retentionPeriod;
+    
+    private String transition;
+    
+    private Date transitionDate;
 
     public ObjectMetadata() {}
 
@@ -866,7 +871,43 @@ public class ObjectMetadata implements ServerSideEncryptionResult, S3RequesterCh
     public Boolean getOngoingRestore() {
         return this.ongoingRestore;
     }
+    		
+	/**
+     * Returns the date at which an object will be transitioned to 
+     * archive storage.
+     */
+    public Date getTransitionDate() {
+        return cloneDate(transitionDate);
+    }
 
+    /**
+     * For internal use only. This will *not* set the object's transition 
+     * date, and is only used to set the value in the object after
+     * receiving the value in a response from S3.
+     *
+     * @param transitionDate
+     *            The transition date for the object.
+     */
+    public void setTransitionDate(Date transitionDate) {
+        this.transitionDate = transitionDate;
+    }
+
+    /**
+     * For internal use only. Sets the transition storage class. Not intended to be called by external
+     * code.
+     */
+    public void setTransition(String transition) {
+        this.transition = transition;
+    }
+
+
+    /**
+     *  Returns the transition storage class.
+     */
+    public String getTransition() {
+        return this.transition;
+    }
+	    
     /**
      *  Set the date when the object is no longer cacheable.
      */

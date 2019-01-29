@@ -41,9 +41,13 @@ import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.ssl.SSLContexts;
 import org.apache.http.util.EntityUtils;
 
+import com.ibm.cloud.objectstorage.ClientConfiguration;
 import com.ibm.cloud.objectstorage.SDKGlobalConfiguration;
+import com.ibm.cloud.objectstorage.http.apache.SdkProxyRoutePlanner;
 import com.ibm.cloud.objectstorage.http.apache.client.impl.ApacheConnectionManagerFactory.TrustingX509TrustManager;
+import com.ibm.cloud.objectstorage.http.apache.utils.ApacheUtils;
 import com.ibm.cloud.objectstorage.http.conn.ssl.SdkTLSSocketFactory;
+import com.ibm.cloud.objectstorage.http.settings.HttpClientSettings;
 import com.ibm.cloud.objectstorage.log.InternalLogApi;
 import com.ibm.cloud.objectstorage.log.InternalLogFactory;
 import com.ibm.cloud.objectstorage.oauth.DefaultTokenProvider;
@@ -93,6 +97,12 @@ public class DefaultTokenManager implements TokenManager {
 	 * variable to overwrite the global SDKGlobalConfiguration.IAM_MAX_RETRY
 	 **/
 	private double iamRefreshOffset = SDKGlobalConfiguration.IAM_REFRESH_OFFSET;
+
+	/** The client configuration */
+	private ClientConfiguration clientConfiguration;
+
+	/** The client http setting */
+	private HttpClientSettings httpClientSettings;
 
 	// Executor service for token refresh
 	private final ExecutorService executor = Executors.newSingleThreadExecutor();
@@ -405,6 +415,34 @@ public class DefaultTokenManager implements TokenManager {
 		log.debug("Aysnchrnonous job in progress : " + asyncInProgress);
 		return asyncInProgress;
 	}
+	/**
+	 * Client config to customise the IAM Client
+	 * 
+	 * @return
+	 */
+	public ClientConfiguration getClientConfiguration() {
+		return clientConfiguration;
+	}
+
+	/**
+	 * Set the client config that is been used on the s3client
+	 * 
+	 * @param clientConfiguration
+	 */
+	public void setClientConfiguration(ClientConfiguration clientConfiguration) {
+		this.clientConfiguration = clientConfiguration;
+		if (clientConfiguration != null) {
+			this.httpClientSettings = HttpClientSettings.adapt(clientConfiguration);
+			if (getProvider() instanceof DefaultTokenProvider) {
+				DefaultTokenProvider defaultProvider = (DefaultTokenProvider)getProvider();
+				defaultProvider.setHttpClientSettings(httpClientSettings); 
+			}
+			if (getProvider() instanceof DelegateTokenProvider) {
+				DelegateTokenProvider delegateProvider = (DelegateTokenProvider)getProvider();
+				delegateProvider.setHttpClientSettings(httpClientSettings); 
+			}
+		}
+	}
 
 	private boolean shouldRetry(int statusCode) {
 		if (NON_RETRYABLE_STATUS_CODES.contains(statusCode))
@@ -493,7 +531,13 @@ public class DefaultTokenManager implements TokenManager {
 
 				SSLConnectionSocketFactory sslsf = new SdkTLSSocketFactory(sslContext, new DefaultHostnameVerifier());
 
-				HttpClient client = HttpClientBuilder.create().setSSLSocketFactory(sslsf).build();
+				HttpClientBuilder builder = HttpClientBuilder.create();				
+				if (httpClientSettings != null){
+					addProxyConfig(builder, httpClientSettings);
+				}
+
+				HttpClient client = builder.setSSLSocketFactory(sslsf).build();
+				
 				HttpPost post = new HttpPost(iamEndpoint);
 				post.setHeader("Authorization", BASIC_AUTH);
 				post.setHeader("Content-Type", CONTENT_TYPE);
@@ -539,6 +583,30 @@ public class DefaultTokenManager implements TokenManager {
 				e.printStackTrace();
 			}
 			return null;
+		}
+	}
+
+	/**
+	 * Add a proxy to the http request if it has been set within settings
+	 * 
+	 * @param builder
+	 * 			Builder used to create the http client
+	 * @param settings
+	 * 			Settings which contain any proxy configuration details
+	 */
+	public static void addProxyConfig(HttpClientBuilder builder,
+			HttpClientSettings settings) {
+		if (settings.isProxyEnabled()) {
+
+			log.info("Configuring Proxy. Proxy Host: " + settings.getProxyHost() + " " +
+					"Proxy Port: " + settings.getProxyPort());
+
+			builder.setRoutePlanner(new SdkProxyRoutePlanner(
+					settings.getProxyHost(), settings.getProxyPort(), settings.getNonProxyHosts()));
+
+			if (settings.isAuthenticatedProxy()) {
+				builder.setDefaultCredentialsProvider(ApacheUtils.newProxyCredentialsProvider(settings));
+			}
 		}
 	}
 }

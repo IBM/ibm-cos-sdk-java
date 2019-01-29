@@ -67,6 +67,7 @@ public final class S3AbortableInputStream extends SdkFilterInputStream {
      */
     @Override
     public void abort() {
+        super.abort();
         if (httpRequest != null) {
             httpRequest.abort();
         }
@@ -158,7 +159,7 @@ public final class S3AbortableInputStream extends SdkFilterInputStream {
      */
     @Override
     public void close() throws IOException {
-        if (bytesRead >= contentLength || eofReached) {
+    	if (readAllBytesInternal() || isAborted()) {
             super.close();
         } else {
             LOG.warn(
@@ -183,5 +184,15 @@ public final class S3AbortableInputStream extends SdkFilterInputStream {
     @SdkTestInternalApi
     boolean isEofReached() {
         return this.eofReached;
+    }
+
+    /**
+     * This method was original readAllBytes, but was renamed to readAllBytesInternal
+     * to work around issues with return types conflicts & access privileges on 
+     * InputStream 
+     * @return
+     */
+    private boolean readAllBytesInternal() {
+        return bytesRead >= contentLength || eofReached;
     }
 }

@@ -880,4 +880,15 @@ public abstract class AmazonWebServiceClient {
     public String getSignerOverride() {
         return clientConfiguration.getSignerOverride();
     }
+
+    /**
+     * Return the client configuration so http calls made outside the Client, but within the SDK,
+     * can ascertain any options set in original client
+     * 
+     * @return
+     * 	ClientConfiguration
+     */
+	public ClientConfiguration getClientConfiguration() {
+		return clientConfiguration;
+	}
 }

@@ -1,13 +1,13 @@
 # IBM Cloud Object Storage - Java SDK
 
 This package allows Java developers to write software that interacts with [IBM
-Cloud Object Storage](https://console.bluemix.net/docs/services/cloud-object-storage/about-cos.html). It is a fork of [the ``AWS SDK for Java`` library](https://github.com/aws/aws-sdk-java).
+Cloud Object Storage](https://cloud.ibm.com/docs/services/cloud-object-storage/about-cos.html). It is a fork of [the ``AWS SDK for Java`` library](https://github.com/aws/aws-sdk-java).
 
 ## Documentation
 
-* [Core documentation for IBM COS](https://console.bluemix.net/docs/services/cloud-object-storage/getting-started.html)
+* [Core documentation for IBM COS](https://cloud.ibm.com/docs/services/cloud-object-storage/getting-started.html)
 * [Java API reference documentation](https://ibm.github.io/ibm-cos-sdk-java)
-* [REST API reference documentation](https://console.bluemix.net/docs/services/cloud-object-storage/api-reference/about-api.html)
+* [REST API reference documentation](https://cloud.ibm.com/docs/services/cloud-object-storage/api-reference/about-api.html)
 
 Changes to the SDK are tracked in the [CHANGELOG.md][changes-file] file.
 
@@ -19,13 +19,13 @@ Changes to the SDK are tracked in the [CHANGELOG.md][changes-file] file.
 
 You'll need:
   * An instance of COS.
-  * An API key from [IBM Cloud Identity and Access Management](https://console.bluemix.net/docs/iam/users_roles.html) with at least `Writer` permissions.
+  * An API key from [IBM Cloud Identity and Access Management](https://cloud.ibm.com/docs/iam/users_roles.html) with at least `Writer` permissions.
   * The ID of the instance of COS that you are working with.
   * Token acquisition endpoint
   * Service endpoint
   * **Java 1.6+**.
 
-These values can be found in the Bluemix UI by [generating a 'service credential'](https://console.bluemix.net/docs/services/cloud-object-storage/iam/service-credentials.html).
+These values can be found in the Bluemix UI by [generating a 'service credential'](https://cloud.ibm.com/docs/services/cloud-object-storage/iam/service-credentials.html).
 
 ## Getting the SDK
 The recommended way to use the IBM COS SDK for Java in your project is to consume it from Maven. Import the `ibm-cos-java-sdk` and specify the SDK Maven modules that your project needs in the dependencies:
@@ -160,20 +160,20 @@ mvn clean install
 
 ## Using a Service Credential
 From Release 2.1.0 you can source credentials directly from a 
-[Service Credential](https://console.bluemix.net/docs/services/cloud-object-storage/iam/service-credentials.html) JSON document 
+[Service Credential](https://cloud.ibm.com/docs/services/cloud-object-storage/iam/service-credentials.html) JSON document 
 generated in the IBM Cloud console saved to `~/.bluemix/cos_credentials`. The SDK will automatically load these providing you 
 have not explicitly set other credentials during client creation. 
-If the Service Credential contain [HMAC keys](https://console.bluemix.net/docs/services/cloud-object-storage/hmac/credentials.html) 
+If the Service Credential contain [HMAC keys](https://cloud.ibm.com/docs/services/cloud-object-storage/hmac/credentials.html) 
 the client will use those and authenticate using a signature, otherwise the client will use the provided API key to authenticate 
 using bearer tokens.
 
 ## Aspera high-speed transfer
-It is now possible to use the IBM Aspera high-speed transfer service as an alternative method to managed transfers of larger objects. The Aspera high-speed transfer service is especially effective across long distances or in environments with high rates of packet loss. For more details, check out the [IBM Cloud documentation](https://console.bluemix.net/docs/services/cloud-object-storage/basics/aspera.html#using-libraries-and-sdks).
+It is now possible to use the IBM Aspera high-speed transfer service as an alternative method to managed transfers of larger objects. The Aspera high-speed transfer service is especially effective across long distances or in environments with high rates of packet loss. For more details, check out the [IBM Cloud documentation](https://cloud.ibm.com/docs/services/cloud-object-storage/basics/aspera.html#using-libraries-and-sdks).
 
 ## Archive Tier Support
 You can automatically archive objects after a specified length of time or after a specified date.  Once archived, a temporary copy of an object can be restored for access as needed.  Restore time may take up to 15 hours.
 
-An archive policy is set at the bucket level by calling the `setBucketLifecycleConfiguration` method on a client instance.  A newly added or modified archive policy applies to new objects uploaded and does not affect existing objects.  For more detail, [see the documentation](https://console.bluemix.net/docs/services/cloud-object-storage/libraries/java.html#java).
+An archive policy is set at the bucket level by calling the `setBucketLifecycleConfiguration` method on a client instance.  A newly added or modified archive policy applies to new objects uploaded and does not affect existing objects.  For more detail, [see the documentation](https://cloud.ibm.com/docs/services/cloud-object-storage/libraries/java.html#java).
 
 ## Immutable Object Storage
 Users can configure buckets with an Immutable Object Storage policy to prevent objects from being modified or deleted for a defined period of time.
@@ -192,11 +192,11 @@ Feel free to use GitHub issues for tracking bugs and feature requests, but for h
 
 
 [changes-file]: ./CHANGELOG.md
-[bluemix-docs]: https://console.bluemix.net/docs/services/cloud-object-storage/libraries/java.html#java
+[bluemix-docs]: https://cloud.ibm.com/docs/services/cloud-object-storage/libraries/java.html#java
 [stack-overflow]: http://stackoverflow.com/questions/tagged/object-storage+ibm
 [ibm-bluemix-support]: https://support.ng.bluemix.net/gethelp/
 [open-an-issue]: https://github.com/ibm/ibm-cos-sdk-java/issues/new
-[immutable-storage-docs]: https://console.bluemix.net/docs/services/cloud-object-storage/basics/immutable.html
+[immutable-storage-docs]: https://cloud.ibm.com/docs/services/cloud-object-storage/basics/immutable.html
 
 ## Deprecation Notice
 

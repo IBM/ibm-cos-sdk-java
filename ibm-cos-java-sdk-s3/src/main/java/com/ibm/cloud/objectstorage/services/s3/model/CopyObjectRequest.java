@@ -187,6 +187,8 @@ public class CopyObjectRequest extends AmazonWebServiceRequest implements
      */
     private ObjectTagging newObjectTagging;
 
+    private String metadataDirective;
+
     /**
      * <p>
      * Constructs with basic options.
@@ -1275,5 +1277,41 @@ public class CopyObjectRequest extends AmazonWebServiceRequest implements
 	public void setRetentionPeriod(Long retentionPeriod) {
 		this.retentionPeriod = retentionPeriod;
 	}
-	
+
+	/**
+	 * Specifies whether the metadata is copied from the source object or replaced with metadata provided in the request.
+	 */
+	public String getMetadataDirective() {
+		return metadataDirective;
+	}
+
+	/**
+	 * Specifies whether the metadata is copied from the source object or replaced with metadata provided in the request.
+	 *
+	 * @param metadataDirective New value for the metadata directive.
+	 */
+	public void setMetadataDirective(String metadataDirective) {
+		this.metadataDirective = metadataDirective;
+	}
+
+	/**
+	 * Specifies whether the metadata is copied from the source object or replaced with metadata provided in the request.
+	 *
+	 * @param metadataDirective New value for the metadata directive.
+	 * @return Returns a reference to this object so that method calls can be chained together.
+	 */
+	public CopyObjectRequest withMetadataDirective(String metadataDirective) {
+		setMetadataDirective(metadataDirective);
+		return this;
+	}
+
+	/**
+	 * Specifies whether the metadata is copied from the source object or replaced with metadata provided in the request.
+	 *
+	 * @param metadataDirective New value for the metadata directive.
+	 * @return Returns a reference to this object so that method calls can be chained together.
+	 */
+	public CopyObjectRequest withMetadataDirective(MetadataDirective metadataDirective) {
+		return withMetadataDirective(metadataDirective == null ? null : metadataDirective.toString());
+	}	
 }

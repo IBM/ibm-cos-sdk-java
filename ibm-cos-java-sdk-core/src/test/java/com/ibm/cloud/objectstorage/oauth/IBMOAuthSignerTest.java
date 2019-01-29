@@ -27,7 +27,7 @@ public class IBMOAuthSignerTest {
 		
 		TokenProvider tokenProvider = new TokenProviderUtil();
 		AWSCredentialsProvider testCredProvider = new CredentialProviderUtil(tokenProvider);
-				
+	
 		IBMOAuthSigner signer = new IBMOAuthSigner();
 		
 		signer.sign(request, testCredProvider.getCredentials());

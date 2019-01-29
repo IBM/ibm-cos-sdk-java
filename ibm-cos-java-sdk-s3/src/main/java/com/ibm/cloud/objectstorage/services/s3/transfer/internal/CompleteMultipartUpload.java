@@ -93,6 +93,7 @@ public class CompleteMultipartUpload implements Callable<UploadResult> {
                 ;
             res = s3.completeMultipartUpload(req);
         } catch (Exception e) {
+        	monitor.uploadFailure();
             publishProgress(listener, ProgressEventType.TRANSFER_FAILED_EVENT);
             throw e;
         }

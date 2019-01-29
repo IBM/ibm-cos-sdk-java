@@ -12,6 +12,7 @@
 */
 package com.ibm.cloud.objectstorage.services.aspera.transfer;
 
+import com.ibm.cloud.objectstorage.AmazonWebServiceClient;
 import com.ibm.cloud.objectstorage.SdkClientException;
 import com.ibm.cloud.objectstorage.oauth.DefaultTokenManager;
 import com.ibm.cloud.objectstorage.oauth.DelegateTokenProvider;
@@ -33,7 +34,10 @@ public class AsperaTransferManagerBuilder {
 	
 	/**token provider interface, the implementation will make the http request with appropriate receiver client id & apiKey**/
 	private TokenProvider asperaTokenProvider;
-	
+
+	/**Default Token Manager for token storage & management**/
+	private DefaultTokenManager defaultTokenManager;
+
 	/**s3Client to retrieve FaspConnectionInfo per bucket**/
 	private AmazonS3 s3Client;
 
@@ -46,11 +50,17 @@ public class AsperaTransferManagerBuilder {
 		if (apiKey == null) throw new SdkClientException("apiKey has not been set for AsperaTransferManager");
 		if (s3Client == null) throw new SdkClientException("s3Client has not been set for AsperaTransferManager");
 
-		this.s3Client = s3Client;
 		this.asperaTokenProvider = new DelegateTokenProvider(apiKey);
-		this.tokenManager = new DefaultTokenManager(asperaTokenProvider);
-		this.asperaTransferManagerConfig = new AsperaTransferManagerConfig();
+		//Ascertain the configuration set by the s3Client & apply it to the tokenmanager
+		defaultTokenManager = new DefaultTokenManager(asperaTokenProvider);
+		if (s3Client instanceof AmazonWebServiceClient){
+			AmazonWebServiceClient amazonS3Client = (AmazonWebServiceClient)s3Client;
+			defaultTokenManager.setClientConfiguration(amazonS3Client.getClientConfiguration());
+		}
+
 		this.s3Client = s3Client;
+		this.tokenManager = defaultTokenManager;
+		this.asperaTransferManagerConfig = new AsperaTransferManagerConfig();
 	}
 
 	public AsperaTransferManager build() {

@@ -1205,7 +1205,6 @@ public class AmazonS3Client extends AmazonWebServiceClient implements AmazonS3 {
     @Override
     public boolean doesBucketExist(String bucketName)
             throws SdkClientException, AmazonServiceException {
-
         try {
             headBucket(new HeadBucketRequest(bucketName));
             return true;
@@ -1213,14 +1212,31 @@ public class AmazonS3Client extends AmazonWebServiceClient implements AmazonS3 {
             // A redirect error or a forbidden error means the bucket exists. So
             // returning true.
             if ((ase.getStatusCode() == Constants.BUCKET_REDIRECT_STATUS_CODE)
-                    || (ase.getStatusCode() == Constants.BUCKET_ACCESS_FORBIDDEN_STATUS_CODE)) {
+                || (ase.getStatusCode() == Constants.BUCKET_ACCESS_FORBIDDEN_STATUS_CODE)) {
                 return true;
             }
             if (ase.getStatusCode() == Constants.NO_SUCH_BUCKET_STATUS_CODE) {
                 return false;
             }
             throw ase;
+        }
+    }
 
+    @Override
+    public boolean doesBucketExistV2(String bucketName) throws SdkClientException {
+        try {
+            getBucketAcl(bucketName);
+            return true;
+        } catch (AmazonServiceException ase) {
+            // A redirect error or an AccessDenied exception means the bucket exists but it's not in this region
+            // or we don't have permissions to it.
+            if ((ase.getStatusCode() == Constants.BUCKET_REDIRECT_STATUS_CODE) || "AccessDenied".equals(ase.getErrorCode())) {
+                return true;
+            }
+            if (ase.getStatusCode() == Constants.NO_SUCH_BUCKET_STATUS_CODE) {
+                return false;
+            }
+            throw ase;
         }
     }
 
@@ -3092,7 +3108,7 @@ public class AmazonS3Client extends AmazonWebServiceClient implements AmazonS3 {
         if(this.awsCredentialsProvider.getCredentials() instanceof IBMOAuthCredentials) {
         	IBMOAuthCredentials oAuthCreds = (IBMOAuthCredentials)this.awsCredentialsProvider.getCredentials();
     		if (oAuthCreds.getApiKey() != null || oAuthCreds.getTokenManager() != null) {
-            	return new IBMOAuthSigner();	
+            	return new IBMOAuthSigner(clientConfiguration);	
     		}
         }
         
@@ -3393,8 +3409,12 @@ public class AmazonS3Client extends AmazonWebServiceClient implements AmazonS3 {
         populateRequesterPaysHeader(request, copyObjectRequest.isRequesterPays());
 
         ObjectMetadata newObjectMetadata = copyObjectRequest.getNewObjectMetadata();
-        if (newObjectMetadata != null) {
+        if (copyObjectRequest.getMetadataDirective() != null) {
+            request.addHeader(Headers.METADATA_DIRECTIVE, copyObjectRequest.getMetadataDirective());
+        } else if (newObjectMetadata != null) {
             request.addHeader(Headers.METADATA_DIRECTIVE, "REPLACE");
+        }
+        if (newObjectMetadata != null) {
             populateRequestMetadata(request, newObjectMetadata);
         }
 
