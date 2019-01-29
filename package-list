@@ -5,11 +5,6 @@ com.ibm.cloud.objectstorage.auth
 com.ibm.cloud.objectstorage.auth.internal
 com.ibm.cloud.objectstorage.auth.json
 com.ibm.cloud.objectstorage.auth.json.internal
-com.ibm.cloud.objectstorage.auth.policy
-com.ibm.cloud.objectstorage.auth.policy.actions
-com.ibm.cloud.objectstorage.auth.policy.conditions
-com.ibm.cloud.objectstorage.auth.policy.internal
-com.ibm.cloud.objectstorage.auth.policy.resources
 com.ibm.cloud.objectstorage.auth.presign
 com.ibm.cloud.objectstorage.auth.profile
 com.ibm.cloud.objectstorage.auth.profile.internal
