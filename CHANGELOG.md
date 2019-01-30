@@ -3,8 +3,8 @@
 # 2.4.2
 ## Content
 ### Defect Fixes
-* COSSDK-47973: https://github.com/IBM/ibm-cos-sdk-java/issues/12
-* AWS Java SDK Patch Alignment
+* COSSDK-47973 https://github.com/IBM/ibm-cos-sdk-java/issues/12
+* AWS Patches aligned to version 1.11.467 of the AWS Java SDK
 
 # 2.4.1
 ## Content
