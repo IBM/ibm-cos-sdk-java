@@ -15,7 +15,7 @@
 package com.ibm.cloud.objectstorage.services.s3.transfer.internal;
 
 import com.ibm.cloud.objectstorage.annotation.SdkInternalApi;
-import com.ibm.cloud.objectstorage.services.s3.internal.ServiceUtils;
+import com.ibm.cloud.objectstorage.services.s3.internal.FileLocks;
 import com.ibm.cloud.objectstorage.services.s3.transfer.Transfer;
 
 import java.io.File;
@@ -28,12 +28,12 @@ import java.util.concurrent.Future;
  */
 @SdkInternalApi
 public class CompleteMultipartDownload implements Callable<File> {
-    private final List<Future<File>> partFiles;
+    private final List<Future<Long>> partFiles;
     private final File destinationFile;
     private final DownloadImpl download;
     private Integer currentPartNumber;
 
-    public CompleteMultipartDownload(List<Future<File>> files, File destinationFile, DownloadImpl download, Integer currentPartNumber) {
+    public CompleteMultipartDownload(List<Future<Long>> files, File destinationFile, DownloadImpl download, Integer currentPartNumber) {
         this.partFiles = files;
         this.destinationFile = destinationFile;
         this.download = download;
@@ -42,12 +42,17 @@ public class CompleteMultipartDownload implements Callable<File> {
 
     @Override
     public File call() throws Exception {
-        for (Future<File> file : partFiles) {
-            ServiceUtils.appendFile(file.get(), destinationFile);
-            download.updatePersistableTransfer(currentPartNumber++);
+        try {
+            for (Future<Long> file : partFiles) {
+                long filePosition = file.get();
+                download.updatePersistableTransfer(currentPartNumber++, filePosition);
+            }
+
+            download.setState(Transfer.TransferState.Completed);
+        } finally {
+            FileLocks.unlock(destinationFile);
         }
 
-        download.setState(Transfer.TransferState.Completed);
         return destinationFile;
     }
 }

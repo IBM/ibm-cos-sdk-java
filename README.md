@@ -6,12 +6,12 @@ Cloud Object Storage](https://cloud.ibm.com/docs/services/cloud-object-storage/a
 ## Documentation
 
 * [Core documentation for IBM COS](https://cloud.ibm.com/docs/services/cloud-object-storage/getting-started.html)
+* [Code Examples](https://cloud.ibm.com/docs/services/cloud-object-storage?topic=cloud-object-storage-using-java#examples)
 * [Java API reference documentation](https://ibm.github.io/ibm-cos-sdk-java)
 * [REST API reference documentation](https://cloud.ibm.com/docs/services/cloud-object-storage/api-reference/about-api.html)
 
 Changes to the SDK are tracked in the [CHANGELOG.md][changes-file] file.
 
-* [Example code](#example-code)
 * [Building from source](#building-from-source)
 * [Getting help](#getting-help)
 
@@ -37,117 +37,6 @@ The recommended way to use the IBM COS SDK for Java in your project is to consum
     <artifactId>ibm-cos-java-sdk</artifactId>
   </dependency>
 </dependencies>
-```
-
-## Example code (Version 2.x)
-
-```java
-
-package com.cos;
-
-import java.sql.Timestamp;
-import java.util.List;
-
-
-// version 1.x of the library uses 'com.amazonaws' for namespacing
-
-import com.ibm.cloud.objectstorage.ClientConfiguration;
-import com.ibm.cloud.objectstorage.SDKGlobalConfiguration;
-import com.ibm.cloud.objectstorage.auth.AWSCredentials;
-import com.ibm.cloud.objectstorage.auth.AWSStaticCredentialsProvider;
-import com.ibm.cloud.objectstorage.auth.BasicAWSCredentials;
-import com.ibm.cloud.objectstorage.client.builder.AwsClientBuilder.EndpointConfiguration;
-import com.ibm.cloud.objectstorage.services.s3.AmazonS3;
-import com.ibm.cloud.objectstorage.services.s3.AmazonS3ClientBuilder;
-import com.ibm.cloud.objectstorage.services.s3.model.Bucket;
-import com.ibm.cloud.objectstorage.services.s3.model.ListObjectsRequest;
-import com.ibm.cloud.objectstorage.services.s3.model.ObjectListing;
-import com.ibm.cloud.objectstorage.services.s3.model.S3ObjectSummary;
-import com.ibm.cloud.objectstorage.oauth.BasicIBMOAuthCredentials;
-
-public class CosExample
-{
-
-    private static AmazonS3 _cos;
-
-    /**
-     * @param args
-     */
-    public static void main(String[] args)
-    {
-
-        SDKGlobalConfiguration.IAM_ENDPOINT = "https://iam.bluemix.net/oidc/token";
-
-        String bucketName = "<bucketName>";
-        String api_key = "<apiKey>";
-        String service_instance_id = "<resourceInstanceId>";
-        String endpoint_url = "https://s3-api.us-geo.objectstorage.softlayer.net";
-        String location = "us";
-
-        System.out.println("Current time: " + new Timestamp(System.currentTimeMillis()).toString());
-        _cos = createClient(api_key, service_instance_id, endpoint_url, location);
-        listObjects(bucketName, _cos);
-        listBuckets(_cos);
-    }
-
-    /**
-     * @param bucketName
-     * @param clientNum
-     * @param api_key
-     *            (or access key)
-     * @param service_instance_id
-     *            (or secret key)
-     * @param endpoint_url
-     * @param location
-     * @return AmazonS3
-     */
-    public static AmazonS3 createClient(String api_key, String service_instance_id, String endpoint_url, String location)
-    {
-        AWSCredentials credentials;
-        if (endpoint_url.contains("objectstorage.softlayer.net")) {
-            credentials = new BasicIBMOAuthCredentials(api_key, service_instance_id);
-        } else {
-            String access_key = api_key;
-            String secret_key = service_instance_id;
-            credentials = new BasicAWSCredentials(access_key, secret_key);
-        }
-        ClientConfiguration clientConfig = new ClientConfiguration().withRequestTimeout(5000);
-        clientConfig.setUseTcpKeepAlive(true);
-
-        AmazonS3 cos = AmazonS3ClientBuilder.standard().withCredentials(new AWSStaticCredentialsProvider(credentials))
-                .withEndpointConfiguration(new EndpointConfiguration(endpoint_url, location)).withPathStyleAccessEnabled(true)
-                .withClientConfiguration(clientConfig).build();
-        return cos;
-    }
-
-    /**
-     * @param bucketName
-     * @param cos
-     */
-    public static void listObjects(String bucketName, AmazonS3 cos)
-    {
-        System.out.println("Listing objects in bucket " + bucketName);
-        ObjectListing objectListing = cos.listObjects(new ListObjectsRequest().withBucketName(bucketName));
-        for (S3ObjectSummary objectSummary : objectListing.getObjectSummaries()) {
-            System.out.println(" - " + objectSummary.getKey() + "  " + "(size = " + objectSummary.getSize() + ")");
-        }
-        System.out.println();
-    }
-
-    /**
-     * @param cos
-     */
-    public static void listBuckets(AmazonS3 cos)
-    {
-        System.out.println("Listing buckets");
-        final List<Bucket> bucketList = cos.listBuckets();
-        for (final Bucket bucket : bucketList) {
-            System.out.println(bucket.getName());
-        }
-        System.out.println();
-    }
-
-}
 ```
 
 ## Building from source
@@ -194,7 +83,7 @@ Feel free to use GitHub issues for tracking bugs and feature requests, but for h
 [changes-file]: ./CHANGELOG.md
 [bluemix-docs]: https://cloud.ibm.com/docs/services/cloud-object-storage/libraries/java.html#java
 [stack-overflow]: http://stackoverflow.com/questions/tagged/object-storage+ibm
-[ibm-bluemix-support]: https://support.ng.bluemix.net/gethelp/
+[ibm-bluemix-support]: https://cloud.ibm.com/unifiedsupport/supportcenter
 [open-an-issue]: https://github.com/ibm/ibm-cos-sdk-java/issues/new
 [immutable-storage-docs]: https://cloud.ibm.com/docs/services/cloud-object-storage/basics/immutable.html
 
@@ -227,4 +116,7 @@ The 2.0 release of the SDK introduces a namespacing change that allows an applic
 
 This SDK is distributed under the
 [Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0),
-see LICENSE.txt and NOTICE.txt for more information.
+see [LICENSE.txt][LICENSE.txt] and [NOTICE.txt][NOTICE.txt] for more information.
+
+[LICENSE.txt]: ./LICENSE.txt
+[NOTICE.txt]: ./NOTICE.txt

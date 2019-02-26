@@ -17,26 +17,10 @@
  */
 package com.ibm.cloud.objectstorage.services.s3.internal;
 
-import com.ibm.cloud.objectstorage.Request;
-import com.ibm.cloud.objectstorage.SdkClientException;
-import com.ibm.cloud.objectstorage.services.s3.AmazonS3;
-import com.ibm.cloud.objectstorage.services.s3.AmazonS3Client;
-import com.ibm.cloud.objectstorage.services.s3.model.GetObjectMetadataRequest;
-import com.ibm.cloud.objectstorage.services.s3.model.GetObjectRequest;
-import com.ibm.cloud.objectstorage.services.s3.model.ObjectMetadata;
-import com.ibm.cloud.objectstorage.services.s3.model.S3Object;
-import com.ibm.cloud.objectstorage.services.s3.transfer.exception.FileLockException;
-import com.ibm.cloud.objectstorage.util.BinaryUtils;
-import com.ibm.cloud.objectstorage.util.DateUtils;
-import com.ibm.cloud.objectstorage.util.Md5Utils;
-import com.ibm.cloud.objectstorage.util.SdkHttpUtils;
-import com.ibm.cloud.objectstorage.util.StringUtils;
-import com.ibm.cloud.objectstorage.util.ValidationUtils;
+import static com.ibm.cloud.objectstorage.services.s3.internal.Constants.MB;
+import static com.ibm.cloud.objectstorage.util.IOUtils.closeQuietly;
+import static com.ibm.cloud.objectstorage.util.StringUtils.UTF8;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
-import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -54,10 +38,25 @@ import java.util.Map;
 
 import javax.net.ssl.SSLProtocolException;
 
-import static com.ibm.cloud.objectstorage.services.s3.internal.Constants.KB;
-import static com.ibm.cloud.objectstorage.services.s3.internal.Constants.MB;
-import static com.ibm.cloud.objectstorage.util.IOUtils.closeQuietly;
-import static com.ibm.cloud.objectstorage.util.StringUtils.UTF8;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+import com.ibm.cloud.objectstorage.Request;
+import com.ibm.cloud.objectstorage.SdkClientException;
+import com.ibm.cloud.objectstorage.annotation.SdkInternalApi;
+import com.ibm.cloud.objectstorage.services.s3.AmazonS3;
+import com.ibm.cloud.objectstorage.services.s3.AmazonS3Client;
+import com.ibm.cloud.objectstorage.services.s3.model.GetObjectMetadataRequest;
+import com.ibm.cloud.objectstorage.services.s3.model.GetObjectRequest;
+import com.ibm.cloud.objectstorage.services.s3.model.ObjectMetadata;
+import com.ibm.cloud.objectstorage.services.s3.model.S3Object;
+import com.ibm.cloud.objectstorage.services.s3.transfer.exception.FileLockException;
+import com.ibm.cloud.objectstorage.util.BinaryUtils;
+import com.ibm.cloud.objectstorage.util.DateUtils;
+import com.ibm.cloud.objectstorage.util.Md5Utils;
+import com.ibm.cloud.objectstorage.util.SdkHttpUtils;
+import com.ibm.cloud.objectstorage.util.StringUtils;
+import com.ibm.cloud.objectstorage.util.ValidationUtils;
 
 /**
  * General utility methods used throughout the AWS S3 Java client.
@@ -516,10 +515,29 @@ public class ServiceUtils {
         ValidationUtils.assertNotNull(s3, "S3 client");
         ValidationUtils.assertNotNull(getObjectRequest, "GetObjectRequest");
 
-        ObjectMetadata metadata = s3.getObjectMetadata(new GetObjectMetadataRequest(getObjectRequest.getBucketName(), getObjectRequest.getKey(), getObjectRequest.getVersionId())
-                .withSSECustomerKey(getObjectRequest.getSSECustomerKey())
-                .withPartNumber(1));
-        return metadata.getPartCount();
+        GetObjectMetadataRequest getObjectMetadataRequest = RequestCopyUtils.createGetObjectMetadataRequestFrom(getObjectRequest)
+                .withPartNumber(1);
+
+        return s3.getObjectMetadata(getObjectMetadataRequest).getPartCount();
+    }
+
+    /**
+     * Returns the part size of the part
+     *
+     * @param getObjectRequest the request to check
+     * @param s3 the s3 client
+     * @param partNumber the part number
+     * @return the part size
+     */
+    @SdkInternalApi
+    public static long getPartSize(GetObjectRequest getObjectRequest, AmazonS3 s3, int partNumber) {
+        ValidationUtils.assertNotNull(s3, "S3 client");
+        ValidationUtils.assertNotNull(getObjectRequest, "GetObjectRequest");
+
+        GetObjectMetadataRequest getObjectMetadataRequest = RequestCopyUtils.createGetObjectMetadataRequestFrom(getObjectRequest)
+                                                                            .withPartNumber(partNumber);
+
+        return s3.getObjectMetadata(getObjectMetadataRequest).getContentLength();
     }
 
     /**

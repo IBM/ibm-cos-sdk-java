@@ -1,5 +1,10 @@
 # CHANGELOG
 
+# 2.4.3
+## Content
+### Defect Fixes
+* AWS Patches aligned to version 1.11.492 of the AWS Java SDK 
+
 # 2.4.2
 ## Content
 ### Defect Fixes
@@ -15,17 +20,14 @@
 ## Content
 ### Features
 * Immutable Object Storage
-### Defect Fixes
 
 # 2.3.2
 ## Content
-### Features 
+### Defect Fixes 
 * COSSDK-37669: https://github.ibm.com/objectstore/objectstorage-issues/issues/344
-### Defect Fixes
 
 # 2.3.1
 ## Content
-### Features
 ### Defect Fixes
 * Documentation updates
 
@@ -33,30 +35,25 @@
 ## Content
 ### Features
 * Aspera High-Speed Transfer Support
-### Defect Fixes
 
 # 2.2.0
 ## Content
 ### Features
 * Archive Tier Support
-### Defect Fixes
 
 # 2.1.3
 ## Content
-### Features
 ### Defect Fixes
 * 38356: null Token causes NPE
 * Bug fixes
 
 # 2.1.2
 ## Content
-### Features
 ### Defect Fixes
 * 38813: Bug fixes
 
 # 2.1.1
 ## Content
-### Features
 ### Defect Fixes
 * Bug fixes
 
@@ -69,13 +66,11 @@
 
 # 2.0.2
 ## Content
-### Features
 ### Defect Fixes
 * Documentation updates
 
 # 2.0.1
 ## Content
-### Features
 ### Defect Fixes
 * Bug fixes
 * Documentation updates
@@ -96,11 +91,9 @@
 ## Content
 ### Features
 * Added Key Protect support
-### Defect Fixes
 
 # 1.0.2
 ## Content
-### Features
 ### Defect Fixes
 * Add support for additional JVM platforms
 * Bug fixes
@@ -110,11 +103,9 @@
 ## Content
 ### Features
 * Host generated API docs
-### Defect Fixes
 
 # 1.0.0
 ## Content
 ### Features
 * Initial release
 * IAM support
-### Defect Fixes

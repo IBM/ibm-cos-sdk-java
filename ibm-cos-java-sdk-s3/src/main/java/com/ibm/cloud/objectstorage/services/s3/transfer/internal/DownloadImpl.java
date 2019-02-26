@@ -41,6 +41,11 @@ public class DownloadImpl extends AbstractTransfer implements Download {
      */
     private Integer lastFullyDownloadedPartNumber;
 
+    /**
+     * The file position of the last part that has been successfully written into the downloaded file
+     */
+    private Long lastFullyDownloadedFilePosition;
+
     private final GetObjectRequest getObjectRequest;
     private final File file;
     private final ObjectMetadata objectMetadata;
@@ -105,9 +110,20 @@ public class DownloadImpl extends AbstractTransfer implements Download {
      * Then notify the listeners that new persistableTransfer is available.
      */
     @SdkInternalApi
-    public void updatePersistableTransfer(Integer lastFullyDownloadedPartNumber) {
+    void updatePersistableTransfer(Integer lastFullyDownloadedPartNumber) {
         synchronized (this) {
             this.lastFullyDownloadedPartNumber = lastFullyDownloadedPartNumber;
+        }
+
+        persistableDownload = captureDownloadState(getObjectRequest, file);
+        S3ProgressPublisher.publishTransferPersistable(progressListenerChain, persistableDownload);
+    }
+
+    @SdkInternalApi
+    void updatePersistableTransfer(Integer lastFullyDownloadedPartNumber, Long lastFullyDownloadedFilePosition) {
+        synchronized (this) {
+            this.lastFullyDownloadedPartNumber = lastFullyDownloadedPartNumber;
+            this.lastFullyDownloadedFilePosition = lastFullyDownloadedFilePosition;
         }
 
         persistableDownload = captureDownloadState(getObjectRequest, file);
@@ -121,6 +137,10 @@ public class DownloadImpl extends AbstractTransfer implements Download {
      */
     public synchronized Integer getLastFullyDownloadedPartNumber() {
         return lastFullyDownloadedPartNumber;
+    }
+
+    public synchronized Long getLastFullyDownloadedFilePosition() {
+        return lastFullyDownloadedFilePosition;
     }
 
     /**
@@ -190,7 +210,8 @@ public class DownloadImpl extends AbstractTransfer implements Download {
                     getObjectRequest.getVersionId(), getObjectRequest.getRange(),
                     getObjectRequest.getResponseHeaders(), getObjectRequest.isRequesterPays(),
                     file.getAbsolutePath(), getLastFullyDownloadedPartNumber(),
-                    getObjectMetadata().getLastModified().getTime());
+                    getObjectMetadata().getLastModified().getTime(),
+                    getLastFullyDownloadedFilePosition());
         }
         return null;
     }

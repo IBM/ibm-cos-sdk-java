@@ -28,6 +28,7 @@ import com.ibm.cloud.objectstorage.services.s3.AmazonS3;
 import com.ibm.cloud.objectstorage.services.s3.AmazonS3Client;
 import com.ibm.cloud.objectstorage.services.s3.internal.FileLocks;
 import com.ibm.cloud.objectstorage.services.s3.internal.Mimetypes;
+import com.ibm.cloud.objectstorage.services.s3.internal.RequestCopyUtils;
 import com.ibm.cloud.objectstorage.services.s3.internal.ServiceUtils;
 import com.ibm.cloud.objectstorage.services.s3.model.AbortMultipartUploadRequest;
 import com.ibm.cloud.objectstorage.services.s3.model.CopyObjectRequest;
@@ -843,7 +844,7 @@ public class TransferManager {
     public Download download(final GetObjectRequest getObjectRequest,
                              final File file, long timeoutMillis) {
         return doDownload(getObjectRequest, file, null, null, OVERWRITE_MODE,
-                timeoutMillis, null, 0L);
+                timeoutMillis, null);
     }
 
     /**
@@ -885,7 +886,7 @@ public class TransferManager {
     public Download download(final GetObjectRequest getObjectRequest,
             final File file, final S3ProgressListener progressListener) {
         return doDownload(getObjectRequest, file, null, progressListener,
-                OVERWRITE_MODE, 0, null, 0L);
+                OVERWRITE_MODE, 0, null);
     }
 
     /**
@@ -934,7 +935,7 @@ public class TransferManager {
                              final File file, final S3ProgressListener progressListener,
                              final long timeoutMillis) {
         return doDownload(getObjectRequest, file, null, progressListener,
-                OVERWRITE_MODE, timeoutMillis, null, 0L);
+                OVERWRITE_MODE, timeoutMillis, null);
     }
 
     /**
@@ -987,26 +988,28 @@ public class TransferManager {
                              final File file, final S3ProgressListener progressListener,
                              final long timeoutMillis, final boolean resumeOnRetry) {
         return doDownload(getObjectRequest, file, null, progressListener,
-                OVERWRITE_MODE, timeoutMillis, null, 0L, resumeOnRetry);
+                OVERWRITE_MODE, timeoutMillis, null, 0L, resumeOnRetry, 0L);
     }
 
-    /**
-     * Same as public interface, but adds a state listener so that callers can
-     * be notified of state changes to the download.
-     *
-     * @see TransferManager#download(GetObjectRequest, File)
-     */
     private Download doDownload(final GetObjectRequest getObjectRequest,
-            final File file, final TransferStateChangeListener stateListener,
-            final S3ProgressListener s3progressListener,
-            final boolean resumeExistingDownload,
-            final long timeoutMillis,
-            final Integer lastFullyDownloadedPart,
-            final long lastModifiedTimeRecordedDuringPause)
-    {
+                                final File file, final TransferStateChangeListener stateListener,
+                                final S3ProgressListener s3progressListener,
+                                final boolean resumeExistingDownload,
+                                final long timeoutMillis,
+                                final PersistableDownload persistableDownload) {
+        long lastModifiedTimeRecordedDuringPause = 0L;
+        Integer lastFullyDownloadedPartNumber = null;
+        Long lastFullyDownloadedFilePosition = null;
+
+        if (persistableDownload != null) {
+            lastModifiedTimeRecordedDuringPause = persistableDownload.getlastModifiedTime();
+            lastFullyDownloadedPartNumber = persistableDownload.getLastFullyDownloadedPartNumber();
+            lastFullyDownloadedFilePosition = persistableDownload.getLastFullyDownloadedFilePosition();
+        }
+
         return doDownload(getObjectRequest, file, stateListener, s3progressListener,
-                resumeExistingDownload, timeoutMillis, lastFullyDownloadedPart,
-                lastModifiedTimeRecordedDuringPause, false);
+                          resumeExistingDownload, timeoutMillis, lastFullyDownloadedPartNumber,
+                          lastModifiedTimeRecordedDuringPause, false, lastFullyDownloadedFilePosition);
     }
 
     /**
@@ -1022,7 +1025,8 @@ public class TransferManager {
             final long timeoutMillis,
             final Integer lastFullyDownloadedPart,
             final long lastModifiedTimeRecordedDuringPause,
-            final boolean resumeOnRetry)
+            final boolean resumeOnRetry,
+            final Long lastFullyDownloadedPartPosition)
     {
         assertParameterNotNull(getObjectRequest,
                 "A valid GetObjectRequest must be provided to initiate download");
@@ -1045,11 +1049,7 @@ public class TransferManager {
         getObjectRequest
                 .setGeneralProgressListener(new ProgressListenerChain(new TransferCompletionFilter(), listenerChain));
 
-        GetObjectMetadataRequest getObjectMetadataRequest = new GetObjectMetadataRequest(
-                getObjectRequest.getBucketName(), getObjectRequest.getKey(), getObjectRequest.getVersionId());
-        if (getObjectRequest.getSSECustomerKey() != null) {
-            getObjectMetadataRequest.setSSECustomerKey(getObjectRequest.getSSECustomerKey());
-        }
+        GetObjectMetadataRequest getObjectMetadataRequest = RequestCopyUtils.createGetObjectMetadataRequestFrom(getObjectRequest);
         final ObjectMetadata objectMetadata = s3.getObjectMetadata(getObjectMetadataRequest);
 
         // Used to check if the object is modified between pause and resume
@@ -1136,7 +1136,8 @@ public class TransferManager {
             new DownloadCallable(s3, latch,
                 getObjectRequest, resumeExistingDownload,
                 download, file, origStartingByte, fileLength, timeoutMillis, timedThreadPool,
-                executorService, lastFullyDownloadedPart, isDownloadParallel, resumeOnRetry));
+                executorService, lastFullyDownloadedPart, isDownloadParallel, resumeOnRetry)
+                .withLastFullyMergedPartPosition(lastFullyDownloadedPartPosition));
         download.setMonitor(new DownloadMonitor(download, future));
         latch.countDown();
         return download;
@@ -1288,7 +1289,7 @@ public class TransferManager {
                             req,
                             f,
                             transferListener, null, false, 0,
-                            null, 0L, resumeOnRetry));
+                            null, 0L, resumeOnRetry, null));
         }
 
         if ( downloads.isEmpty() ) {
@@ -2059,8 +2060,7 @@ public class TransferManager {
 
         return doDownload(request, new File(persistableDownload.getFile()), null, null,
                 APPEND_MODE, 0,
-                persistableDownload.getLastFullyDownloadedPartNumber(),
-                persistableDownload.getlastModifiedTime());
+                persistableDownload);
     }
 
     /**
