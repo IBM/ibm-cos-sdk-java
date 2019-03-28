@@ -1,5 +1,13 @@
 # CHANGELOG
 
+# 2.4.4
+## Content
+### Features
+* Public Access
+
+### Defect Fixes
+* COSSDK-51255: https://github.com/IBM/ibm-cos-sdk-java/issues/16
+
 # 2.4.3
 ## Content
 ### Defect Fixes

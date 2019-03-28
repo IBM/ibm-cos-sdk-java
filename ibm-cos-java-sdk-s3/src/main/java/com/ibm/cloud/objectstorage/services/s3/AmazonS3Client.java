@@ -2797,11 +2797,14 @@ public class AmazonS3Client extends AmazonWebServiceClient implements AmazonS3 {
                             + fileOrig, e);
                 }
             }
+            
+            final boolean closeStream = uploadPartRequest.isCalculateMD5() ?
+                false : uploadPartRequest.isLastPart();
             isCurr = new InputSubstream(
                     isCurr,
                     uploadPartRequest.getFileOffset(),
                     partSize,
-                    uploadPartRequest.isLastPart());
+                    closeStream);
             
             // Calculate Content MD5 on part upload if requested.  
             if(uploadPartRequest.getMd5Digest() == null
@@ -2811,7 +2814,7 @@ public class AmazonS3Client extends AmazonWebServiceClient implements AmazonS3 {
 					isCurr.reset();
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
-					e.printStackTrace();
+				  	e.printStackTrace();
 				}     
             }          
             
