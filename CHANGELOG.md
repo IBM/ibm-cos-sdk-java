@@ -1,5 +1,10 @@
 # CHANGELOG
 
+# 2.4.5
+## Content
+### Defect Fixes
+* COSSDK-53246: https://github.com/IBM/ibm-cos-sdk-java/issues/17
+
 # 2.4.4
 ## Content
 ### Features

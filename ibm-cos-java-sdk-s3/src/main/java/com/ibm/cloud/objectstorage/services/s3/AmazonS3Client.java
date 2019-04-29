@@ -2805,12 +2805,15 @@ public class AmazonS3Client extends AmazonWebServiceClient implements AmazonS3 {
                     uploadPartRequest.getFileOffset(),
                     partSize,
                     closeStream);
-            
+
             // Calculate Content MD5 on part upload if requested.  
             if(uploadPartRequest.getMd5Digest() == null
-            		&& uploadPartRequest.isCalculateMD5()) {
+            		&& uploadPartRequest.isCalculateMD5()
+            		&& isCurr.markSupported()) {
 	            try {
-					request.addHeader("Content-MD5", Md5Utils.md5AsBase64(isCurr));
+
+	            	uploadPartRequest.setMd5Digest(Md5Utils.md5AsBase64(isCurr));
+					request.addHeader("Content-MD5", uploadPartRequest.getMd5Digest());
 					isCurr.reset();
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
