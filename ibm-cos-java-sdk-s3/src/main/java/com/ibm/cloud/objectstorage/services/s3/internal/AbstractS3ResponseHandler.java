@@ -139,6 +139,7 @@ public abstract class AbstractS3ResponseHandler<T>
                 }
             } else if (key.equalsIgnoreCase(Headers.EXPIRATION)) {
                 new ObjectExpirationHeaderHandler<ObjectMetadata>().handle(metadata, response);
+                metadata.setHeader(key, header.getValue());
             } else if (key.equalsIgnoreCase(Headers.RESTORE)) {
                 new ObjectRestoreHeaderHandler<ObjectRestoreResult>().handle(metadata, response);
             } else if (key.equalsIgnoreCase(Headers.IBM_TRANSITION)) {

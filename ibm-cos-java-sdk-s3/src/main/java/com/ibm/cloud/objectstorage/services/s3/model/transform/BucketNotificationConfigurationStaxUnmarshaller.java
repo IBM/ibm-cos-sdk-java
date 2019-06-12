@@ -14,10 +14,10 @@
  */
 package com.ibm.cloud.objectstorage.services.s3.model.transform;
 
+import com.ibm.cloud.objectstorage.util.XmlUtils;
 import java.io.InputStream;
 import java.util.Map.Entry;
 
-import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.events.XMLEvent;
 
 import com.ibm.cloud.objectstorage.services.s3.model.BucketNotificationConfiguration;
@@ -28,23 +28,19 @@ import com.ibm.cloud.objectstorage.transform.Unmarshaller;
 public class BucketNotificationConfigurationStaxUnmarshaller implements
         Unmarshaller<BucketNotificationConfiguration, InputStream> {
 
-    private static BucketNotificationConfigurationStaxUnmarshaller instance = new BucketNotificationConfigurationStaxUnmarshaller();
+    private static final BucketNotificationConfigurationStaxUnmarshaller instance = new BucketNotificationConfigurationStaxUnmarshaller();
 
     public static BucketNotificationConfigurationStaxUnmarshaller getInstance() {
         return instance;
     }
-
-    private final XMLInputFactory inputFactory = XMLInputFactory.newInstance();
 
     private BucketNotificationConfigurationStaxUnmarshaller() {
     }
 
     @Override
     public BucketNotificationConfiguration unmarshall(InputStream inputStream) throws Exception {
-        StaxUnmarshallerContext context;
-        synchronized (inputFactory) {
-            context = new StaxUnmarshallerContext(inputFactory.createXMLEventReader(inputStream));
-        }
+        StaxUnmarshallerContext context =
+            new StaxUnmarshallerContext(XmlUtils.getXmlInputFactory().createXMLEventReader(inputStream));
         int originalDepth = context.getCurrentDepth();
         int targetDepth = originalDepth + 1;
 

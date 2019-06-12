@@ -16,13 +16,16 @@ package com.ibm.cloud.objectstorage.http;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.http.impl.io.EmptyInputStream;
 
 import com.ibm.cloud.objectstorage.AmazonWebServiceResponse;
 import com.ibm.cloud.objectstorage.ResponseMetadata;
+import com.ibm.cloud.objectstorage.internal.SdkFilterInputStream;
 import com.ibm.cloud.objectstorage.transform.StaxUnmarshallerContext;
 import com.ibm.cloud.objectstorage.transform.Unmarshaller;
 import com.ibm.cloud.objectstorage.transform.VoidStaxUnmarshaller;
 import com.ibm.cloud.objectstorage.util.StringUtils;
+import com.ibm.cloud.objectstorage.util.XmlUtils;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -30,7 +33,6 @@ import java.io.InputStream;
 import java.util.Map;
 
 import javax.xml.stream.XMLEventReader;
-import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;
 
 /**
@@ -48,9 +50,6 @@ public class StaxResponseHandler<T> implements HttpResponseHandler<AmazonWebServ
 
     /** Shared logger for profiling information */
     private static final Log log = LogFactory.getLog("com.ibm.cloud.objectstorage.request");
-
-    /** Shared factory for creating XML event readers */
-    private static final XMLInputFactory xmlInputFactory = XMLInputFactory.newInstance();
 
     /**
      * Constructs a new response handler that will use the specified StAX
@@ -85,11 +84,16 @@ public class StaxResponseHandler<T> implements HttpResponseHandler<AmazonWebServ
         InputStream content = response.getContent();
         if (content == null) {
             content = new ByteArrayInputStream("<eof/>".getBytes(StringUtils.UTF8));
+        } else if (content instanceof SdkFilterInputStream &&
+                   ((SdkFilterInputStream) content).getDelegateStream() instanceof EmptyInputStream) {
+            content = new ByteArrayInputStream("<eof/>".getBytes(StringUtils.UTF8));
         }
 
         XMLEventReader eventReader;
-        synchronized (xmlInputFactory) {
-            eventReader = xmlInputFactory.createXMLEventReader(content);
+        try {
+            eventReader = XmlUtils.getXmlInputFactory().createXMLEventReader(content);
+        } catch (XMLStreamException e) {
+            throw handleXmlStreamException(e);
         }
 
         try {
@@ -115,12 +119,7 @@ public class StaxResponseHandler<T> implements HttpResponseHandler<AmazonWebServ
             log.trace("Done parsing service response");
             return awsResponse;
         } catch (XMLStreamException e) {
-            // If the exception was caused by an IOE, wrap this in an IOE so
-            // that it will be exposed to the RetryPolicy.
-            if (e.getNestedException() instanceof IOException) {
-                throw new IOException(e);
-            }
-            throw e;
+            throw handleXmlStreamException(e);
         } finally {
             try {
                 eventReader.close();
@@ -128,6 +127,17 @@ public class StaxResponseHandler<T> implements HttpResponseHandler<AmazonWebServ
                 log.warn("Error closing xml parser", e);
             }
         }
+    }
+
+    /**
+     * If the exception was caused by an {@link IOException}, wrap it an another IOE so
+     * that it will be exposed to the RetryPolicy.
+     */
+    private Exception handleXmlStreamException(XMLStreamException e) throws Exception {
+        if (e.getNestedException() instanceof IOException) {
+            return new IOException(e);
+        }
+        return e;
     }
 
     /**

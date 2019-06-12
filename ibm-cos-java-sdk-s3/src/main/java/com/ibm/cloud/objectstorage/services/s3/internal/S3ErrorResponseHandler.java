@@ -22,6 +22,7 @@ import com.ibm.cloud.objectstorage.services.s3.Headers;
 import com.ibm.cloud.objectstorage.services.s3.model.AmazonS3Exception;
 import com.ibm.cloud.objectstorage.util.IOUtils;
 
+import com.ibm.cloud.objectstorage.util.XmlUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -32,7 +33,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Map;
 
-import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
@@ -53,11 +53,7 @@ public class S3ErrorResponseHandler implements
     private static final Log log = LogFactory
             .getLog(S3ErrorResponseHandler.class);
 
-    /** Shared factory for creating XML event readers */
-    private static final XMLInputFactory xmlInputFactory = XMLInputFactory
-            .newInstance();
-
-    private static enum S3ErrorTags {
+    private enum S3ErrorTags {
         Error, Message, Code, RequestId, HostId
     };
 
@@ -92,19 +88,8 @@ public class S3ErrorResponseHandler implements
             return createExceptionFromHeaders(httpResponse, null);
         }
 
-        /*
-         * XMLInputFactory is not thread safe and hence it is synchronized.
-         * Reference :
-         * http://itdoc.hitachi.co.jp/manuals/3020/30203Y2210e/EY220140.HTM
-         */
-        XMLStreamReader reader;
-        synchronized (xmlInputFactory) {
-            reader = xmlInputFactory
-                    .createXMLStreamReader(new ByteArrayInputStream(content
-                            .getBytes(UTF8)));
-			xmlInputFactory.setProperty(XMLInputFactory.IS_COALESCING,
-        	        Boolean.TRUE);
-        }
+        XMLStreamReader reader
+            = XmlUtils.getXmlInputFactory().createXMLStreamReader(new ByteArrayInputStream(content.getBytes(UTF8)));
 
         try {
             /*

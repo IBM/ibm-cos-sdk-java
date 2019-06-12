@@ -1,5 +1,12 @@
 # CHANGELOG
 
+# 2.5.0
+## Content
+### Features
+* Object Expiration Rules
+### Defect Fixes
+* COSSDK-54086: https://github.com/IBM/ibm-cos-sdk-java/issues/20
+
 # 2.4.5
 ## Content
 ### Defect Fixes
