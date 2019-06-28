@@ -67,6 +67,9 @@ public class Bucket implements Serializable {
     /** The date this bucket was created */
     private Date creationDate = null;
 
+    /** locationConstraint associated with the bucket.*/
+    private String locationConstraint = null;
+
     /**
      * Constructs a bucket without any name specified.
      * 
@@ -169,6 +172,27 @@ public class Bucket implements Serializable {
      */
     public void setName(String name) {
         this.name = name;
+    }
+
+    /**
+     * Returns the locationConstraint associated with the bucket
+     * This will only have populated information when used in conjunction with
+     * the Extended Listing support to the COS S3 GET Service API
+     * 
+     * @return The locationConstraint on the bucket
+     */
+    public String getLocationConstraint() {
+        return locationConstraint;
+    }
+
+    /** For internal use only: 
+     * set the bucket locationConstraint from the api response 
+     * 
+     * @param locationConstraint
+     *          The location constraint for the bucket.
+     */
+    public void setLocationConstraint(String locationConstraint) {
+        this.locationConstraint = locationConstraint;
     }
 
 }

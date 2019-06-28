@@ -1,5 +1,10 @@
 # CHANGELOG
 
+# 2.5.1
+## Content
+### Features
+* Extended Listing Support
+
 # 2.5.0
 ## Content
 ### Features

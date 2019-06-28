@@ -152,6 +152,8 @@ import com.ibm.cloud.objectstorage.services.s3.model.HeadBucketRequest;
 import com.ibm.cloud.objectstorage.services.s3.model.HeadBucketResult;
 import com.ibm.cloud.objectstorage.services.s3.model.InitiateMultipartUploadRequest;
 import com.ibm.cloud.objectstorage.services.s3.model.InitiateMultipartUploadResult;
+import com.ibm.cloud.objectstorage.services.s3.model.ListBucketsExtendedResponse;
+import com.ibm.cloud.objectstorage.services.s3.model.ListBucketsExtendedRequest;
 import com.ibm.cloud.objectstorage.services.s3.model.ListBucketsRequest;
 import com.ibm.cloud.objectstorage.services.s3.model.ListLegalHoldsRequest;
 import com.ibm.cloud.objectstorage.services.s3.model.ListLegalHoldsResult;
@@ -883,6 +885,35 @@ public class AmazonS3Client extends AmazonWebServiceClient implements AmazonS3 {
     public List<Bucket> listBuckets()
             throws SdkClientException, AmazonServiceException {
         return listBuckets(new ListBucketsRequest());
+    }
+
+    @Override
+    public ListBucketsExtendedResponse listBucketsExtended() throws SdkClientException, AmazonServiceException {
+        return listBucketsExtended(new ListBucketsExtendedRequest());
+    }
+
+    @Override
+    public ListBucketsExtendedResponse listBucketsExtended(ListBucketsExtendedRequest listBucketsExtendedRequest)
+            throws SdkClientException, AmazonServiceException {
+
+        listBucketsExtendedRequest = beforeClientExecution(listBucketsExtendedRequest);
+        rejectNull(listBucketsExtendedRequest, "The request object parameter listBucketsExtendedRequest must be specified.");
+        Request<ListBucketsExtendedRequest> request = createRequest(null, null, listBucketsExtendedRequest, HttpMethodName.GET);
+        request.addParameter("extended", null);
+
+        addParameterIfNotNull(request, "marker", listBucketsExtendedRequest.getMarker());
+        addParameterIfNotNull(request, "prefix", listBucketsExtendedRequest.getPrefix());
+        addParameterIfNotNull(request, "max-keys", listBucketsExtendedRequest.getMaxKeys());
+
+        //Add IBM Service Instance Id to headers
+        if ((null != this.awsCredentialsProvider ) && (this.awsCredentialsProvider.getCredentials() instanceof IBMOAuthCredentials)) {
+            IBMOAuthCredentials oAuthCreds = (IBMOAuthCredentials)this.awsCredentialsProvider.getCredentials();
+            if (oAuthCreds.getServiceInstanceId() != null) {
+                request.addHeader(Headers.IBM_SERVICE_INSTANCE_ID, oAuthCreds.getServiceInstanceId());  
+            }
+        }
+        
+        return invoke(request, new Unmarshallers.ListBucketsExtendedUnmarshaller(), null, null);
     }
 
     @Override
@@ -4618,5 +4649,5 @@ public class AmazonS3Client extends AmazonWebServiceClient implements AmazonS3 {
 
         return invoke(request, responseHandler, bucketName, null);
 
-	}  
+	}
 }

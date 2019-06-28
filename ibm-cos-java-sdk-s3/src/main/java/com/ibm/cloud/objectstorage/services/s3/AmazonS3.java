@@ -378,6 +378,58 @@ public interface AmazonS3 extends S3DirectSpi {
 
     /**
      * <p>
+     * Returns a list of all Cloud Object Storage (COS) S3 buckets that the
+     * authenticated sender of the request owns.
+     * </p>
+     * <p>
+     * Users must authenticate with a valid credentials that are registered
+     * with COS. Anonymous requests cannot list buckets, and users cannot
+     * list buckets that they did not create.
+     * </p>
+     *
+     * @return A list of all of the S3 buckets owned by the authenticated
+     *         sender of the request.
+     *
+     * @throws SdkClientException
+     *             If any errors are encountered in the client while making the
+     *             request or handling the response.
+     * @throws AmazonServiceException
+     *             If any errors occurred in COS S3 while processing the
+     *             request.
+     */
+    public ListBucketsExtendedResponse listBucketsExtended() throws SdkClientException,
+            AmazonServiceException;
+
+    /**
+     * <p>
+     * Returns a list of all Cloud Object Storage (COS) S3 buckets that the
+     * authenticated sender of the request owns.
+     * </p>
+     * <p>
+     * Users must authenticate with a valid credentials that are registered
+     * with COS. Anonymous requests cannot list buckets, and users cannot
+     * list buckets that they did not create.
+     * </p>
+     *
+     * @param listBucketsExtendedResponse
+     *          The request containing all of the options related to the extended listing
+     *          of buckets.
+     *
+     * @return A list of all of the S3 buckets owned by the authenticated
+     *         sender of the request.
+     *
+     * @throws SdkClientException
+     *             If any errors are encountered in the client while making the
+     *             request or handling the response.
+     * @throws AmazonServiceException
+     *             If any errors occurred in COS S3 while processing the
+     *             request.
+     */
+    public ListBucketsExtendedResponse listBucketsExtended(ListBucketsExtendedRequest listBucketsExtendedRequest) throws SdkClientException,
+            AmazonServiceException;
+    
+    /**
+     * <p>
      * Provides an easy way to continue a truncated object listing and retrieve
      * the next page of results.
      * </p>

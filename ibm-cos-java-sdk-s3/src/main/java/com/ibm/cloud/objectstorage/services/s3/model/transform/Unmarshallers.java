@@ -38,6 +38,17 @@ public class Unmarshallers {
                     .parseListMyBucketsResponse(in).getBuckets();
         }
     }
+    
+    /**
+     * Unmarshaller for the ListBucketsExtended XML response.
+     */
+    public static final class ListBucketsExtendedUnmarshaller implements
+            Unmarshaller<ListBucketsExtendedResponse, InputStream> {
+        public ListBucketsExtendedResponse unmarshall(InputStream in) throws Exception {
+            return new XmlResponsesSaxParser()
+                    .parseListMyBucketsExtendedResponse(in).getListBucketsExtendedResponse();
+        }
+    }
 
     /**
      * Unmarshaller for the ListBuckets XML response, parsing out the owner

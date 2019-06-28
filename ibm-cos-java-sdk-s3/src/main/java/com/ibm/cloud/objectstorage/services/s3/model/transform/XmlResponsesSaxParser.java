@@ -350,6 +350,22 @@ public class XmlResponsesSaxParser {
     }
 
     /**
+     * Parses a ListAllMyBuckets response XML document from an input stream.
+     *
+     * @param inputStream
+     *            XML data input stream.
+     * @return the XML handler object populated with data parsed from the XML
+     *         stream.
+     * @throws SdkClientException
+     */
+    public ListAllMyBucketsExtendedHandler parseListMyBucketsExtendedResponse(InputStream inputStream)
+            throws IOException {
+        ListAllMyBucketsExtendedHandler handler = new ListAllMyBucketsExtendedHandler();
+        parseXmlInputStream(handler, sanitizeXmlDocument(handler, inputStream));
+        return handler;
+    }
+
+    /**
      * Parses an AccessControlListHandler response XML document from an input
      * stream.
      *
@@ -985,6 +1001,109 @@ public class XmlResponsesSaxParser {
                 } else if (name.equals("CreationDate")) {
                     Date creationDate = DateUtils.parseISO8601Date(getText());
                     currentBucket.setCreationDate(creationDate);
+                }
+            }
+        }
+    }
+
+
+    /**
+     * Handler for ListAllMyBucketsExtended response XML documents. The document is
+     * parsed into ListBucketsExtendedResponse available via the {@link #getBuckets()}
+     * method.
+     */
+    public static class ListAllMyBucketsExtendedHandler extends AbstractHandler {
+
+        private final List<Bucket> buckets = new ArrayList<Bucket>();
+        private Owner bucketsOwner = null;
+        private ListBucketsExtendedResponse listBucketsExtendedResponse = new ListBucketsExtendedResponse();
+        private boolean isTruncated = false;
+        private String marker = null;
+        
+
+        private Bucket currentBucket = null;
+
+        /**
+         * @return the buckets listed in the document.
+         */
+        public ListBucketsExtendedResponse getListBucketsExtendedResponse() {
+            listBucketsExtendedResponse.setBuckets(getBuckets());
+            listBucketsExtendedResponse.setMarker(marker);
+            listBucketsExtendedResponse.setTruncated(isTruncated);
+            return listBucketsExtendedResponse;
+        }
+
+        /**
+         * @return the buckets listed in the document.
+         */
+        public List<Bucket> getBuckets() {
+            return buckets;
+        }
+
+        /**
+         * @return the owner of the buckets.
+         */
+        public Owner getOwner() {
+            return bucketsOwner;
+        }
+
+        @Override
+        protected void doStartElement(
+                String uri,
+                String name,
+                String qName,
+                Attributes attrs) {
+
+            if (in("ListAllMyBucketsResult")) {
+                if (name.equals("Owner")) {
+                    bucketsOwner = new Owner();
+                }
+            } else if (in("ListAllMyBucketsResult", "Buckets")) {
+                if (name.equals("Bucket")) {
+                    currentBucket = new Bucket();
+                    currentBucket.setOwner(bucketsOwner);
+                }
+            }
+        }
+
+        @Override
+        protected void doEndElement(String uri, String name, String qName) {
+
+            if (in("ListAllMyBucketsResult")) {
+                if (name.equals("IsTruncated")) {
+                    isTruncated = Boolean.parseBoolean(getText());
+
+                } else if (name.equals("Marker")) {
+                    marker = getText();
+                }
+            }
+
+            else if (in("ListAllMyBucketsResult", "Owner")) {
+                if (name.equals("ID")) {
+                    bucketsOwner.setId(getText());
+
+                } else if (name.equals("DisplayName")) {
+                    bucketsOwner.setDisplayName(getText());
+                }
+            }
+
+            else if (in("ListAllMyBucketsResult", "Buckets")) {
+                if (name.equals("Bucket")) {
+                    buckets.add(currentBucket);
+                    currentBucket = null;
+                }
+            }
+
+            else if (in("ListAllMyBucketsResult", "Buckets", "Bucket")) {
+                if (name.equals("Name")) {
+                    currentBucket.setName(getText());
+
+                } else if (name.equals("CreationDate")) {
+                    Date creationDate = DateUtils.parseISO8601Date(getText());
+                    currentBucket.setCreationDate(creationDate);
+
+                } else if (name.equals("LocationConstraint")) {
+                    currentBucket.setLocationConstraint(getText());
                 }
             }
         }
