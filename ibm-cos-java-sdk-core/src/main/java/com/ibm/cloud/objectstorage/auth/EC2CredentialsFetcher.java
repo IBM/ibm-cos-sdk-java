@@ -120,7 +120,7 @@ class EC2CredentialsFetcher {
 
             String credentialsResponse = EC2CredentialsUtils.getInstance().readResource(credentailsEndpointProvider.getCredentialsEndpoint(), credentailsEndpointProvider.getRetryPolicy());
 
-            node = Jackson.jsonNodeOf(credentialsResponse);
+            node = Jackson.fromSensitiveJsonString(credentialsResponse, JsonNode.class);
             accessKey = node.get(ACCESS_KEY_ID);
             secretKey = node.get(SECRET_ACCESS_KEY);
             token = node.get(TOKEN);

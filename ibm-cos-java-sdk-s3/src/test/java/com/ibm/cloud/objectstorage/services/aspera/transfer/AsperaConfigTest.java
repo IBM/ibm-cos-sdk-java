@@ -38,4 +38,33 @@ public class AsperaConfigTest {
 		assertEquals(400000, asperaConfig.getMinRateKbps());
 		assertEquals(60000000, asperaConfig.getMultiSessionThreshold());
 	}
+    
+    @Test
+    public void testConfigKBConvertsToMB() {
+        AsperaConfig asperaConfig = new AsperaConfig();
+        
+        asperaConfig.setTargetRateKbps(1000000);
+        asperaConfig.setTargetRateCapKbps(500000);
+        asperaConfig.setMinRateCapKbps(300000);
+        asperaConfig.setMinRateKbps(400000);
+        
+        assertEquals(1000, asperaConfig.getTargetRateMbps());
+        assertEquals(500, asperaConfig.getTargetRateCapMbps());
+        assertEquals(300, asperaConfig.getMinRateCapMbps());
+        assertEquals(400, asperaConfig.getMinRateMbps());
+    }
+    
+    @Test
+    public void testConfigConstructorKBConvertsToMB() {
+        AsperaConfig asperaConfig = new AsperaConfig()
+                .withTargetRateKbps(1000000)
+                .withTargetRateCapKbps(500000)
+                .withMinRateCapKbps(300000)
+                .withMinRateKbps(400000);
+        
+        assertEquals(1000, asperaConfig.getTargetRateMbps());
+        assertEquals(500, asperaConfig.getTargetRateCapMbps());
+        assertEquals(300, asperaConfig.getMinRateCapMbps());
+        assertEquals(400, asperaConfig.getMinRateMbps());
+    }
 }

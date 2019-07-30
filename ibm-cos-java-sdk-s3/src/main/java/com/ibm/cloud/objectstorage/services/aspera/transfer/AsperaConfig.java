@@ -10,13 +10,9 @@ package com.ibm.cloud.objectstorage.services.aspera.transfer;
  */
 public class AsperaConfig {
     private long targetRateKbps;
-    private long targetRateMbps;
     private long targetRateCapKbps;
-    private long targetRateCapMbps;
     private long minRateCapKbps;
-    private long minRateCapMbps;
     private long minRateKbps;
-    private long minRateMbps;
     private String ratePolicy="fair";
     private boolean lockMinRate;
     private boolean lockTargetRate;
@@ -26,6 +22,7 @@ public class AsperaConfig {
     private long multiSessionThreshold;
     private long multiSessionThresholdMb;
     
+    private static final int ONE_THOUSAND = 1000;
     /**
      * The desired speed of the transfer, in Kbps.
      * If there is competing network traffic, FASP may share this bandwidth, depending on the ratePolicy value you set.
@@ -63,7 +60,7 @@ public class AsperaConfig {
 	 * @return this AsperConfig
 	 */
 	public AsperaConfig withTargetRateKbps(long targetRateKbps) {
-		this.targetRateKbps = targetRateKbps;
+		setTargetRateKbps(targetRateKbps);
 		return this;
 	}
 	
@@ -77,7 +74,7 @@ public class AsperaConfig {
      * @return targetRateMbps
      */
 	public long getTargetRateMbps() {
-		return targetRateMbps;
+	    return targetRateKbps / ONE_THOUSAND;
 	}
 
 	/**
@@ -90,8 +87,7 @@ public class AsperaConfig {
 	 * @param targetRateMbps
 	 */
 	public void setTargetRateMbps(long targetRateMbps) {
-		this.targetRateMbps = targetRateMbps;
-		this.targetRateKbps = targetRateMbps * 1000;
+		this.targetRateKbps = targetRateMbps * ONE_THOUSAND;
 	}
 	
 	/**
@@ -105,8 +101,7 @@ public class AsperaConfig {
 	 * @return this AsperConfig
 	 */
 	public AsperaConfig withTargetRateMbps(long targetRateMbps) {
-		this.targetRateMbps = targetRateMbps;
-		this.targetRateKbps = targetRateMbps * 1000;
+		setTargetRateMbps(targetRateMbps);
 		return this;
 	}
 	
@@ -145,7 +140,7 @@ public class AsperaConfig {
 	 * @return targetRateCapMbps
 	 */
 	public long getTargetRateCapMbps() {
-		return targetRateCapMbps;
+	    return targetRateCapKbps / ONE_THOUSAND;
 	}
 
 	/**
@@ -154,8 +149,7 @@ public class AsperaConfig {
 	 * @param targetRateCapMbps
 	 */
 	public void setTargetRateCapMbps(long targetRateCapMbps) {
-		this.targetRateCapMbps = targetRateCapMbps;
-		this.targetRateCapKbps = targetRateCapMbps * 1000;
+		this.targetRateCapKbps = targetRateCapMbps * ONE_THOUSAND;
 	}
 	
 	/**
@@ -165,8 +159,7 @@ public class AsperaConfig {
 	 * @return this AsperConfig
 	 */
 	public AsperaConfig withTargetRateCapMbps(long targetRateCapMbps) {
-		this.targetRateCapMbps = targetRateCapMbps;
-		this.targetRateCapKbps = targetRateCapMbps * 1000;
+		setTargetRateCapMbps(targetRateCapMbps);
 		return this;
 	}
 
@@ -195,7 +188,7 @@ public class AsperaConfig {
 	 * @return this AsperConfig
 	 */
 	public AsperaConfig withMinRateCapKbps(long minRateCapKbps) {
-		this.minRateCapKbps = minRateCapKbps;
+		setMinRateCapKbps(minRateCapKbps);
 		return this;
 	}
 	
@@ -205,7 +198,7 @@ public class AsperaConfig {
 	 * @return minRateCapMbps
 	 */
 	public long getMinRateCapMbps() {
-		return minRateCapMbps;
+	    return minRateCapKbps / ONE_THOUSAND;
 	}
 
 	/**
@@ -214,8 +207,7 @@ public class AsperaConfig {
 	 * @param minRateCapMbps
 	 */
 	public void setMinRateCapMbps(long minRateCapMbps) {
-		this.minRateCapMbps = minRateCapMbps;
-		this.minRateCapKbps = minRateCapMbps * 1000;
+		this.minRateCapKbps = minRateCapMbps * ONE_THOUSAND;
 	}
 	
 	/**
@@ -225,8 +217,7 @@ public class AsperaConfig {
 	 * @return this AsperConfig
 	 */
 	public AsperaConfig withMinRateCapMbps(long minRateCapMbps) {
-		this.minRateCapMbps = minRateCapMbps;
-		this.minRateCapKbps = minRateCapMbps * 1000;
+		setMinRateCapMbps(minRateCapMbps);
 		return this;
 	}
 
@@ -255,7 +246,7 @@ public class AsperaConfig {
 	 * @return this AsperConfig
 	 */
 	public AsperaConfig withMinRateKbps(long minRateKbps) {
-		this.minRateKbps = minRateKbps;
+		setMinRateKbps(minRateKbps);
 		return this;
 	}
 		
@@ -265,7 +256,7 @@ public class AsperaConfig {
 	 * @return minRateMbps
 	 */
 	public long getMinRateMbps() {
-		return minRateMbps;
+	    return minRateKbps / ONE_THOUSAND;
 	}
 
 	/**
@@ -274,8 +265,7 @@ public class AsperaConfig {
 	 * @param minRateMbps
 	 */
 	public void setMinRateMbps(long minRateMbps) {
-		this.minRateMbps = minRateMbps;
-		this.minRateKbps = minRateMbps * 1000;
+		this.minRateKbps = minRateMbps * ONE_THOUSAND;
 	}
 	
 	/**
@@ -285,8 +275,7 @@ public class AsperaConfig {
 	 * @return this AsperConfig
 	 */
 	public AsperaConfig withMinRateMbps(long minRateMbps) {
-		this.minRateMbps = minRateMbps;
-		this.minRateKbps = minRateMbps * 1000;
+		setMinRateMbps(minRateMbps);
 		return this;
 	}
 
@@ -328,7 +317,7 @@ public class AsperaConfig {
 	 * @return this AsperConfig
 	 */
 	public AsperaConfig withRatePolicy(String ratePolicy) {
-		this.ratePolicy = ratePolicy;
+		setRatePolicy(ratePolicy);
 		return this;
 	}
 	
@@ -357,7 +346,7 @@ public class AsperaConfig {
 	 * @return this AsperConfig
 	 */
 	public AsperaConfig withLockMinRate(boolean lockMinRate) {
-		this.lockMinRate = lockMinRate;
+		setLockMinRate(lockMinRate);
 		return this;
 	}
 	
@@ -386,7 +375,7 @@ public class AsperaConfig {
 	 * @return this AsperConfig
 	 */
 	public AsperaConfig withLockTargetRate(boolean lockTargetRate) {
-		this.lockTargetRate = lockTargetRate;
+		setLockTargetRate(lockTargetRate);
 		return this;
 	}
 	
@@ -415,7 +404,7 @@ public class AsperaConfig {
 	 * @return withlockRatePolicy
 	 */
 	public AsperaConfig withLockRatePolicy(boolean lockRatePolicy) {
-		this.lockRatePolicy = lockRatePolicy;
+		setLockRatePolicy(lockRatePolicy);
 		return this;
 	}
 	
@@ -444,7 +433,7 @@ public class AsperaConfig {
 	 * @return this AsperConfig
 	 */
 	public AsperaConfig withMultiSession(int multiSession) {
-		this.multiSession = multiSession;
+		setMultiSession(multiSession);
 		return this;
 	}
 	
@@ -473,7 +462,7 @@ public class AsperaConfig {
 	 * @return this AsperConfig
 	 */
 	public AsperaConfig withDestinationRoot(String destinationRoot) {
-		this.destinationRoot = destinationRoot;
+		setDestinationRoot(destinationRoot);
 		return this;
 	}
 
@@ -501,7 +490,7 @@ public class AsperaConfig {
 	 * @param multiSessionThreshold
 	 */
 	public AsperaConfig withMultiSessionThreshold(long multiSessionThreshold) {
-		this.multiSessionThreshold = multiSessionThreshold;
+		setMultiSessionThreshold(multiSessionThreshold);
 		return this;
 	}
 
@@ -530,8 +519,7 @@ public class AsperaConfig {
 	 * @param multiSessionThreshold
 	 */
 	public AsperaConfig withMultiSessionThresholdMb(long multiSessionThresholdMb) {
-		this.multiSessionThresholdMb = multiSessionThresholdMb;
-		this.multiSessionThreshold = multiSessionThresholdMb * 1000000;
+		setMultiSessionThresholdMb(multiSessionThresholdMb);
 		return this;
 	}
 	
