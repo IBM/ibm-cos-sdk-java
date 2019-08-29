@@ -14,16 +14,19 @@
  */
 package com.ibm.cloud.objectstorage.http.settings;
 
+import com.ibm.cloud.objectstorage.Protocol;
+import com.ibm.cloud.objectstorage.ProxyAuthenticationMethod;
+import com.ibm.cloud.objectstorage.http.TlsKeyManagersProvider;
 import java.net.InetAddress;
 import java.security.SecureRandom;
-import java.util.List;
 
 import com.ibm.cloud.objectstorage.ApacheHttpClientConfig;
 import com.ibm.cloud.objectstorage.ClientConfiguration;
 import com.ibm.cloud.objectstorage.DnsResolver;
-import com.ibm.cloud.objectstorage.ProxyAuthenticationMethod;
 import com.ibm.cloud.objectstorage.annotation.SdkInternalApi;
 import com.ibm.cloud.objectstorage.util.ValidationUtils;
+import java.util.List;
+import javax.net.ssl.KeyManager;
 
 /**
  * A convienient class that expose all settings in {@link ClientConfiguration} and other internal settings to the
@@ -173,7 +176,23 @@ public class HttpClientSettings {
         return getProxyHost() != null && getProxyPort() > 0;
     }
 
+    public boolean disableSocketProxy() {
+        return config.disableSocketProxy();
+    }
+
     public boolean isAuthenticatedProxy() {
         return getProxyUsername() != null && getProxyPassword() != null;
+    }
+
+    public Protocol getProxyProtocol() {
+        return config.getProxyProtocol();
+    }
+
+    public KeyManager[] getKeyManagers() {
+        TlsKeyManagersProvider provider = config.getTlsKeyManagersProvider();
+        if (provider != null) {
+            return provider.getKeyManagers();
+        }
+        return null;
     }
 }

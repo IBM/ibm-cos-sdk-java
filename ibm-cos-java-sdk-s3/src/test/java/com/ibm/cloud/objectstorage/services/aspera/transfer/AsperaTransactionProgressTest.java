@@ -1,3 +1,15 @@
+/*
+ * Copyright 2018 IBM Corp. All Rights Reserved.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
+ * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
+ * specific language governing permissions and limitations under the License.
+ */
 package com.ibm.cloud.objectstorage.services.aspera.transfer;
 
 import static org.junit.Assert.assertEquals;
@@ -171,21 +183,21 @@ public class AsperaTransactionProgressTest {
 		transferListener.transferReporter(xferId, msgSession);
 		
 		transferListener.transferReporter(xferId, msgStats1);
-		assertEquals(asperaTransaction.getProgress().getBytesTransferred(), 262144l);
-		assertEquals(asperaTransaction.getProgress().getPercentTransferred(), 25.0d, 0.0);
+		assertEquals(262144l, asperaTransaction.getProgress().getBytesTransferred());
+		assertEquals(25.0d, asperaTransaction.getProgress().getPercentTransferred(), 0.0);
 		
 		transferListener.transferReporter(xferId, msgStats2);
-		assertEquals(asperaTransaction.getProgress().getBytesTransferred(), 524288l);
-		assertEquals(asperaTransaction.getProgress().getPercentTransferred(), 50.0d, 0.0);
+		assertEquals(524288l, asperaTransaction.getProgress().getBytesTransferred());
+		assertEquals(50.0d, asperaTransaction.getProgress().getPercentTransferred(), 0.0);
 		
 		transferListener.transferReporter(xferId, msgStats3);
-		assertEquals(asperaTransaction.getProgress().getBytesTransferred(), 786432l);
-		assertEquals(asperaTransaction.getProgress().getPercentTransferred(), 75.0d, 0.0);
+		assertEquals(786432l, asperaTransaction.getProgress().getBytesTransferred());
+		assertEquals(75.0d, asperaTransaction.getProgress().getPercentTransferred(), 0.0);
 		
 		transferListener.transferReporter(xferId, msgDone);
 
-		assertEquals(asperaTransaction.getProgress().getBytesTransferred(), 1048576);
-		assertEquals(asperaTransaction.getProgress().getPercentTransferred(), 100.0d, 0.0);
+		assertEquals(1048576, asperaTransaction.getProgress().getBytesTransferred());
+		assertEquals(100.0d, asperaTransaction.getProgress().getPercentTransferred(), 0.0);
 	}
 
 
@@ -211,13 +223,13 @@ public class AsperaTransactionProgressTest {
 		transferListener.transferReporter(xferId, msgSession);
 		
 		transferListener.transferReporter(xferId, msgStats1);
-		assertEquals(asperaTransaction.getProgress().getBytesTransferred(), 262144l);
-		assertEquals(asperaTransaction.getProgress().getPercentTransferred(), 25.0d, 0.0);
+		assertEquals(262144l, asperaTransaction.getProgress().getBytesTransferred());
+		assertEquals(25.0d, asperaTransaction.getProgress().getPercentTransferred(), 0.0);
 		
 		transferListener.transferReporter(xferId, msgError);
 
-		assertEquals(asperaTransaction.getProgress().getBytesTransferred(), 262144l);
-		assertEquals(asperaTransaction.getProgress().getPercentTransferred(), 25.0d, 0.0);
+		assertEquals(262144l, asperaTransaction.getProgress().getBytesTransferred());
+		assertEquals(25.0d, asperaTransaction.getProgress().getPercentTransferred(), 0.0);
 	}
 	
 	/**
@@ -247,21 +259,21 @@ public class AsperaTransactionProgressTest {
 		transferListener.transferReporter(xferId, msgSession);
 		
 		transferListener.transferReporter(xferId, msgStats1);
-		assertEquals(customProgress.getBytesTransferred(), 262144l);
-		assertEquals(customProgress.getPercentTransferred(), 25.0d, 0.0);
+		assertEquals(262144l, customProgress.getBytesTransferred());
+		assertEquals(25.0d, customProgress.getPercentTransferred(), 0.0);
 		
 		transferListener.transferReporter(xferId, msgStats2);
-		assertEquals(customProgress.getBytesTransferred(), 524288l);
-		assertEquals(customProgress.getPercentTransferred(), 50.0d, 0.0);
+		assertEquals(524288l, customProgress.getBytesTransferred());
+		assertEquals(50.0d, customProgress.getPercentTransferred(), 0.0);
 		
 		transferListener.transferReporter(xferId, msgStats3);
-		assertEquals(customProgress.getBytesTransferred(), 786432l);
-		assertEquals(customProgress.getPercentTransferred(), 75.0d, 0.0);
+		assertEquals(786432l, customProgress.getBytesTransferred());
+		assertEquals(75.0d, customProgress.getPercentTransferred(), 0.0);
 		
 		transferListener.transferReporter(xferId, msgDone);
 
-		assertEquals(customProgress.getBytesTransferred(), 1048576);
-		assertEquals(customProgress.getPercentTransferred(), 100.0d, 0.0);
+		assertEquals(1048576, customProgress.getBytesTransferred());
+		assertEquals(100.0d, customProgress.getPercentTransferred(), 0.0);
 	}
 }
 

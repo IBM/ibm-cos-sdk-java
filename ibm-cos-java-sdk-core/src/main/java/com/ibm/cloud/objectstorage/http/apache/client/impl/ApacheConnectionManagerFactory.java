@@ -90,7 +90,7 @@ public class ApacheConnectionManagerFactory implements
         return sslsf != null
                 ? sslsf
                 : new SdkTLSSocketFactory(
-                SdkSSLContext.getPreferredSSLContext(settings.getSecureRandom()),
+                SdkSSLContext.getPreferredSSLContext(settings.getKeyManagers(), settings.getSecureRandom()),
                 getHostNameVerifier(settings));
     }
 

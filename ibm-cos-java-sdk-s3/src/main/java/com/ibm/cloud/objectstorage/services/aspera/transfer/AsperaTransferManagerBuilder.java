@@ -47,8 +47,12 @@ public class AsperaTransferManagerBuilder {
 	public AsperaTransferManagerBuilder (String apiKey, AmazonS3 s3Client) {
 
 		//Confirm apiKey & s3Client are not null
-		if (apiKey == null) throw new SdkClientException("apiKey has not been set for AsperaTransferManager");
-		if (s3Client == null) throw new SdkClientException("s3Client has not been set for AsperaTransferManager");
+		if (apiKey == null) {
+			throw new SdkClientException("apiKey has not been set for AsperaTransferManager");
+		}
+		if (s3Client == null) {
+			throw new SdkClientException("s3Client has not been set for AsperaTransferManager");
+		}
 
 		this.asperaTokenProvider = new DelegateTokenProvider(apiKey);
 		//Ascertain the configuration set by the s3Client & apply it to the tokenmanager

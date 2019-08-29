@@ -384,12 +384,15 @@ public class DefaultTokenManager implements TokenManager {
 					log.debug("Exception retrieving IAM token. Returned status code " + exception.getStatusCode()
 							+ "Retry attempt " + retryCount);
 					tokenRequest = shouldRetry(exception.getStatusCode()) ? true : false;
-					if (!tokenRequest || retryCount == this.iamMaxRetry)
+					if (!tokenRequest || retryCount == this.iamMaxRetry) {
 						throw exception;
+					}
 				}
 			}
 
-			if(null == token) throw new OAuthServiceException("Null token returned by the Token Provider");
+			if(null == token) {
+				throw new OAuthServiceException("Null token returned by the Token Provider");
+			}
 
 			cacheToken(token);
 		}
@@ -445,10 +448,12 @@ public class DefaultTokenManager implements TokenManager {
 	}
 
 	private boolean shouldRetry(int statusCode) {
-		if (NON_RETRYABLE_STATUS_CODES.contains(statusCode))
+		if (NON_RETRYABLE_STATUS_CODES.contains(statusCode)) {
 			return false;
-		else
+		}
+		else {
 			return true;
+		}
 	}
 
 	@Override

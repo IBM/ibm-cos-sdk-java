@@ -209,7 +209,7 @@ public class SDKGlobalConfiguration {
     public static final String IBM_SERVICE_INSTANCE_ID = "IBM_SERVICE_INSTANCE_ID";
     
     /** Global variable IAM Endpoint */
-    public static String IAM_ENDPOINT = "https://iam.ng.bluemix.net/oidc/token";
+    public static String IAM_ENDPOINT = "https://iam.cloud.ibm.com/identity/token";
     
     /** Global variable IAM token retrieval max retry **/
     public static int IAM_MAX_RETRY = 2;

@@ -1,6 +1,19 @@
+/*
+ * Copyright 2018 IBM Corp. All Rights Reserved.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
+ * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
+ * specific language governing permissions and limitations under the License.
+ */
 package com.ibm.cloud.objectstorage.services.aspera.transfer;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.Ignore;
 import org.junit.Test;
@@ -65,7 +78,7 @@ public class AsperaTransactionImplTest {
 		transferListener.transferReporter(xferId, msgStats);
 		transferListener.transferReporter(xferId, msgError);
 
-		assertEquals(asperaTransaction.isDone(), true);
+		assertTrue(asperaTransaction.isDone());
 	}
 
 	/**
@@ -85,7 +98,7 @@ public class AsperaTransactionImplTest {
 		transferListener.transferReporter(xferId, msgError);
 		transferListener.transferReporter(xferId, msgDone);
 
-		assertEquals(asperaTransaction.isDone(), true);
+		assertTrue(asperaTransaction.isDone());
 	}
 
 	/**
@@ -103,7 +116,7 @@ public class AsperaTransactionImplTest {
 		transferListener.transferReporter(xferId, msgQueued);
 		transferListener.transferReporter(xferId, msgStats);
 
-		assertEquals(asperaTransaction.progress(), true);
+		assertTrue(asperaTransaction.progress());
 	}
 
 	/**
@@ -120,7 +133,7 @@ public class AsperaTransactionImplTest {
 		
 		transferListener.transferReporter(xferId, msgQueued);
 
-		assertEquals(asperaTransaction.onQueue(), true);
+		assertTrue(asperaTransaction.onQueue());
 	}
 	
     /**
@@ -138,7 +151,7 @@ public class AsperaTransactionImplTest {
         transferListener.transferReporter(xferId, msgQueued);
         transferListener.transferReporter(xferId, msgStats);
 
-        assertEquals(asperaTransaction.pause(), true);
+        assertTrue(asperaTransaction.pause());
     }
     
     /**
@@ -156,7 +169,7 @@ public class AsperaTransactionImplTest {
         transferListener.transferReporter(xferId, msgQueued);
         transferListener.transferReporter(xferId, msgStats);
 
-        assertEquals(asperaTransaction.resume(), true);
+        assertTrue(asperaTransaction.resume());
     }
     
     /**
@@ -174,7 +187,7 @@ public class AsperaTransactionImplTest {
         transferListener.transferReporter(xferId, msgQueued);
         transferListener.transferReporter(xferId, msgStats);
 
-        assertEquals(asperaTransaction.cancel(), true);
+        assertTrue(asperaTransaction.cancel());
     }
 
 }

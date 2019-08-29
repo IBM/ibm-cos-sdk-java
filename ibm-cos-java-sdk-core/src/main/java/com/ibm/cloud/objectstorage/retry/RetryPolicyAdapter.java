@@ -14,16 +14,16 @@
  */
 package com.ibm.cloud.objectstorage.retry;
 
-import static com.ibm.cloud.objectstorage.util.ValidationUtils.assertNotNull;
-
 import com.ibm.cloud.objectstorage.AmazonClientException;
 import com.ibm.cloud.objectstorage.AmazonWebServiceRequest;
 import com.ibm.cloud.objectstorage.ClientConfiguration;
 import com.ibm.cloud.objectstorage.annotation.SdkInternalApi;
 import com.ibm.cloud.objectstorage.retry.v2.RetryPolicyContext;
 
+import static com.ibm.cloud.objectstorage.util.ValidationUtils.assertNotNull;
+
 /**
- * Adapts a legacy {@link RetryPolicy} to the new {@link com.ibm.cloud.objectstorage.retry.v2.RetryPolicy}. This class is intended for internal
+ * Adapts a legacy {@link RetryPolicy} to the new {@link com.amazonaws.retry.v2.RetryPolicy}. This class is intended for internal
  * use by the SDK.
  */
 @SdkInternalApi
@@ -47,13 +47,14 @@ public class RetryPolicyAdapter implements com.ibm.cloud.objectstorage.retry.v2.
 
     @Override
     public boolean shouldRetry(RetryPolicyContext context) {
-        if (context.retriesAttempted() >= getMaxErrorRetry()) {
-            return false;
-        }
+        return !maxRetriesExceeded(context) && isRetryable(context);
+    }
+
+    public boolean isRetryable(RetryPolicyContext context) {
         return legacyRetryPolicy.getRetryCondition().shouldRetry(
-                (AmazonWebServiceRequest) context.originalRequest(),
-                (AmazonClientException) context.exception(),
-                context.retriesAttempted());
+            (AmazonWebServiceRequest) context.originalRequest(),
+            (AmazonClientException) context.exception(),
+            context.retriesAttempted());
     }
 
     public RetryPolicy getLegacyRetryPolicy() {
@@ -67,4 +68,7 @@ public class RetryPolicyAdapter implements com.ibm.cloud.objectstorage.retry.v2.
         return legacyRetryPolicy.getMaxErrorRetry();
     }
 
+    public boolean maxRetriesExceeded(RetryPolicyContext context) {
+        return context.retriesAttempted() >= getMaxErrorRetry();
+    }
 }

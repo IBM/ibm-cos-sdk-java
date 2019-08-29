@@ -15,10 +15,11 @@
 package com.ibm.cloud.objectstorage.handlers;
 
 import com.ibm.cloud.objectstorage.auth.AWSCredentials;
+import com.ibm.cloud.objectstorage.client.builder.AdvancedConfig;
 
 /**
  * A type safe key used for setting and retrieving context in a {@link
- * com.ibm.cloud.objectstorage.Request} object.
+ * com.amazonaws.Request} object.
  *
  * <pre class="brush: java">
  *     final HandlerContextKey<String> METRICS_KEY = new HandlerContextKey("METRICS_KEY");
@@ -43,8 +44,42 @@ import com.ibm.cloud.objectstorage.auth.AWSCredentials;
  * </pre>
  */
 public class HandlerContextKey<T> {
-    /** The key under which the request credentials are set. */
+
+    /**
+     * The key under which the request credentials are set.
+     **/
     public static final HandlerContextKey<AWSCredentials> AWS_CREDENTIALS = new HandlerContextKey<AWSCredentials>("AWSCredentials");
+
+    /**
+     * The region used to sign the request.
+     */
+    public static final HandlerContextKey<String> SIGNING_REGION = new HandlerContextKey<String>("SigningRegion");
+
+    /**
+     * The name of the operation for the request.
+     */
+    public static final HandlerContextKey<String> OPERATION_NAME = new HandlerContextKey<String>("OperationName");
+
+    /**
+     * The unique identifier for a service to which the request is being sent.
+     */
+    public static final HandlerContextKey<String> SERVICE_ID = new HandlerContextKey<String>("ServiceId");
+
+    /**
+     * A boolean value indicating if Content-Length header is required by the operation
+     */
+    public static final HandlerContextKey<Boolean> REQUIRES_LENGTH = new HandlerContextKey<Boolean>("RequiresLength");
+
+    /**
+     * A boolean value indicating if the input of the operation has a streaming member.
+     * If an input shape in operation has streaming trait, then it is a streaming op
+     */
+    public static final HandlerContextKey<Boolean> HAS_STREAMING_INPUT = new HandlerContextKey<Boolean>("HasStreamingInput");
+
+    /**
+     * Advanced client configuration. Contents will be service specific.
+     */
+    public static final HandlerContextKey<AdvancedConfig> ADVANCED_CONFIG = new HandlerContextKey<AdvancedConfig>("AdvancedConfig");
 
     private final String name;
 

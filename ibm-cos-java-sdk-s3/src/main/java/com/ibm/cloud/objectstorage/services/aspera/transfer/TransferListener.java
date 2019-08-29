@@ -110,8 +110,9 @@ public class TransferListener extends ITransferListener
 		String[] keyValPairs = msg.split("\n");
 		for(String keyVal : keyValPairs) {
 			String[] arr = keyVal.split(":");
-			if(arr.length == 2)
+			if(arr.length == 2) {
 				msgStats.put(arr[0].trim(), arr[1].trim());
+			}
 		}
 
 		// Resolve transfer status
@@ -172,8 +173,9 @@ public class TransferListener extends ITransferListener
 
 	private void setTotalBytesToTransfer(String xferId, Long preTransferBytes) {
 		for(AsperaTransaction transaction : transactions.get(xferId)) {
-			if(transaction.getProgress() != null)
+			if(transaction.getProgress() != null) {
 				transaction.getProgress().setTotalBytesToTransfer(preTransferBytes);
+			}
 		}
 	}
 
@@ -208,8 +210,9 @@ public class TransferListener extends ITransferListener
 			removeAllTransactionSessions(xferId);
 		}
 
-		if(bytes > 0)
+		if(bytes > 0) {
 			updateProgress(xferId, sessionId, status, bytes);
+		}
 		// Only set status to DONE if all bytes transferred.
 		if(status.equals("DONE") || status.equals("STOP")) {
 			if(totalPreTransferBytes.get(xferId) == null 
@@ -246,8 +249,9 @@ public class TransferListener extends ITransferListener
 		log.trace("TransferListener.updateProgress >> " + System.nanoTime() + ": " + new Exception().getStackTrace()[1].getClassName());
 
 		Long totalBytesTransferred = bytesTransferred.get(xferId);
-		if(totalBytesTransferred == null)
+		if(totalBytesTransferred == null) {
 			totalBytesTransferred = new Long(0);
+		}
 
 		Map<String, Long> sessionBytesTransferred = sessionsBytesTransferred.get(xferId);
 		Long currentBytesTransferredForSession = sessionBytesTransferred.get(sessionId);
@@ -286,8 +290,9 @@ public class TransferListener extends ITransferListener
 
 	protected void fireProgressEvent(String xferid, long bytesTransferred) {
 		log.trace("TransferListener.fireProgressEvent >> " + System.nanoTime());
-		if(transactions.get(xferid) == null)
+		if(transactions.get(xferid) == null) {
 			return;
+		}
 		for(AsperaTransaction transaction : transactions.get(xferid)) {
 			publishRequestBytesTransferred(transaction.getProgressListenerChain(), bytesTransferred);
 		}
@@ -352,8 +357,9 @@ public class TransferListener extends ITransferListener
 	public void removeAllTransactionSessions(String xferId) {
 		List<String> sessions = transactionSessions.get(xferId);
 
-		if(sessions != null)
+		if(sessions != null) {
 			sessions.clear();
+		}
 	}
 
 	/**
@@ -366,8 +372,9 @@ public class TransferListener extends ITransferListener
 		int sessionCount = 0;
 		List<String> sessions = transactionSessions.get(xferId);
 
-		if(sessions != null)
+		if(sessions != null) {
 			sessionCount = sessions.size();
+		}
 
 		return sessionCount;
 	}

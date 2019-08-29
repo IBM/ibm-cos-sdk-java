@@ -107,11 +107,13 @@ public class AsperaTransferManager {
 	protected AsperaTransferManager(AmazonS3 s3Client, TokenManager tokenManager, AsperaConfig asperaConfig, 
 			AsperaTransferManagerConfig asperaTransferManagerConfig) {
 
-		if (s3Client == null)
+		if (s3Client == null) {
 			throw new SdkClientException("s3Client has not been set for AsperaTransferManager");
+		}
 
-		if (asperaTransferManagerConfig == null)
+		if (asperaTransferManagerConfig == null) {
 			throw new SdkClientException("asperaTransferManagerConfig has not been set for AsperaTransferManager");
+		}
 
 		this.tokenManager = tokenManager;
 		this.akCache = new AsperaKeyCache(asperaTransferManagerConfig.getMaxFaspCacheSize());
@@ -121,8 +123,9 @@ public class AsperaTransferManager {
 		this.asperaFaspManagerWrapper = new AsperaFaspManagerWrapper();
 		this.asperaConfig = asperaConfig;
 		//Set log location if configured
-		if (null != asperaTransferManagerConfig.getAscpLogPath()) 
+		if (null != asperaTransferManagerConfig.getAscpLogPath()) {
 			asperaFaspManagerWrapper.configureLogLocation(asperaTransferManagerConfig.getAscpLogPath());
+		}
 	}
 
 	/**
@@ -145,12 +148,15 @@ public class AsperaTransferManager {
 		checkAscpThreshold();
 
 		// Destination bucket and source path must be specified
-		if (bucket == null || bucket.isEmpty())
+		if (bucket == null || bucket.isEmpty()) {
 			throw new SdkClientException("Bucket name has not been specified for upload");
-		if (localFileName == null || !localFileName.exists())
+		}
+		if (localFileName == null || !localFileName.exists()) {
 			throw new SdkClientException("localFileName has not been specified for upload");
-		if (remoteFileName == null || remoteFileName.isEmpty())
+		}
+		if (remoteFileName == null || remoteFileName.isEmpty()) {
 			throw new SdkClientException("remoteFileName has not been specified for upload");
+		}
 
 		// Submit upload to thread pool
 		AsperaUploadCallable uploadCallable =  new AsperaUploadCallable(this, bucket, localFileName, remoteFileName, sessionDetails, progressListener);
@@ -183,12 +189,15 @@ public class AsperaTransferManager {
 		checkAscpThreshold();
 
 		// Destination bucket and source path must be specified
-		if (bucket == null || bucket.isEmpty())
+		if (bucket == null || bucket.isEmpty()) {
 			throw new SdkClientException("Bucket name has not been specified for download");
-		if (localFileName == null || !localFileName.exists())
+		}
+		if (localFileName == null || !localFileName.exists()) {
 			throw new SdkClientException("localFile does not exist");
-		if (remoteFileName == null || remoteFileName.isEmpty())
+		}
+		if (remoteFileName == null || remoteFileName.isEmpty()) {
 			throw new SdkClientException("remoteFileName has not been specified for download");
+		}
 		// Submit upload to thread pool
 		AsperaDownloadCallable downloadCallable =  new AsperaDownloadCallable(this, bucket, localFileName, remoteFileName, sessionDetails, listenerChain);
 		Future<AsperaTransaction> asperaTransaction = executorService.submit(downloadCallable);
@@ -208,12 +217,15 @@ public class AsperaTransferManager {
 		log.trace("AsperaTransferManager.downloadDirectory >> Starting Download " + System.nanoTime());
 		checkAscpThreshold();
 
-		if (bucketName == null || bucketName.isEmpty())
+		if (bucketName == null || bucketName.isEmpty()) {
 			throw new SdkClientException("Bucket name has not been specified for upload");
-		if (directory == null || !directory.exists())
+		}
+		if (directory == null || !directory.exists()) {
 			throw new SdkClientException("localFileName has not been specified for upload");
-		if (virtualDirectoryKeyPrefix == null || virtualDirectoryKeyPrefix.isEmpty())
+		}
+		if (virtualDirectoryKeyPrefix == null || virtualDirectoryKeyPrefix.isEmpty()) {
 			throw new SdkClientException("remoteFileName has not been specified for upload");
+		}
 		
 		// Submit upload to thread pool
 		AsperaDownloadDirectoryCallable downloadDirectoryCallable =  new AsperaDownloadDirectoryCallable(this, bucketName, directory, virtualDirectoryKeyPrefix, sessionDetails, progressListener);
@@ -256,12 +268,15 @@ public class AsperaTransferManager {
 		checkAscpThreshold();
 
 		// Destination bucket and source path must be specified
-		if (bucketName == null || bucketName.isEmpty())
+		if (bucketName == null || bucketName.isEmpty()) {
 			throw new SdkClientException("Bucket name has not been specified for upload");
-		if (directory == null || !directory.exists())
+		}
+		if (directory == null || !directory.exists()) {
 			throw new SdkClientException("localFileName has not been specified for upload");
-		if (virtualDirectoryKeyPrefix == null || virtualDirectoryKeyPrefix.isEmpty())
+		}
+		if (virtualDirectoryKeyPrefix == null || virtualDirectoryKeyPrefix.isEmpty()) {
 			throw new SdkClientException("remoteFileName has not been specified for upload");
+		}
 		
 		// Submit upload to thread pool
 		AsperaUploadDirectoryCallable uploadDirectoryCallable =  new AsperaUploadDirectoryCallable(this, bucketName, directory, virtualDirectoryKeyPrefix, sessionDetails, includeSubdirectories, progressListener);
@@ -500,17 +515,39 @@ public class AsperaTransferManager {
 	 */
 	public void modifyTransferSpec(AsperaConfig sessionDetails, TransferSpecs transferSpecs) {
 		for(TransferSpec transferSpec : transferSpecs.transfer_specs) {
-			if (!StringUtils.isNullOrEmpty(String.valueOf(sessionDetails.getTargetRateKbps())))transferSpec.setTarget_rate_kbps(sessionDetails.getTargetRateKbps());
-			if (!StringUtils.isNullOrEmpty(String.valueOf(sessionDetails.getTargetRateCapKbps())))transferSpec.setTarget_rate_cap_kbps(sessionDetails.getTargetRateCapKbps());
-			if (!StringUtils.isNullOrEmpty(String.valueOf(sessionDetails.getMinRateCapKbps())))transferSpec.setMin_rate_cap_kbps(sessionDetails.getMinRateCapKbps());
-			if (!StringUtils.isNullOrEmpty(String.valueOf(sessionDetails.getMinRateKbps())))transferSpec.setMin_rate_kbps(sessionDetails.getMinRateKbps());
-			if (!StringUtils.isNullOrEmpty(sessionDetails.getRatePolicy()))transferSpec.setRate_policy(sessionDetails.getRatePolicy());
-			if (!StringUtils.isNullOrEmpty(String.valueOf(sessionDetails.isLockMinRate())))transferSpec.setLock_min_rate(sessionDetails.isLockMinRate());
-			if (!StringUtils.isNullOrEmpty(String.valueOf(sessionDetails.isLockTargetRate())))transferSpec.setLock_target_rate(sessionDetails.isLockTargetRate());
-			if (!StringUtils.isNullOrEmpty(String.valueOf(sessionDetails.isLockRatePolicy())))transferSpec.setLock_rate_policy(sessionDetails.isLockRatePolicy());
-			if (!StringUtils.isNullOrEmpty(sessionDetails.getDestinationRoot()))transferSpec.setDestination_root(sessionDetails.getDestinationRoot());
-			if (!StringUtils.isNullOrEmpty(String.valueOf(sessionDetails.getMultiSession())))transferSpec.setMulti_session(sessionDetails.getMultiSession());
-			if (!StringUtils.isNullOrEmpty(String.valueOf(sessionDetails.getMultiSessionThreshold())))transferSpec.setMulti_session_threshold(sessionDetails.getMultiSessionThreshold());
+			if (!StringUtils.isNullOrEmpty(String.valueOf(sessionDetails.getTargetRateKbps()))) {
+				transferSpec.setTarget_rate_kbps(sessionDetails.getTargetRateKbps());
+			}
+			if (!StringUtils.isNullOrEmpty(String.valueOf(sessionDetails.getTargetRateCapKbps()))) {
+				transferSpec.setTarget_rate_cap_kbps(sessionDetails.getTargetRateCapKbps());
+			}
+			if (!StringUtils.isNullOrEmpty(String.valueOf(sessionDetails.getMinRateCapKbps()))) {
+				transferSpec.setMin_rate_cap_kbps(sessionDetails.getMinRateCapKbps());
+			}
+			if (!StringUtils.isNullOrEmpty(String.valueOf(sessionDetails.getMinRateKbps()))) {
+				transferSpec.setMin_rate_kbps(sessionDetails.getMinRateKbps());
+			}
+			if (!StringUtils.isNullOrEmpty(sessionDetails.getRatePolicy())) {
+				transferSpec.setRate_policy(sessionDetails.getRatePolicy());
+			}
+			if (!StringUtils.isNullOrEmpty(String.valueOf(sessionDetails.isLockMinRate()))) {
+				transferSpec.setLock_min_rate(sessionDetails.isLockMinRate());
+			}
+			if (!StringUtils.isNullOrEmpty(String.valueOf(sessionDetails.isLockTargetRate()))) {
+				transferSpec.setLock_target_rate(sessionDetails.isLockTargetRate());
+			}
+			if (!StringUtils.isNullOrEmpty(String.valueOf(sessionDetails.isLockRatePolicy()))) {
+				transferSpec.setLock_rate_policy(sessionDetails.isLockRatePolicy());
+			}
+			if (!StringUtils.isNullOrEmpty(sessionDetails.getDestinationRoot())) {
+				transferSpec.setDestination_root(sessionDetails.getDestinationRoot());
+			}
+			if (!StringUtils.isNullOrEmpty(String.valueOf(sessionDetails.getMultiSession()))) {
+				transferSpec.setMulti_session(sessionDetails.getMultiSession());
+			}
+			if (!StringUtils.isNullOrEmpty(String.valueOf(sessionDetails.getMultiSessionThreshold()))) {
+				transferSpec.setMulti_session_threshold(sessionDetails.getMultiSessionThreshold());
+			}
 		}
 	}
 

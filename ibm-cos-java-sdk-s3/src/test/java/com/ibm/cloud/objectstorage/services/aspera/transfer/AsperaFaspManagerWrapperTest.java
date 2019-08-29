@@ -1,6 +1,19 @@
+/*
+ * Copyright 2018 IBM Corp. All Rights Reserved.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
+ * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
+ * specific language governing permissions and limitations under the License.
+ */
 package com.ibm.cloud.objectstorage.services.aspera.transfer;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.anyLong;
@@ -71,7 +84,7 @@ public class AsperaFaspManagerWrapperTest {
 		wrapper.log = mockLog;
 		
 		long rtn = wrapper.startTransfer("xyz123", "configString1");
-		assertEquals(rtn, 3L);
+		assertEquals(3L, rtn);
 
 		verify(mockLog, times(1)).info(Mockito.eq("Starting transfer with xferId [xyz123]"));
 	}
@@ -95,7 +108,7 @@ public class AsperaFaspManagerWrapperTest {
 		wrapper.log = mockLog;
 		
 		long rtn = wrapper.startTransfer("xyz123", "configString1");
-		assertEquals(rtn, 3L);
+		assertEquals(3L, rtn);
 
 		verify(mockLog, times(1)).debug(Mockito.eq("Transfer Spec for Session with xferId [xyz123]"));
 	}
@@ -119,7 +132,7 @@ public class AsperaFaspManagerWrapperTest {
 		wrapper.log = mockLog;
 		
 		long rtn = wrapper.startTransfer("xyz123", "configString1");
-		assertEquals(rtn, 3L);
+		assertEquals(3L, rtn);
 
 		verify(mockLog, times(1)).trace(Mockito.eq("Calling method [startTransfer] with parameters [\"xyz123\", null, transferSpecStr, transferListener]"));
 		verify(mockLog, times(1)).trace(Mockito.eq("Method [startTransfer] returned for xferId [\"xyz123\"] with result: [3]"));
@@ -147,7 +160,7 @@ public class AsperaFaspManagerWrapperTest {
 		wrapper.log = mockLog;
 		
 		boolean rtn = wrapper.pause("xyz123");
-		assertEquals(rtn, true);
+		assertTrue(rtn);
 
 		verify(mockLog, times(1)).info(Mockito.eq("Pausing transfer with xferId [xyz123]"));
 	}
@@ -171,7 +184,7 @@ public class AsperaFaspManagerWrapperTest {
 		wrapper.log = mockLog;
 		
 		boolean rtn = wrapper.pause("xyz123");
-		assertEquals(rtn, true);
+		assertTrue(rtn);
 
 		verify(mockLog, times(1)).trace(Mockito.eq("Calling method [modifyTransfer] with parameters [\"xyz123\", 4, 0]"));
 		verify(mockLog, times(1)).trace(Mockito.eq("Method [modifyTransfer] returned for xferId [\"xyz123\"] with result: [true]"));
@@ -199,7 +212,7 @@ public class AsperaFaspManagerWrapperTest {
 		wrapper.log = mockLog;
 		
 		boolean rtn = wrapper.resume("xyz123");
-		assertEquals(rtn, true);
+		assertTrue(rtn);
 
 		verify(mockLog, times(1)).info(Mockito.eq("Resuming transfer with xferId [xyz123]"));
 	}
@@ -223,7 +236,7 @@ public class AsperaFaspManagerWrapperTest {
 		wrapper.log = mockLog;
 		
 		boolean rtn = wrapper.resume("xyz123");
-		assertEquals(rtn, true);
+		assertTrue(rtn);
 
 		verify(mockLog, times(1)).trace(Mockito.eq("Calling method [modifyTransfer] with parameters [\"xyz123\", 5, 0]"));
 		verify(mockLog, times(1)).trace(Mockito.eq("Method [modifyTransfer] returned for xferId [\"xyz123\"] with result: [true]"));
@@ -251,7 +264,7 @@ public class AsperaFaspManagerWrapperTest {
 		wrapper.log = mockLog;
 		
 		boolean rtn = wrapper.cancel("xyz123");
-		assertEquals(rtn, true);
+		assertTrue(rtn);
 
 		verify(mockLog, times(1)).info(Mockito.eq("Cancel transfer with xferId [xyz123]"));
 	}
@@ -275,7 +288,7 @@ public class AsperaFaspManagerWrapperTest {
 		wrapper.log = mockLog;
 		
 		boolean rtn = wrapper.cancel("xyz123");
-		assertEquals(rtn, true);
+		assertTrue(rtn);
 
 		verify(mockLog, times(1)).trace(Mockito.eq("Calling method [stopTransfer] with parameters [\"xyz123\", 8, 0]"));
 		verify(mockLog, times(1)).trace(Mockito.eq("Method [stopTransfer] returned for xferId [\"xyz123\"] with result: [true]"));
@@ -300,7 +313,7 @@ public class AsperaFaspManagerWrapperTest {
 		wrapper.log = mockLog;
 		
 		boolean rtn = wrapper.isRunning("xyz123");
-		assertEquals(rtn, true);
+		assertTrue(rtn);
 
 		verify(mockLog, times(1)).trace(Mockito.eq("Calling method [isRunning] with parameters [\"xyz123\"]"));
 		verify(mockLog, times(1)).trace(Mockito.eq("Method [isRunning] returned for xferId [\"xyz123\"] with result: [true]"));
@@ -325,7 +338,7 @@ public class AsperaFaspManagerWrapperTest {
 		wrapper.log = mockLog;
 		
 		boolean rtn = wrapper.configureLogLocation("somePath");
-		assertEquals(rtn, true);
+		assertTrue(rtn);
 
 		verify(mockLog, times(1)).trace(Mockito.eq("Calling method [configureLogLocation] with parameters [\"somePath\"]"));
 		verify(mockLog, times(1)).trace(Mockito.eq("Method [configureLogLocation] returned for ascpLogPath [\"somePath\"] with result: [true]"));
