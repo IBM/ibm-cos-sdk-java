@@ -41,6 +41,8 @@ com.ibm.cloud.objectstorage.jmx.spi
 com.ibm.cloud.objectstorage.log
 com.ibm.cloud.objectstorage.metrics
 com.ibm.cloud.objectstorage.metrics.internal
+com.ibm.cloud.objectstorage.monitoring
+com.ibm.cloud.objectstorage.monitoring.internal
 com.ibm.cloud.objectstorage.oauth
 com.ibm.cloud.objectstorage.partitions
 com.ibm.cloud.objectstorage.partitions.model
