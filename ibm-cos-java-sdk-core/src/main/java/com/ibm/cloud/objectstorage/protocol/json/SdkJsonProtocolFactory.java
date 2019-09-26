@@ -101,14 +101,19 @@ public class SdkJsonProtocolFactory implements SdkJsonMarshallerFactory {
     @SuppressWarnings("unchecked")
     private void createErrorUnmarshallers() {
         for (JsonErrorShapeMetadata errorMetadata : metadata.getErrorShapeMetadata()) {
-            errorUnmarshallers.add(new JsonErrorUnmarshaller(
-                    (Class<? extends AmazonServiceException>) errorMetadata.getModeledClass(),
-                    errorMetadata.getErrorCode()));
-
+            if (errorMetadata.getExceptionUnmarshaller() != null) {
+                errorUnmarshallers.add(errorMetadata.getExceptionUnmarshaller());
+            } else if (errorMetadata.getModeledClass() != null) {
+                errorUnmarshallers.add(new JsonErrorUnmarshaller(
+                        (Class<? extends AmazonServiceException>) errorMetadata.getModeledClass(),
+                        errorMetadata.getErrorCode()));
+            }
         }
-        errorUnmarshallers.add(new JsonErrorUnmarshaller(
-                (Class<? extends AmazonServiceException>) metadata.getBaseServiceExceptionClass(),
-                null));
+
+        if (metadata.getBaseServiceExceptionClass() != null) {
+            errorUnmarshallers.add(new JsonErrorUnmarshaller(
+                    (Class<? extends AmazonServiceException>) metadata.getBaseServiceExceptionClass(), null));
+        }
     }
 
     /**

@@ -27,6 +27,11 @@ public interface HttpResponseHandler<T> {
     String X_AMZN_REQUEST_ID_HEADER = "x-amzn-RequestId";
 
     /**
+     * An extended request ID used primarily by S3 related services.
+     */
+    String X_AMZN_EXTENDED_REQUEST_ID_HEADER = "x-amz-id-2";
+
+    /**
      * Accepts an HTTP response object, and returns an object of type T.
      * Individual implementations may choose to handle the response however they
      * need to, and return any type that they need to.

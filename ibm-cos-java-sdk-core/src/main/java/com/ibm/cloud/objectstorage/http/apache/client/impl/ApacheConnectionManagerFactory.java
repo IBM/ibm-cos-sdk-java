@@ -33,11 +33,14 @@ import org.apache.http.protocol.HttpContext;
 import com.ibm.cloud.objectstorage.SDKGlobalConfiguration;
 import com.ibm.cloud.objectstorage.http.AmazonHttpClient;
 import com.ibm.cloud.objectstorage.http.DelegatingDnsResolver;
+import com.ibm.cloud.objectstorage.http.SystemPropertyTlsKeyManagersProvider;
+import com.ibm.cloud.objectstorage.http.TlsKeyManagersProvider;
 import com.ibm.cloud.objectstorage.http.client.ConnectionManagerFactory;
 import com.ibm.cloud.objectstorage.http.conn.ssl.SdkTLSSocketFactory;
 import com.ibm.cloud.objectstorage.http.settings.HttpClientSettings;
 import com.ibm.cloud.objectstorage.internal.SdkSSLContext;
 
+import javax.net.ssl.KeyManager;
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSocket;
@@ -90,10 +93,9 @@ public class ApacheConnectionManagerFactory implements
         return sslsf != null
                 ? sslsf
                 : new SdkTLSSocketFactory(
-                SdkSSLContext.getPreferredSSLContext(settings.getKeyManagers(), settings.getSecureRandom()),
+                SdkSSLContext.getPreferredSSLContext(getKeyManagers(settings), settings.getSecureRandom()),
                 getHostNameVerifier(settings));
     }
-
 
     private SocketConfig buildSocketConfig(HttpClientSettings settings) {
         return SocketConfig.custom()
@@ -113,6 +115,14 @@ public class ApacheConnectionManagerFactory implements
                 : ConnectionConfig.custom()
                 .setBufferSize(socketBufferSize)
                 .build();
+    }
+
+    private KeyManager[] getKeyManagers(HttpClientSettings settings) {
+        TlsKeyManagersProvider provider = settings.getTlsKeyMangersProvider();
+        if (provider == null) {
+            provider = new SystemPropertyTlsKeyManagersProvider();
+        }
+        return provider.getKeyManagers();
     }
 
     private HostnameVerifier getHostNameVerifier

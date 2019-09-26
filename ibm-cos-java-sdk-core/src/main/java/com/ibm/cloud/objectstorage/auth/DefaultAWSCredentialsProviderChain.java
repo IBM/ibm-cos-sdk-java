@@ -31,6 +31,7 @@ import com.ibm.cloud.objectstorage.auth.profile.ProfileCredentialsProvider;
  *   <li>Credentials delivered through the Amazon EC2 container service if AWS_CONTAINER_CREDENTIALS_RELATIVE_URI" environment variable is set
  *   and security manager has permission to access the variable,</li>
  *   <li>Instance profile credentials delivered through the Amazon EC2 metadata service</li>
+ *   <li>Web Identity Token credentials from the environment or container.</li>
  * </ul>
  *
  * @see EnvironmentVariableCredentialsProvider
@@ -49,6 +50,7 @@ public class DefaultAWSCredentialsProviderChain extends AWSCredentialsProviderCh
               new SystemPropertiesCredentialsProvider(),
               new JsonCredentialsProvider(),
               new ProfileCredentialsProvider(),
+              WebIdentityTokenCredentialsProvider.create(),
               new EC2ContainerCredentialsProviderWrapper());
     }
 
