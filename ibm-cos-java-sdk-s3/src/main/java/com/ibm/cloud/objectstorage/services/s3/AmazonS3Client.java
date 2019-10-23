@@ -228,6 +228,7 @@ import com.ibm.cloud.objectstorage.util.RuntimeHttpUtils;
 import com.ibm.cloud.objectstorage.util.SdkHttpUtils;
 import com.ibm.cloud.objectstorage.util.ServiceClientHolderInputStream;
 import com.ibm.cloud.objectstorage.util.StringUtils;
+import com.ibm.cloud.objectstorage.util.ValidationUtils;
 import com.ibm.cloud.objectstorage.util.AWSRequestMetrics.Field;
 
 import java.io.ByteArrayInputStream;
@@ -1237,6 +1238,7 @@ public class AmazonS3Client extends AmazonWebServiceClient implements AmazonS3 {
     public boolean doesBucketExist(String bucketName)
             throws SdkClientException, AmazonServiceException {
         try {
+            ValidationUtils.assertStringNotEmpty(bucketName, "bucketName");
             headBucket(new HeadBucketRequest(bucketName));
             return true;
         } catch (AmazonServiceException ase) {
@@ -1256,6 +1258,7 @@ public class AmazonS3Client extends AmazonWebServiceClient implements AmazonS3 {
     @Override
     public boolean doesBucketExistV2(String bucketName) throws SdkClientException {
         try {
+            ValidationUtils.assertStringNotEmpty(bucketName, "bucketName");
             getBucketAcl(bucketName);
             return true;
         } catch (AmazonServiceException ase) {
@@ -1275,6 +1278,8 @@ public class AmazonS3Client extends AmazonWebServiceClient implements AmazonS3 {
     public boolean doesObjectExist(String bucketName, String objectName)
             throws AmazonServiceException, SdkClientException {
         try {
+            ValidationUtils.assertStringNotEmpty(bucketName, "bucketName");
+            ValidationUtils.assertStringNotEmpty(objectName, "objectName");
             getObjectMetadata(bucketName, objectName);
             return true;
         } catch (AmazonS3Exception e) {

@@ -14,6 +14,7 @@
  */
 package com.ibm.cloud.objectstorage.services.s3.event;
 
+import com.ibm.cloud.objectstorage.services.s3.model.S3Event;
 import java.util.List;
 
 import org.joda.time.DateTime;
@@ -332,6 +333,11 @@ public class S3EventNotification {
 
         public String getEventName() {
             return eventName;
+        }
+
+        @JsonIgnore
+        public S3Event getEventNameAsEnum() {
+            return S3Event.fromValue(eventName);
         }
 
         public String getEventSource() {

@@ -1,5 +1,10 @@
 # CHANGELOG
 
+# 2.5.5
+## Content
+### Defect Fixes
+* AWS Patches aligned to version 1.11.646 of the AWS Java SDK
+
 # 2.5.4
 ## Content
 ### Defect Fixes
