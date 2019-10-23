@@ -1,6 +1,7 @@
 com.ibm.cloud.objectstorage
 com.ibm.cloud.objectstorage.adapters.types
 com.ibm.cloud.objectstorage.annotation
+com.ibm.cloud.objectstorage.arn
 com.ibm.cloud.objectstorage.auth
 com.ibm.cloud.objectstorage.auth.internal
 com.ibm.cloud.objectstorage.auth.json
