@@ -31,6 +31,7 @@ public enum InventoryOptionalField {
 
     ReplicationStatus("ReplicationStatus"),
 
+    IntelligentTieringAccessTier("IntelligentTieringAccessTier")
     ;
 
     private final String field;

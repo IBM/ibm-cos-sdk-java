@@ -14,9 +14,6 @@
  */
 package com.ibm.cloud.objectstorage.auth;
 
-import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -25,10 +22,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import com.ibm.cloud.objectstorage.AmazonClientException;
-import com.ibm.cloud.objectstorage.SdkClientException;
-import com.ibm.cloud.objectstorage.internal.CredentialsEndpointProvider;
-import com.ibm.cloud.objectstorage.internal.EC2CredentialsUtils;
-import com.ibm.cloud.objectstorage.util.EC2MetadataUtils;
 
 /**
  * Credentials provider implementation that loads credentials from the Amazon
@@ -52,7 +45,7 @@ public class InstanceProfileCredentialsProvider implements AWSCredentialsProvide
     private static final InstanceProfileCredentialsProvider INSTANCE
         = new InstanceProfileCredentialsProvider();
 
-    private final EC2CredentialsFetcher credentialsFetcher;
+    private final InstanceMetadataServiceCredentialsFetcher credentialsFetcher;
 
     /**
      * The executor service used for refreshing the credentials in the
@@ -86,7 +79,7 @@ public class InstanceProfileCredentialsProvider implements AWSCredentialsProvide
      * @param eagerlyRefreshCredentialsAsync
      *            when set to false will not attempt to refresh credentials asynchronously
      *            until after a call has been made to {@link #getCredentials()} - ensures that
-     *            {@link EC2CredentialsFetcher#getCredentials()} is only hit when this CredentialProvider is actually required
+     *            {@link ContainerCredentialsFetcher#getCredentials()} is only hit when this CredentialProvider is actually required
      */
     public static InstanceProfileCredentialsProvider createAsyncRefreshingProvider(final boolean eagerlyRefreshCredentialsAsync) {
         return new InstanceProfileCredentialsProvider(true, eagerlyRefreshCredentialsAsync);
@@ -94,7 +87,7 @@ public class InstanceProfileCredentialsProvider implements AWSCredentialsProvide
 
 
     private InstanceProfileCredentialsProvider(boolean refreshCredentialsAsync, final boolean eagerlyRefreshCredentialsAsync) {
-        credentialsFetcher = new EC2CredentialsFetcher(new InstanceMetadataCredentialsEndpointProvider());
+        credentialsFetcher = new InstanceMetadataServiceCredentialsFetcher();
         shouldRefresh = eagerlyRefreshCredentialsAsync;
         if (refreshCredentialsAsync) {
             executor = Executors.newScheduledThreadPool(1);
@@ -146,21 +139,6 @@ public class InstanceProfileCredentialsProvider implements AWSCredentialsProvide
     @Override
     public void refresh() {
         credentialsFetcher.refresh();
-    }
-
-    private static class InstanceMetadataCredentialsEndpointProvider extends CredentialsEndpointProvider {
-        @Override
-        public URI getCredentialsEndpoint() throws URISyntaxException, IOException {
-            String host = EC2MetadataUtils.getHostAddressForEC2MetadataService();
-
-            String securityCredentialsList = EC2CredentialsUtils.getInstance().readResource(new URI(host + EC2MetadataUtils.SECURITY_CREDENTIALS_RESOURCE));
-            String[] securityCredentials = securityCredentialsList.trim().split("\n");
-            if (securityCredentials.length == 0) {
-                throw new SdkClientException("Unable to load credentials path");
-            }
-
-            return new URI(host + EC2MetadataUtils.SECURITY_CREDENTIALS_RESOURCE + securityCredentials[0]);
-        }
     }
 
 }

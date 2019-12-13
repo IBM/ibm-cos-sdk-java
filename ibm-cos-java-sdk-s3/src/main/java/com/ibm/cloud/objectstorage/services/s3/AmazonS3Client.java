@@ -777,6 +777,9 @@ public class AmazonS3Client extends AmazonWebServiceClient implements AmazonS3 {
         if (listObjectsRequest.getMaxKeys() != null && listObjectsRequest.getMaxKeys().intValue() >= 0) request.addParameter("max-keys", listObjectsRequest.getMaxKeys().toString());
         request.addParameter("encoding-type", shouldSDKDecodeResponse ? Constants.URL_ENCODING : listObjectsRequest.getEncodingType());
 
+        addHeaderIfNotEmpty(
+            request, Headers.MIRROR_DESTINATION, listObjectsRequest.getWormMirrorDestination());
+
         return invoke(request, new Unmarshallers.ListObjectsUnmarshaller(shouldSDKDecodeResponse), listObjectsRequest.getBucketName(), null);
     }
 
@@ -1026,6 +1029,9 @@ public class AmazonS3Client extends AmazonWebServiceClient implements AmazonS3 {
         rejectNull(getObjectAclRequest.getBucketName(), "The bucket name parameter must be specified when requesting an object's ACL");
         rejectNull(getObjectAclRequest.getKey(), "The key parameter must be specified when requesting an object's ACL");
 
+        addHeaderIfNotEmptyForAwsRequest(
+                getObjectAclRequest, Headers.MIRROR_DESTINATION, getObjectAclRequest.getWormMirrorDestination());
+
         return getAcl(getObjectAclRequest.getBucketName(), getObjectAclRequest.getKey(),
                 getObjectAclRequest.getVersionId(), getObjectAclRequest.isRequesterPays(),
                 getObjectAclRequest);
@@ -1223,6 +1229,9 @@ public class AmazonS3Client extends AmazonWebServiceClient implements AmazonS3 {
         populateRequesterPaysHeader(request, getObjectMetadataRequest.isRequesterPays());
         addPartNumberIfNotNull(request, getObjectMetadataRequest.getPartNumber());
 
+        addHeaderIfNotEmpty(
+            request, Headers.MIRROR_DESTINATION, getObjectMetadataRequest.getWormMirrorDestination());
+
         populateSSE_C(request, getObjectMetadataRequest.getSSECustomerKey());
 
         return invoke(request, new S3MetadataResponseHandler(), bucketName, key);
@@ -1348,6 +1357,9 @@ public class AmazonS3Client extends AmazonWebServiceClient implements AmazonS3 {
         }
 
         addPartNumberIfNotNull(request, getObjectRequest.getPartNumber());
+
+        addHeaderIfNotEmpty(
+            request, Headers.MIRROR_DESTINATION, getObjectRequest.getWormMirrorDestination());
 
         // Range
         long[] range = getObjectRequest.getRange();
@@ -2258,6 +2270,9 @@ public class AmazonS3Client extends AmazonWebServiceClient implements AmazonS3 {
         Request<GetBucketCrossOriginConfigurationRequest> request = createRequest(bucketName, null, getBucketCrossOriginConfigurationRequest, HttpMethodName.GET);
         request.addParameter("cors", null);
 
+        addHeaderIfNotEmpty(
+            request, Headers.MIRROR_DESTINATION, getBucketCrossOriginConfigurationRequest.getWormMirrorDestination());
+
         try {
             return invoke(request, new Unmarshallers.BucketCrossOriginConfigurationUnmarshaller(), bucketName, null);
         } catch (AmazonServiceException ase) {
@@ -2348,6 +2363,10 @@ public class AmazonS3Client extends AmazonWebServiceClient implements AmazonS3 {
         rejectNull(bucketName, "The bucket name must be specified when retrieving the bucket tagging configuration.");
 
         Request<GetBucketTaggingConfigurationRequest> request = createRequest(bucketName, null, getBucketTaggingConfigurationRequest, HttpMethodName.GET);
+
+        addHeaderIfNotEmpty(
+            request, Headers.MIRROR_DESTINATION, getBucketTaggingConfigurationRequest.getWormMirrorDestination());
+
         request.addParameter("tagging", null);
 
         try {
@@ -2735,6 +2754,9 @@ public class AmazonS3Client extends AmazonWebServiceClient implements AmazonS3 {
         if (listMultipartUploadsRequest.getPrefix() != null) request.addParameter("prefix", listMultipartUploadsRequest.getPrefix());
         if (listMultipartUploadsRequest.getEncodingType() != null) request.addParameter("encoding-type", listMultipartUploadsRequest.getEncodingType());
 
+        addHeaderIfNotEmpty(
+            request, Headers.MIRROR_DESTINATION, listMultipartUploadsRequest.getWormMirrorDestination());
+
         return invoke(request, new Unmarshallers.ListMultipartUploadsResultUnmarshaller(), listMultipartUploadsRequest.getBucketName(), null);
     }
 
@@ -2760,6 +2782,9 @@ public class AmazonS3Client extends AmazonWebServiceClient implements AmazonS3 {
         if (listPartsRequest.getEncodingType() != null) request.addParameter("encoding-type", listPartsRequest.getEncodingType());
 
         populateRequesterPaysHeader(request, listPartsRequest.isRequesterPays());
+
+        addHeaderIfNotEmpty(
+            request, Headers.MIRROR_DESTINATION, listPartsRequest.getWormMirrorDestination());
 
         @SuppressWarnings("unchecked")
         ResponseHeaderHandlerChain<PartListing> responseHandler = new ResponseHeaderHandlerChain<PartListing>(
@@ -3613,6 +3638,40 @@ public class AmazonS3Client extends AmazonWebServiceClient implements AmazonS3 {
     }
 
     /**
+     * Adds the specified header to the specified request, if the header value
+     * is not null and is not a trimmed empty string.
+     *
+     * @param request
+     *            The request to add the header to.
+     * @param header
+     *            The header name.
+     * @param value
+     *            The header value.
+     */
+    private static void addHeaderIfNotEmpty(Request<?> request, String header, String value) {
+        if (StringUtils.hasValue(value)) {
+            request.addHeader(header, value);
+        }
+    }
+
+    /**
+     * Adds the specified header to the specified request, if the header value
+     * is not null and is not a trimmed empty string.
+     *
+     * @param request
+     *            The request to add the header to.
+     * @param header
+     *            The header name.
+     * @param value
+     *            The header value.
+     */
+    private static void addHeaderIfNotEmptyForAwsRequest(AmazonWebServiceRequest request, String header, String value) {
+        if (StringUtils.hasValue(value)) {
+            request.putCustomRequestHeader(header, value);
+        }
+    }
+
+    /**
      * Adds the specified parameter to the specified request, if the parameter
      * value is not null.
      *
@@ -4058,6 +4117,9 @@ public class AmazonS3Client extends AmazonWebServiceClient implements AmazonS3 {
         request.addParameter("requestPayment", null);
         request.addHeader("Content-Type", "application/xml");
 
+        addHeaderIfNotEmpty(
+            request, Headers.MIRROR_DESTINATION, getRequestPaymentConfigurationRequest.getWormMirrorDestination());
+
         return invoke(request,
                 new Unmarshallers.RequestPaymentConfigurationUnmarshaller(),
                 bucketName, null);
@@ -4501,6 +4563,9 @@ public class AmazonS3Client extends AmazonWebServiceClient implements AmazonS3 {
         
         Request<ListLegalHoldsRequest> request = createRequest(bucketName, key, listLegalHoldsRequest, HttpMethodName.GET);
         request.addParameter("legalHold", null);
+
+        addHeaderIfNotEmpty(
+            request, Headers.MIRROR_DESTINATION, listLegalHoldsRequest.getWormMirrorDestination());
 
         try {
             return invoke(request, new Unmarshallers.ListLegalHoldsRequestUnmarshaller(), bucketName, key);

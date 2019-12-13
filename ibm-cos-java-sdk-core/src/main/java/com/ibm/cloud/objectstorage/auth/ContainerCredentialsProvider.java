@@ -15,7 +15,6 @@
 package com.ibm.cloud.objectstorage.auth;
 
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.Date;
 
 import com.ibm.cloud.objectstorage.SdkClientException;
@@ -41,7 +40,7 @@ public class ContainerCredentialsProvider implements AWSCredentialsProvider {
     /** Default endpoint to retreive the Amazon ECS Credentials. */
     private static final String ECS_CREDENTIALS_ENDPOINT = "http://169.254.170.2";
 
-    private final EC2CredentialsFetcher credentialsFetcher;
+    private final ContainerCredentialsFetcher credentialsFetcher;
 
     public ContainerCredentialsProvider() {
         this(new ECSCredentialsEndpointProvider());
@@ -49,7 +48,7 @@ public class ContainerCredentialsProvider implements AWSCredentialsProvider {
 
     @SdkInternalApi
     public ContainerCredentialsProvider(CredentialsEndpointProvider credentailsEndpointProvider) {
-        this.credentialsFetcher = new EC2CredentialsFetcher(credentailsEndpointProvider);
+        this.credentialsFetcher = new ContainerCredentialsFetcher(credentailsEndpointProvider);
     }
 
     @Override
@@ -69,14 +68,14 @@ public class ContainerCredentialsProvider implements AWSCredentialsProvider {
 
     private static class ECSCredentialsEndpointProvider extends CredentialsEndpointProvider {
         @Override
-        public URI getCredentialsEndpoint() throws URISyntaxException {
+        public URI getCredentialsEndpoint() {
             String path = System.getenv(ECS_CONTAINER_CREDENTIALS_PATH);
             if (path == null) {
                 throw new SdkClientException(
                         "The environment variable " + ECS_CONTAINER_CREDENTIALS_PATH + " is empty");
             }
 
-            return new URI(ECS_CREDENTIALS_ENDPOINT + path);
+            return URI.create(ECS_CREDENTIALS_ENDPOINT + path);
         }
 
         @Override

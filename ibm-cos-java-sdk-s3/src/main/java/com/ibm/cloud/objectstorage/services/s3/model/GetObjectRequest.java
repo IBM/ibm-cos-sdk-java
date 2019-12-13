@@ -52,7 +52,7 @@ import com.ibm.cloud.objectstorage.services.s3.internal.Constants;
  * @see GetObjectMetadataRequest
  */
 public class GetObjectRequest extends AmazonWebServiceRequest implements
-        SSECustomerKeyProvider, Serializable {
+        SSECustomerKeyProvider, WormMirrorDestinationProvider, Serializable {
     /**
      * Builder of an S3 object identifier.  This member field is never null.
      */
@@ -102,6 +102,11 @@ public class GetObjectRequest extends AmazonWebServiceRequest implements
      * decrypt this object.
      */
     private SSECustomerKey sseCustomerKey;
+
+    /**
+     * The optional destination-mirror value to use for WORM mirroring
+     */
+    private String wormMirrorDestination;
 
     /**
      * The part number of the requested part in a multipart object.
@@ -923,6 +928,43 @@ public class GetObjectRequest extends AmazonWebServiceRequest implements
      */
     public GetObjectRequest withSSECustomerKey(SSECustomerKey sseKey) {
         setSSECustomerKey(sseKey);
+        return this;
+    }
+
+    /**
+     * Returns the optional mirror-destination value for WORM mirroring
+     *
+     * @return The optional mirror-destination value
+     */
+    @Override
+    public String getWormMirrorDestination() {
+        return wormMirrorDestination;
+    }
+
+    /**
+     * Sets the optional mirror-destination value for WORM mirroring
+     * 
+     * @param wormMirrorDestination
+     *            The optional mirror-destination value for WORM mirroring
+     */
+    @Override
+    public void setWormMirrorDestination(String wormMirrorDestination) {
+        this.wormMirrorDestination = wormMirrorDestination;
+    }
+
+    /**
+     * Sets the optional mirror-destination value for WORM mirroring
+     * and returns the updated GetObjectRequest so that additional 
+     * method calls may be chained together.
+     *
+     * @param wormMirrorDestination
+     *            The optional mirror-destination value for WORM mirroring
+     *
+     * @return This {@link GetObjectRequest}, enabling additional method
+     *         calls to be chained together.
+     */
+    public GetObjectRequest withWormMirrorDestination(String wormMirrorDestination) {
+        setWormMirrorDestination(wormMirrorDestination);
         return this;
     }
 

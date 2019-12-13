@@ -14,31 +14,24 @@
  */
 package com.ibm.cloud.objectstorage.auth;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.util.Date;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.JsonNode;
 import com.ibm.cloud.objectstorage.SdkClientException;
 import com.ibm.cloud.objectstorage.annotation.SdkInternalApi;
-import com.ibm.cloud.objectstorage.internal.CredentialsEndpointProvider;
-import com.ibm.cloud.objectstorage.internal.EC2CredentialsUtils;
 import com.ibm.cloud.objectstorage.util.DateUtils;
 import com.ibm.cloud.objectstorage.util.json.Jackson;
+import com.fasterxml.jackson.databind.JsonNode;
+import java.util.Date;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 /**
  * Helper class that contains the common behavior of the
  * CredentialsProviders that loads the credentials from a
- * local endpoint on an EC2 instance.
+ * local endpoint.
  */
 @SdkInternalApi
-class EC2CredentialsFetcher {
+abstract class BaseCredentialsFetcher {
 
-    private static final Log LOG = LogFactory.getLog(EC2CredentialsFetcher.class);
+    private static final Log LOG = LogFactory.getLog(BaseCredentialsFetcher.class);
 
     /**
      * The threshold after the last attempt to load credentials (in
@@ -70,13 +63,6 @@ class EC2CredentialsFetcher {
     /** The time of the last attempt to check for new credentials */
     protected volatile Date lastInstanceProfileCheck;
 
-    /** Used to load the endpoint where the credentials are stored. */
-    private final CredentialsEndpointProvider credentailsEndpointProvider;
-
-    public EC2CredentialsFetcher(CredentialsEndpointProvider credentailsEndpointProvider) {
-        this.credentailsEndpointProvider = credentailsEndpointProvider;
-    }
-
     public AWSCredentials getCredentials() {
         if (needsToLoadCredentials())
             fetchCredentials();
@@ -91,7 +77,7 @@ class EC2CredentialsFetcher {
      * Returns true if credentials are null, credentials are within expiration or
      * if the last attempt to refresh credentials is beyond the refresh threshold.
      */
-     protected boolean needsToLoadCredentials() {
+    boolean needsToLoadCredentials() {
         if (credentials == null) return true;
 
         if (credentialsExpiration != null) {
@@ -106,6 +92,11 @@ class EC2CredentialsFetcher {
     }
 
     /**
+     * @return the raw credential response string from the local endpoint.
+     */
+    abstract String getCredentialsResponse();
+
+    /**
      * Fetches the credentials from the endpoint.
      */
     private synchronized void fetchCredentials() {
@@ -118,7 +109,7 @@ class EC2CredentialsFetcher {
         try {
             lastInstanceProfileCheck = new Date();
 
-            String credentialsResponse = EC2CredentialsUtils.getInstance().readResource(credentailsEndpointProvider.getCredentialsEndpoint(), credentailsEndpointProvider.getRetryPolicy());
+            String credentialsResponse = getCredentialsResponse();
 
             node = Jackson.fromSensitiveJsonString(credentialsResponse, JsonNode.class);
             accessKey = node.get(ACCESS_KEY_ID);
@@ -153,11 +144,7 @@ class EC2CredentialsFetcher {
                     handleError("Unable to parse credentials expiration date from Amazon EC2 instance", ex);
                 }
             }
-        } catch (JsonMappingException e) {
-            handleError("Unable to parse response returned from service endpoint", e);
-        } catch (IOException e) {
-            handleError("Unable to load credentials from service endpoint", e);
-        } catch (URISyntaxException e) {
+        } catch (Exception e) {
             handleError("Unable to load credentials from service endpoint", e);
         }
     }
@@ -175,6 +162,10 @@ class EC2CredentialsFetcher {
      *            The error that occurred.
      */
     private void handleError(String errorMessage, Exception e) {
+        if (e instanceof SdkClientException) {
+            throw (SdkClientException) e;
+        }
+
         // If we don't have any valid credentials to fall back on, then throw an exception
         if (credentials == null || expired())
             throw new SdkClientException(errorMessage, e);
@@ -214,12 +205,12 @@ class EC2CredentialsFetcher {
         return false;
     }
 
-    public Date getCredentialsExpiration() {
+    Date getCredentialsExpiration() {
         return credentialsExpiration;
     }
 
     @Override
     public String toString() {
-        return getClass().getSimpleName();
+        return "BaseCredentialsFetcher";
     }
 }

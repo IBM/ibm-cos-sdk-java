@@ -40,6 +40,13 @@ public class ReplicationRule implements Serializable {
     private ReplicationDestinationConfig destinationConfig;
 
     /**
+     * The status of the replication of existing objects in this replication rule. Valid values are Enabled, Disabled.
+     * The rule will be applied only if the status is Enabled, and is only valid for Replication configuration V2.
+     */
+    private ExistingObjectReplication existingObjectReplication;
+
+
+    /**
      * Returns the prefix associated with the replication rule.
      */
     public String getPrefix() {
@@ -163,6 +170,34 @@ public class ReplicationRule implements Serializable {
     public ReplicationRule withDestinationConfig(
             ReplicationDestinationConfig destinationConfig) {
         setDestinationConfig(destinationConfig);
+        return this;
+    }
+
+        /**
+     * Returns the status of existing object replication of current rule.
+     */
+    public ExistingObjectReplication getExistingObjectReplication() {
+        return existingObjectReplication;
+    }
+
+    /**
+     * Sets the status of existing object replication of current rule.
+     *
+     * @param existingObjectReplication Status of existing object replication.
+     */
+    public void setExistingObjectReplication(ExistingObjectReplication existingObjectReplication) {
+        this.existingObjectReplication = existingObjectReplication;
+    }
+
+    /**
+     * Fluent method to set the ExistingObjectReplication that is indicate if existing
+     * objects are replicated in Replication configuration V2.
+     *
+     * @param existingObjectReplication Status of existing object replication.
+     * @return This object for method chaining.
+     */
+    public ReplicationRule withExistingObjectReplication(ExistingObjectReplication existingObjectReplication) {
+        setExistingObjectReplication(existingObjectReplication);
         return this;
     }
 

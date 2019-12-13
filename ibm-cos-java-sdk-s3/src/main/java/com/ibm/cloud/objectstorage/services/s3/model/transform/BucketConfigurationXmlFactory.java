@@ -34,6 +34,7 @@ import com.ibm.cloud.objectstorage.services.s3.model.BucketWebsiteConfiguration;
 import com.ibm.cloud.objectstorage.services.s3.model.CORSRule;
 import com.ibm.cloud.objectstorage.services.s3.model.CORSRule.AllowedMethods;
 import com.ibm.cloud.objectstorage.services.s3.model.CloudFunctionConfiguration;
+import com.ibm.cloud.objectstorage.services.s3.model.ExistingObjectReplication;
 import com.ibm.cloud.objectstorage.services.s3.model.Filter;
 import com.ibm.cloud.objectstorage.services.s3.model.FilterRule;
 import com.ibm.cloud.objectstorage.services.s3.model.LambdaConfiguration;
@@ -275,6 +276,10 @@ public class BucketConfigurationXmlFactory {
             xml.start("ID").value(ruleId).end();
             xml.start("Prefix").value(rule.getPrefix()).end();
             xml.start("Status").value(rule.getStatus()).end();
+            ExistingObjectReplication existingObjectReplication = rule.getExistingObjectReplication();
+            if (existingObjectReplication != null) {
+                xml.start("ExistingObjectReplication").start("Status").value(existingObjectReplication.getStatus()).end().end();
+            }
 
             final ReplicationDestinationConfig config = rule.getDestinationConfig();
             xml.start("Destination");

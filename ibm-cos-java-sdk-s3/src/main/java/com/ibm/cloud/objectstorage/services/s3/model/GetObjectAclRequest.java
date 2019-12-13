@@ -36,7 +36,8 @@ import com.ibm.cloud.objectstorage.services.s3.internal.Constants;
  * @see AmazonS3#getObjectAcl(String, String, String)
  * @see AmazonS3#getObjectAcl(GetObjectAclRequest)
  */
-public class GetObjectAclRequest extends AmazonWebServiceRequest implements Serializable{
+public class GetObjectAclRequest extends AmazonWebServiceRequest implements 
+        WormMirrorDestinationProvider, Serializable {
 
     /**
      * Builder of an S3 object identifier. This member field is never null.
@@ -48,6 +49,11 @@ public class GetObjectAclRequest extends AmazonWebServiceRequest implements Seri
      * Requester Pays Buckets.
      */
     private boolean isRequesterPays;
+
+    /**
+     * Optional parameter setting the mirror-destination on a WORM enabled bucket.
+     */
+    private String wormMirrorDestination;
 
     public GetObjectAclRequest(String bucketName, String key) {
         this(bucketName, key, null);
@@ -293,6 +299,43 @@ public class GetObjectAclRequest extends AmazonWebServiceRequest implements Seri
      */
     public GetObjectAclRequest withRequesterPays(boolean isRequesterPays) {
         setRequesterPays(isRequesterPays);
+        return this;
+    }
+
+        /**
+     * Returns the optional mirror-destination value for WORM mirroring
+     *
+     * @return The optional mirror-destination value
+     */
+    @Override
+    public String getWormMirrorDestination() {
+        return wormMirrorDestination;
+    }
+
+    /**
+     * Sets the optional mirror-destination value for WORM mirroring
+     * 
+     * @param wormMirrorDestination
+     *            The optional mirror-destination value for WORM mirroring
+     */
+    @Override
+    public void setWormMirrorDestination(String wormMirrorDestination) {
+        this.wormMirrorDestination = wormMirrorDestination;
+    }
+
+    /**
+     * Sets the optional mirror-destination value for WORM mirroring
+     * and returns the updated GetObjectAclRequest so that additional 
+     * method calls may be chained together.
+     *
+     * @param wormMirrorDestination
+     *            The optional mirror-destination value for WORM mirroring
+     *
+     * @return This {@link GetObjectAclRequest}, enabling additional method
+     *         calls to be chained together.
+     */
+    public GetObjectAclRequest withWormMirrorDestination(String wormMirrorDestination) {
+        setWormMirrorDestination(wormMirrorDestination);
         return this;
     }
 

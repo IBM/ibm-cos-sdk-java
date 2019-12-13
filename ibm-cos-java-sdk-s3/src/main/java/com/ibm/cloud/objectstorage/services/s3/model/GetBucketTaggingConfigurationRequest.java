@@ -22,7 +22,8 @@ import com.ibm.cloud.objectstorage.services.s3.AmazonS3;
  *
  * @see AmazonS3#getBucketTaggingConfiguration(GetBucketTaggingConfigurationRequest)
  */
-public class GetBucketTaggingConfigurationRequest extends GenericBucketRequest implements Serializable {
+public class GetBucketTaggingConfigurationRequest extends GenericBucketRequest implements 
+        WormMirrorDestinationProvider, Serializable {
 
     /**
      * Creates request object, ready to be executed to fetch the tagging
@@ -36,4 +37,45 @@ public class GetBucketTaggingConfigurationRequest extends GenericBucketRequest i
         super(bucketName);
     }
 
+    /**
+     * The optional destination-mirror value to use for WORM mirroring
+     */
+    private String wormMirrorDestination;
+
+    /**
+     * Returns the optional mirror-destination value for WORM mirroring
+     *
+     * @return The optional mirror-destination value
+     */
+    @Override
+    public String getWormMirrorDestination() {
+        return wormMirrorDestination;
+    }
+
+    /**
+     * Sets the optional mirror-destination value for WORM mirroring
+     * 
+     * @param wormMirrorDestination
+     *            The optional mirror-destination value for WORM mirroring
+     */
+    @Override
+    public void setWormMirrorDestination(String wormMirrorDestination) {
+        this.wormMirrorDestination = wormMirrorDestination;
+    }
+
+    /**
+     * Sets the optional mirror-destination value for WORM mirroring
+     * and returns the updated GetBucketTaggingConfigurationRequest so that additional 
+     * method calls may be chained together.
+     *
+     * @param wormMirrorDestination
+     *            The optional mirror-destination value for WORM mirroring
+     *
+     * @return This {@link GetBucketTaggingConfigurationRequest}, enabling additional method
+     *         calls to be chained together.
+     */
+    public GetBucketTaggingConfigurationRequest withWormMirrorDestination(String wormMirrorDestination) {
+        setWormMirrorDestination(wormMirrorDestination);
+        return this;
+    }
 }

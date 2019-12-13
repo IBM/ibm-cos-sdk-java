@@ -26,26 +26,44 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.fail;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-
 import com.ibm.cloud.objectstorage.AmazonClientException;
 import com.ibm.cloud.objectstorage.auth.AWSSessionCredentials;
 import com.ibm.cloud.objectstorage.auth.InstanceProfileCredentialsProvider;
 import com.ibm.cloud.objectstorage.util.LogCaptor;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.Parameterized;
 
 /**
  * Unit tests for the InstanceProfileCredentialsProvider.
  */
+@RunWith(Parameterized.class)
 public class InstanceProfileCredentialsProviderIntegrationTest extends LogCaptor.LogCaptorTestBase {
 
     private EC2MetadataServiceMock mockServer;
+    private boolean tokenEnabled;
+
+    @Parameterized.Parameters()
+    public static Iterable<Boolean[]> tokenEnabled() {
+        Collection<Boolean[]> tokenEnabled = new ArrayList<Boolean[]>();
+        tokenEnabled.add(new Boolean[] {true});
+        tokenEnabled.add(new Boolean[] {false});
+        return tokenEnabled;
+    }
+
+    public InstanceProfileCredentialsProviderIntegrationTest(boolean tokenEnabled) {
+        this.tokenEnabled = tokenEnabled;
+    }
 
     /** Starts up the mock EC2 Instance Metadata Service. */
     @Before
     public void setUp() throws Exception {
-        mockServer = new EC2MetadataServiceMock();
+        mockServer = new EC2MetadataServiceMock(tokenEnabled);
         mockServer.start();
     }
 

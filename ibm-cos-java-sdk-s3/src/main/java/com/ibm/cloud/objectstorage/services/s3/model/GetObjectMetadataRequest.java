@@ -42,7 +42,7 @@ import com.ibm.cloud.objectstorage.services.s3.AmazonS3Client;
  * @see GetObjectRequest
  */
 public class GetObjectMetadataRequest extends AmazonWebServiceRequest implements
-        SSECustomerKeyProvider, Serializable {
+        SSECustomerKeyProvider, WormMirrorDestinationProvider, Serializable {
     /**
      * The name of the bucket containing the object's whose metadata is being
      * retrieved.
@@ -77,6 +77,10 @@ public class GetObjectMetadataRequest extends AmazonWebServiceRequest implements
      */
     private Integer partNumber;
 
+    /**
+     * The optional destination-mirror value to use for WORM mirroring
+     */
+    private String wormMirrorDestination;
 
     /**
      * Constructs a new
@@ -433,6 +437,43 @@ public class GetObjectMetadataRequest extends AmazonWebServiceRequest implements
      */
     public GetObjectMetadataRequest withPartNumber(Integer partNumber) {
         setPartNumber(partNumber);
+        return this;
+    }
+
+    /**
+     * Returns the optional mirror-destination value for WORM mirroring
+     *
+     * @return The optional mirror-destination value
+     */
+    @Override
+    public String getWormMirrorDestination() {
+        return wormMirrorDestination;
+    }
+
+    /**
+     * Sets the optional mirror-destination value for WORM mirroring
+     * 
+     * @param wormMirrorDestination
+     *            The optional mirror-destination value for WORM mirroring
+     */
+    @Override
+    public void setWormMirrorDestination(String wormMirrorDestination) {
+        this.wormMirrorDestination = wormMirrorDestination;
+    }
+
+    /**
+     * Sets the optional mirror-destination value for WORM mirroring
+     * and returns the updated GetObjectRequest so that additional 
+     * method calls may be chained together.
+     *
+     * @param wormMirrorDestination
+     *            The optional mirror-destination value for WORM mirroring
+     *
+     * @return This {@link GetObjectMetadataRequest}, enabling additional method
+     *         calls to be chained together.
+     */
+    public GetObjectMetadataRequest withWormMirrorDestination(String wormMirrorDestination) {
+        setWormMirrorDestination(wormMirrorDestination);
         return this;
     }
 

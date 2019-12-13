@@ -195,8 +195,8 @@ public class ContainerCredentialsProviderTest {
         }
 
         @Override
-        public URI getCredentialsEndpoint() throws URISyntaxException {
-            return new URI(host + CREDENTIALS_PATH);
+        public URI getCredentialsEndpoint() {
+            return URI.create(host + CREDENTIALS_PATH);
         }
     }
 }

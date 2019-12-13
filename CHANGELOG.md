@@ -1,5 +1,12 @@
 # CHANGELOG
 
+# 2.6.0
+## Content
+### Features
+* Support for On-Premise IBM Cloud Object Storage (3.14.8+)
+### Defect Fixes
+* AWS Patches aligned to version 1.11.687 of the AWS Java SDK
+
 # 2.5.5
 ## Content
 ### Defect Fixes

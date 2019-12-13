@@ -15,18 +15,34 @@
 package com.ibm.cloud.objectstorage.internal;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
+import static com.github.tomakehurst.wiremock.client.WireMock.equalTo;
 import static com.github.tomakehurst.wiremock.client.WireMock.get;
 import static com.github.tomakehurst.wiremock.client.WireMock.stubFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlPathEqualTo;
+import static org.hamcrest.CoreMatchers.allOf;
+import static org.hamcrest.Matchers.hasEntry;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.argThat;
+import static org.mockito.Matchers.eq;
 
+import com.ibm.cloud.objectstorage.AmazonClientException;
+import com.ibm.cloud.objectstorage.AmazonServiceException;
+import com.ibm.cloud.objectstorage.SdkClientException;
+import com.ibm.cloud.objectstorage.internal.EC2ResourceFetcher.DefaultEC2ResourceFetcher;
+import com.ibm.cloud.objectstorage.retry.internal.CredentialsEndpointRetryParameters;
+import com.ibm.cloud.objectstorage.retry.internal.CredentialsEndpointRetryPolicy;
+import com.ibm.cloud.objectstorage.util.VersionInfoUtils;
+import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
-
+import java.util.HashMap;
+import java.util.Map;
+import org.hamcrest.Matcher;
 import org.junit.BeforeClass;
 import org.junit.ClassRule;
 import org.junit.Test;
@@ -34,19 +50,10 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
-
-import com.github.tomakehurst.wiremock.junit.WireMockRule;
-import com.ibm.cloud.objectstorage.AmazonClientException;
-import com.ibm.cloud.objectstorage.AmazonServiceException;
-import com.ibm.cloud.objectstorage.internal.ConnectionUtils;
-import com.ibm.cloud.objectstorage.internal.EC2CredentialsUtils;
-import com.ibm.cloud.objectstorage.retry.internal.CredentialsEndpointRetryParameters;
-import com.ibm.cloud.objectstorage.retry.internal.CredentialsEndpointRetryPolicy;
-
 import utils.http.SocketUtils;
 
 @RunWith(MockitoJUnitRunner.class)
-public class EC2CredentialsUtilsTest {
+public class EC2ResourceFetcherTest {
 
     @ClassRule
     public static WireMockRule mockServer = new WireMockRule(0);
@@ -60,7 +67,7 @@ public class EC2CredentialsUtilsTest {
 
     private static CustomRetryPolicy customRetryPolicy;
 
-    private static EC2CredentialsUtils ec2CredentialsUtils;
+    private static EC2ResourceFetcher ec2ResourceFetcher;
 
     @Mock
     private ConnectionUtils mockConnection;
@@ -69,13 +76,13 @@ public class EC2CredentialsUtilsTest {
     public static void setup() throws URISyntaxException {
         endpoint = new URI("http://localhost:" + mockServer.port() + CREDENTIALS_PATH);
         customRetryPolicy = new CustomRetryPolicy();
-        ec2CredentialsUtils = EC2CredentialsUtils.getInstance();
+        ec2ResourceFetcher = EC2ResourceFetcher.defaultResourceFetcher();
     }
 
     /**
      * When a connection to end host cannot be opened, throws {@link IOException}.
      */
-    @Test (expected = IOException.class)
+    @Test
     public void readResourceThrowsIOExceptionWhenNoConnection() throws IOException, URISyntaxException {
         int port = 0;
         try {
@@ -84,7 +91,12 @@ public class EC2CredentialsUtilsTest {
             fail("Unable to find an unused port");
         }
 
-        ec2CredentialsUtils.readResource(new URI("http://localhost:" + port));
+        try {
+            ec2ResourceFetcher.readResource(new URI("http://localhost:" + port));
+            fail("no exception is thrown");
+        } catch (SdkClientException exception) {
+            assertTrue(exception.getMessage().contains("Failed to connect"));
+        }
     }
 
     /**
@@ -92,10 +104,10 @@ public class EC2CredentialsUtilsTest {
      * the test successfully returns the body from the response.
      */
     @Test
-    public void readResouceReturnsResponseBodyFor200Response() throws IOException {
+    public void readResourceReturnsResponseBodyFor200Response() throws IOException {
         generateStub(200, SUCCESS_BODY);
 
-        assertEquals(SUCCESS_BODY, ec2CredentialsUtils.readResource(endpoint));
+        assertEquals(SUCCESS_BODY, ec2ResourceFetcher.readResource(endpoint));
     }
 
     /**
@@ -103,9 +115,9 @@ public class EC2CredentialsUtilsTest {
      * the test should throw AmazonClientException.
      */
     @Test
-    public void readResouceReturnsAceFor404ErrorResponse() throws Exception {
+    public void readResourceReturnsAceFor404ErrorResponse() throws Exception {
         try {
-            ec2CredentialsUtils.readResource(new URI("http://localhost:" + mockServer.port() + "/dummyPath"));
+            ec2ResourceFetcher.readResource(new URI("http://localhost:" + mockServer.port() + "/dummyPath"));
             fail("Expected AmazonClientException");
         } catch (AmazonClientException ace) {
             assertTrue(ace.getMessage().contains("The requested metadata is not found at"));
@@ -118,11 +130,11 @@ public class EC2CredentialsUtilsTest {
      * is not retried.
      */
     @Test
-    public void readResouceReturnsAseFor5xxResponse() throws IOException {
+    public void readResourceReturnsAseFor5xxResponse() throws IOException {
         generateStub(500, "{\"code\":\"500 Internal Server Error\",\"message\":\"ERROR_MESSAGE\"}");
 
         try {
-            ec2CredentialsUtils.readResource(endpoint);
+            ec2ResourceFetcher.readResource(endpoint);
             fail("Expected AmazonServiceException");
         } catch (AmazonServiceException ase) {
             assertEquals(500, ase.getStatusCode());
@@ -137,11 +149,11 @@ public class EC2CredentialsUtilsTest {
      * the test throws AmazonServiceException.
      */
     @Test
-    public void readResouceNonJsonErrorBody() throws IOException {
+    public void readResourceNonJsonErrorBody() throws IOException {
         generateStub(500, "Non Json error body");
 
         try {
-            ec2CredentialsUtils.readResource(endpoint);
+            ec2ResourceFetcher.readResource(endpoint);
             fail("Expected AmazonServiceException");
         } catch (AmazonServiceException ase) {
             assertEquals(500, ase.getStatusCode());
@@ -154,14 +166,14 @@ public class EC2CredentialsUtilsTest {
      * the request is not retried.
      */
     @Test
-    public void readResouceWithDefaultRetryPolicy_DoesNotRetry_ForIoException() throws IOException {
-        Mockito.when(mockConnection.connectToEndpoint(endpoint)).thenThrow(new IOException());
+    public void readResourceWithDefaultRetryPolicy_DoesNotRetry_ForIoException() throws IOException {
+        Mockito.when(mockConnection.connectToEndpoint(eq(endpoint), any(Map.class), eq("GET"))).thenThrow(new IOException());
 
         try {
-            new EC2CredentialsUtils(mockConnection).readResource(endpoint);
+            new DefaultEC2ResourceFetcher(mockConnection).readResource(endpoint);
             fail("Expected an IOexception");
-        } catch (IOException exception) {
-            Mockito.verify(mockConnection, Mockito.times(1)).connectToEndpoint(endpoint);
+        } catch (Exception exception) {
+            Mockito.verify(mockConnection, Mockito.times(1)).connectToEndpoint(eq(endpoint), any(Map.class), eq("GET"));
         }
     }
 
@@ -171,14 +183,14 @@ public class EC2CredentialsUtilsTest {
      * returned by getMaxRetries method of the custom retry policy.
      */
     @Test
-    public void readResouceWithCustomRetryPolicy_DoesRetry_ForIoException() throws IOException {
-        Mockito.when(mockConnection.connectToEndpoint(endpoint)).thenThrow(new IOException());
+    public void readResourceWithCustomRetryPolicy_DoesRetry_ForIoException() throws IOException {
+        Mockito.when(mockConnection.connectToEndpoint(eq(endpoint), any(Map.class), eq("GET"))).thenThrow(new IOException());
 
         try {
-            new EC2CredentialsUtils(mockConnection).readResource(endpoint, customRetryPolicy);
+            new DefaultEC2ResourceFetcher(mockConnection).readResource(endpoint, customRetryPolicy);
             fail("Expected an IOexception");
-        } catch (IOException exception) {
-             Mockito.verify(mockConnection, Mockito.times(CustomRetryPolicy.MAX_RETRIES + 1)).connectToEndpoint(endpoint);
+        } catch (Exception exception) {
+            Mockito.verify(mockConnection, Mockito.times(CustomRetryPolicy.MAX_RETRIES + 1)).connectToEndpoint(eq(endpoint), any(Map.class), eq("GET"));
         }
     }
 
@@ -188,15 +200,14 @@ public class EC2CredentialsUtilsTest {
      * then the request is not retried.
      */
     @Test
-    public void readResouceWithCustomRetryPolicy_DoesNotRetry_ForNonIoException() throws IOException {
+    public void readResourceWithCustomRetryPolicy_DoesNotRetry_ForNonIoException() throws IOException {
         generateStub(500, "Non Json error body");
-        Mockito.when(mockConnection.connectToEndpoint(endpoint)).thenCallRealMethod();
 
         try {
-            new EC2CredentialsUtils(mockConnection).readResource(endpoint, customRetryPolicy);
+            ec2ResourceFetcher.readResource(endpoint, customRetryPolicy, new HashMap<String, String>());
             fail("Expected an AmazonServiceException");
         } catch (AmazonServiceException ase) {
-            Mockito.verify(mockConnection, Mockito.times(1)).connectToEndpoint(endpoint);
+            assertEquals(500, ase.getStatusCode());
         }
     }
 

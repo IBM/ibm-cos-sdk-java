@@ -36,7 +36,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.ibm.cloud.objectstorage.AmazonClientException;
 import com.ibm.cloud.objectstorage.SdkClientException;
-import com.ibm.cloud.objectstorage.internal.EC2CredentialsUtils;
+import com.ibm.cloud.objectstorage.internal.InstanceMetadataServiceResourceFetcher;
 import com.ibm.cloud.objectstorage.util.json.Jackson;
 
 /**
@@ -377,7 +377,7 @@ public class EC2MetadataUtils {
         List<String> items;
         try {
             String hostAddress = getHostAddressForEC2MetadataService();
-            String response = EC2CredentialsUtils.getInstance().readResource(new URI(hostAddress + path));
+            String response = InstanceMetadataServiceResourceFetcher.getInstance().readResource(new URI(hostAddress + path));
             if (slurp)
                 items = Collections.singletonList(response);
             else

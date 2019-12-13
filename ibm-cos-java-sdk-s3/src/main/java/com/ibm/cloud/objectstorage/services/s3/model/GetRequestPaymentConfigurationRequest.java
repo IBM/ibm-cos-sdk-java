@@ -23,10 +23,15 @@ import com.ibm.cloud.objectstorage.AmazonWebServiceRequest;
  * an Amazon S3 bucket.
  */
 public class GetRequestPaymentConfigurationRequest extends
-        AmazonWebServiceRequest implements Serializable {
+        AmazonWebServiceRequest implements WormMirrorDestinationProvider, Serializable {
 
     /** The name of the Amazon S3 bucket. */
     private String bucketName;
+
+    /**
+     * The optional destination-mirror value to use for WORM mirroring
+     */
+    private String wormMirrorDestination;
 
     public GetRequestPaymentConfigurationRequest(String bucketName) {
         this.bucketName = bucketName;
@@ -40,4 +45,41 @@ public class GetRequestPaymentConfigurationRequest extends
         this.bucketName = bucketName;
     }
 
+        /**
+     * Returns the optional mirror-destination value for WORM mirroring
+     *
+     * @return The optional mirror-destination value
+     */
+    @Override
+    public String getWormMirrorDestination() {
+        return wormMirrorDestination;
+    }
+
+    /**
+     * Sets the optional mirror-destination value for WORM mirroring
+     * 
+     * @param wormMirrorDestination
+     *            The optional mirror-destination value for WORM mirroring
+     */
+    @Override
+    public void setWormMirrorDestination(String wormMirrorDestination) {
+        this.wormMirrorDestination = wormMirrorDestination;
+    }
+
+    /**
+     * Sets the optional mirror-destination value for WORM mirroring
+     * and returns the updated GetRequestPaymentConfigurationRequest so that additional 
+     * method calls may be chained together.
+     *
+     * @param wormMirrorDestination
+     *            The optional mirror-destination value for WORM mirroring
+     *
+     * @return This {@link GetRequestPaymentConfigurationRequest}, enabling additional method
+     *         calls to be chained together.
+     */
+    public GetRequestPaymentConfigurationRequest withWormMirrorDestination(
+            String wormMirrorDestination) {
+        setWormMirrorDestination(wormMirrorDestination);
+        return this;
+    }
 }

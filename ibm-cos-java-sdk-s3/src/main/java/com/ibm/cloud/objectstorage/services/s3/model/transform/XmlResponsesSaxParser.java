@@ -2353,6 +2353,7 @@ public class XmlResponsesSaxParser {
         private final BucketReplicationConfiguration bucketReplicationConfiguration = new BucketReplicationConfiguration();
         private String currentRuleId;
         private ReplicationRule currentRule;
+        private ExistingObjectReplication existingObjectReplication;
         private ReplicationDestinationConfig destinationConfig;
         private static final String REPLICATION_CONFIG = "ReplicationConfiguration";
         private static final String ROLE = "Role";
@@ -2360,6 +2361,7 @@ public class XmlResponsesSaxParser {
         private static final String DESTINATION = "Destination";
         private static final String ID = "ID";
         private static final String PREFIX = "Prefix";
+        private static final String EXISTING_OBJECT_REPLICATION = "ExistingObjectReplication";
         private static final String STATUS = "Status";
         private static final String BUCKET = "Bucket";
         private static final String STORAGECLASS = "StorageClass";
@@ -2379,6 +2381,8 @@ public class XmlResponsesSaxParser {
             } else if (in(REPLICATION_CONFIG, RULE)) {
                 if (name.equals(DESTINATION)) {
                     destinationConfig = new ReplicationDestinationConfig();
+                } else if (name.equals(EXISTING_OBJECT_REPLICATION)) {
+                    existingObjectReplication = new ExistingObjectReplication();
                 }
             }
         }
@@ -2391,6 +2395,7 @@ public class XmlResponsesSaxParser {
                             currentRule);
                     currentRule = null;
                     currentRuleId = null;
+                    existingObjectReplication = null;
                     destinationConfig = null;
                 } else if (name.equals(ROLE)) {
                     bucketReplicationConfiguration.setRoleARN(getText());
@@ -2400,6 +2405,8 @@ public class XmlResponsesSaxParser {
                     currentRuleId = getText();
                 } else if (name.equals(PREFIX)) {
                     currentRule.setPrefix(getText());
+                } else if (name.equals(EXISTING_OBJECT_REPLICATION)){
+                    currentRule.setExistingObjectReplication(existingObjectReplication);
                 } else {
                     if (name.equals(STATUS)) {
                         currentRule.setStatus(getText());
@@ -2407,6 +2414,10 @@ public class XmlResponsesSaxParser {
                     } else if (name.equals(DESTINATION)) {
                         currentRule.setDestinationConfig(destinationConfig);
                     }
+                }
+            } else if (in(REPLICATION_CONFIG, RULE, EXISTING_OBJECT_REPLICATION)) {
+                if (name.equals(STATUS)) {
+                    existingObjectReplication.setStatus(getText());
                 }
             } else if (in(REPLICATION_CONFIG, RULE, DESTINATION)) {
                 if (name.equals(BUCKET)) {

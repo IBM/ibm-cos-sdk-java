@@ -25,7 +25,8 @@ import com.ibm.cloud.objectstorage.services.s3.AmazonS3;
  *
  * @see AmazonS3#listMultipartUploads(ListMultipartUploadsRequest)
  */
-public class ListMultipartUploadsRequest extends AmazonWebServiceRequest implements Serializable {
+public class ListMultipartUploadsRequest extends AmazonWebServiceRequest implements 
+        WormMirrorDestinationProvider, Serializable {
 
     /** The name of the bucket containing the uploads to list. */
     private String bucketName;
@@ -89,6 +90,11 @@ public class ListMultipartUploadsRequest extends AmazonWebServiceRequest impleme
      * response.
      */
     private String encodingType;
+
+    /**
+     * Optional parameter setting the mirror-destination on a WORM enabled bucket.
+     */
+    private String wormMirrorDestination;
 
 
     /**
@@ -432,6 +438,44 @@ public class ListMultipartUploadsRequest extends AmazonWebServiceRequest impleme
      */
     public ListMultipartUploadsRequest withEncodingType(String encodingType) {
         setEncodingType(encodingType);
+        return this;
+    }
+
+    /**
+     * Returns the optional mirror-destination value for WORM mirroring
+     *
+     * @return The optional mirror-destination value
+     */
+    @Override
+    public String getWormMirrorDestination() {
+        return wormMirrorDestination;
+    }
+
+    /**
+     * Sets the optional mirror-destination value for WORM mirroring
+     * 
+     * @param wormMirrorDestination
+     *            The optional mirror-destination value for WORM mirroring
+     */
+    @Override
+    public void setWormMirrorDestination(String wormMirrorDestination) {
+        this.wormMirrorDestination = wormMirrorDestination;
+    }
+
+    /**
+     * Sets the optional mirror-destination value for WORM mirroring
+     * and returns the updated ListMultipartUploadsRequest so that additional 
+     * method calls may be chained together.
+     *
+     * @param wormMirrorDestination
+     *            The optional mirror-destination value for WORM mirroring
+     *
+     * @return This {@link ListMultipartUploadsRequest}, enabling additional method
+     *         calls to be chained together.
+     */
+    public ListMultipartUploadsRequest withWormMirrorDestination(
+            String wormMirrorDestination) {
+        setWormMirrorDestination(wormMirrorDestination);
         return this;
     }
 

@@ -14,12 +14,11 @@
  */
 package com.ibm.cloud.objectstorage.internal;
 
-import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
-
 import com.ibm.cloud.objectstorage.annotation.SdkInternalApi;
 import com.ibm.cloud.objectstorage.retry.internal.CredentialsEndpointRetryPolicy;
+import java.net.URI;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * <p>
@@ -36,14 +35,8 @@ public abstract class CredentialsEndpointProvider {
      * @return
      * 		URI to retrieve the credentials.
      *
-     * @throws URISyntaxException
-     * 				If the endpoint string could not be parsed as a URI reference.
-     *
-     * @throws IOException
-     * 				If any problems are encountered while connecting to the
-     *             	service to retrieve the endpoint.
      */
-    public abstract URI getCredentialsEndpoint() throws URISyntaxException, IOException;
+    public abstract URI getCredentialsEndpoint() ;
 
     /**
      * Allows the extending class to provide a custom retry policy.
@@ -51,5 +44,12 @@ public abstract class CredentialsEndpointProvider {
      */
     public CredentialsEndpointRetryPolicy getRetryPolicy() {
         return CredentialsEndpointRetryPolicy.NO_RETRY;
+    }
+
+    /**
+     * Allows passing additional headers to the request
+     */
+    public Map<String, String> getHeaders() {
+        return new HashMap<String, String>();
     }
 }

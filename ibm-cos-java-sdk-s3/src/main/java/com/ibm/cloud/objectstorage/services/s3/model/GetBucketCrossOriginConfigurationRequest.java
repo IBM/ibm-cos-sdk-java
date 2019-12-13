@@ -22,7 +22,8 @@ import com.ibm.cloud.objectstorage.services.s3.AmazonS3;
  *
  * @see AmazonS3#getBucketCrossOriginConfiguration(GetBucketCrossOriginConfigurationRequest)
  */
-public class GetBucketCrossOriginConfigurationRequest extends GenericBucketRequest implements Serializable {
+public class GetBucketCrossOriginConfigurationRequest extends GenericBucketRequest implements 
+        WormMirrorDestinationProvider, Serializable {
 
     /**
      * Creates a request object, ready to be executed to fetch the cross origin
@@ -34,6 +35,48 @@ public class GetBucketCrossOriginConfigurationRequest extends GenericBucketReque
      */
     public GetBucketCrossOriginConfigurationRequest(String bucketName) {
         super(bucketName);
+    }
+
+    /**
+     * Optional parameter setting the mirror-destination on a WORM enabled bucket.
+     */
+    private String wormMirrorDestination;
+
+    /**
+     * Returns the optional mirror-destination value for WORM mirroring
+     *
+     * @return The optional mirror-destination value
+     */
+    @Override
+    public String getWormMirrorDestination() {
+        return wormMirrorDestination;
+    }
+
+    /**
+     * Sets the optional mirror-destination value for WORM mirroring
+     * 
+     * @param wormMirrorDestination
+     *            The optional mirror-destination value for WORM mirroring
+     */
+    @Override
+    public void setWormMirrorDestination(String wormMirrorDestination) {
+        this.wormMirrorDestination = wormMirrorDestination;
+    }
+
+    /**
+     * Sets the optional mirror-destination value for WORM mirroring
+     * and returns the updated GetBucketCrossOriginConfigurationRequest so that additional 
+     * method calls may be chained together.
+     *
+     * @param wormMirrorDestination
+     *            The optional mirror-destination value for WORM mirroring
+     *
+     * @return This {@link GetBucketCrossOriginConfigurationRequest}, enabling additional method
+     *         calls to be chained together.
+     */
+    public GetBucketCrossOriginConfigurationRequest withWormMirrorDestination(String wormMirrorDestination) {
+        setWormMirrorDestination(wormMirrorDestination);
+        return this;
     }
 
 }

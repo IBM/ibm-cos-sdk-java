@@ -25,7 +25,8 @@ import com.ibm.cloud.objectstorage.services.s3.AmazonS3;
  *
  * @see AmazonS3#listParts(ListPartsRequest)
  */
-public class ListPartsRequest extends AmazonWebServiceRequest implements Serializable {
+public class ListPartsRequest extends AmazonWebServiceRequest implements 
+        WormMirrorDestinationProvider, Serializable {
 
     /**
      * The name of the bucket containing the multipart upload whose parts are
@@ -61,6 +62,10 @@ public class ListPartsRequest extends AmazonWebServiceRequest implements Seriali
      */
     private boolean isRequesterPays;
 
+    /**
+     * Optional parameter setting the mirror-destination on a WORM enabled bucket.
+     */
+    private String wormMirrorDestination;
 
     /**
      * Constructs a new ListPartsRequest from the required parameters bucket
@@ -375,6 +380,44 @@ public class ListPartsRequest extends AmazonWebServiceRequest implements Seriali
      */
     public ListPartsRequest withRequesterPays(boolean isRequesterPays) {
         setRequesterPays(isRequesterPays);
+        return this;
+    }
+
+    /**
+     * Returns the optional mirror-destination value for WORM mirroring
+     *
+     * @return The optional mirror-destination value
+     */
+    @Override
+    public String getWormMirrorDestination() {
+        return wormMirrorDestination;
+    }
+
+    /**
+     * Sets the optional mirror-destination value for WORM mirroring
+     * 
+     * @param wormMirrorDestination
+     *            The optional mirror-destination value for WORM mirroring
+     */
+    @Override
+    public void setWormMirrorDestination(String wormMirrorDestination) {
+        this.wormMirrorDestination = wormMirrorDestination;
+    }
+
+    /**
+     * Sets the optional mirror-destination value for WORM mirroring
+     * and returns the updated ListPartsRequest so that additional 
+     * method calls may be chained together.
+     *
+     * @param wormMirrorDestination
+     *            The optional mirror-destination value for WORM mirroring
+     *
+     * @return This {@link ListPartsRequest}, enabling additional method
+     *         calls to be chained together.
+     */
+    public ListPartsRequest withWormMirrorDestination(
+            String wormMirrorDestination) {
+        setWormMirrorDestination(wormMirrorDestination);
         return this;
     }
 

@@ -65,7 +65,8 @@ import com.ibm.cloud.objectstorage.services.s3.AmazonS3Client;
  * nor does the presence or absence of additional request parameters.
  * </p>
  */
-public class ListObjectsRequest extends AmazonWebServiceRequest implements Serializable {
+public class ListObjectsRequest extends AmazonWebServiceRequest implements 
+        WormMirrorDestinationProvider, Serializable {
 
     /** The name of the Amazon S3 bucket to list. */
     private String bucketName;
@@ -115,6 +116,11 @@ public class ListObjectsRequest extends AmazonWebServiceRequest implements Seria
      * response.
      */
     private String encodingType;
+
+    /**
+     * Optional parameter setting the mirror-destination on a WORM enabled bucket.
+     */
+    private String wormMirrorDestination;
 
 
     /**
@@ -466,6 +472,43 @@ public class ListObjectsRequest extends AmazonWebServiceRequest implements Seria
      */
     public ListObjectsRequest withEncodingType(String encodingType) {
         setEncodingType(encodingType);
+        return this;
+    }
+
+    /**
+     * Returns the optional mirror-destination value for WORM mirroring
+     *
+     * @return The optional mirror-destination value
+     */
+    @Override
+    public String getWormMirrorDestination() {
+        return wormMirrorDestination;
+    }
+
+    /**
+     * Sets the optional mirror-destination value for WORM mirroring
+     * 
+     * @param wormMirrorDestination
+     *            The optional mirror-destination value for WORM mirroring
+     */
+    @Override
+    public void setWormMirrorDestination(String wormMirrorDestination) {
+        this.wormMirrorDestination = wormMirrorDestination;
+    }
+
+    /**
+     * Sets the optional mirror-destination value for WORM mirroring
+     * and returns the updated ListObjectsRequest so that additional 
+     * method calls may be chained together.
+     *
+     * @param wormMirrorDestination
+     *            The optional mirror-destination value for WORM mirroring
+     *
+     * @return This {@link ListObjectsRequest}, enabling additional method
+     *         calls to be chained together.
+     */
+    public ListObjectsRequest withWormMirrorDestination(String wormMirrorDestination) {
+        setWormMirrorDestination(wormMirrorDestination);
         return this;
     }
 

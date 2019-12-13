@@ -18,12 +18,18 @@ import com.ibm.cloud.objectstorage.AmazonWebServiceRequest;
 /**
  * Request object containing all the options for requesting an object's legal holds.
  */
-public class ListLegalHoldsRequest extends AmazonWebServiceRequest implements Serializable {
+public class ListLegalHoldsRequest extends AmazonWebServiceRequest implements 
+        WormMirrorDestinationProvider, Serializable {
     /** The name of the bucket which contains the specified object. */
     private String bucketName;
      
     /** The name of the specified object to perform the list against. */
     private String key;
+
+    /**
+     * Optional parameter setting the mirror-destination on a WORM enabled bucket.
+     */
+    private String wormMirrorDestination;
  
     /**
      * Constructs a new ListLegalHoldsRequest object.
@@ -52,5 +58,42 @@ public class ListLegalHoldsRequest extends AmazonWebServiceRequest implements Se
      */
     public String getKey() {
         return key;
+    }
+
+    /**
+     * Returns the optional mirror-destination value for WORM mirroring
+     *
+     * @return The optional mirror-destination value
+     */
+    @Override
+    public String getWormMirrorDestination() {
+        return wormMirrorDestination;
+    }
+
+    /**
+     * Sets the optional mirror-destination value for WORM mirroring
+     * 
+     * @param wormMirrorDestination
+     *            The optional mirror-destination value for WORM mirroring
+     */
+    @Override
+    public void setWormMirrorDestination(String wormMirrorDestination) {
+        this.wormMirrorDestination = wormMirrorDestination;
+    }
+
+    /**
+     * Sets the optional mirror-destination value for WORM mirroring
+     * and returns the updated ListLegalHoldsRequest so that additional 
+     * method calls may be chained together.
+     *
+     * @param wormMirrorDestination
+     *            The optional mirror-destination value for WORM mirroring
+     *
+     * @return This {@link ListLegalHoldsRequest}, enabling additional method
+     *         calls to be chained together.
+     */
+    public ListLegalHoldsRequest withWormMirrorDestination(String wormMirrorDestination) {
+        setWormMirrorDestination(wormMirrorDestination);
+        return this;
     }
 }

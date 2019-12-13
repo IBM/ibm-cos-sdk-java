@@ -22,6 +22,7 @@ import java.util.List;
 
 import com.ibm.cloud.objectstorage.ClientConfiguration;
 import com.ibm.cloud.objectstorage.SdkClientException;
+import com.ibm.cloud.objectstorage.util.SdkHttpUtils;
 
 /**
  * Utilities for working with regions.
@@ -102,7 +103,8 @@ public class RegionUtils {
      * null.
      */
     public static Region getRegion(String regionName) {
-        return getRegionMetadata().getRegion(regionName);
+        String urlEncodedRegionName = regionName == null ? null : SdkHttpUtils.urlEncode(regionName, false);
+        return getRegionMetadata().getRegion(urlEncodedRegionName);
     }
 
     /*

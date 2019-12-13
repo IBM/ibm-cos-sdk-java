@@ -278,6 +278,16 @@ public class SDKGlobalConfiguration {
     public static final String AWS_ION_BINARY_DISABLE_SYSTEM_PROPERTY = "com.amazonaws.sdk.disableIonBinary";
 
     /**
+     * Environment variable to disable loading credentials or regions from EC2 Metadata instance service.
+     */
+    public static final String AWS_EC2_METADATA_DISABLED_ENV_VAR = "AWS_EC2_METADATA_DISABLED";
+
+    /**
+     * System property to disable loading credentials or regions from EC2 Metadata instance service.
+     */
+    public static final String AWS_EC2_METADATA_DISABLED_SYSTEM_PROPERTY = "com.amazonaws.sdk.disableEc2Metadata";
+
+    /**
      * @deprecated by {@link SDKGlobalTime#setGlobalTimeOffset(int)}
      */
     @Deprecated
@@ -311,12 +321,24 @@ public class SDKGlobalConfiguration {
                 isPropertyEnabled(System.getenv(AWS_ION_BINARY_DISABLE_ENV_VAR));
     }
 
+    public static boolean isEc2MetadataDisabled() {
+        return isPropertyTrue(System.getProperty(AWS_EC2_METADATA_DISABLED_SYSTEM_PROPERTY)) ||
+               isPropertyTrue(System.getenv(AWS_EC2_METADATA_DISABLED_ENV_VAR));
+    }
+
     private static boolean isPropertyEnabled(final String property) {
         if (property == null || property.equalsIgnoreCase("false")) {
             return false;
         } else {
             return true;
         }
+    }
+
+    private static boolean isPropertyTrue(final String property) {
+        if (property != null && property.equalsIgnoreCase("true")) {
+            return true;
+        }
+        return false;
     }
 
 }

@@ -55,6 +55,7 @@ public interface Headers {
     public static final String RETENTION_PERIOD = "retention-period";
     public static final String RETENTION_LEGAL_HOLD_COUNT = "retention-legal-hold-count";
     public static final String RETENTION_DIRECTIVE = "retention-directive";
+    public static final String MIRROR_DESTINATION = "mirror-destination";
 
     public static final String IBM_TRANSITION = "x-ibm-transition";
     public static final String IBM_RESTORED_COPY_STORAGE_CLASS = "x-ibm-restored-copy-storage-class";
