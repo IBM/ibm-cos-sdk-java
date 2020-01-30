@@ -1,5 +1,9 @@
 # CHANGELOG
 
+# 2.6.1
+## Content
+### Defect Fixes
+
 # 2.6.0
 ## Content
 ### Features
