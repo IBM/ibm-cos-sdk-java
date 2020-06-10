@@ -1,5 +1,10 @@
 # CHANGELOG
 
+# 2.6.2
+## Content
+### Defect Fixes
+* COSSDK-67979: Disable Apache URI Normalization
+
 # 2.6.1
 ## Content
 ### Defect Fixes
