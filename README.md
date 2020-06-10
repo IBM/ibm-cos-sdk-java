@@ -25,7 +25,7 @@ You'll need:
   * Service endpoint
   * **Java 1.6+**.
 
-These values can be found in the Bluemix UI by [generating a 'service credential'](https://cloud.ibm.com/docs/services/cloud-object-storage/iam/service-credentials.html).
+These values can be found in the IBM Cloud UI by [generating a 'service credential'](https://cloud.ibm.com/docs/services/cloud-object-storage/iam/service-credentials.html).
 
 ## Getting the SDK
 The recommended way to use the IBM COS SDK for Java in your project is to consume it from Maven. Import the `ibm-cos-java-sdk` and specify the SDK Maven modules that your project needs in the dependencies:
