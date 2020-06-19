@@ -1,172 +1,273 @@
 # CHANGELOG
 
-# 2.6.2
-## Content
-### Defect Fixes
+## 2.6.2
+
+### Content
+
+#### Defect Fixes
+
 * COSSDK-67979: Disable Apache URI Normalization
 
-# 2.6.1
-## Content
-### Defect Fixes
+## 2.6.1
 
-# 2.6.0
-## Content
-### Features
+### Content
+
+#### Defect Fixes
+
+## 2.6.0
+
+### Content
+
+#### Features
+
 * Support for On-Premise IBM Cloud Object Storage (3.14.8+)
-### Defect Fixes
+
+#### Defect Fixes
+
 * AWS Patches aligned to version 1.11.687 of the AWS Java SDK
 
-# 2.5.5
-## Content
-### Defect Fixes
+## 2.5.5
+
+### Content
+
+#### Defect Fixes
+
 * AWS Patches aligned to version 1.11.646 of the AWS Java SDK
 
-# 2.5.4
-## Content
-### Defect Fixes
+## 2.5.4
+
+### Content
+
+#### Defect Fixes
+
 * AWS Patches aligned to version 1.11.630 of the AWS Java SDK
 
-# 2.5.3
-## Content
-### Defect Fixes
+## 2.5.3
+
+### Content
+
+#### Defect Fixes
+
 * AWS Patches aligned to version 1.11.610 of the AWS Java SDK
 
-# 2.5.2
-## Content
-### Defect Fixes
+## 2.5.2
+
+### Content
+
+#### Defect Fixes
+
 * AWS Patches aligned to version 1.11.589 of the AWS Java SDK
 
-# 2.5.1
-## Content
-### Features
+## 2.5.1
+
+### Content
+
+#### Features
+
 * Extended Listing Support
 
-# 2.5.0
-## Content
-### Features
+## 2.5.0
+
+### Content
+
+#### Features
+
 * Object Expiration Rules
-### Defect Fixes
-* COSSDK-54086: https://github.com/IBM/ibm-cos-sdk-java/issues/20
 
-# 2.4.5
-## Content
-### Defect Fixes
-* COSSDK-53246: https://github.com/IBM/ibm-cos-sdk-java/issues/17
+#### Defect Fixes
 
-# 2.4.4
-## Content
-### Features
+* COSSDK-54086: <https://github.com/IBM/ibm-cos-sdk-java/issues/20>
+
+## 2.4.5
+
+### Content
+
+#### Defect Fixes
+
+* COSSDK-53246: <https://github.com/IBM/ibm-cos-sdk-java/issues/17>
+
+## 2.4.4
+
+### Content
+
+#### Features
+
 * Public Access
 
-### Defect Fixes
-* COSSDK-51255: https://github.com/IBM/ibm-cos-sdk-java/issues/16
+#### Defect Fixes
 
-# 2.4.3
-## Content
-### Defect Fixes
-* AWS Patches aligned to version 1.11.492 of the AWS Java SDK 
+* COSSDK-51255: <https://github.com/IBM/ibm-cos-sdk-java/issues/16>
 
-# 2.4.2
-## Content
-### Defect Fixes
-* COSSDK-47973 https://github.com/IBM/ibm-cos-sdk-java/issues/12
+## 2.4.3
+
+### Content
+
+#### Defect Fixes
+
+* AWS Patches aligned to version 1.11.492 of the AWS Java SDK
+
+## 2.4.2
+
+### Content
+
+#### Defect Fixes
+
+* COSSDK-47973 <https://github.com/IBM/ibm-cos-sdk-java/issues/12>
 * AWS Patches aligned to version 1.11.467 of the AWS Java SDK
 
-# 2.4.1
-## Content
-### Features
+## 2.4.1
+
+### Content
+
+#### Features
+
 * GET Bucket (List Objects) Version 2
 
-# 2.4.0
-## Content
-### Features
+## 2.4.0
+
+### Content
+
+#### Features
+
 * Immutable Object Storage
 
-# 2.3.2
-## Content
-### Defect Fixes 
-* COSSDK-37669: https://github.ibm.com/objectstore/objectstorage-issues/issues/344
+## 2.3.2
 
-# 2.3.1
-## Content
-### Defect Fixes
+### Content
+
+#### Defect Fixes
+
+* COSSDK-37669: <https://github.ibm.com/objectstore/objectstorage-issues/issues/344>
+
+## 2.3.1
+
+### Content
+
+#### Defect Fixes
+
 * Documentation updates
 
-# 2.3.0
-## Content
-### Features
+## 2.3.0
+
+### Content
+
+#### Features
+
 * Aspera High-Speed Transfer Support
 
-# 2.2.0
-## Content
-### Features
+## 2.2.0
+
+### Content
+
+#### Features
+
 * Archive Tier Support
 
-# 2.1.3
-## Content
-### Defect Fixes
+## 2.1.3
+
+### Content
+
+#### Defect Fixes
+
 * 38356: null Token causes NPE
 * Bug fixes
 
-# 2.1.2
-## Content
-### Defect Fixes
+## 2.1.2
+
+### Content
+
+#### Defect Fixes
+
 * 38813: Bug fixes
 
-# 2.1.1
-## Content
-### Defect Fixes
+## 2.1.1
+
+### Content
+
+#### Defect Fixes
+
 * Bug fixes
 
-# 2.1.0
-## Content
-### Features
+## 2.1.0
+
+### Content
+
+#### Features
+
 * JSON Cut + Paste
-### Defect Fixes
+
+#### Defect Fixes
+
 * Documentation updates
 
-# 2.0.2
-## Content
-### Defect Fixes
+## 2.0.2
+
+### Content
+
+#### Defect Fixes
+
 * Documentation updates
 
-# 2.0.1
-## Content
-### Defect Fixes
+## 2.0.1
+
+### Content
+
+#### Defect Fixes
+
 * Bug fixes
 * Documentation updates
 
-# 2.0.0
-## Content
-### Features
+## 2.0.0
+
+### Content
+
+#### Features
+
 * Namespace changes
 
-# 1.1.1
-## Content
-### Features
+## 1.1.1
+
+### Content
+
+#### Features
+
 * IAM Resiliency support
-### Defect Fixes
+
+#### Defect Fixes
+
 * Documentation updates
 
-# 1.1.0
-## Content
-### Features
+## 1.1.0
+
+### Content
+
+#### Features
+
 * Added Key Protect support
 
-# 1.0.2
-## Content
-### Defect Fixes
+## 1.0.2
+
+### Content
+
+#### Defect Fixes
+
 * Add support for additional JVM platforms
 * Bug fixes
 * Documentation updates
 
-# 1.0.1
-## Content
-### Features
+## 1.0.1
+
+### Content
+
+#### Features
+
 * Host generated API docs
 
-# 1.0.0
-## Content
-### Features
+## 1.0.0
+
+### Content
+
+#### Features
+
 * Initial release
 * IAM support
