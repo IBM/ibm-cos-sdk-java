@@ -77,6 +77,10 @@ to set open-ended and permanent retention periods. Immutable Object Storage meet
 IBM Cloud administrators are unable to bypass these restrictions. For more detail, [see the documentation][immutable-storage-docs].
 Immutable Object Storage does not support Aspera transfers via the SDK to upload objects or directories at this stage.
 
+## Accelerated Archive
+
+Users can set an archive rule that would allow data restore from an archive in 2 hours or 12 hours.
+
 ## Getting help
 
 Feel free to use GitHub issues for tracking bugs and feature requests, but for help please use one of the following resources:
