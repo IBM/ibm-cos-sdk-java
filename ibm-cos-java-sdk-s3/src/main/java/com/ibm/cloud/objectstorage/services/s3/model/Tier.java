@@ -19,6 +19,7 @@ package com.ibm.cloud.objectstorage.services.s3.model;
  */
 public enum Tier {
 
+    Accelerated("Accelerated"),
     Standard("Standard"),
     Bulk("Bulk"),
     Expedited("Expedited");

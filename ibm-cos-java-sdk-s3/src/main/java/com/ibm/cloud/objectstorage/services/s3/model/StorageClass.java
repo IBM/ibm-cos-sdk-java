@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2017 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2010-2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -25,8 +25,34 @@ package com.ibm.cloud.objectstorage.services.s3.model;
  * redundant copies of data will be stored in different locations.
  * </p>
  * <p>
+ * The <code>REDUCED_REDUNDANCY</code> storage class offers customers who are using Amazon S3
+ * for storing non-critical, reproducible data a low-cost highly available,
+ * but less redundant, storage option.
+ * </p>
  */
 public enum StorageClass {
+
+	/**
+	 * The IBM Accelerated storage class.
+	 */
+	Accelerated("ACCELERATED"),
+
+    /**
+     * The default Amazon S3 storage class. This storage class
+     * is recommended for critical, non-reproducible data.  The standard
+     * storage class is a highly available and highly redundant storage option
+     * provided for an affordable price.
+     */
+    Standard("STANDARD"),
+
+    /**
+     * The reduced redundancy storage class.
+     * This storage class allows customers to reduce their storage costs
+     * in return for a reduced level of data redundancy. Customers who are using
+     * Amazon S3 for storing non-critical, reproducible data can choose this
+     * low cost and highly available, but less redundant, storage option.
+     */
+    ReducedRedundancy("REDUCED_REDUNDANCY"),
 
     /**
      * The Amazon Glacier storage class.
@@ -34,7 +60,34 @@ public enum StorageClass {
      * and Amazon S3 stores a reference to the data in the Amazon S3 bucket.
      */
     Glacier("GLACIER"),
-    
+
+    /**
+     * Standard Infrequent Access storage class
+     */
+    StandardInfrequentAccess("STANDARD_IA"),
+
+    /**
+     * One Zone Infrequent Access storage class stores object data in only one Availability Zone at a lower price than
+     * STANDARD_IA.
+     */
+    OneZoneInfrequentAccess("ONEZONE_IA"),
+
+    /**
+     * IntelligentTiering makes it easy to lower your overall cost of storage by automatically placing data in the storage
+     * class that best matches the access patterns for the storage. With IntelligentTiering, you don’t need to define
+     * and manage individual policies for lifecycle data management or write code to transition objects
+     * between storage classes. Instead, you can use IntelligentTiering to manage transitions between Standard and
+     * S-IA without writing any application code. IntelligentTiering also manages transitions automatically to
+     * Glacier for long term archive in addition to S3 storage classes.
+     */
+    IntelligentTiering("INTELLIGENT_TIERING"),
+
+    /**
+     * S3 Glacier Deep Archive provides secure, durable object storage class for long term data archival. It’s the
+     * ideal storage class to make an archival, durable copy of data that rarely, if ever, needs to be accessed. It can
+     * be used as an offline backup for their most important data assets and to meet long-term retention needs.
+     */
+    DeepArchive("DEEP_ARCHIVE")
     ;
 
     /**
