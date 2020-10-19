@@ -51,6 +51,7 @@ import com.ibm.cloud.objectstorage.event.ProgressEventType;
 import com.ibm.cloud.objectstorage.event.ProgressInputStream;
 import com.ibm.cloud.objectstorage.event.ProgressListener;
 import com.ibm.cloud.objectstorage.handlers.HandlerChainFactory;
+import com.ibm.cloud.objectstorage.handlers.HandlerContextKey;
 import com.ibm.cloud.objectstorage.handlers.RequestHandler2;
 import com.ibm.cloud.objectstorage.http.ExecutionContext;
 import com.ibm.cloud.objectstorage.http.HttpMethodName;
@@ -112,6 +113,7 @@ import com.ibm.cloud.objectstorage.services.s3.model.BucketProtectionConfigurati
 import com.ibm.cloud.objectstorage.services.s3.model.BucketLifecycleConfiguration;
 import com.ibm.cloud.objectstorage.services.s3.model.BucketTaggingConfiguration;
 import com.ibm.cloud.objectstorage.services.s3.model.BucketVersioningConfiguration;
+import com.ibm.cloud.objectstorage.services.s3.model.BucketWebsiteConfiguration;
 import com.ibm.cloud.objectstorage.services.s3.model.CannedAccessControlList;
 import com.ibm.cloud.objectstorage.services.s3.model.CompleteMultipartUploadRequest;
 import com.ibm.cloud.objectstorage.services.s3.model.CompleteMultipartUploadResult;
@@ -124,6 +126,7 @@ import com.ibm.cloud.objectstorage.services.s3.model.DeleteBucketCrossOriginConf
 import com.ibm.cloud.objectstorage.services.s3.model.DeleteBucketLifecycleConfigurationRequest;
 import com.ibm.cloud.objectstorage.services.s3.model.DeleteBucketRequest;
 import com.ibm.cloud.objectstorage.services.s3.model.DeleteBucketTaggingConfigurationRequest;
+import com.ibm.cloud.objectstorage.services.s3.model.DeleteBucketWebsiteConfigurationRequest;
 import com.ibm.cloud.objectstorage.services.s3.model.DeleteLegalHoldRequest;
 import com.ibm.cloud.objectstorage.services.s3.model.DeleteObjectRequest;
 import com.ibm.cloud.objectstorage.services.s3.model.DeleteObjectsRequest;
@@ -140,6 +143,7 @@ import com.ibm.cloud.objectstorage.services.s3.model.GetBucketFaspConnectionInfo
 import com.ibm.cloud.objectstorage.services.s3.model.GetBucketLifecycleConfigurationRequest;
 import com.ibm.cloud.objectstorage.services.s3.model.GetBucketTaggingConfigurationRequest;
 import com.ibm.cloud.objectstorage.services.s3.model.GetBucketVersioningConfigurationRequest;
+import com.ibm.cloud.objectstorage.services.s3.model.GetBucketWebsiteConfigurationRequest;
 import com.ibm.cloud.objectstorage.services.s3.model.GetObjectAclRequest;
 import com.ibm.cloud.objectstorage.services.s3.model.GetObjectMetadataRequest;
 import com.ibm.cloud.objectstorage.services.s3.model.GetObjectRequest;
@@ -194,6 +198,7 @@ import com.ibm.cloud.objectstorage.services.s3.model.SetBucketProtectionConfigur
 import com.ibm.cloud.objectstorage.services.s3.model.SetBucketLifecycleConfigurationRequest;
 import com.ibm.cloud.objectstorage.services.s3.model.SetBucketTaggingConfigurationRequest;
 import com.ibm.cloud.objectstorage.services.s3.model.SetBucketVersioningConfigurationRequest;
+import com.ibm.cloud.objectstorage.services.s3.model.SetBucketWebsiteConfigurationRequest;
 import com.ibm.cloud.objectstorage.services.s3.model.SetObjectAclRequest;
 import com.ibm.cloud.objectstorage.services.s3.model.SetRequestPaymentConfigurationRequest;
 import com.ibm.cloud.objectstorage.services.s3.model.StorageClass;
@@ -2169,6 +2174,34 @@ public class AmazonS3Client extends AmazonWebServiceClient implements AmazonS3 {
     }
     
     @Override
+    public BucketWebsiteConfiguration getBucketWebsiteConfiguration(String bucketName)
+            throws SdkClientException, AmazonServiceException {
+        return getBucketWebsiteConfiguration(new GetBucketWebsiteConfigurationRequest(bucketName));
+    }
+
+    @Override
+    public BucketWebsiteConfiguration getBucketWebsiteConfiguration(GetBucketWebsiteConfigurationRequest getBucketWebsiteConfigurationRequest)
+            throws SdkClientException, AmazonServiceException {
+        getBucketWebsiteConfigurationRequest = beforeClientExecution(getBucketWebsiteConfigurationRequest);
+        rejectNull(getBucketWebsiteConfigurationRequest, "The request object parameter getBucketWebsiteConfigurationRequest must be specified.");
+        String bucketName = getBucketWebsiteConfigurationRequest.getBucketName();
+        rejectNull(bucketName,
+            "The bucket name parameter must be specified when requesting a bucket's website configuration");
+
+        Request<GetBucketWebsiteConfigurationRequest> request = createRequest(bucketName, null, getBucketWebsiteConfigurationRequest, HttpMethodName.GET);
+        request.addHandlerContext(HandlerContextKey.OPERATION_NAME, "GetBucketWebsite");
+        request.addParameter("website", null);
+        request.addHeader("Content-Type", "application/xml");
+
+        try {
+            return invoke(request, new Unmarshallers.BucketWebsiteConfigurationUnmarshaller(), bucketName, null);
+        } catch (AmazonServiceException ase) {
+            if (ase.getStatusCode() == 404) return null;
+            throw ase;
+        }
+    }
+    
+    @Override
     public BucketLifecycleConfiguration getBucketLifecycleConfiguration(String bucketName) {
         return getBucketLifecycleConfiguration(new GetBucketLifecycleConfigurationRequest(bucketName));
     }
@@ -2449,6 +2482,62 @@ public class AmazonS3Client extends AmazonWebServiceClient implements AmazonS3 {
 
         Request<DeleteBucketTaggingConfigurationRequest> request = createRequest(bucketName, null, deleteBucketTaggingConfigurationRequest, HttpMethodName.DELETE);
         request.addParameter("tagging", null);
+
+        invoke(request, voidResponseHandler, bucketName, null);
+    }
+
+    @Override
+    public void setBucketWebsiteConfiguration(String bucketName, BucketWebsiteConfiguration configuration)
+            throws SdkClientException, AmazonServiceException {
+        setBucketWebsiteConfiguration(new SetBucketWebsiteConfigurationRequest(bucketName, configuration));
+    }
+
+    @Override
+    public void setBucketWebsiteConfiguration(SetBucketWebsiteConfigurationRequest setBucketWebsiteConfigurationRequest)
+           throws SdkClientException, AmazonServiceException {
+        setBucketWebsiteConfigurationRequest = beforeClientExecution(setBucketWebsiteConfigurationRequest);
+        String bucketName = setBucketWebsiteConfigurationRequest.getBucketName();
+        BucketWebsiteConfiguration configuration = setBucketWebsiteConfigurationRequest.getConfiguration();
+
+        rejectNull(bucketName,
+                "The bucket name parameter must be specified when setting a bucket's website configuration");
+        rejectNull(configuration,
+                "The bucket website configuration parameter must be specified when setting a bucket's website configuration");
+        if (configuration.getRedirectAllRequestsTo() == null) {
+        rejectNull(configuration.getIndexDocumentSuffix(),
+                "The bucket website configuration parameter must specify the index document suffix when setting a bucket's website configuration");
+        }
+
+        Request<SetBucketWebsiteConfigurationRequest> request = createRequest(bucketName, null, setBucketWebsiteConfigurationRequest, HttpMethodName.PUT);
+        request.addHandlerContext(HandlerContextKey.OPERATION_NAME, "PutBucketWebsite");
+        request.addParameter("website", null);
+        request.addHeader("Content-Type", "application/xml");
+
+        byte[] bytes = bucketConfigurationXmlFactory.convertToXmlByteArray(configuration);
+        request.setContent(new ByteArrayInputStream(bytes));
+
+        invoke(request, voidResponseHandler, bucketName, null);
+    }
+
+    @Override
+    public void deleteBucketWebsiteConfiguration(String bucketName)
+            throws SdkClientException, AmazonServiceException {
+        deleteBucketWebsiteConfiguration(new DeleteBucketWebsiteConfigurationRequest(bucketName));
+    }
+
+    @Override
+    public void deleteBucketWebsiteConfiguration(DeleteBucketWebsiteConfigurationRequest deleteBucketWebsiteConfigurationRequest)
+        throws SdkClientException, AmazonServiceException {
+        deleteBucketWebsiteConfigurationRequest = beforeClientExecution(deleteBucketWebsiteConfigurationRequest);
+        String bucketName = deleteBucketWebsiteConfigurationRequest.getBucketName();
+
+        rejectNull(bucketName,
+            "The bucket name parameter must be specified when deleting a bucket's website configuration");
+
+        Request<DeleteBucketWebsiteConfigurationRequest> request = createRequest(bucketName, null, deleteBucketWebsiteConfigurationRequest, HttpMethodName.DELETE);
+        request.addHandlerContext(HandlerContextKey.OPERATION_NAME, "DeleteBucketWebsite");
+        request.addParameter("website", null);
+        request.addHeader("Content-Type", "application/xml");
 
         invoke(request, voidResponseHandler, bucketName, null);
     }
