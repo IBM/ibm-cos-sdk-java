@@ -1,5 +1,13 @@
 # CHANGELOG
 
+## 2.8.0
+
+### Content
+
+#### Features
+
+* Static Website
+
 ## 2.7.0
 
 ### Content
