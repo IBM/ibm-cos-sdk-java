@@ -5,7 +5,7 @@
   <parent>
     <groupId>com.ibm.cos</groupId>
     <artifactId>ibm-cos-java-sdk-pom</artifactId>
-    <version>2.8.0</version>
+    <version>2.9.0</version>
   </parent>
   <groupId>com.ibm.cos</groupId>
   <artifactId>ibm-cos-java-sdk-core</artifactId>
@@ -13,6 +13,21 @@
   <description>The IBM COS SDK for Java - Core module holds the classes that are used by the individual service clients to interact with IBM Cloud Object Storage. Users need to depend on cos-java-sdk artifact for accessing individual client classes.</description>
   <url>https://github.com/ibm/ibm-cos-sdk-java</url>
   <dependencies>
+  <dependency>
+    <groupId>javax.xml.bind</groupId>
+    <artifactId>jaxb-api</artifactId>
+    <version>2.3.0</version>
+  </dependency>
+  <dependency>
+    <groupId>com.sun.xml.bind</groupId>
+    <artifactId>jaxb-core</artifactId>
+    <version>2.3.0</version>
+  </dependency>
+  <dependency>
+    <groupId>com.sun.xml.bind</groupId>
+    <artifactId>jaxb-impl</artifactId>
+    <version>2.3.0</version>
+  </dependency>
   <dependency>
       <groupId>commons-logging</groupId>
       <artifactId>commons-logging</artifactId>

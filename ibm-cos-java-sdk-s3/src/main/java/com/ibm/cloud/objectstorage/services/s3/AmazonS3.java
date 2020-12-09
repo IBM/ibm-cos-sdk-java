@@ -13,13 +13,6 @@
  * permissions and limitations under the License.
  */
 package com.ibm.cloud.objectstorage.services.s3;
-
-import java.io.File;
-import java.io.InputStream;
-import java.net.URL;
-import java.util.Date;
-import java.util.List;
-
 import com.ibm.cloud.objectstorage.AmazonServiceException;
 import com.ibm.cloud.objectstorage.AmazonWebServiceRequest;
 import com.ibm.cloud.objectstorage.ClientConfiguration;
@@ -29,7 +22,18 @@ import com.ibm.cloud.objectstorage.regions.RegionUtils;
 import com.ibm.cloud.objectstorage.services.s3.internal.Constants;
 import com.ibm.cloud.objectstorage.services.s3.internal.S3DirectSpi;
 import com.ibm.cloud.objectstorage.services.s3.model.*;
+import com.ibm.cloud.objectstorage.services.s3.model.DeleteObjectTaggingRequest;
+import com.ibm.cloud.objectstorage.services.s3.model.DeleteObjectTaggingResult;
+import com.ibm.cloud.objectstorage.services.s3.model.GetObjectTaggingRequest;
+import com.ibm.cloud.objectstorage.services.s3.model.GetObjectTaggingResult;
+import com.ibm.cloud.objectstorage.services.s3.model.SetObjectTaggingRequest;
+import com.ibm.cloud.objectstorage.services.s3.model.SetObjectTaggingResult;
 import com.ibm.cloud.objectstorage.services.s3.waiters.AmazonS3Waiters;
+import java.io.File;
+import java.io.InputStream;
+import java.net.URL;
+import java.util.Date;
+import java.util.List;
 
 /**
  * <p>
@@ -427,7 +431,7 @@ public interface AmazonS3 extends S3DirectSpi {
      */
     public ListBucketsExtendedResponse listBucketsExtended(ListBucketsExtendedRequest listBucketsExtendedRequest) throws SdkClientException,
             AmazonServiceException;
-    
+
     /**
      * <p>
      * Provides an easy way to continue a truncated object listing and retrieve
@@ -1744,7 +1748,7 @@ public interface AmazonS3 extends S3DirectSpi {
      */
     public AccessControlList getBucketAcl(String bucketName) throws SdkClientException,
             AmazonServiceException;
-    
+
     /**
      * <p>
      * Gets the FASP Connection Info for a particular bucket.
@@ -1769,7 +1773,7 @@ public interface AmazonS3 extends S3DirectSpi {
      */
     public FASPConnectionInfo getBucketFaspConnectionInfo(String bucketName) throws SdkClientException,
             AmazonServiceException;
-    
+
     /**
      * <p>
      * Gets the FASP Connection Info for a particular bucket.
@@ -2205,6 +2209,40 @@ public interface AmazonS3 extends S3DirectSpi {
      */
     String getObjectAsString(String bucketName, String key)
             throws AmazonServiceException, SdkClientException;
+
+    /**
+     * Returns the tags for the specified object.
+     *
+     * @param getObjectTaggingRequest
+     *            The request object containing all the options on how to
+     *            retrieve the Amazon S3 object tags.
+     * @return The tags for the specified object.
+     * @see <a href="http://docs.aws.amazon.com/goto/WebAPI/s3-2006-03-01/GetObjectTagging">AWS API Documentation</a>
+     */
+    public GetObjectTaggingResult getObjectTagging(GetObjectTaggingRequest getObjectTaggingRequest);
+
+    /**
+     * Set the tags for the specified object.
+     *
+     * @param setObjectTaggingRequest
+     *            The request object containing all the options for setting the
+     *            tags for the specified object.
+     * @see <a href="http://docs.aws.amazon.com/goto/WebAPI/s3-2006-03-01/PutObjectTagging">AWS API Documentation</a>
+     */
+    public SetObjectTaggingResult setObjectTagging(SetObjectTaggingRequest setObjectTaggingRequest);
+
+    /**
+     * Remove the tags for the specified object.
+     *
+     * @param deleteObjectTaggingRequest
+     *            The request object containing all the options for deleting
+     *            the tags for the specified object.
+     *
+     * @return a {@link DeleteObjectTaggingResult} object containing the
+     * information returned by S3 for the the tag deletion.
+     * @see <a href="http://docs.aws.amazon.com/goto/WebAPI/s3-2006-03-01/DeleteObjectTagging">AWS API Documentation</a>
+     */
+    public DeleteObjectTaggingResult deleteObjectTagging(DeleteObjectTaggingRequest deleteObjectTaggingRequest);
 
     /**
      * <p>
@@ -3089,7 +3127,7 @@ public interface AmazonS3 extends S3DirectSpi {
      */
     public void setBucketVersioningConfiguration(SetBucketVersioningConfigurationRequest setBucketVersioningConfigurationRequest)
         throws SdkClientException, AmazonServiceException;
-    
+
     /**
      * Gets the lifecycle configuration for the specified bucket, or null if
      * the specified bucket does not exists, or an empty list if no
@@ -3161,7 +3199,7 @@ public interface AmazonS3 extends S3DirectSpi {
      * @see <a href="http://docs.aws.amazon.com/goto/WebAPI/s3-2006-03-01/DeleteBucketLifecycleConfiguration">AWS API Documentation</a>
      */
     public void deleteBucketLifecycleConfiguration(DeleteBucketLifecycleConfigurationRequest deleteBucketLifecycleConfigurationRequest);
-    
+
     /**
      * Gets the cross origin configuration for the specified bucket, or null if
      * the specified bucket does not exists, or an empty list if no
@@ -4008,7 +4046,7 @@ public interface AmazonS3 extends S3DirectSpi {
      */
     public void restoreObject(String bucketName, String key, int expirationInDays)
             throws AmazonServiceException;
-    
+
     /**
      * @param bucketName
      *            Name of bucket that presumably contains object
@@ -4024,7 +4062,7 @@ public interface AmazonS3 extends S3DirectSpi {
      */
     boolean doesObjectExist(String bucketName, String objectName)
             throws AmazonServiceException, SdkClientException;
-    
+
     /**
     * Set the protection configuration for the specified bucket.
     *
@@ -4040,7 +4078,7 @@ public interface AmazonS3 extends S3DirectSpi {
     */
     public void setBucketProtectionConfiguration(SetBucketProtectionConfigurationRequest setBucketProtectionRequest)
                 throws SdkClientException, AmazonServiceException;
-    
+
     /**
      * Gets the protection configuration for the specified bucket.
      *
@@ -4056,7 +4094,7 @@ public interface AmazonS3 extends S3DirectSpi {
      */
     public BucketProtectionConfiguration getBucketProtection(String bucketName)
             throws SdkClientException, AmazonServiceException;
-     
+
     /**
      *
      * @param getBucketProtectionRequest
@@ -4071,7 +4109,7 @@ public interface AmazonS3 extends S3DirectSpi {
      */
     public BucketProtectionConfiguration getBucketProtectionConfiguration(GetBucketProtectionConfigurationRequest getBucketProtectionRequest)
             throws SdkClientException, AmazonServiceException;
-     
+
     /**
     *
     * @param bucketName
@@ -4088,7 +4126,7 @@ public interface AmazonS3 extends S3DirectSpi {
     */
     public void setBucketProtection(String bucketName, BucketProtectionConfiguration protectionConfiguration)
                 throws SdkClientException, AmazonServiceException;
-    
+
     /**
      * Adds a legal hold to the specified object in the specified bucket.
      *
@@ -4108,7 +4146,7 @@ public interface AmazonS3 extends S3DirectSpi {
      */
     public void addLegalHold(String bucketName, String key, String legalHoldId)
         throws SdkClientException, AmazonServiceException;
-     
+
     /**
      * Adds a legal hold to the specified object in the specified bucket.
      *
@@ -4127,7 +4165,7 @@ public interface AmazonS3 extends S3DirectSpi {
      */
     public void addLegalHold(AddLegalHoldRequest addLegalHoldRequest)
         throws SdkClientException, AmazonServiceException;
-    
+
     /**
      * Returns a list of legal holds for the specified key in the specified bucket.
      *
@@ -4146,7 +4184,7 @@ public interface AmazonS3 extends S3DirectSpi {
      */
     public ListLegalHoldsResult listLegalHolds(String bucketName, String key) throws SdkClientException,
             AmazonServiceException;
-     
+
     /**
      * Returns a list of legal holds for the specified key in the specified bucket.
      *
@@ -4160,11 +4198,11 @@ public interface AmazonS3 extends S3DirectSpi {
      *             request or handling the response.
      * @throws AmazonServiceException
      *             If any errors occurred in Amazon S3 while processing the
-     *             request. 
+     *             request.
      */
     public ListLegalHoldsResult listLegalHolds(ListLegalHoldsRequest listLegalHoldsRequest) throws SdkClientException,
     AmazonServiceException;
-    
+
 
 	/**
 	 * Deletes a legal hold for the specified object in the specified bucket.
@@ -4185,7 +4223,7 @@ public interface AmazonS3 extends S3DirectSpi {
 	 */
 	public void deleteLegalHold(String bucketName, String key, String legalHoldId)
 	    throws SdkClientException, AmazonServiceException;
-	 
+
 	/**
 	 * Deletes a legal hold for the specified object in the specified bucket.
 	 *
@@ -4204,7 +4242,7 @@ public interface AmazonS3 extends S3DirectSpi {
 	 */
 	public void deleteLegalHold(DeleteLegalHoldRequest deleteLegalHoldRequest)
 	    throws SdkClientException, AmazonServiceException;
-	
+
 	/**
 	 * Extends the retention period of a protected object in a protected vault.
 	 *
@@ -4224,7 +4262,7 @@ public interface AmazonS3 extends S3DirectSpi {
 			Long additionalRetentionPeriod, Long extendRetentionFromCurrentTime,
 			Date newRetentionExpirationDate, Long newRetentionPeriod)
 	    throws SdkClientException, AmazonServiceException;
-	 
+
 	/**
 	 * Extends the retention period of a protected object in a protected vault.
 	 *

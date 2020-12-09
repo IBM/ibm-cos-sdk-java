@@ -14,10 +14,9 @@
  */
 package com.ibm.cloud.objectstorage.services.s3.model;
 
-import java.io.Serializable;
-
 import com.ibm.cloud.objectstorage.AmazonWebServiceRequest;
 import com.ibm.cloud.objectstorage.services.s3.AmazonS3;
+import java.io.Serializable;
 
 /**
  * The InitiateMultipartUploadRequest contains the parameters used for the
@@ -97,6 +96,7 @@ public class InitiateMultipartUploadRequest extends AmazonWebServiceRequest
      */
     private boolean isRequesterPays;
 
+    private ObjectTagging tagging;
     /**
      * Constructs a request to initiate a new multipart upload in the specified
      * bucket, stored by the specified key.
@@ -564,6 +564,36 @@ public class InitiateMultipartUploadRequest extends AmazonWebServiceRequest
      */
     public InitiateMultipartUploadRequest withRequesterPays(boolean isRequesterPays) {
         setRequesterPays(isRequesterPays);
+        return this;
+    }
+
+    /**
+     * @return The tags for this object.
+     */
+    public ObjectTagging getTagging() {
+        return tagging;
+    }
+
+    /**
+     * Set the tags for this object.
+     *
+     * @param tagging
+     *            The tags for this object.
+     */
+    public void setTagging(ObjectTagging tagging) {
+        this.tagging = tagging;
+    }
+
+    /**
+     * Set the tags for this object.
+     *
+     * @param tagging
+     *            The tags for this object.
+     *
+     * @return The updated InitiateMultipartUploadRequest object.
+     */
+    public InitiateMultipartUploadRequest withTagging(ObjectTagging tagging) {
+        setTagging(tagging);
         return this;
     }
 }

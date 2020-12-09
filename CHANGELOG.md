@@ -1,5 +1,17 @@
 # CHANGELOG
 
+## 2.9.0
+
+### Content
+
+#### Features
+
+* Object Tagging
+
+#### Defect Fixes
+
+* Update dependencies
+
 ## 2.8.0
 
 ### Content

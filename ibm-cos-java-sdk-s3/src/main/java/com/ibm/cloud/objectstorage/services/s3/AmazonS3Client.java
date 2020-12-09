@@ -25,6 +25,7 @@ import static com.ibm.cloud.objectstorage.util.ValidationUtils.assertStringNotEm
 
 import com.ibm.cloud.objectstorage.AmazonClientException;
 import com.ibm.cloud.objectstorage.AmazonServiceException;
+import com.ibm.cloud.objectstorage.AmazonServiceException.ErrorType;
 import com.ibm.cloud.objectstorage.AmazonWebServiceClient;
 import com.ibm.cloud.objectstorage.AmazonWebServiceRequest;
 import com.ibm.cloud.objectstorage.AmazonWebServiceResponse;
@@ -37,7 +38,6 @@ import com.ibm.cloud.objectstorage.ResetException;
 import com.ibm.cloud.objectstorage.Response;
 import com.ibm.cloud.objectstorage.SDKGlobalConfiguration;
 import com.ibm.cloud.objectstorage.SdkClientException;
-import com.ibm.cloud.objectstorage.AmazonServiceException.ErrorType;
 import com.ibm.cloud.objectstorage.annotation.SdkInternalApi;
 import com.ibm.cloud.objectstorage.annotation.SdkTestInternalApi;
 import com.ibm.cloud.objectstorage.annotation.ThreadSafe;
@@ -76,9 +76,11 @@ import com.ibm.cloud.objectstorage.services.s3.internal.AWSS3V4Signer;
 import com.ibm.cloud.objectstorage.services.s3.internal.BucketNameUtils;
 import com.ibm.cloud.objectstorage.services.s3.internal.CompleteMultipartUploadRetryCondition;
 import com.ibm.cloud.objectstorage.services.s3.internal.Constants;
+import com.ibm.cloud.objectstorage.services.s3.internal.DeleteObjectTaggingHeaderHandler;
 import com.ibm.cloud.objectstorage.services.s3.internal.DeleteObjectsResponse;
 import com.ibm.cloud.objectstorage.services.s3.internal.DigestValidationInputStream;
 import com.ibm.cloud.objectstorage.services.s3.internal.DualstackEndpointBuilder;
+import com.ibm.cloud.objectstorage.services.s3.internal.GetObjectTaggingResponseHeaderHandler;
 import com.ibm.cloud.objectstorage.services.s3.internal.InitiateMultipartUploadHeaderHandler;
 import com.ibm.cloud.objectstorage.services.s3.internal.InputSubstream;
 import com.ibm.cloud.objectstorage.services.s3.internal.ListPartsHeaderHandler;
@@ -99,6 +101,7 @@ import com.ibm.cloud.objectstorage.services.s3.internal.S3VersionHeaderHandler;
 import com.ibm.cloud.objectstorage.services.s3.internal.S3XmlResponseHandler;
 import com.ibm.cloud.objectstorage.services.s3.internal.ServerSideEncryptionHeaderHandler;
 import com.ibm.cloud.objectstorage.services.s3.internal.ServiceUtils;
+import com.ibm.cloud.objectstorage.services.s3.internal.SetObjectTaggingResponseHeaderHandler;
 import com.ibm.cloud.objectstorage.services.s3.internal.SkipMd5CheckStrategy;
 import com.ibm.cloud.objectstorage.services.s3.internal.XmlWriter;
 import com.ibm.cloud.objectstorage.services.s3.internal.auth.S3SignerProvider;
@@ -109,8 +112,8 @@ import com.ibm.cloud.objectstorage.services.s3.model.AddLegalHoldRequest;
 import com.ibm.cloud.objectstorage.services.s3.model.AmazonS3Exception;
 import com.ibm.cloud.objectstorage.services.s3.model.Bucket;
 import com.ibm.cloud.objectstorage.services.s3.model.BucketCrossOriginConfiguration;
-import com.ibm.cloud.objectstorage.services.s3.model.BucketProtectionConfiguration;
 import com.ibm.cloud.objectstorage.services.s3.model.BucketLifecycleConfiguration;
+import com.ibm.cloud.objectstorage.services.s3.model.BucketProtectionConfiguration;
 import com.ibm.cloud.objectstorage.services.s3.model.BucketTaggingConfiguration;
 import com.ibm.cloud.objectstorage.services.s3.model.BucketVersioningConfiguration;
 import com.ibm.cloud.objectstorage.services.s3.model.BucketWebsiteConfiguration;
@@ -129,6 +132,8 @@ import com.ibm.cloud.objectstorage.services.s3.model.DeleteBucketTaggingConfigur
 import com.ibm.cloud.objectstorage.services.s3.model.DeleteBucketWebsiteConfigurationRequest;
 import com.ibm.cloud.objectstorage.services.s3.model.DeleteLegalHoldRequest;
 import com.ibm.cloud.objectstorage.services.s3.model.DeleteObjectRequest;
+import com.ibm.cloud.objectstorage.services.s3.model.DeleteObjectTaggingRequest;
+import com.ibm.cloud.objectstorage.services.s3.model.DeleteObjectTaggingResult;
 import com.ibm.cloud.objectstorage.services.s3.model.DeleteObjectsRequest;
 import com.ibm.cloud.objectstorage.services.s3.model.DeleteObjectsResult;
 import com.ibm.cloud.objectstorage.services.s3.model.DeleteVersionRequest;
@@ -138,15 +143,17 @@ import com.ibm.cloud.objectstorage.services.s3.model.GeneratePresignedUrlRequest
 import com.ibm.cloud.objectstorage.services.s3.model.GenericBucketRequest;
 import com.ibm.cloud.objectstorage.services.s3.model.GetBucketAclRequest;
 import com.ibm.cloud.objectstorage.services.s3.model.GetBucketCrossOriginConfigurationRequest;
-import com.ibm.cloud.objectstorage.services.s3.model.GetBucketProtectionConfigurationRequest;
 import com.ibm.cloud.objectstorage.services.s3.model.GetBucketFaspConnectionInfoRequest;
 import com.ibm.cloud.objectstorage.services.s3.model.GetBucketLifecycleConfigurationRequest;
+import com.ibm.cloud.objectstorage.services.s3.model.GetBucketProtectionConfigurationRequest;
 import com.ibm.cloud.objectstorage.services.s3.model.GetBucketTaggingConfigurationRequest;
 import com.ibm.cloud.objectstorage.services.s3.model.GetBucketVersioningConfigurationRequest;
 import com.ibm.cloud.objectstorage.services.s3.model.GetBucketWebsiteConfigurationRequest;
 import com.ibm.cloud.objectstorage.services.s3.model.GetObjectAclRequest;
 import com.ibm.cloud.objectstorage.services.s3.model.GetObjectMetadataRequest;
 import com.ibm.cloud.objectstorage.services.s3.model.GetObjectRequest;
+import com.ibm.cloud.objectstorage.services.s3.model.GetObjectTaggingRequest;
+import com.ibm.cloud.objectstorage.services.s3.model.GetObjectTaggingResult;
 import com.ibm.cloud.objectstorage.services.s3.model.GetRequestPaymentConfigurationRequest;
 import com.ibm.cloud.objectstorage.services.s3.model.GetS3AccountOwnerRequest;
 import com.ibm.cloud.objectstorage.services.s3.model.Grant;
@@ -156,8 +163,8 @@ import com.ibm.cloud.objectstorage.services.s3.model.HeadBucketRequest;
 import com.ibm.cloud.objectstorage.services.s3.model.HeadBucketResult;
 import com.ibm.cloud.objectstorage.services.s3.model.InitiateMultipartUploadRequest;
 import com.ibm.cloud.objectstorage.services.s3.model.InitiateMultipartUploadResult;
-import com.ibm.cloud.objectstorage.services.s3.model.ListBucketsExtendedResponse;
 import com.ibm.cloud.objectstorage.services.s3.model.ListBucketsExtendedRequest;
+import com.ibm.cloud.objectstorage.services.s3.model.ListBucketsExtendedResponse;
 import com.ibm.cloud.objectstorage.services.s3.model.ListBucketsRequest;
 import com.ibm.cloud.objectstorage.services.s3.model.ListLegalHoldsRequest;
 import com.ibm.cloud.objectstorage.services.s3.model.ListLegalHoldsResult;
@@ -194,12 +201,14 @@ import com.ibm.cloud.objectstorage.services.s3.model.SSECustomerKey;
 import com.ibm.cloud.objectstorage.services.s3.model.SSECustomerKeyProvider;
 import com.ibm.cloud.objectstorage.services.s3.model.SetBucketAclRequest;
 import com.ibm.cloud.objectstorage.services.s3.model.SetBucketCrossOriginConfigurationRequest;
-import com.ibm.cloud.objectstorage.services.s3.model.SetBucketProtectionConfigurationRequest;
 import com.ibm.cloud.objectstorage.services.s3.model.SetBucketLifecycleConfigurationRequest;
+import com.ibm.cloud.objectstorage.services.s3.model.SetBucketProtectionConfigurationRequest;
 import com.ibm.cloud.objectstorage.services.s3.model.SetBucketTaggingConfigurationRequest;
 import com.ibm.cloud.objectstorage.services.s3.model.SetBucketVersioningConfigurationRequest;
 import com.ibm.cloud.objectstorage.services.s3.model.SetBucketWebsiteConfigurationRequest;
 import com.ibm.cloud.objectstorage.services.s3.model.SetObjectAclRequest;
+import com.ibm.cloud.objectstorage.services.s3.model.SetObjectTaggingRequest;
+import com.ibm.cloud.objectstorage.services.s3.model.SetObjectTaggingResult;
 import com.ibm.cloud.objectstorage.services.s3.model.SetRequestPaymentConfigurationRequest;
 import com.ibm.cloud.objectstorage.services.s3.model.StorageClass;
 import com.ibm.cloud.objectstorage.services.s3.model.Tag;
@@ -211,6 +220,7 @@ import com.ibm.cloud.objectstorage.services.s3.model.transform.AclXmlFactory;
 import com.ibm.cloud.objectstorage.services.s3.model.transform.BucketConfigurationXmlFactory;
 import com.ibm.cloud.objectstorage.services.s3.model.transform.HeadBucketResultHandler;
 import com.ibm.cloud.objectstorage.services.s3.model.transform.MultiObjectDeleteXmlFactory;
+import com.ibm.cloud.objectstorage.services.s3.model.transform.ObjectTaggingXmlFactory;
 import com.ibm.cloud.objectstorage.services.s3.model.transform.RequestPaymentConfigurationXmlFactory;
 import com.ibm.cloud.objectstorage.services.s3.model.transform.RequestXmlFactory;
 import com.ibm.cloud.objectstorage.services.s3.model.transform.Unmarshallers;
@@ -220,6 +230,7 @@ import com.ibm.cloud.objectstorage.services.s3.request.S3HandlerContextKeys;
 import com.ibm.cloud.objectstorage.services.s3.waiters.AmazonS3Waiters;
 import com.ibm.cloud.objectstorage.transform.Unmarshaller;
 import com.ibm.cloud.objectstorage.util.AWSRequestMetrics;
+import com.ibm.cloud.objectstorage.util.AWSRequestMetrics.Field;
 import com.ibm.cloud.objectstorage.util.AwsHostNameUtils;
 import com.ibm.cloud.objectstorage.util.Base16;
 import com.ibm.cloud.objectstorage.util.Base64;
@@ -234,8 +245,6 @@ import com.ibm.cloud.objectstorage.util.SdkHttpUtils;
 import com.ibm.cloud.objectstorage.util.ServiceClientHolderInputStream;
 import com.ibm.cloud.objectstorage.util.StringUtils;
 import com.ibm.cloud.objectstorage.util.ValidationUtils;
-import com.ibm.cloud.objectstorage.util.AWSRequestMetrics.Field;
-
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -266,7 +275,6 @@ import java.util.regex.Matcher;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.client.methods.HttpRequestBase;
-
 
 /**
  * <p>
@@ -618,7 +626,7 @@ public class AmazonS3Client extends AmazonWebServiceClient implements AmazonS3 {
     @Override
     @Deprecated
     public synchronized void setEndpoint(String endpoint) {
-    	
+
         if (ServiceUtils.isS3AccelerateEndpoint(endpoint)) {
             throw new IllegalStateException("To enable accelerate mode, please use AmazonS3ClientBuilder.withAccelerateModeEnabled(true)");
         } else {
@@ -878,15 +886,15 @@ public class AmazonS3Client extends AmazonWebServiceClient implements AmazonS3 {
         listBucketsRequest = beforeClientExecution(listBucketsRequest);
         rejectNull(listBucketsRequest, "The request object parameter listBucketsRequest must be specified.");
         Request<ListBucketsRequest> request = createRequest(null, null, listBucketsRequest, HttpMethodName.GET);
-        
+
         //Add IBM Service Instance Id to headers
     	if ((null != this.awsCredentialsProvider ) && (this.awsCredentialsProvider.getCredentials() instanceof IBMOAuthCredentials)) {
     		IBMOAuthCredentials oAuthCreds = (IBMOAuthCredentials)this.awsCredentialsProvider.getCredentials();
     		if (oAuthCreds.getServiceInstanceId() != null) {
-            	request.addHeader(Headers.IBM_SERVICE_INSTANCE_ID, oAuthCreds.getServiceInstanceId());	
+            	request.addHeader(Headers.IBM_SERVICE_INSTANCE_ID, oAuthCreds.getServiceInstanceId());
     		}
     	}
-        
+
         return invoke(request, new Unmarshallers.ListBucketsUnmarshaller(), null, null);
     }
 
@@ -918,10 +926,10 @@ public class AmazonS3Client extends AmazonWebServiceClient implements AmazonS3 {
         if ((null != this.awsCredentialsProvider ) && (this.awsCredentialsProvider.getCredentials() instanceof IBMOAuthCredentials)) {
             IBMOAuthCredentials oAuthCreds = (IBMOAuthCredentials)this.awsCredentialsProvider.getCredentials();
             if (oAuthCreds.getServiceInstanceId() != null) {
-                request.addHeader(Headers.IBM_SERVICE_INSTANCE_ID, oAuthCreds.getServiceInstanceId());  
+                request.addHeader(Headers.IBM_SERVICE_INSTANCE_ID, oAuthCreds.getServiceInstanceId());
             }
         }
-        
+
         return invoke(request, new Unmarshallers.ListBucketsExtendedUnmarshaller(), null, null);
     }
 
@@ -962,9 +970,9 @@ public class AmazonS3Client extends AmazonWebServiceClient implements AmazonS3 {
         BucketNameUtils.validateBucketName(bucketName);
 
         Request<CreateBucketRequest> request = createRequest(bucketName, null, createBucketRequest, HttpMethodName.PUT, requestEndpoint);
-        
+
         request = addIAMHeaders(request, createBucketRequest);
-        
+
         if (createBucketRequest.getAccessControlList() != null) {
             addAclHeaders(request, createBucketRequest.getAccessControlList());
         } else if (createBucketRequest.getCannedAcl() != null) {
@@ -1500,6 +1508,71 @@ public class AmazonS3Client extends AmazonWebServiceClient implements AmazonS3 {
     }
 
     @Override
+    public GetObjectTaggingResult getObjectTagging(GetObjectTaggingRequest getObjectTaggingRequest) {
+        getObjectTaggingRequest = beforeClientExecution(getObjectTaggingRequest);
+        rejectNull(getObjectTaggingRequest,
+                "The request parameter must be specified when getting the object tags");
+        String bucketName = assertStringNotEmpty(getObjectTaggingRequest.getBucketName(), "BucketName");
+        String key = assertNotNull(getObjectTaggingRequest.getKey(), "Key");
+
+        Request<GetObjectTaggingRequest> request = createRequest(bucketName, key, getObjectTaggingRequest, HttpMethodName.GET);
+        request.addHandlerContext(HandlerContextKey.OPERATION_NAME, "GetObjectTagging");
+        request.addParameter("tagging", null);
+        addParameterIfNotNull(request, "versionId", getObjectTaggingRequest.getVersionId());
+
+        ResponseHeaderHandlerChain<GetObjectTaggingResult> handlerChain = new ResponseHeaderHandlerChain<GetObjectTaggingResult>(
+                new Unmarshallers.GetObjectTaggingResponseUnmarshaller(),
+                new GetObjectTaggingResponseHeaderHandler()
+        );
+
+        return invoke(request, handlerChain, bucketName, key);
+    }
+
+    @Override
+    public SetObjectTaggingResult setObjectTagging(SetObjectTaggingRequest setObjectTaggingRequest) {
+        setObjectTaggingRequest = beforeClientExecution(setObjectTaggingRequest);
+        rejectNull(setObjectTaggingRequest,
+                "The request parameter must be specified setting the object tags");
+        String bucketName = assertStringNotEmpty(setObjectTaggingRequest.getBucketName(), "BucketName");
+        String key = assertNotNull(setObjectTaggingRequest.getKey(), "Key");
+        ObjectTagging tagging = assertNotNull(setObjectTaggingRequest.getTagging(), "ObjectTagging");
+
+        Request<SetObjectTaggingRequest> request = createRequest(bucketName, key, setObjectTaggingRequest, HttpMethodName.PUT);
+        request.addHandlerContext(HandlerContextKey.OPERATION_NAME, "PutObjectTagging");
+        request.addParameter("tagging", null);
+        addParameterIfNotNull(request, "versionId", setObjectTaggingRequest.getVersionId());
+        byte[] content = new ObjectTaggingXmlFactory().convertToXmlByteArray(tagging);
+        setContent(request, content, "application/xml", true);
+
+        ResponseHeaderHandlerChain<SetObjectTaggingResult> handlerChain = new ResponseHeaderHandlerChain<SetObjectTaggingResult>(
+                new Unmarshallers.SetObjectTaggingResponseUnmarshaller(),
+                new SetObjectTaggingResponseHeaderHandler()
+        );
+
+        return invoke(request, handlerChain, bucketName, key);
+    }
+
+    @Override
+    public DeleteObjectTaggingResult deleteObjectTagging(DeleteObjectTaggingRequest deleteObjectTaggingRequest) {
+        deleteObjectTaggingRequest = beforeClientExecution(deleteObjectTaggingRequest);
+        rejectNull(deleteObjectTaggingRequest, "The request parameter must be specified when delete the object tags");
+        String bucketName = assertStringNotEmpty(deleteObjectTaggingRequest.getBucketName(), "BucketName");
+        String key = assertStringNotEmpty(deleteObjectTaggingRequest.getKey(), "Key");
+
+        Request<DeleteObjectTaggingRequest> request = createRequest(bucketName, key, deleteObjectTaggingRequest, HttpMethodName.DELETE);
+        request.addHandlerContext(HandlerContextKey.OPERATION_NAME, "DeleteObjectTagging");
+        request.addParameter("tagging", null);
+        addParameterIfNotNull(request, "versionId", deleteObjectTaggingRequest.getVersionId());
+
+        ResponseHeaderHandlerChain<DeleteObjectTaggingResult> handlerChain = new ResponseHeaderHandlerChain<DeleteObjectTaggingResult>(
+                new Unmarshallers.DeleteObjectTaggingResponseUnmarshaller(),
+                new DeleteObjectTaggingHeaderHandler()
+        );
+
+        return invoke(request, handlerChain, bucketName, key);
+    }
+
+    @Override
     public void deleteBucket(String bucketName)
             throws SdkClientException, AmazonServiceException {
         deleteBucket(new DeleteBucketRequest(bucketName));
@@ -1617,18 +1690,18 @@ public class AmazonS3Client extends AmazonWebServiceClient implements AmazonS3 {
             // Populate the SSE AWS KMS parameters to the request header
             populateSSE_KMS(request,
                     putObjectRequest.getSSEAwsKeyManagementParams());
-            
+
             // Populate the object retention parameters to the request header
             if (putObjectRequest.getRetentionExpirationDate() != null) {
                 request.addHeader(Headers.RETENTION_EXPIRATION_DATE,
                 		DateUtils.formatRFC822Date(putObjectRequest.getRetentionExpirationDate()));
             }
-            
+
             if (putObjectRequest.getRetentionLegalHoldId() != null) {
                 request.addHeader(Headers.RETENTION_LEGAL_HOLD_ID,
                 		putObjectRequest.getRetentionLegalHoldId());
             }
-            
+
             if (putObjectRequest.getRetentionPeriod() != null) {
                 request.addHeader(Headers.RETENTION_PERIOD,
                 		putObjectRequest.getRetentionPeriod().toString());
@@ -2172,7 +2245,7 @@ public class AmazonS3Client extends AmazonWebServiceClient implements AmazonS3 {
 
         return invoke(request, new Unmarshallers.BucketVersioningConfigurationUnmarshaller(), bucketName, null);
     }
-    
+
     @Override
     public BucketWebsiteConfiguration getBucketWebsiteConfiguration(String bucketName)
             throws SdkClientException, AmazonServiceException {
@@ -2703,19 +2776,19 @@ public class AmazonS3Client extends AmazonWebServiceClient implements AmazonS3 {
             request.addHeader("Content-Type", "application/xml");
             request.addHeader("Content-Length", String.valueOf(xml.length));
             if(completeMultipartUploadRequest.getRetentionExpirationDate() != null) {
-            request.addHeader(Headers.RETENTION_EXPIRATION_DATE, 
+            request.addHeader(Headers.RETENTION_EXPIRATION_DATE,
             		DateUtils.formatRFC822Date(completeMultipartUploadRequest.getRetentionExpirationDate()));
             }
             if(completeMultipartUploadRequest.getRetentionPeriod() != null) {
-            request.addHeader(Headers.RETENTION_PERIOD, 
+            request.addHeader(Headers.RETENTION_PERIOD,
             		completeMultipartUploadRequest.getRetentionPeriod().toString());
             }
-            addHeaderIfNotNull(request, Headers.RETENTION_LEGAL_HOLD_ID, 
+            addHeaderIfNotNull(request, Headers.RETENTION_LEGAL_HOLD_ID,
             		completeMultipartUploadRequest.getRetentionLegalHoldId());
-            
+
 
             request.setContent(new ByteArrayInputStream(xml));
-            
+
             // Calculate Content MD5
             try {
                 byte[] md5 = Md5Utils.computeMD5Hash(new ByteArrayInputStream(xml));
@@ -2804,6 +2877,7 @@ public class AmazonS3Client extends AmazonWebServiceClient implements AmazonS3 {
         populateSSE_KMS(request,
                 initiateMultipartUploadRequest.getSSEAwsKeyManagementParams());
 
+        addHeaderIfNotNull(request, Headers.S3_TAGGING, urlEncodeTags(initiateMultipartUploadRequest.getTagging()));
         // Be careful that we don't send the object's total size as the content
         // length for the InitiateMultipartUpload request.
         setZeroContentLength(request);
@@ -2947,7 +3021,7 @@ public class AmazonS3Client extends AmazonWebServiceClient implements AmazonS3 {
                             + fileOrig, e);
                 }
             }
-            
+
             final boolean closeStream = uploadPartRequest.isCalculateMD5() ?
                 false : uploadPartRequest.isLastPart();
             isCurr = new InputSubstream(
@@ -2956,7 +3030,7 @@ public class AmazonS3Client extends AmazonWebServiceClient implements AmazonS3 {
                     partSize,
                     closeStream);
 
-            // Calculate Content MD5 on part upload if requested.  
+            // Calculate Content MD5 on part upload if requested.
             if(uploadPartRequest.getMd5Digest() == null
             		&& uploadPartRequest.isCalculateMD5()
             		&& isCurr.markSupported()) {
@@ -2968,9 +3042,9 @@ public class AmazonS3Client extends AmazonWebServiceClient implements AmazonS3 {
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
 				  	e.printStackTrace();
-				}     
-            }          
-            
+				}
+            }
+
             MD5DigestCalculatingInputStream md5DigestStream = null;
             if (uploadPartRequest.getMd5Digest() == null
                     && !skipMd5CheckStrategy.skipClientSideValidationPerRequest(uploadPartRequest)) {
@@ -3045,7 +3119,7 @@ public class AmazonS3Client extends AmazonWebServiceClient implements AmazonS3 {
     public S3ResponseMetadata getCachedResponseMetadata(AmazonWebServiceRequest request) {
         return (S3ResponseMetadata)client.getResponseMetadataForRequest(request);
     }
-    
+
     @Override
     public void restoreObject(RestoreObjectRequest restoreObjectRequest)
             throws AmazonServiceException {
@@ -3264,10 +3338,10 @@ public class AmazonS3Client extends AmazonWebServiceClient implements AmazonS3 {
         if(this.awsCredentialsProvider.getCredentials() instanceof IBMOAuthCredentials) {
         	IBMOAuthCredentials oAuthCreds = (IBMOAuthCredentials)this.awsCredentialsProvider.getCredentials();
     		if (oAuthCreds.getApiKey() != null || oAuthCreds.getTokenManager() != null) {
-            	return new IBMOAuthSigner(clientConfiguration);	
+            	return new IBMOAuthSigner(clientConfiguration);
     		}
         }
-        
+
         if (!isSignerOverridden()) {
 
             if ((signer instanceof AWSS3V4Signer) && bucketRegionShouldBeCached(request)) {
@@ -3544,20 +3618,20 @@ public class AmazonS3Client extends AmazonWebServiceClient implements AmazonS3 {
         if (copyObjectRequest.getRedirectLocation() != null) {
             request.addHeader(Headers.REDIRECT_LOCATION, copyObjectRequest.getRedirectLocation());
         }
-        
+
         if (copyObjectRequest.getRetentionDirective() != null) {
         	request.addHeader(Headers.RETENTION_DIRECTIVE, copyObjectRequest.getRetentionDirective().toString());
         }
-        
+
         if (copyObjectRequest.getRetentionExpirationDate() != null) {
-        	request.addHeader(Headers.RETENTION_EXPIRATION_DATE, 
+        	request.addHeader(Headers.RETENTION_EXPIRATION_DATE,
         			DateUtils.formatRFC822Date(copyObjectRequest.getRetentionExpirationDate()));
         }
-        
+
         if (copyObjectRequest.getRetentionLegalHoldId() != null) {
         	request.addHeader(Headers.RETENTION_LEGAL_HOLD_ID, copyObjectRequest.getRetentionLegalHoldId());
         }
-        
+
         if (copyObjectRequest.getRetentionPeriod() != null) {
         	request.addHeader(Headers.RETENTION_PERIOD, copyObjectRequest.getRetentionPeriod().toString());
         }
@@ -4103,7 +4177,7 @@ public class AmazonS3Client extends AmazonWebServiceClient implements AmazonS3 {
         	 ase.setStatusCode(ose.getStatusCode());
         	 ase.setServiceName("IAM");
         	 ase.setStackTrace(ose.getStackTrace());
-        	 throw ase; 	        
+        	 throw ase;
         } finally {
             endClientExecution(awsRequestMetrics, request, response);
         }
@@ -4484,37 +4558,37 @@ public class AmazonS3Client extends AmazonWebServiceClient implements AmazonS3 {
             }
         }
     }
-    	
-    /**  
-     * Add IAM specific headers based on the credentials set & any optional  
-     * parameters added to the CreateBucketRequest object  
-     *   
-     * @param request  
-     * @param createBucketRequest  
-     * @return Request<CreateBucketRequest>  
-     */  
-    protected Request<CreateBucketRequest> addIAMHeaders(Request<CreateBucketRequest> request, CreateBucketRequest createBucketRequest){  
-  
-    	if ((null != this.awsCredentialsProvider ) && (this.awsCredentialsProvider.getCredentials() instanceof IBMOAuthCredentials)) {  
-    		if (null != createBucketRequest.getServiceInstanceId()) {  
-    			request.addHeader(Headers.IBM_SERVICE_INSTANCE_ID, createBucketRequest.getServiceInstanceId());  
+
+    /**
+     * Add IAM specific headers based on the credentials set & any optional
+     * parameters added to the CreateBucketRequest object
+     *
+     * @param request
+     * @param createBucketRequest
+     * @return Request<CreateBucketRequest>
+     */
+    protected Request<CreateBucketRequest> addIAMHeaders(Request<CreateBucketRequest> request, CreateBucketRequest createBucketRequest){
+
+    	if ((null != this.awsCredentialsProvider ) && (this.awsCredentialsProvider.getCredentials() instanceof IBMOAuthCredentials)) {
+    		if (null != createBucketRequest.getServiceInstanceId()) {
+    			request.addHeader(Headers.IBM_SERVICE_INSTANCE_ID, createBucketRequest.getServiceInstanceId());
             	if (null != createBucketRequest.getEncryptionType()) {
 	            	request.addHeader(Headers.IBM_SSE_KP_ENCRYPTION_ALGORITHM, createBucketRequest.getEncryptionType().getKmsEncryptionAlgorithm());
 	            	request.addHeader(Headers.IBM_SSE_KP_CUSTOMER_ROOT_KEY_CRN, createBucketRequest.getEncryptionType().getIBMSSEKMSCustomerRootKeyCrn());
             	}
-    		} else {  
-	    		IBMOAuthCredentials oAuthCreds = (IBMOAuthCredentials)this.awsCredentialsProvider.getCredentials();  
-	    		if (oAuthCreds.getServiceInstanceId() != null) {  
-	            	request.addHeader(Headers.IBM_SERVICE_INSTANCE_ID, oAuthCreds.getServiceInstanceId());	
+    		} else {
+	    		IBMOAuthCredentials oAuthCreds = (IBMOAuthCredentials)this.awsCredentialsProvider.getCredentials();
+	    		if (oAuthCreds.getServiceInstanceId() != null) {
+	            	request.addHeader(Headers.IBM_SERVICE_INSTANCE_ID, oAuthCreds.getServiceInstanceId());
 	            	if (null != createBucketRequest.getEncryptionType()) {
 		            	request.addHeader(Headers.IBM_SSE_KP_ENCRYPTION_ALGORITHM, createBucketRequest.getEncryptionType().getKmsEncryptionAlgorithm());
 		            	request.addHeader(Headers.IBM_SSE_KP_CUSTOMER_ROOT_KEY_CRN, createBucketRequest.getEncryptionType().getIBMSSEKMSCustomerRootKeyCrn());
-	            	}  
-	    		}  
-    		}  
-    	}  
-    	  
-    	return request;  
+	            	}
+	    		}
+    		}
+    	}
+
+    	return request;
     }
 
 	@Override
@@ -4523,7 +4597,7 @@ public class AmazonS3Client extends AmazonWebServiceClient implements AmazonS3 {
 		setBucketProtectionConfigurationRequest = beforeClientExecution(setBucketProtectionConfigurationRequest);
         rejectNull(setBucketProtectionConfigurationRequest,
                 "The set bucket protection configuration request object must be specified.");
-        
+
         String bucketName = setBucketProtectionConfigurationRequest.getBucketName();
         BucketProtectionConfiguration bucketProtectionConfiguration = setBucketProtectionConfigurationRequest.getProtectionConfiguration();
 
@@ -4534,7 +4608,7 @@ public class AmazonS3Client extends AmazonWebServiceClient implements AmazonS3 {
 
         Request<SetBucketProtectionConfigurationRequest> request = createRequest(bucketName, null, setBucketProtectionConfigurationRequest, HttpMethodName.PUT);
         request.addParameter("protection", null);
-        
+
         byte[] content = new BucketConfigurationXmlFactory().convertToXmlByteArray(bucketProtectionConfiguration);
         request.addHeader("Content-Length", String.valueOf(content.length));
         request.addHeader("Content-Type", "application/xml");
@@ -4548,7 +4622,7 @@ public class AmazonS3Client extends AmazonWebServiceClient implements AmazonS3 {
         }
 
         invoke(request, voidResponseHandler, bucketName, null);
-		
+
 	}
 
 	@Override
@@ -4593,7 +4667,7 @@ public class AmazonS3Client extends AmazonWebServiceClient implements AmazonS3 {
 	public void addLegalHold(String bucketName, String key, String legalHoldId)
 			throws SdkClientException, AmazonServiceException {
 		addLegalHold(new AddLegalHoldRequest(bucketName, key, legalHoldId));
-		
+
 	}
 
 	@Override
@@ -4602,7 +4676,7 @@ public class AmazonS3Client extends AmazonWebServiceClient implements AmazonS3 {
 		addLegalHoldRequest = beforeClientExecution(addLegalHoldRequest);
         rejectNull(addLegalHoldRequest,
                 "The add legal hold configuration request object must be specified.");
-        
+
         String bucketName = addLegalHoldRequest.getBucketName();
         String key = addLegalHoldRequest.getKey();
         String legalHoldId = addLegalHoldRequest.getLegalHoldId();
@@ -4617,7 +4691,7 @@ public class AmazonS3Client extends AmazonWebServiceClient implements AmazonS3 {
         Request<AddLegalHoldRequest> request = createRequest(bucketName, key, addLegalHoldRequest, HttpMethodName.POST);
         request.addParameter("legalHold", null);
         request.addParameter("add", legalHoldId);
-        
+
         byte[] content = addLegalHoldRequest.getLegalHoldId().getBytes();
         request.addHeader("Content-Length", String.valueOf(content.length));
         request.addHeader("Content-Type", "application/xml");
@@ -4631,7 +4705,7 @@ public class AmazonS3Client extends AmazonWebServiceClient implements AmazonS3 {
         }
 
         invoke(request, voidResponseHandler, bucketName, key);
-		
+
 	}
 
 	@Override
@@ -4649,7 +4723,7 @@ public class AmazonS3Client extends AmazonWebServiceClient implements AmazonS3 {
         rejectNull(bucketName, "The bucket name must be specified when retrieving the list of legal holds.");
         String key = listLegalHoldsRequest.getKey();
         rejectNull(key, "The object key must be specified when retrieving the list of legal holds.");
-        
+
         Request<ListLegalHoldsRequest> request = createRequest(bucketName, key, listLegalHoldsRequest, HttpMethodName.GET);
         request.addParameter("legalHold", null);
 
@@ -4672,7 +4746,7 @@ public class AmazonS3Client extends AmazonWebServiceClient implements AmazonS3 {
 	public void deleteLegalHold(String bucketName, String key, String legalHoldId)
 			throws SdkClientException, AmazonServiceException {
 		deleteLegalHold(new DeleteLegalHoldRequest(bucketName, key, legalHoldId));
-		
+
 	}
 
 	@Override
@@ -4681,7 +4755,7 @@ public class AmazonS3Client extends AmazonWebServiceClient implements AmazonS3 {
 		deleteLegalHoldRequest = beforeClientExecution(deleteLegalHoldRequest);
         rejectNull(deleteLegalHoldRequest,
                 "The delete legal hold configuration request object must be specified.");
-        
+
         String bucketName = deleteLegalHoldRequest.getBucketName();
         String key = deleteLegalHoldRequest.getKey();
         String legalHoldId = deleteLegalHoldRequest.getLegalHoldId();
@@ -4696,14 +4770,14 @@ public class AmazonS3Client extends AmazonWebServiceClient implements AmazonS3 {
         Request<DeleteLegalHoldRequest> request = createRequest(bucketName, key, deleteLegalHoldRequest, HttpMethodName.POST);
         request.addParameter("legalHold", null);
         request.addParameter("remove", legalHoldId);
-        
+
         byte[] content = "".getBytes();
         request.addHeader("Content-Length", String.valueOf(content.length));
         request.addHeader("Content-Type", "text/plain");
         request.setContent(new ByteArrayInputStream(content));
 
         invoke(request, voidResponseHandler, bucketName, key);
-		
+
 	}
 
 	@Override
@@ -4717,7 +4791,7 @@ public class AmazonS3Client extends AmazonWebServiceClient implements AmazonS3 {
 		.withExtendRetentionFromCurrentTime(extendRetentionFromCurrentTime)
 		.withNewRetentionExpirationDate(newRetentionExpirationDate)
 		.withNewRetentionPeriod(newRetentionPeriod));
-		
+
 	}
 
 	@Override
@@ -4726,7 +4800,7 @@ public class AmazonS3Client extends AmazonWebServiceClient implements AmazonS3 {
 		extendObjectRetentionRequest = beforeClientExecution(extendObjectRetentionRequest);
         rejectNull(extendObjectRetentionRequest,
                 "The extend object retention request object must be specified.");
-        
+
         String bucketName = extendObjectRetentionRequest.getBucketName();
         String key = extendObjectRetentionRequest.getKey();
         Long additionalRetentionPeriod = extendObjectRetentionRequest.getAdditionalRetentionPeriod();
@@ -4738,27 +4812,27 @@ public class AmazonS3Client extends AmazonWebServiceClient implements AmazonS3 {
                 "The bucket name must be specified when adding a legal hold id.");
         rejectNull(key,
                 "The bucket name must be specified when adding a legal hold id.");
-        
+
         // Only one of the extend retention headers can be populated
         String argumentExceptionMessage = "Only one of additionalRetentionPeriod, extendRetentionFromCurrentTime, newRetentionExpirationDate"
         		+ " or newRetentionPeriod can be specified.";
-        if(additionalRetentionPeriod != null && 
+        if(additionalRetentionPeriod != null &&
         		(extendRetentionFromCurrentTime != null
         		|| newRetentionExpirationDate != null
         		|| newRetentionPeriod != null)) {
         	throw new IllegalArgumentException(argumentExceptionMessage);
         }
-        
-        if(extendRetentionFromCurrentTime != null && 
+
+        if(extendRetentionFromCurrentTime != null &&
         		(newRetentionExpirationDate != null
         		|| newRetentionPeriod != null)) {
         	throw new IllegalArgumentException(argumentExceptionMessage);
         }
-        
+
         if(newRetentionExpirationDate != null && newRetentionPeriod != null) {
         	throw new IllegalArgumentException(argumentExceptionMessage);
         }
-        
+
 
         Request<ExtendObjectRetentionRequest> request = createRequest(bucketName, key, extendObjectRetentionRequest, HttpMethodName.POST);
         request.addParameter("extendRetention", null);
@@ -4774,13 +4848,13 @@ public class AmazonS3Client extends AmazonWebServiceClient implements AmazonS3 {
         if(newRetentionPeriod != null) {
         	request.addHeader("new-retention-period", newRetentionPeriod.toString());
         }
-        
+
         byte[] content = new byte[0];
         request.addHeader("Content-Length", String.valueOf(content.length));
         request.addHeader("Content-Type", "text/plain");
         request.setContent(new ByteArrayInputStream(content));
         invoke(request, voidResponseHandler, bucketName, key);
-		
+
 	}
 
 	public FASPConnectionInfo getBucketFaspConnectionInfo(String bucketName)
@@ -4795,12 +4869,12 @@ public class AmazonS3Client extends AmazonWebServiceClient implements AmazonS3 {
 		getBucketFaspConnectionInfoRequest = beforeClientExecution(getBucketFaspConnectionInfoRequest);
         String bucketName = getBucketFaspConnectionInfoRequest.getBucketName();
         rejectNull(bucketName, "The bucket name parameter must be specified when requesting a bucket's FASP Connection Info");
-        
+
         Request<GetBucketFaspConnectionInfoRequest> request = createRequest(bucketName, null, getBucketFaspConnectionInfoRequest, HttpMethodName.GET);
         request.addParameter("faspConnectionInfo", null);
 
         populateRequesterPaysHeader(request, false);
-        
+
         @SuppressWarnings("unchecked")
         ResponseHeaderHandlerChain<FASPConnectionInfo> responseHandler = new ResponseHeaderHandlerChain<FASPConnectionInfo>(
                 new Unmarshallers.FASPConnectionInfoUnmarshaller(),
