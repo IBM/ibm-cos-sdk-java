@@ -1,1 +1,12 @@
+target/
+*settings.xml
+*.iml
+*.idea
+
+# Eclipse metadata
+.classpath
+.settings
+.project
+
+# MacOS
 .DS_Store

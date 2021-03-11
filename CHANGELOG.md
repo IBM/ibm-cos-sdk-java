@@ -1,5 +1,15 @@
 # CHANGELOG
 
+## 2.9.1
+
+### Content
+
+#### Defect Fixes
+
+* COSSDK-77581: <https://github.com/IBM/ibm-cos-sdk-java/issues/35>
+* COSSDK-77582: <https://github.com/IBM/ibm-cos-sdk-java/issues/34>
+* COSSDK-79125: <https://github.com/IBM/ibm-cos-sdk-java/issues/36>
+
 ## 2.9.0
 
 ### Content
