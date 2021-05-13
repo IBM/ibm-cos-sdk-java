@@ -28,6 +28,12 @@ import com.ibm.cloud.objectstorage.services.s3.model.GetObjectTaggingRequest;
 import com.ibm.cloud.objectstorage.services.s3.model.GetObjectTaggingResult;
 import com.ibm.cloud.objectstorage.services.s3.model.SetObjectTaggingRequest;
 import com.ibm.cloud.objectstorage.services.s3.model.SetObjectTaggingResult;
+import com.ibm.cloud.objectstorage.services.s3.model.SetPublicAccessBlockRequest;
+import com.ibm.cloud.objectstorage.services.s3.model.SetPublicAccessBlockResult;
+import com.ibm.cloud.objectstorage.services.s3.model.GetPublicAccessBlockRequest;
+import com.ibm.cloud.objectstorage.services.s3.model.GetPublicAccessBlockResult;
+import com.ibm.cloud.objectstorage.services.s3.model.DeletePublicAccessBlockRequest;
+import com.ibm.cloud.objectstorage.services.s3.model.DeletePublicAccessBlockResult;
 import com.ibm.cloud.objectstorage.services.s3.waiters.AmazonS3Waiters;
 import java.io.File;
 import java.io.InputStream;
@@ -3572,6 +3578,38 @@ public interface AmazonS3 extends S3DirectSpi {
     public void deleteBucketWebsiteConfiguration(DeleteBucketWebsiteConfigurationRequest deleteBucketWebsiteConfigurationRequest)
         throws SdkClientException, AmazonServiceException;
 
+    /**
+     * Creates or modifies the Public Access Block configuration for an Amazon S3 bucket.
+     *
+     * @param request The request object for setting the buckets Public Access Block configuration.
+     * @return A {@link SetPublicAccessBlockResult}.
+     * @throws AmazonServiceException
+     * @throws SdkClientException
+     * @see <a href="http://docs.aws.amazon.com/goto/WebAPI/s3-2006-03-01/SetPublicAccessBlock">AWS API Documentation</a>
+     */
+    SetPublicAccessBlockResult setPublicAccessBlock(SetPublicAccessBlockRequest request);
+
+    /**
+     * Retrieves the Public Access Block configuration for an Amazon S3 bucket.
+     *
+     * @param request The request object for getting the buckets Public Access Block configuration.
+     * @return A {@link GetPublicAccessBlockResult}.
+     * @throws AmazonServiceException
+     * @throws SdkClientException
+     * @see <a href="http://docs.aws.amazon.com/goto/WebAPI/s3-2006-03-01/GetPublicAccessBlock">AWS API Documentation</a>
+     */
+    GetPublicAccessBlockResult getPublicAccessBlock(GetPublicAccessBlockRequest request);
+
+    /**
+     * Removes the Public Access Block configuration for an Amazon S3 bucket.
+     *
+     * @param request The request object for deleting the buckets Public Access Block configuration.
+     * @return A {@link DeletePublicAccessBlockResult}.
+     * @throws AmazonServiceException
+     * @throws SdkClientException
+     * @see <a href="http://docs.aws.amazon.com/goto/WebAPI/s3-2006-03-01/DeletePublicAccessBlock">AWS API Documentation</a>
+     */
+    DeletePublicAccessBlockResult deletePublicAccessBlock(DeletePublicAccessBlockRequest request);
 
     /**
      * <p>

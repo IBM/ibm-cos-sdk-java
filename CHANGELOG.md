@@ -1,5 +1,15 @@
 # CHANGELOG
 
+## 2.10.0
+
+### Content
+
+#### Features
+
+* Block Public Anonymous Access
+* Object Versioning
+* IBM Cloud Security and Compliance Center Support
+
 ## 2.9.1
 
 ### Content

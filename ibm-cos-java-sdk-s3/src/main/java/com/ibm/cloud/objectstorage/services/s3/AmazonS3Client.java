@@ -209,6 +209,13 @@ import com.ibm.cloud.objectstorage.services.s3.model.SetBucketWebsiteConfigurati
 import com.ibm.cloud.objectstorage.services.s3.model.SetObjectAclRequest;
 import com.ibm.cloud.objectstorage.services.s3.model.SetObjectTaggingRequest;
 import com.ibm.cloud.objectstorage.services.s3.model.SetObjectTaggingResult;
+import com.ibm.cloud.objectstorage.services.s3.model.SetPublicAccessBlockRequest;
+import com.ibm.cloud.objectstorage.services.s3.model.SetPublicAccessBlockResult;
+import com.ibm.cloud.objectstorage.services.s3.model.PublicAccessBlockConfiguration;
+import com.ibm.cloud.objectstorage.services.s3.model.GetPublicAccessBlockRequest;
+import com.ibm.cloud.objectstorage.services.s3.model.GetPublicAccessBlockResult;
+import com.ibm.cloud.objectstorage.services.s3.model.DeletePublicAccessBlockRequest;
+import com.ibm.cloud.objectstorage.services.s3.model.DeletePublicAccessBlockResult;
 import com.ibm.cloud.objectstorage.services.s3.model.SetRequestPaymentConfigurationRequest;
 import com.ibm.cloud.objectstorage.services.s3.model.StorageClass;
 import com.ibm.cloud.objectstorage.services.s3.model.Tag;
@@ -218,6 +225,7 @@ import com.ibm.cloud.objectstorage.services.s3.model.UploadPartResult;
 import com.ibm.cloud.objectstorage.services.s3.model.VersionListing;
 import com.ibm.cloud.objectstorage.services.s3.model.transform.AclXmlFactory;
 import com.ibm.cloud.objectstorage.services.s3.model.transform.BucketConfigurationXmlFactory;
+import com.ibm.cloud.objectstorage.services.s3.model.transform.GetPublicAccessBlockStaxUnmarshaller;
 import com.ibm.cloud.objectstorage.services.s3.model.transform.HeadBucketResultHandler;
 import com.ibm.cloud.objectstorage.services.s3.model.transform.MultiObjectDeleteXmlFactory;
 import com.ibm.cloud.objectstorage.services.s3.model.transform.ObjectTaggingXmlFactory;
@@ -2615,6 +2623,64 @@ public class AmazonS3Client extends AmazonWebServiceClient implements AmazonS3 {
         invoke(request, voidResponseHandler, bucketName, null);
     }
 
+    @Override
+    public SetPublicAccessBlockResult setPublicAccessBlock(SetPublicAccessBlockRequest setPublicAccessBlockRequest) {
+        setPublicAccessBlockRequest = beforeClientExecution(setPublicAccessBlockRequest);
+        rejectNull(setPublicAccessBlockRequest, "The request object must be specified.");
+
+        String bucketName = setPublicAccessBlockRequest.getBucketName();
+        PublicAccessBlockConfiguration config = setPublicAccessBlockRequest.getPublicAccessBlockConfiguration();
+        rejectNull(bucketName,
+                "The bucket name parameter must be specified when setting public block configuration.");
+        rejectNull(config,
+                "The PublicAccessBlockConfiguration parameter must be specified when setting public block");
+
+
+        Request<SetPublicAccessBlockRequest> request = createRequest(bucketName, null, setPublicAccessBlockRequest, HttpMethodName.PUT);
+        request.addHandlerContext(HandlerContextKey.OPERATION_NAME, "PutPublicAccessBlock");
+        request.addParameter("publicAccessBlock", null);
+
+        byte[] bytes = bucketConfigurationXmlFactory.convertToXmlByteArray(config);
+        request.setContent(new ByteArrayInputStream(bytes));
+
+        return invoke(request, new Unmarshallers.SetPublicAccessBlockUnmarshaller(), bucketName, null);
+    }
+    
+    @Override
+    public GetPublicAccessBlockResult getPublicAccessBlock(GetPublicAccessBlockRequest getPublicAccessBlockRequest) {
+        getPublicAccessBlockRequest = beforeClientExecution(getPublicAccessBlockRequest);
+        rejectNull(getPublicAccessBlockRequest, "The request object must be specified.");
+
+        String bucketName = getPublicAccessBlockRequest.getBucketName();
+        rejectNull(bucketName,
+                   "The bucket name parameter must be specified when getting public block configuration.");
+
+
+        Request<GetPublicAccessBlockRequest> request = createRequest(bucketName, null, getPublicAccessBlockRequest, HttpMethodName.GET);
+        request.addHandlerContext(HandlerContextKey.OPERATION_NAME, "GetPublicAccessBlock");
+        request.addParameter("publicAccessBlock", null);
+
+
+        return invoke(request, GetPublicAccessBlockStaxUnmarshaller.getInstance(), bucketName, null);
+    }
+
+    @Override
+    public DeletePublicAccessBlockResult deletePublicAccessBlock(DeletePublicAccessBlockRequest deletePublicAccessBlockRequest) {
+        deletePublicAccessBlockRequest = beforeClientExecution(deletePublicAccessBlockRequest);
+        rejectNull(deletePublicAccessBlockRequest, "The request object must be specified.");
+
+        String bucketName = deletePublicAccessBlockRequest.getBucketName();
+        rejectNull(bucketName,
+                   "The bucket name parameter must be specified when deleting public block configuration.");
+
+
+        Request<DeletePublicAccessBlockRequest> request = createRequest(bucketName, null, deletePublicAccessBlockRequest, HttpMethodName.DELETE);
+        request.addHandlerContext(HandlerContextKey.OPERATION_NAME, "DeletePublicAccessBlock");
+        request.addParameter("publicAccessBlock", null);
+
+
+        return invoke(request, new Unmarshallers.DeletePublicAccessBlockUnmarshaller(), bucketName, null);
+    }
     @Override
     public URL generatePresignedUrl(String bucketName, String key, Date expiration)
             throws SdkClientException {

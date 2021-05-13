@@ -66,6 +66,9 @@ public class Bucket implements Serializable {
 
     /** The date this bucket was created */
     private Date creationDate = null;
+    
+    /** The template identifier applied at bucket creation */
+    private String creationTemplateId = null;
 
     /** locationConstraint associated with the bucket.*/
     private String locationConstraint = null;
@@ -194,5 +197,26 @@ public class Bucket implements Serializable {
     public void setLocationConstraint(String locationConstraint) {
         this.locationConstraint = locationConstraint;
     }
+      
+    /**
+     * Returns the creationTemplateId associated with the bucket.
+     * IBM COS returns this field only if a template was used.
+     * This will only have populated information when used in conjunction with
+     * the Extended Listing support to the COS S3 GET Service API
+     * 
+     * @return The templateId used on bucket creation
+     */
+    public String getCreationTemplateId() {
+        return creationTemplateId;
+    }
 
+    /** For internal use only: 
+     * set the bucket creationTemplateId from the api response 
+     * 
+     * @param creationTemplateId
+     *          The templateId used on bucket creation
+     */
+    public void setCreationTemplateId(String creationTemplateId) {
+        this.creationTemplateId = creationTemplateId;
+    }
 }

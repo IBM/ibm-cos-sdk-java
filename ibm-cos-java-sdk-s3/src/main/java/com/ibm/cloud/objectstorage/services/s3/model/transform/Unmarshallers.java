@@ -353,6 +353,22 @@ public class Unmarshallers {
         }
     }
 
+    public static final class SetPublicAccessBlockUnmarshaller
+        implements Unmarshaller<SetPublicAccessBlockResult, InputStream> {
+        public SetPublicAccessBlockResult unmarshall(InputStream in) {
+            // SetPublicAccessBlock has no output shape
+            return new SetPublicAccessBlockResult();
+        }
+    }
+
+    public static final class DeletePublicAccessBlockUnmarshaller
+        implements Unmarshaller<DeletePublicAccessBlockResult, InputStream> {
+        public DeletePublicAccessBlockResult unmarshall(InputStream in) {
+            // DeletePublicAccessBlock has no output shape
+            return new DeletePublicAccessBlockResult();
+        }
+    }
+
     /**
      * Unmarshaller for the GetBucketAnalyticsConfiguration XML response.
      */

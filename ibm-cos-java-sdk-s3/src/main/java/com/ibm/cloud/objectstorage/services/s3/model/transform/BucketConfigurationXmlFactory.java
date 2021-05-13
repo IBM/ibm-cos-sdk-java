@@ -39,6 +39,7 @@ import com.ibm.cloud.objectstorage.services.s3.model.Filter;
 import com.ibm.cloud.objectstorage.services.s3.model.FilterRule;
 import com.ibm.cloud.objectstorage.services.s3.model.LambdaConfiguration;
 import com.ibm.cloud.objectstorage.services.s3.model.NotificationConfiguration;
+import com.ibm.cloud.objectstorage.services.s3.model.PublicAccessBlockConfiguration;
 import com.ibm.cloud.objectstorage.services.s3.model.QueueConfiguration;
 import com.ibm.cloud.objectstorage.services.s3.model.RedirectRule;
 import com.ibm.cloud.objectstorage.services.s3.model.ReplicationDestinationConfig;
@@ -654,6 +655,19 @@ public class BucketConfigurationXmlFactory {
         predicate.accept(new LifecyclePredicateVisitorImpl(xml));
     }
 
+    public byte[] convertToXmlByteArray(PublicAccessBlockConfiguration config) {
+        XmlWriter xml = new XmlWriter();
+        xml.start("PublicAccessBlockConfiguration", "xmlns", Constants.XML_NAMESPACE);
+        addBooleanParameterIfNotNull(xml, "BlockPublicAcls", config.getBlockPublicAcls());
+        addBooleanParameterIfNotNull(xml, "IgnorePublicAcls", config.getIgnorePublicAcls());
+
+        // IBM COS does not support these flags.
+        // addBooleanParameterIfNotNull(xml, "BlockPublicPolicy", config.getBlockPublicPolicy());
+        // addBooleanParameterIfNotNull(xml, "RestrictPublicBuckets", config.getRestrictPublicBuckets());
+        xml.end();
+        return xml.getBytes();
+    }
+
     private class LifecyclePredicateVisitorImpl implements LifecyclePredicateVisitor {
         private final XmlWriter xml;
 
@@ -1165,6 +1179,12 @@ public class BucketConfigurationXmlFactory {
 
     private void writePrefix(XmlWriter xml, String prefix) {
         addParameterIfNotNull(xml, "Prefix", prefix);
+    }
+
+    private void addBooleanParameterIfNotNull(XmlWriter xml, String xmlTagName, Boolean value) {
+        if (value != null) {
+            xml.start(xmlTagName).value(value.toString()).end();
+        }
     }
 
     private void writeTag(XmlWriter xml, Tag tag) {
