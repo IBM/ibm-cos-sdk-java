@@ -1,15 +1,15 @@
-/* 
-* Copyright 2017 IBM Corp. All Rights Reserved. 
-* 
-* Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with 
-* the License. You may obtain a copy of the License at 
-* 
-* http://www.apache.org/licenses/LICENSE-2.0 
-* 
-* Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on 
-* an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the 
-* specific language governing permissions and limitations under the License. 
-*/ 
+/*
+* Copyright 2017 IBM Corp. All Rights Reserved.
+*
+* Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
+* the License. You may obtain a copy of the License at
+*
+* http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
+* an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
+* specific language governing permissions and limitations under the License.
+*/
 package com.ibm.cloud.objectstorage.oauth;
 
 import java.io.IOException;
@@ -62,6 +62,7 @@ public class DefaultTokenProvider implements TokenProvider {
 	private static final String ACCEPT = "application/json";
 
 	private static final String GRANT_TYPE = "urn:ibm:params:oauth:grant-type:apikey";
+	private static final String REFRESH_GRANT_TYPE = "refresh_token";
 	private static final String RESPONSE_TYPE = "cloud_iam";
 
 	private String apiKey;
@@ -75,7 +76,7 @@ public class DefaultTokenProvider implements TokenProvider {
 	/**
 	 * Default implmentation will use the apiKey to retrieve the Token from the
 	 * IAM Service
-	 * 
+	 *
 	 * @param apiKey
 	 *            The IBM apiKey
 	 */
@@ -84,9 +85,9 @@ public class DefaultTokenProvider implements TokenProvider {
 	}
 
 	/**
-	 * Over write the default IAM endpoint. This should only be done in a
+	 * Overwrite the default IAM endpoint. This should only be done in a
 	 * development or staging environment
-	 * 
+	 *
 	 * @param iamEndpoint
 	 *            The http endpoint to retrieve the token
 	 */
@@ -95,9 +96,9 @@ public class DefaultTokenProvider implements TokenProvider {
 	}
 
 	/**
-	 * Apply http Settings when available to match those set on the s3Client. 
+	 * Apply http Settings when available to match those set on the s3Client.
 	 * This is needed for proxy host & port config
-	 * 
+	 *
 	 * @param httpClientSettings
 	 */
 	public void setHttpClientSettings(HttpClientSettings httpClientSettings) {
@@ -109,11 +110,29 @@ public class DefaultTokenProvider implements TokenProvider {
 	 */
 	@Override
 	public Token retrieveToken() {
-
 		log.debug("DefaultTokenProvider retrieveToken()");
+		return retrieveTokenHelper(null);
+	}
+
+	/**
+	 * Retrieve a token using the refresh token instead of the IBM apiKey
+	 */
+	public Token retrieveTokenWithRefresh(String refreshToken) {
+		log.debug("DefaultTokenProvider retrieveTokenWithRefresh()");
+		return retrieveTokenHelper(refreshToken);
+	}
+
+	/**
+	 * Helper function for retrieving a new token
+	 *
+	 * @param refreshToken
+	 *        Use the passed refresh token instead of the apiKey
+	 *        If null, the apiKey will be used
+	 */
+	private Token retrieveTokenHelper(String refreshToken) {
+		log.debug("DefaultTokenProvider retrieveTokenHelper()");
 
 		try {
-
 			SSLContext sslContext;
 			/*
 			 * If SSL cert checking for endpoints has been explicitly disabled,
@@ -132,7 +151,7 @@ public class DefaultTokenProvider implements TokenProvider {
 
 			SSLConnectionSocketFactory sslsf = new SdkTLSSocketFactory(sslContext, new DefaultHostnameVerifier());
 
-			HttpClientBuilder builder = HttpClientBuilder.create();	
+			HttpClientBuilder builder = HttpClientBuilder.create();
 			if (httpClientSettings != null){
 				DefaultTokenManager.addProxyConfig(builder, httpClientSettings);
 			}
@@ -145,9 +164,14 @@ public class DefaultTokenProvider implements TokenProvider {
 			post.setHeader("Accept", ACCEPT);
 
 			List<NameValuePair> urlParameters = new ArrayList<NameValuePair>();
-			urlParameters.add(new BasicNameValuePair("grant_type", GRANT_TYPE));
 			urlParameters.add(new BasicNameValuePair("response_type", RESPONSE_TYPE));
-			urlParameters.add(new BasicNameValuePair("apikey", apiKey));
+			if (refreshToken != null) {
+				urlParameters.add(new BasicNameValuePair("grant_type", REFRESH_GRANT_TYPE));
+				urlParameters.add(new BasicNameValuePair("refresh_token", refreshToken));
+			} else {
+				urlParameters.add(new BasicNameValuePair("grant_type", GRANT_TYPE));
+				urlParameters.add(new BasicNameValuePair("apikey", apiKey));
+			}
 
 			post.setEntity(new UrlEncodedFormEntity(urlParameters));
 
@@ -170,21 +194,31 @@ public class DefaultTokenProvider implements TokenProvider {
 
 			final Token token = mapper.readValue(resultStr, Token.class);
 
+			if (token == null) {
+				throw new OAuthServiceException("Parsing this response mapped to a null Token object with no exceptions thrown: " + response);
+			}
+
 			return token;
 
 		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
+			OAuthServiceException exception = new OAuthServiceException("Received " + e.toString() + " retrieving IAM token (" + e.getCause() + ")");
+			exception.setStatusMessage(e.toString());
+			throw exception;
 		} catch (ClientProtocolException e) {
-			e.printStackTrace();
+			OAuthServiceException exception = new OAuthServiceException("Received " + e.toString() + " retrieving IAM token (" + e.getCause() + ")");
+			throw exception;
 		} catch (IOException e) {
-			e.printStackTrace();
+			OAuthServiceException exception = new OAuthServiceException("Received " + e.toString() + " retrieving IAM token (" + e.getCause() + ")");
+			exception.setStatusMessage(e.toString());
+			throw exception;
 		} catch (NoSuchAlgorithmException e) {
-			e.printStackTrace();
+			OAuthServiceException exception = new OAuthServiceException("Received " + e.toString() + " retrieving IAM token (" + e.getCause() + ")");
+			exception.setStatusMessage(e.toString());
+			throw exception;
 		} catch (KeyManagementException e) {
-			e.printStackTrace();
+			OAuthServiceException exception = new OAuthServiceException("Received " + e.toString() + " retrieving IAM token (" + e.getCause() + ")");
+			exception.setStatusMessage(e.toString());
+			throw exception;
 		}
-
-		return null;
-
 	}
 }

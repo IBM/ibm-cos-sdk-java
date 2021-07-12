@@ -1,5 +1,14 @@
 # CHANGELOG
 
+## 2.10.1
+
+### Content
+
+#### Defect Fixes
+
+* COSSDK-81794: <https://github.com/IBM/ibm-cos-sdk-java/issues/38>
+* Enhancements and logging improvements around IAM token retrieval
+
 ## 2.10.0
 
 ### Content
@@ -160,7 +169,7 @@
 
 #### Defect Fixes
 
-* COSSDK-47973 <https://github.com/IBM/ibm-cos-sdk-java/issues/12>
+* COSSDK-47973: <https://github.com/IBM/ibm-cos-sdk-java/issues/12>
 * AWS Patches aligned to version 1.11.467 of the AWS Java SDK
 
 ## 2.4.1
@@ -217,7 +226,7 @@
 
 #### Defect Fixes
 
-* 38356: null Token causes NPE
+* COSSDK-38356: <https://github.com/IBM/ibm-cos-sdk-java/issues/10>
 * Bug fixes
 
 ## 2.1.2
@@ -226,7 +235,7 @@
 
 #### Defect Fixes
 
-* 38813: Bug fixes
+* Security update
 
 ## 2.1.1
 

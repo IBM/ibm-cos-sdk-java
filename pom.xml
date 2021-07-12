@@ -4,7 +4,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.ibm.cos</groupId>
   <artifactId>ibm-cos-java-sdk-pom</artifactId>
-  <version>2.10.0</version>
+  <version>2.10.1</version>
   <packaging>pom</packaging>
   <name>IBM COS SDK for Java</name>
   <description>The IBM COS Web Services SDK for Java provides Java APIs
@@ -18,10 +18,9 @@
   </licenses>
   <developers>
     <developer>
-      <name>Robert Veitch</name>
-      <email>rveitch@us.ibm.com</email>
-      <organization>IBM</organization>
-      <organizationUrl>http://www.ibm.com</organizationUrl>
+      <name>IBM</name>
+      <email></email>
+      <url>https://www.ibm.com/cloud/</url>
     </developer>
   </developers>
   <scm>
@@ -63,6 +62,7 @@
       <jre.version>1.6</jre.version>
       <commons.logging.version>1.1.3</commons.logging.version>
       <httpcomponents.httpclient.version>4.5.13</httpcomponents.httpclient.version>
+      <commons.codec.version>1.15</commons.codec.version>
       <powermockmodule.version>1.7.4</powermockmodule.version>
       <powermockmockito.version>1.7.4</powermockmockito.version>
       <aspera.version>0.1.163682</aspera.version>
