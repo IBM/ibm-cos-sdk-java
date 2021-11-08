@@ -1,5 +1,5 @@
 /*
- * Copyright 2016-2017 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2016-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -14,6 +14,9 @@
  */
 package com.ibm.cloud.objectstorage.http.apache.client.impl;
 
+import com.ibm.cloud.objectstorage.util.CRC32ChecksumCalculatingInputStream;
+import com.ibm.cloud.objectstorage.util.IOUtils;
+
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpException;
@@ -21,9 +24,6 @@ import org.apache.http.HttpResponse;
 import org.apache.http.HttpResponseInterceptor;
 import org.apache.http.entity.HttpEntityWrapper;
 import org.apache.http.protocol.HttpContext;
-
-import com.ibm.cloud.objectstorage.util.CRC32ChecksumCalculatingInputStream;
-import com.ibm.cloud.objectstorage.util.IOUtils;
 
 import java.io.IOException;
 import java.io.InputStream;

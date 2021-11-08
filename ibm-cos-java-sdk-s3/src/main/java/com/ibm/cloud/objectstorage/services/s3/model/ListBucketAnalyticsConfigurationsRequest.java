@@ -1,5 +1,5 @@
 /*
- * Copyright 2011-2017 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2011-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,9 +14,9 @@
  */
 package com.ibm.cloud.objectstorage.services.s3.model;
 
-import java.io.Serializable;
-
 import com.ibm.cloud.objectstorage.AmazonWebServiceRequest;
+
+import java.io.Serializable;
 
 /**
  * Request object to list the analytics configurations of a bucket.

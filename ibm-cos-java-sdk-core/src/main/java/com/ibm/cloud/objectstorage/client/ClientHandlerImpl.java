@@ -1,5 +1,5 @@
 /*
- * Copyright 2011-2017 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2011-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -13,9 +13,6 @@
  * permissions and limitations under the License.
  */
 package com.ibm.cloud.objectstorage.client;
-
-import java.net.URI;
-import java.util.List;
 
 import com.ibm.cloud.objectstorage.AmazonWebServiceRequest;
 import com.ibm.cloud.objectstorage.Request;
@@ -35,6 +32,9 @@ import com.ibm.cloud.objectstorage.metrics.AwsSdkMetrics;
 import com.ibm.cloud.objectstorage.metrics.RequestMetricCollector;
 import com.ibm.cloud.objectstorage.util.AWSRequestMetrics;
 import com.ibm.cloud.objectstorage.util.CredentialUtils;
+
+import java.net.URI;
+import java.util.List;
 
 /**
  * Default implementation of {@link ClientHandler}.

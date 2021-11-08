@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2017 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2014-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"). You may not use this file except in compliance with
  * the License. A copy of the License is located at
@@ -16,8 +16,8 @@ import javax.annotation.Generated;
 
 /**
  * <p>
- * The request was rejected because the provided key material is invalid or is not the same key material that was
- * previously imported into this customer master key (CMK).
+ * The request was rejected because the key material in the request is, expired, invalid, or is not the same key
+ * material that was previously imported into this customer master key (CMK).
  * </p>
  */
 @Generated("com.amazonaws:aws-java-sdk-code-generator")

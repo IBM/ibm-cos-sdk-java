@@ -1,5 +1,5 @@
 /*
- * Copyright 2011-2017 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2011-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,7 +22,6 @@ import java.io.IOException;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import com.ibm.cloud.objectstorage.auth.ContainerCredentialsRetryPolicy;
 import com.ibm.cloud.objectstorage.retry.internal.CredentialsEndpointRetryParameters;
 
 public class ContainerCredentialsRetryPolicyTest {

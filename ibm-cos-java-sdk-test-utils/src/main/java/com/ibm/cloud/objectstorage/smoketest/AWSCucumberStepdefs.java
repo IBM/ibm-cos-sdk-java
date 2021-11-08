@@ -1,5 +1,5 @@
 /*
- * Copyright 2011-2017 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2011-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,11 +25,11 @@ import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.Map;
 
-import com.google.inject.Inject;
 import com.ibm.cloud.objectstorage.AmazonServiceException;
 import com.ibm.cloud.objectstorage.AmazonWebServiceClient;
 import com.ibm.cloud.objectstorage.regions.RegionUtils;
 import com.ibm.cloud.objectstorage.util.Classes;
+import com.google.inject.Inject;
 
 import cucumber.api.java.en.And;
 import cucumber.api.java.en.Then;

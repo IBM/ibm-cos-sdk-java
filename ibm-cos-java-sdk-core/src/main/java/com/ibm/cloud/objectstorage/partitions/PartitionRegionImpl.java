@@ -1,5 +1,5 @@
 /*
- * Copyright 2016-2017 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2016-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -14,6 +14,12 @@
  */
 package com.ibm.cloud.objectstorage.partitions;
 
+import com.ibm.cloud.objectstorage.partitions.model.Endpoint;
+import com.ibm.cloud.objectstorage.partitions.model.Partition;
+import com.ibm.cloud.objectstorage.partitions.model.Service;
+import com.ibm.cloud.objectstorage.regions.RegionImpl;
+import com.ibm.cloud.objectstorage.util.ValidationUtils;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -21,12 +27,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-
-import com.ibm.cloud.objectstorage.partitions.model.Endpoint;
-import com.ibm.cloud.objectstorage.partitions.model.Partition;
-import com.ibm.cloud.objectstorage.partitions.model.Service;
-import com.ibm.cloud.objectstorage.regions.RegionImpl;
-import com.ibm.cloud.objectstorage.util.ValidationUtils;
 
 /**
  * A region implementation backed by the partition.

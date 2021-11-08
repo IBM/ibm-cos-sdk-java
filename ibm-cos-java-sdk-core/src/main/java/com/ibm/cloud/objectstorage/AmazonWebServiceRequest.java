@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2017 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2010-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -14,12 +14,6 @@
  */
 package com.ibm.cloud.objectstorage;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-
 import com.ibm.cloud.objectstorage.annotation.NotThreadSafe;
 import com.ibm.cloud.objectstorage.annotation.SdkInternalApi;
 import com.ibm.cloud.objectstorage.auth.AWSCredentials;
@@ -28,6 +22,11 @@ import com.ibm.cloud.objectstorage.event.ProgressListener;
 import com.ibm.cloud.objectstorage.handlers.HandlerContextKey;
 import com.ibm.cloud.objectstorage.internal.StaticCredentialsProvider;
 import com.ibm.cloud.objectstorage.metrics.RequestMetricCollector;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Base class for all user facing web service requests.
@@ -134,6 +133,22 @@ public abstract class AmazonWebServiceRequest implements Cloneable, ReadLimitInf
      */
     public AWSCredentialsProvider getRequestCredentialsProvider() {
         return credentialsProvider;
+    }
+
+    /**
+     * Sets the optional credentials provider to use for this request, overriding the default credentials
+     * provider at the client level.
+     *
+     * @param credentialsProvider
+     *            The optional AWS security credentials provider to use for this request, overriding the
+     *            default credentials provider at the client level.
+     * @return A reference to this updated object so that method calls can be chained together.
+     */
+    public <T extends AmazonWebServiceRequest> T withRequestCredentialsProvider(final AWSCredentialsProvider credentialsProvider) {
+        setRequestCredentialsProvider(credentialsProvider);
+        @SuppressWarnings("unchecked")
+        T t = (T) this;
+        return t;
     }
 
     /**

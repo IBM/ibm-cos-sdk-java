@@ -1,5 +1,5 @@
 /*
- * Copyright 2011-2017 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2011-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -14,11 +14,11 @@
  */
 package com.ibm.cloud.objectstorage.profile.path.config;
 
-import java.io.File;
-
 import com.ibm.cloud.objectstorage.SDKGlobalConfiguration;
 import com.ibm.cloud.objectstorage.annotation.SdkInternalApi;
 import com.ibm.cloud.objectstorage.profile.path.AwsProfileFileLocationProvider;
+
+import java.io.File;
 
 /**
  * If the {@value SDKGlobalConfiguration#AWS_CONFIG_FILE_ENV_VAR} environment variable is set then we source

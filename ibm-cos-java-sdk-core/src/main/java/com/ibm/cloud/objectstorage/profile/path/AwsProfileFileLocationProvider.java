@@ -1,5 +1,5 @@
 /*
- * Copyright 2011-2017 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2011-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -14,14 +14,14 @@
  */
 package com.ibm.cloud.objectstorage.profile.path;
 
-import java.io.File;
-
 import com.ibm.cloud.objectstorage.annotation.SdkInternalApi;
-import com.ibm.cloud.objectstorage.profile.path.config.ConfigEnvVarOverrideLocationProvider;
 import com.ibm.cloud.objectstorage.profile.path.config.SharedConfigDefaultLocationProvider;
+import com.ibm.cloud.objectstorage.profile.path.config.ConfigEnvVarOverrideLocationProvider;
 import com.ibm.cloud.objectstorage.profile.path.cred.CredentialsDefaultLocationProvider;
 import com.ibm.cloud.objectstorage.profile.path.cred.CredentialsEnvVarOverrideLocationProvider;
 import com.ibm.cloud.objectstorage.profile.path.cred.CredentialsLegacyConfigLocationProvider;
+
+import java.io.File;
 import com.ibm.cloud.objectstorage.profile.path.cred.IBMJsonCredentialsDefaultLocationProvider;
 import com.ibm.cloud.objectstorage.profile.path.cred.IBMJsonCredentialsEnvVarOverrideLocationProvider;
 
@@ -54,7 +54,7 @@ public interface AwsProfileFileLocationProvider {
      */
     AwsProfileFileLocationProvider IBM_CREDENTIALS_LOCATION_PROVIDER = new AwsProfileFileLocationProviderChain(
             new IBMJsonCredentialsEnvVarOverrideLocationProvider(), new IBMJsonCredentialsDefaultLocationProvider());
-    
+
     /**
      * @return Location of file containing profile data. Null if implementation cannot provide the
      * location.

@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2017 Amazon.com, Inc. or its affiliates. All Rights
+ * Copyright 2015-2019 Amazon.com, Inc. or its affiliates. All Rights
  * Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
@@ -18,10 +18,6 @@
  */
 package com.ibm.cloud.objectstorage.util;
 
-import org.hamcrest.Matchers;
-import org.junit.Assert;
-import org.junit.Test;
-
 import com.ibm.cloud.objectstorage.AmazonWebServiceRequest;
 import com.ibm.cloud.objectstorage.RequestConfig;
 import com.ibm.cloud.objectstorage.auth.AWSCredentials;
@@ -29,7 +25,10 @@ import com.ibm.cloud.objectstorage.auth.AWSCredentialsProvider;
 import com.ibm.cloud.objectstorage.auth.BasicAWSCredentials;
 import com.ibm.cloud.objectstorage.auth.DefaultAWSCredentialsProviderChain;
 import com.ibm.cloud.objectstorage.internal.StaticCredentialsProvider;
-import com.ibm.cloud.objectstorage.util.CredentialUtils;
+
+import org.hamcrest.Matchers;
+import org.junit.Assert;
+import org.junit.Test;
 
 import utils.model.EmptyAmazonWebServiceRequest;
 

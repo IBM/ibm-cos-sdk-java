@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2017 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2010-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -50,15 +50,15 @@ public class S3ObjectResponseHandler extends AbstractS3ResponseHandler<S3Object>
         if (response.getHeaders().get(Headers.S3_TAGGING_COUNT) != null) {
             object.setTaggingCount(Integer.parseInt(response.getHeaders().get(Headers.S3_TAGGING_COUNT)));
         }
-        
+
         if (response.getHeaders().get(Headers.RETENTION_EXPIRATION_DATE) != null) {
             object.setRetentionExpirationDate(ServiceUtils.parseRfc822Date(response.getHeaders().get(Headers.RETENTION_EXPIRATION_DATE)));
         }
-        
+
         if (response.getHeaders().get(Headers.RETENTION_LEGAL_HOLD_COUNT) != null) {
             object.setRetentionLegalHoldCount(Integer.parseInt(response.getHeaders().get(Headers.RETENTION_LEGAL_HOLD_COUNT)));
         }
-        
+
         if (response.getHeaders().get(Headers.RETENTION_PERIOD) != null) {
             object.setRetentionPeriod(Long.parseLong(response.getHeaders().get(Headers.RETENTION_PERIOD)));
         }
@@ -66,14 +66,10 @@ public class S3ObjectResponseHandler extends AbstractS3ResponseHandler<S3Object>
         ObjectMetadata metadata = object.getObjectMetadata();
         populateObjectMetadata(response, metadata);
 
-        object.setObjectContent(new S3ObjectInputStream(abortableIs(response), response.getHttpRequest()));
+        object.setObjectContent(new S3ObjectInputStream(response.getContent(), response.getHttpRequest()));
 
         awsResponse.setResult(object);
         return awsResponse;
-    }
-
-    private S3AbortableInputStream abortableIs(HttpResponse response) {
-        return new S3AbortableInputStream(response.getContent(), response.getHttpRequest(), getContentLength(response));
     }
 
     /**

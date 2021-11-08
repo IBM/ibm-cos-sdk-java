@@ -1,5 +1,5 @@
 /*
- * Copyright 2011-2017 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2011-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -14,12 +14,10 @@
  */
 package com.ibm.cloud.objectstorage.retry.v2;
 
-import org.junit.Test;
-
 import com.ibm.cloud.objectstorage.SdkBaseException;
 import com.ibm.cloud.objectstorage.SdkClientException;
-import com.ibm.cloud.objectstorage.retry.v2.RetryCondition;
-import com.ibm.cloud.objectstorage.retry.v2.RetryOnExceptionsCondition;
+
+import org.junit.Test;
 
 import java.net.ConnectException;
 import java.net.SocketTimeoutException;

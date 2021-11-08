@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2017 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2013-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -13,33 +13,6 @@
  * permissions and limitations under the License.
  */
 package com.ibm.cloud.objectstorage.auth;
-
-import static com.ibm.cloud.objectstorage.auth.internal.SignerConstants.AUTHORIZATION;
-import static com.ibm.cloud.objectstorage.auth.internal.SignerConstants.AWS4_SIGNING_ALGORITHM;
-import static com.ibm.cloud.objectstorage.auth.internal.SignerConstants.AWS4_TERMINATOR;
-import static com.ibm.cloud.objectstorage.auth.internal.SignerConstants.HOST;
-import static com.ibm.cloud.objectstorage.auth.internal.SignerConstants.LINE_SEPARATOR;
-import static com.ibm.cloud.objectstorage.auth.internal.SignerConstants.PRESIGN_URL_MAX_EXPIRATION_SECONDS;
-import static com.ibm.cloud.objectstorage.auth.internal.SignerConstants.X_AMZ_ALGORITHM;
-import static com.ibm.cloud.objectstorage.auth.internal.SignerConstants.X_AMZ_CONTENT_SHA256;
-import static com.ibm.cloud.objectstorage.auth.internal.SignerConstants.X_AMZ_CREDENTIAL;
-import static com.ibm.cloud.objectstorage.auth.internal.SignerConstants.X_AMZ_DATE;
-import static com.ibm.cloud.objectstorage.auth.internal.SignerConstants.X_AMZ_EXPIRES;
-import static com.ibm.cloud.objectstorage.auth.internal.SignerConstants.X_AMZ_SECURITY_TOKEN;
-import static com.ibm.cloud.objectstorage.auth.internal.SignerConstants.X_AMZ_SIGNATURE;
-import static com.ibm.cloud.objectstorage.auth.internal.SignerConstants.X_AMZ_SIGNED_HEADER;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URI;
-import java.nio.charset.Charset;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.TimeUnit;
 
 import com.ibm.cloud.objectstorage.ReadLimitInfo;
 import com.ibm.cloud.objectstorage.SdkClientException;
@@ -55,6 +28,33 @@ import com.ibm.cloud.objectstorage.util.BinaryUtils;
 import com.ibm.cloud.objectstorage.util.DateUtils;
 import com.ibm.cloud.objectstorage.util.SdkHttpUtils;
 import com.ibm.cloud.objectstorage.util.StringUtils;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URI;
+import java.nio.charset.Charset;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.TimeUnit;
+
+import static com.ibm.cloud.objectstorage.auth.internal.SignerConstants.AUTHORIZATION;
+import static com.ibm.cloud.objectstorage.auth.internal.SignerConstants.AWS4_SIGNING_ALGORITHM;
+import static com.ibm.cloud.objectstorage.auth.internal.SignerConstants.AWS4_TERMINATOR;
+import static com.ibm.cloud.objectstorage.auth.internal.SignerConstants.HOST;
+import static com.ibm.cloud.objectstorage.auth.internal.SignerConstants.LINE_SEPARATOR;
+import static com.ibm.cloud.objectstorage.auth.internal.SignerConstants.PRESIGN_URL_MAX_EXPIRATION_SECONDS;
+import static com.ibm.cloud.objectstorage.auth.internal.SignerConstants.X_AMZ_ALGORITHM;
+import static com.ibm.cloud.objectstorage.auth.internal.SignerConstants.X_AMZ_CONTENT_SHA256;
+import static com.ibm.cloud.objectstorage.auth.internal.SignerConstants.X_AMZ_CREDENTIAL;
+import static com.ibm.cloud.objectstorage.auth.internal.SignerConstants.X_AMZ_DATE;
+import static com.ibm.cloud.objectstorage.auth.internal.SignerConstants.X_AMZ_EXPIRES;
+import static com.ibm.cloud.objectstorage.auth.internal.SignerConstants.X_AMZ_SECURITY_TOKEN;
+import static com.ibm.cloud.objectstorage.auth.internal.SignerConstants.X_AMZ_SIGNATURE;
+import static com.ibm.cloud.objectstorage.auth.internal.SignerConstants.X_AMZ_SIGNED_HEADER;
 
 /**
  * Signer implementation that signs requests with the AWS4 signing protocol.
@@ -316,7 +316,7 @@ public class AWS4Signer extends AbstractAWSSigner implements
         final String canonicalRequest = canonicalRequestBuilder.toString();
 
         if (log.isDebugEnabled())
-            log.debug("AWS4 Canonical Requests: '\"" + canonicalRequest + "\"");
+            log.debug("AWS4 Canonical Request: '\"" + canonicalRequest + "\"");
 
         return canonicalRequest;
     }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2017 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2013-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -14,15 +14,15 @@
  */
 package com.ibm.cloud.objectstorage.regions;
 
+import com.ibm.cloud.objectstorage.SdkClientException;
+import com.ibm.cloud.objectstorage.ClientConfiguration;
+import com.ibm.cloud.objectstorage.util.SdkHttpUtils;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 import java.util.List;
-
-import com.ibm.cloud.objectstorage.ClientConfiguration;
-import com.ibm.cloud.objectstorage.SdkClientException;
-import com.ibm.cloud.objectstorage.util.SdkHttpUtils;
 
 /**
  * Utilities for working with regions.
@@ -99,8 +99,8 @@ public class RegionUtils {
     }
 
     /**
-     * Returns the region with the id given, if it exists. Otherwise, returns
-     * null.
+     * Returns the region with the given regionName and proper partition if found in region metadata.
+     * Otherwise, returns a {@link Region} object with given regionName and aws partition.
      */
     public static Region getRegion(String regionName) {
         String urlEncodedRegionName = regionName == null ? null : SdkHttpUtils.urlEncode(regionName, false);

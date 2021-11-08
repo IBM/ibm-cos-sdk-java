@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2017 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2010-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -14,14 +14,28 @@
  */
 package com.ibm.cloud.objectstorage.services.s3.model.transform;
 
-import java.io.InputStream;
-import java.util.List;
-
 import com.ibm.cloud.objectstorage.services.s3.internal.DeleteObjectsResponse;
 import com.ibm.cloud.objectstorage.services.s3.model.*;
+import com.ibm.cloud.objectstorage.services.s3.model.AccessControlList;
+import com.ibm.cloud.objectstorage.services.s3.model.Bucket;
+import com.ibm.cloud.objectstorage.services.s3.model.BucketLifecycleConfiguration;
+import com.ibm.cloud.objectstorage.services.s3.model.BucketWebsiteConfiguration;
+import com.ibm.cloud.objectstorage.services.s3.model.DeleteObjectTaggingResult;
+import com.ibm.cloud.objectstorage.services.s3.model.DeletePublicAccessBlockResult;
+import com.ibm.cloud.objectstorage.services.s3.model.GetObjectTaggingResult;
+import com.ibm.cloud.objectstorage.services.s3.model.InitiateMultipartUploadResult;
+import com.ibm.cloud.objectstorage.services.s3.model.ListObjectsV2Result;
+import com.ibm.cloud.objectstorage.services.s3.model.MultipartUploadListing;
+import com.ibm.cloud.objectstorage.services.s3.model.ObjectListing;
+import com.ibm.cloud.objectstorage.services.s3.model.PartListing;
+import com.ibm.cloud.objectstorage.services.s3.model.SetObjectTaggingResult;
+import com.ibm.cloud.objectstorage.services.s3.model.SetPublicAccessBlockResult;
+import com.ibm.cloud.objectstorage.services.s3.model.VersionListing;
 import com.ibm.cloud.objectstorage.services.s3.model.transform.XmlResponsesSaxParser.CompleteMultipartUploadHandler;
 import com.ibm.cloud.objectstorage.services.s3.model.transform.XmlResponsesSaxParser.CopyObjectResultHandler;
 import com.ibm.cloud.objectstorage.transform.Unmarshaller;
+import java.io.InputStream;
+import java.util.List;
 
 /**
  * Collection of unmarshallers for S3 XML responses.
@@ -38,15 +52,14 @@ public class Unmarshallers {
                     .parseListMyBucketsResponse(in).getBuckets();
         }
     }
-    
+
     /**
      * Unmarshaller for the ListBucketsExtended XML response.
      */
     public static final class ListBucketsExtendedUnmarshaller implements
             Unmarshaller<ListBucketsExtendedResponse, InputStream> {
         public ListBucketsExtendedResponse unmarshall(InputStream in) throws Exception {
-            return new XmlResponsesSaxParser()
-                    .parseListMyBucketsExtendedResponse(in).getListBucketsExtendedResponse();
+            return new XmlResponsesSaxParser().parseListMyBucketsExtendedResponse(in).getListBucketsExtendedResponse();
         }
     }
 
@@ -133,8 +146,7 @@ public class Unmarshallers {
     public static final class FASPConnectionInfoUnmarshaller implements
             Unmarshaller<FASPConnectionInfo, InputStream> {
         public FASPConnectionInfo unmarshall(InputStream in) throws Exception {
-            return new XmlResponsesSaxParser()
-                    .parseFASPConnectionInfoResponse(in).getFASPConnectionInfo();
+            return new XmlResponsesSaxParser().parseFASPConnectionInfoResponse(in).getFASPConnectionInfo();
         }
     }
 
@@ -223,6 +235,22 @@ public class Unmarshallers {
         }
     }
 
+    public static final class SetPublicAccessBlockUnmarshaller
+        implements Unmarshaller<SetPublicAccessBlockResult, InputStream> {
+        public SetPublicAccessBlockResult unmarshall(InputStream in) {
+            // SetPublicAccessBlock has no output shape
+            return new SetPublicAccessBlockResult();
+        }
+    }
+
+    public static final class DeletePublicAccessBlockUnmarshaller
+        implements Unmarshaller<DeletePublicAccessBlockResult, InputStream> {
+        public DeletePublicAccessBlockResult unmarshall(InputStream in) {
+            // DeletePublicAccessBlock has no output shape
+            return new DeletePublicAccessBlockResult();
+        }
+    }
+
     /**
      * Unmarshaller for the a direct InputStream response.
      */
@@ -297,25 +325,25 @@ public class Unmarshallers {
             return new XmlResponsesSaxParser().parseBucketCrossOriginConfigurationResponse(in).getConfiguration();
         }
     }
-    
+
     /**
      * Unmarshaller for the BucketProtectionConfiguration XML response.
      */
     public static final class BucketProtectionConfigurationUnmarshaller implements
-	    Unmarshaller<BucketProtectionConfiguration, InputStream> {
-	    public BucketProtectionConfiguration unmarshall(InputStream in) throws Exception {
-	        return new XmlResponsesSaxParser().parseBucketProtectionConfigurationResponse(in).getConfiguration();
-	    }
+        Unmarshaller<BucketProtectionConfiguration, InputStream> {
+        public BucketProtectionConfiguration unmarshall(InputStream in) throws Exception {
+            return new XmlResponsesSaxParser().parseBucketProtectionConfigurationResponse(in).getConfiguration();
+        }
     }
     
     /**
      * Unmarshaller for the ListLegalHolds XML response.
      */
     public static final class ListLegalHoldsRequestUnmarshaller implements
-    	Unmarshaller<ListLegalHoldsResult, InputStream> {
-    	public ListLegalHoldsResult unmarshall(InputStream in) throws Exception {
-    		return new XmlResponsesSaxParser().parseListLegalHoldsResponse(in).getlegalHolds();
-    	}
+        Unmarshaller<ListLegalHoldsResult, InputStream> {
+        public ListLegalHoldsResult unmarshall(InputStream in) throws Exception {
+            return new XmlResponsesSaxParser().parseListLegalHoldsResponse(in).getlegalHolds();
+        }
     }
 
     /**
@@ -350,22 +378,6 @@ public class Unmarshallers {
         @Override
         public DeleteObjectTaggingResult unmarshall(InputStream in) throws Exception {
             return new DeleteObjectTaggingResult();
-        }
-    }
-
-    public static final class SetPublicAccessBlockUnmarshaller
-        implements Unmarshaller<SetPublicAccessBlockResult, InputStream> {
-        public SetPublicAccessBlockResult unmarshall(InputStream in) {
-            // SetPublicAccessBlock has no output shape
-            return new SetPublicAccessBlockResult();
-        }
-    }
-
-    public static final class DeletePublicAccessBlockUnmarshaller
-        implements Unmarshaller<DeletePublicAccessBlockResult, InputStream> {
-        public DeletePublicAccessBlockResult unmarshall(InputStream in) {
-            // DeletePublicAccessBlock has no output shape
-            return new DeletePublicAccessBlockResult();
         }
     }
 

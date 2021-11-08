@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2017 Amazon.com, Inc. or its affiliates. All Rights
+ * Copyright 2015-2019 Amazon.com, Inc. or its affiliates. All Rights
  * Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
@@ -21,7 +21,6 @@ package com.ibm.cloud.objectstorage.http;
 import org.junit.After;
 import org.junit.Before;
 
-import com.ibm.cloud.objectstorage.http.HttpMethodName;
 import com.ibm.cloud.objectstorage.http.request.EmptyHttpRequest;
 import com.ibm.cloud.objectstorage.http.server.MockServer;
 

@@ -14,6 +14,17 @@
  */
 package com.ibm.cloud.objectstorage.http.apache.client.impl;
 
+import com.ibm.cloud.objectstorage.SDKGlobalConfiguration;
+import com.ibm.cloud.objectstorage.http.AmazonHttpClient;
+import com.ibm.cloud.objectstorage.http.DelegatingDnsResolver;
+import com.ibm.cloud.objectstorage.http.SystemPropertyTlsKeyManagersProvider;
+import com.ibm.cloud.objectstorage.http.TlsKeyManagersProvider;
+import com.ibm.cloud.objectstorage.http.client.ConnectionManagerFactory;
+import com.ibm.cloud.objectstorage.http.conn.SdkPlainSocketFactory;
+import com.ibm.cloud.objectstorage.http.conn.ssl.SdkTLSSocketFactory;
+import com.ibm.cloud.objectstorage.http.settings.HttpClientSettings;
+import com.ibm.cloud.objectstorage.internal.SdkSSLContext;
+import javax.net.ssl.KeyManager;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpHost;
@@ -24,31 +35,16 @@ import org.apache.http.config.SocketConfig;
 import org.apache.http.conn.HttpClientConnectionManager;
 import org.apache.http.conn.socket.ConnectionSocketFactory;
 import org.apache.http.conn.socket.LayeredConnectionSocketFactory;
-import org.apache.http.conn.socket.PlainConnectionSocketFactory;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.impl.conn.DefaultSchemePortResolver;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 import org.apache.http.protocol.HttpContext;
 
-import com.ibm.cloud.objectstorage.SDKGlobalConfiguration;
-import com.ibm.cloud.objectstorage.http.AmazonHttpClient;
-import com.ibm.cloud.objectstorage.http.DelegatingDnsResolver;
-import com.ibm.cloud.objectstorage.http.SystemPropertyTlsKeyManagersProvider;
-import com.ibm.cloud.objectstorage.http.TlsKeyManagersProvider;
-import com.ibm.cloud.objectstorage.http.client.ConnectionManagerFactory;
-import com.ibm.cloud.objectstorage.http.conn.ssl.SdkTLSSocketFactory;
-import com.ibm.cloud.objectstorage.http.settings.HttpClientSettings;
-import com.ibm.cloud.objectstorage.internal.SdkSSLContext;
-
-import javax.net.ssl.KeyManager;
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSocket;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
-
-import static com.ibm.cloud.objectstorage.SDKGlobalConfiguration.DISABLE_CERT_CHECKING_SYSTEM_PROPERTY;
-
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.Socket;
@@ -149,7 +145,7 @@ public class ApacheConnectionManagerFactory implements
         }
 
         return RegistryBuilder.<ConnectionSocketFactory>create()
-                .register("http", PlainConnectionSocketFactory.getSocketFactory())
+                .register("http", new SdkPlainSocketFactory())
                 .register("https", sslSocketFactory)
                 .build();
     }
@@ -209,6 +205,8 @@ public class ApacheConnectionManagerFactory implements
      * Simple implementation of X509TrustManager that trusts all certificates.
      * This class is only intended to be used for testing purposes.
      */
+    // IBM-specific change to make this class public
+    // Used when SDKGlobalConfiguration.isCertCheckingDisabled() == true
     public static class TrustingX509TrustManager implements X509TrustManager {
         private static final X509Certificate[] X509_CERTIFICATES = new X509Certificate[0];
 

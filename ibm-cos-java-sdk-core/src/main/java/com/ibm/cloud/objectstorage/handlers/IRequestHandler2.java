@@ -126,7 +126,8 @@ public interface IRequestHandler2 {
     void afterResponse(Request<?> request, Response<?> response);
 
     /**
-     * Runs any additional processing logic on a request after it has failed.
+     * Runs any additional processing logic on a request after it has failed.  This callback is invoked
+     * from a catch block.  If it generates an exception, the original AmazonClientException will be lost.
      *
      * @param request
      *            The request that generated an error.

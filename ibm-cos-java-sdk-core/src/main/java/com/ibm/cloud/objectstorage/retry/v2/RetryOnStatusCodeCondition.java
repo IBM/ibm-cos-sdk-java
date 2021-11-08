@@ -1,5 +1,5 @@
 /*
- * Copyright 2011-2017 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2011-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -14,10 +14,10 @@
  */
 package com.ibm.cloud.objectstorage.retry.v2;
 
-import static com.ibm.cloud.objectstorage.util.ValidationUtils.assertNotNull;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.ibm.cloud.objectstorage.util.ValidationUtils.assertNotNull;
 
 /**
  * Retry condition implementation that retries if the HTTP status code matches one of the provided status codes.

@@ -16,15 +16,16 @@
  */
 package com.ibm.cloud.objectstorage.protocol.json;
 
+import com.ibm.cloud.objectstorage.annotation.SdkInternalApi;
+import com.ibm.cloud.objectstorage.util.TimestampFormat;
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.dataformat.cbor.CBORGenerator;
-import com.ibm.cloud.objectstorage.annotation.SdkInternalApi;
-
-import static com.ibm.cloud.objectstorage.SDKGlobalConfiguration.AWS_CBOR_DISABLE_ENV_VAR;
-import static com.ibm.cloud.objectstorage.SDKGlobalConfiguration.AWS_CBOR_DISABLE_SYSTEM_PROPERTY;
 
 import java.io.IOException;
 import java.util.Date;
+
+import static com.ibm.cloud.objectstorage.SDKGlobalConfiguration.AWS_CBOR_DISABLE_ENV_VAR;
+import static com.ibm.cloud.objectstorage.SDKGlobalConfiguration.AWS_CBOR_DISABLE_SYSTEM_PROPERTY;
 
 /**
  * Thin wrapper around Jackson's JSON generator for CBOR.
@@ -44,7 +45,7 @@ class SdkCborGenerator extends SdkJsonGenerator {
      * write a tag and write the epoch.
      */
     @Override
-    public StructuredJsonGenerator writeValue(Date date) {
+    public StructuredJsonGenerator writeValue(Date date, TimestampFormat timestampFormat) {
 
         if (!(getGenerator() instanceof CBORGenerator)) {
             throw new IllegalStateException("SdkCborGenerator is not created with a CBORGenerator.");

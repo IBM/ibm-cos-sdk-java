@@ -1,5 +1,5 @@
 /*
- * Copyright 2011-2017 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2011-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -14,12 +14,13 @@
  */
 package com.ibm.cloud.objectstorage.util.json;
 
-import com.fasterxml.jackson.core.JsonFactory;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.ibm.cloud.objectstorage.util.TimestampFormat;
 import com.ibm.cloud.objectstorage.protocol.json.SdkJsonGenerator;
 import com.ibm.cloud.objectstorage.protocol.json.StructuredJsonGenerator;
 import com.ibm.cloud.objectstorage.util.Base64;
+import com.fasterxml.jackson.core.JsonFactory;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -86,7 +87,7 @@ public class SdkJsonGeneratorTest {
     public void simpleObject_WithServiceDate() throws IOException {
         Date date = new Date(123456);
         jsonGenerator.writeStartObject();
-        jsonGenerator.writeFieldName("dateProp").writeValue(date);
+        jsonGenerator.writeFieldName("dateProp").writeValue(date, TimestampFormat.UNIX_TIMESTAMP);
         jsonGenerator.writeEndObject();
         JsonNode node = toJsonNode();
         assertEquals(123.456, node.get("dateProp").doubleValue(), DELTA);

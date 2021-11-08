@@ -12,15 +12,13 @@
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-
 package com.ibm.cloud.objectstorage.http;
 
+import com.ibm.cloud.objectstorage.util.ValidationUtils;
 import java.io.File;
 import javax.net.ssl.KeyManager;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
-import com.ibm.cloud.objectstorage.util.ValidationUtils;
 
 /**
  * Implementation of {@link TlsKeyManagersProvider} that loads from a given file path.

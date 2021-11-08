@@ -20,7 +20,7 @@ import org.apache.http.protocol.HttpContext;
 
 @SdkInternalApi
 public final class HttpContextUtils {
-    public static final String DISABLE_SOCKET_PROXY_PROPERTY = "com.amazonaws.disableSocketProxy";
+    public static final String DISABLE_SOCKET_PROXY_PROPERTY = "com.ibm.cloud.objectstorage.disableSocketProxy";
     private HttpContextUtils() {
     }
 

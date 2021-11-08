@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2017 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2010-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -14,15 +14,15 @@
  */
 package com.ibm.cloud.objectstorage.services.s3.transfer.internal;
 
-import java.io.File;
-import java.io.FileInputStream;
-
 import com.ibm.cloud.objectstorage.internal.ReleasableInputStream;
 import com.ibm.cloud.objectstorage.services.s3.internal.InputSubstream;
+import com.ibm.cloud.objectstorage.services.s3.model.ObjectMetadata;
 import com.ibm.cloud.objectstorage.services.s3.model.PutObjectRequest;
 import com.ibm.cloud.objectstorage.services.s3.model.SSECustomerKey;
 import com.ibm.cloud.objectstorage.services.s3.model.UploadPartRequest;
 import com.ibm.cloud.objectstorage.services.s3.transfer.TransferManager;
+import java.io.File;
+import java.io.FileInputStream;
 
 /**
  * Factory for creating all the individual UploadPartRequest objects for a
@@ -53,6 +53,8 @@ public class UploadPartRequestFactory {
      */
     private ReleasableInputStream wrappedStream;
 
+    // Note: Do not copy object metadata from PutObjectRequest to the UploadPartRequest
+    // as headers "like x-amz-server-side-encryption" are valid in PutObject but not in UploadPart API
     public UploadPartRequestFactory(PutObjectRequest origReq, String uploadId, long optimalPartSize) {
         this.origReq = origReq;
         this.uploadId = uploadId;

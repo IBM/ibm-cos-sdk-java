@@ -1,5 +1,5 @@
 /*
- * Copyright 2016-2017 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2016-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -17,15 +17,15 @@ package com.ibm.cloud.objectstorage.partitions;
 import java.io.IOException;
 import java.io.InputStream;
 
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.MapperFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ibm.cloud.objectstorage.SdkClientException;
 import com.ibm.cloud.objectstorage.annotation.SdkInternalApi;
 import com.ibm.cloud.objectstorage.partitions.model.Partitions;
 import com.ibm.cloud.objectstorage.regions.RegionMetadata;
 import com.ibm.cloud.objectstorage.util.IOUtils;
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.MapperFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
  * Loads all the partition files into memory.

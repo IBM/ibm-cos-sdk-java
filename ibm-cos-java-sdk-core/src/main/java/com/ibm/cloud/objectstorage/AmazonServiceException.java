@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2017 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2010-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -14,9 +14,9 @@
  */
 package com.ibm.cloud.objectstorage;
 
-import java.util.Map;
-
 import com.ibm.cloud.objectstorage.util.StringUtils;
+
+import java.util.Map;
 
 /**
  * Extension of SdkClientException that represents an error response returned

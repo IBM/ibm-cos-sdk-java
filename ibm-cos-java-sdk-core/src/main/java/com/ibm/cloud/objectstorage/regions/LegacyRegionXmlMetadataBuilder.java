@@ -1,5 +1,5 @@
 /*
- * Copyright 2016-2017 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2016-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -14,18 +14,18 @@
  */
 package com.ibm.cloud.objectstorage.regions;
 
+import com.ibm.cloud.objectstorage.SdkClientException;
+import com.ibm.cloud.objectstorage.SDKGlobalConfiguration;
+import com.ibm.cloud.objectstorage.annotation.SdkInternalApi;
+import com.ibm.cloud.objectstorage.internal.config.Builder;
+import com.ibm.cloud.objectstorage.util.IOUtils;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
-import com.ibm.cloud.objectstorage.SDKGlobalConfiguration;
-import com.ibm.cloud.objectstorage.SdkClientException;
-import com.ibm.cloud.objectstorage.annotation.SdkInternalApi;
-import com.ibm.cloud.objectstorage.internal.config.Builder;
-import com.ibm.cloud.objectstorage.util.IOUtils;
 
 /**
  * A region metadata builder that loads the data by looking at all the
@@ -38,7 +38,7 @@ public class LegacyRegionXmlMetadataBuilder implements Builder<RegionMetadata> {
             SDKGlobalConfiguration.REGIONS_FILE_OVERRIDE_SYSTEM_PROPERTY;
 
     private static final String OVERRIDE_ENDPOINTS_RESOURCE_PATH =
-            "/com/amazonaws/regions/override/regions.xml";
+            "/com/ibm/cloud/objectstorage/regions/override/regions.xml";
 
     private static final Log LOG = LogFactory.getLog(LegacyRegionXmlMetadataBuilder.class);
 

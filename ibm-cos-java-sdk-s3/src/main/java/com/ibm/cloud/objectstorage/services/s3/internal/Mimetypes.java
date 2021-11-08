@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2017 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2010-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Portions copyright 2006-2009 James Murty. Please see LICENSE.txt
  * for applicable license terms and NOTICE.txt for applicable notices.
@@ -25,10 +25,9 @@ import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.StringTokenizer;
 
+import com.ibm.cloud.objectstorage.util.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
-import com.ibm.cloud.objectstorage.util.StringUtils;
 
 /**
  * Utility class that maintains a listing of known Mimetypes, and determines the

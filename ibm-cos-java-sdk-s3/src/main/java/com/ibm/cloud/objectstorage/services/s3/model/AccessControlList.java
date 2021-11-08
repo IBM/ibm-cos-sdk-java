@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2017 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2010-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Portions copyright 2006-2009 James Murty. Please see LICENSE.txt
  * for applicable license terms and NOTICE.txt for applicable notices.
@@ -17,6 +17,8 @@
  */
 package com.ibm.cloud.objectstorage.services.s3.model;
 
+import com.ibm.cloud.objectstorage.services.s3.internal.S3RequesterChargedResult;
+
 import java.io.Serializable;
 import java.security.Permissions;
 import java.util.ArrayList;
@@ -24,8 +26,6 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
-
-import com.ibm.cloud.objectstorage.services.s3.internal.S3RequesterChargedResult;
 
 /**
  * <p>

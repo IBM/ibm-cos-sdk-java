@@ -1,5 +1,5 @@
 /*
- * Copyright 2011-2017 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2011-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -14,16 +14,15 @@
  */
 package com.ibm.cloud.objectstorage.protocol.json.internal;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-
 import com.ibm.cloud.objectstorage.SdkClientException;
 import com.ibm.cloud.objectstorage.annotation.SdkInternalApi;
 import com.ibm.cloud.objectstorage.protocol.MarshallLocation;
 import com.ibm.cloud.objectstorage.protocol.MarshallingType;
 import com.ibm.cloud.objectstorage.protocol.StructuredPojo;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 @SdkInternalApi
 public class MarshallerRegistry {
@@ -81,6 +80,23 @@ public class MarshallerRegistry {
         return marshallingTypeCache.get(clzz);
     }
 
+    /**
+     * Merge the given overrides with 'this' registry. Overrides are higher precedence than 'this' registry. Both 'this'
+     * registry and the override registry are immutable so a new registry object is returned. If the marshallerRegistryOverrides
+     * are null then this method just returns the current registry since there is nothing to merge.
+     *
+     * @param marshallerRegistryOverrides Override registry.
+     * @return New {@link MarshallerRegistry} with marshallers merged.
+     */
+    public MarshallerRegistry merge(MarshallerRegistry.Builder marshallerRegistryOverrides) {
+        if(marshallerRegistryOverrides == null) {
+            return this;
+        }
+        Builder merged = MarshallerRegistry.builder();
+        merged.copyMarshallersFromRegistry(this.marshallers);
+        merged.copyMarshallersFromRegistry(marshallerRegistryOverrides.marshallers);
+        return merged.build();
+    }
 
     /**
      * @return Builder instance to construct a {@link MarshallerRegistry}.
@@ -127,9 +143,9 @@ public class MarshallerRegistry {
             return addMarshaller(MarshallLocation.GREEDY_PATH, marshallingType, marshaller);
         }
 
-        private <T> Builder addMarshaller(MarshallLocation marshallLocation,
-                                          MarshallingType<T> marshallingType,
-                                          JsonMarshaller<T> marshaller) {
+        public <T> Builder addMarshaller(MarshallLocation marshallLocation,
+                                         MarshallingType<T> marshallingType,
+                                         JsonMarshaller<T> marshaller) {
             marshallingTypes.add(marshallingType);
             if (!marshallers.containsKey(marshallLocation)) {
                 marshallers.put(marshallLocation, new HashMap<MarshallingType, JsonMarshaller<?>>());
@@ -143,6 +159,23 @@ public class MarshallerRegistry {
          */
         public MarshallerRegistry build() {
             return new MarshallerRegistry(this);
+        }
+
+        /**
+         * Fill this builder with marshallers from the source {@link MarshallerRegistry}. Will overwrite anything that is
+         * registered with the same location and type.
+         *
+         * @param sourceMarshallers Marshallers to copy in.
+         */
+        private void copyMarshallersFromRegistry(
+                Map<MarshallLocation, Map<MarshallingType, JsonMarshaller<?>>> sourceMarshallers) {
+
+            for (Map.Entry<MarshallLocation, Map<MarshallingType, JsonMarshaller<?>>> byLocationEntry :
+                    sourceMarshallers.entrySet()) {
+                for (Map.Entry<MarshallingType, JsonMarshaller<?>> byTypeEntry : byLocationEntry.getValue().entrySet()) {
+                    this.addMarshaller(byLocationEntry.getKey(), byTypeEntry.getKey(), byTypeEntry.getValue());
+                }
+            }
         }
     }
 }

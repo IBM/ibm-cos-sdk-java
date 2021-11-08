@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2017 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2010-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -14,6 +14,7 @@
  */
 package com.ibm.cloud.objectstorage.test;
 
+import com.ibm.cloud.objectstorage.test.retry.RetryRule;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -28,6 +29,7 @@ import com.ibm.cloud.objectstorage.auth.profile.ProfileCredentialsProvider;
 import com.ibm.cloud.objectstorage.test.util.InputStreamUtils;
 import com.ibm.cloud.objectstorage.test.util.SdkAsserts;
 import com.ibm.cloud.objectstorage.util.IOUtils;
+import org.junit.Rule;
 
 public abstract class AWSTestBase {
 
@@ -44,12 +46,15 @@ public abstract class AWSTestBase {
     private static final String propertiesFilePath = System.getProperty("user.home")
             + "/.aws/awsTestAccount.properties";
 
-    private static final String TEST_CREDENTIALS_PROFILE_NAME = "aws-java-sdk-test";
+    private static final String TEST_CREDENTIALS_PROFILE_NAME = "ibm-cos-java-sdk-test";
 
     private static final AWSCredentialsProviderChain chain = new AWSCredentialsProviderChain(
             new PropertiesFileCredentialsProvider(propertiesFilePath),
             new ProfileCredentialsProvider(TEST_CREDENTIALS_PROFILE_NAME), new EnvironmentVariableCredentialsProvider(),
             new SystemPropertiesCredentialsProvider());
+
+    @Rule
+    public RetryRule retry = new RetryRule(3);
 
     /**
      * @deprecated Extend from {@link AWSIntegrationTestBase} to access credentials
@@ -62,6 +67,10 @@ public abstract class AWSTestBase {
             } catch (Exception ignored) {
             }
         }
+    }
+
+    protected void setRetryRule(RetryRule rule) {
+        this.retry = rule;
     }
 
     /**

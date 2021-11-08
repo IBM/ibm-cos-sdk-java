@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2017 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2010-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -14,6 +14,7 @@
  */
 package com.ibm.cloud.objectstorage.test;
 
+import com.ibm.cloud.objectstorage.test.retry.RetryRule;
 import java.io.InputStream;
 
 import org.junit.BeforeClass;
@@ -25,6 +26,7 @@ import com.ibm.cloud.objectstorage.auth.PropertiesFileCredentialsProvider;
 import com.ibm.cloud.objectstorage.auth.SystemPropertiesCredentialsProvider;
 import com.ibm.cloud.objectstorage.auth.profile.ProfileCredentialsProvider;
 import com.ibm.cloud.objectstorage.util.IOUtils;
+import org.junit.Rule;
 
 public abstract class AWSIntegrationTestBase {
 
@@ -37,12 +39,15 @@ public abstract class AWSIntegrationTestBase {
     private static final String propertiesFilePath = System.getProperty("user.home")
             + "/.aws/awsTestAccount.properties";
 
-    private static final String TEST_CREDENTIALS_PROFILE_NAME = "aws-java-sdk-test";
+    private static final String TEST_CREDENTIALS_PROFILE_NAME = "ibm-cos-java-sdk-test";
 
     private static final AWSCredentialsProviderChain chain = new AWSCredentialsProviderChain(
             new PropertiesFileCredentialsProvider(propertiesFilePath),
             new ProfileCredentialsProvider(TEST_CREDENTIALS_PROFILE_NAME), new EnvironmentVariableCredentialsProvider(),
             new SystemPropertiesCredentialsProvider());
+
+    @Rule
+    public RetryRule retry = new RetryRule(3);
 
     /**
      * Before of super class is guaranteed to be called before that of a subclass so the following
@@ -56,6 +61,10 @@ public abstract class AWSIntegrationTestBase {
             } catch (Exception ignored) {
             }
         }
+    }
+
+    protected void setRetryRule(RetryRule retry) {
+        this.retry = retry;
     }
 
     /**

@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2017 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2010-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -42,13 +42,13 @@ public interface Headers {
      */
     /** IBM Service instance header */
     public static final String IBM_SERVICE_INSTANCE_ID = "ibm-service-instance-id";
-    
+
     /** IBM Key Protect headers */
     public static final String IBM_SSE_KP_ENCRYPTION_ALGORITHM = "ibm-sse-kp-encryption-algorithm";
     public static final String IBM_SSE_KP_CUSTOMER_ROOT_KEY_CRN = "ibm-sse-kp-customer-root-key-crn";
     public static final String IBM_SSE_KP_ENABLED = "ibm-sse-kp-enabled";
     public static final String IBM_SSE_KP_CRK = "ibm-sse-kp-crk-id";
-    
+
     /** Object retention headers */
     public static final String RETENTION_EXPIRATION_DATE = "retention-expiration-date";
     public static final String RETENTION_LEGAL_HOLD_ID = "retention-legal-hold-id";
@@ -59,7 +59,7 @@ public interface Headers {
 
     public static final String IBM_TRANSITION = "x-ibm-transition";
     public static final String IBM_RESTORED_COPY_STORAGE_CLASS = "x-ibm-restored-copy-storage-class";
-    
+
     /*
      * Amazon HTTP Headers
      */

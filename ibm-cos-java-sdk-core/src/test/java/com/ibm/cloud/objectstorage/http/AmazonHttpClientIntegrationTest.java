@@ -15,14 +15,10 @@
 
 package com.ibm.cloud.objectstorage.http;
 
-import org.junit.Before;
-import org.junit.Test;
-
 import com.ibm.cloud.objectstorage.ClientConfiguration;
 import com.ibm.cloud.objectstorage.Request;
-import com.ibm.cloud.objectstorage.http.AmazonHttpClient;
-import com.ibm.cloud.objectstorage.http.HttpMethodName;
-
+import org.junit.Before;
+import org.junit.Test;
 import utils.http.WireMockTestBase;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;

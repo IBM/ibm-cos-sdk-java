@@ -1,5 +1,5 @@
 /*
- * Copyright 2011-2017 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2011-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -14,14 +14,13 @@
  */
 package com.ibm.cloud.objectstorage.protocol;
 
+import com.ibm.cloud.objectstorage.annotation.SdkProtectedApi;
 import java.io.InputStream;
 import java.math.BigDecimal;
 import java.nio.ByteBuffer;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-
-import com.ibm.cloud.objectstorage.annotation.SdkProtectedApi;
 
 /**
  * Represents the various types supported for marshalling.
@@ -46,6 +45,8 @@ public interface MarshallingType<T> {
     MarshallingType<Integer> INTEGER = new DefaultMarshallingType<Integer>(Integer.class);
 
     MarshallingType<Long> LONG = new DefaultMarshallingType<Long>(Long.class);
+
+    MarshallingType<Short> SHORT = new DefaultMarshallingType<Short>(Short.class);
 
     MarshallingType<Float> FLOAT = new DefaultMarshallingType<Float>(Float.class);
 

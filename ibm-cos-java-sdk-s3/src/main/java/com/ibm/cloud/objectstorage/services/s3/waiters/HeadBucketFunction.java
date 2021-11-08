@@ -1,5 +1,5 @@
 /*
- * Copyright 2011-2017 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2011-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"). You may not
  * use this file except in compliance with the License. A copy of the License is
@@ -16,10 +16,10 @@
 package com.ibm.cloud.objectstorage.services.s3.waiters;
 
 import com.ibm.cloud.objectstorage.annotation.SdkInternalApi;
-import com.ibm.cloud.objectstorage.services.s3.AmazonS3;
+import com.ibm.cloud.objectstorage.waiters.SdkFunction;
 import com.ibm.cloud.objectstorage.services.s3.model.HeadBucketRequest;
 import com.ibm.cloud.objectstorage.services.s3.model.HeadBucketResult;
-import com.ibm.cloud.objectstorage.waiters.SdkFunction;
+import com.ibm.cloud.objectstorage.services.s3.AmazonS3;
 
 @SdkInternalApi
 public class HeadBucketFunction implements

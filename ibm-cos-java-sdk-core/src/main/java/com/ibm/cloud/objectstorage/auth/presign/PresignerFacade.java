@@ -1,5 +1,5 @@
 /*
- * Copyright 2011-2017 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2011-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -14,11 +14,6 @@
  */
 package com.ibm.cloud.objectstorage.auth.presign;
 
-import java.net.URL;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-
 import com.ibm.cloud.objectstorage.AmazonWebServiceRequest;
 import com.ibm.cloud.objectstorage.Request;
 import com.ibm.cloud.objectstorage.annotation.Immutable;
@@ -29,6 +24,11 @@ import com.ibm.cloud.objectstorage.internal.auth.SignerProvider;
 import com.ibm.cloud.objectstorage.internal.auth.SignerProviderContext;
 import com.ibm.cloud.objectstorage.util.CredentialUtils;
 import com.ibm.cloud.objectstorage.util.RuntimeHttpUtils;
+
+import java.net.URL;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Really thin facade over {@link Presigner} to deal with some common concerns like credential resolution, adding custom headers

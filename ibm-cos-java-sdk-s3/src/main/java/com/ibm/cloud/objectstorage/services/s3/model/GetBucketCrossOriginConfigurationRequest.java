@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2017 Amazon Technologies, Inc.
+ * Copyright 2015-2019 Amazon Technologies, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -37,11 +37,13 @@ public class GetBucketCrossOriginConfigurationRequest extends GenericBucketReque
         super(bucketName);
     }
 
+    // IBM-Specifc
     /**
      * Optional parameter setting the mirror-destination on a WORM enabled bucket.
      */
     private String wormMirrorDestination;
 
+    // IBM-Specifc
     /**
      * Returns the optional mirror-destination value for WORM mirroring
      *
@@ -52,6 +54,7 @@ public class GetBucketCrossOriginConfigurationRequest extends GenericBucketReque
         return wormMirrorDestination;
     }
 
+    // IBM-Specifc
     /**
      * Sets the optional mirror-destination value for WORM mirroring
      * 
@@ -63,6 +66,7 @@ public class GetBucketCrossOriginConfigurationRequest extends GenericBucketReque
         this.wormMirrorDestination = wormMirrorDestination;
     }
 
+    // IBM-Specifc
     /**
      * Sets the optional mirror-destination value for WORM mirroring
      * and returns the updated GetBucketCrossOriginConfigurationRequest so that additional 

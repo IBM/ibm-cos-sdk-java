@@ -18,7 +18,6 @@ import com.ibm.cloud.objectstorage.*;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.net.InetAddress;
@@ -65,7 +64,6 @@ public class DelegatingDnsResolverTest {
     }
 
     @Test
-    @Ignore("Test fails with NullPointerException")
     public void testDelegateIsCalledWhenRequestIsMade() {
         // The ExecutionContext should collect the expected RequestCount
         ExecutionContext context = new ExecutionContext(true);

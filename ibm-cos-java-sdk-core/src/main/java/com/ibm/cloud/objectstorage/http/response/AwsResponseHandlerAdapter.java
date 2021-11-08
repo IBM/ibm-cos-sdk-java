@@ -1,5 +1,5 @@
 /*
- * Copyright 2011-2017 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2011-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -14,9 +14,6 @@
  */
 package com.ibm.cloud.objectstorage.http.response;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import com.ibm.cloud.objectstorage.AmazonWebServiceRequest;
 import com.ibm.cloud.objectstorage.AmazonWebServiceResponse;
 import com.ibm.cloud.objectstorage.AmazonWebServiceResult;
@@ -27,6 +24,8 @@ import com.ibm.cloud.objectstorage.http.HttpResponseHandler;
 import com.ibm.cloud.objectstorage.http.SdkHttpMetadata;
 import com.ibm.cloud.objectstorage.util.AWSRequestMetrics;
 import com.ibm.cloud.objectstorage.util.MetadataCache;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 /**
  * Adapts an {@link HttpResponseHandler < AmazonWebServiceResponse <T>>} to an {@link
@@ -166,9 +165,9 @@ public class AwsResponseHandlerAdapter<T> implements HttpResponseHandler<T> {
     /**
      * Used to log the "x-amz-id-2" header at DEBUG level, if any, from the response. This
      * method assumes the apache httpClientSettings request/response has just been successfully
-     * executed. The extended request id is logged using the "com.amazonaws.requestId" logger
+     * executed. The extended request id is logged using the "com.ibm.cloud.objectstorage.requestId" logger
      * if it was enabled at DEBUG level; otherwise, it is logged using at DEBUG level
-     * using the "com.amazonaws.request" logger.
+     * using the "com.ibm.cloud.objectstorage.request" logger.
      */
     private void logExtendedRequestId(HttpResponse response) {
         String reqId = response.getHeaders()

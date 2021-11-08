@@ -1,5 +1,5 @@
 /*
- * Copyright 2011-2017 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2011-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -22,7 +22,6 @@ import java.net.URI;
 
 import org.junit.Rule;
 
-import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import com.ibm.cloud.objectstorage.AmazonServiceException;
 import com.ibm.cloud.objectstorage.DefaultRequest;
 import com.ibm.cloud.objectstorage.Request;
@@ -30,6 +29,7 @@ import com.ibm.cloud.objectstorage.http.HttpMethodName;
 import com.ibm.cloud.objectstorage.http.HttpResponse;
 import com.ibm.cloud.objectstorage.http.HttpResponseHandler;
 import com.ibm.cloud.objectstorage.http.JsonErrorResponseHandler;
+import com.github.tomakehurst.wiremock.junit.WireMockRule;
 
 /**
  * Base class for tests that use a WireMock server

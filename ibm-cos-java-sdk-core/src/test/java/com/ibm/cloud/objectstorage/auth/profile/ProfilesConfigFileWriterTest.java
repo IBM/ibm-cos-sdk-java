@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2017 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2012-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -32,8 +32,6 @@ import com.ibm.cloud.objectstorage.auth.AWSCredentials;
 import com.ibm.cloud.objectstorage.auth.AWSSessionCredentials;
 import com.ibm.cloud.objectstorage.auth.BasicAWSCredentials;
 import com.ibm.cloud.objectstorage.auth.BasicSessionCredentials;
-import com.ibm.cloud.objectstorage.auth.profile.ProfilesConfigFile;
-import com.ibm.cloud.objectstorage.auth.profile.ProfilesConfigFileWriter;
 import com.ibm.cloud.objectstorage.auth.profile.internal.Profile;
 import com.ibm.cloud.objectstorage.util.ImmutableMapParameter;
 

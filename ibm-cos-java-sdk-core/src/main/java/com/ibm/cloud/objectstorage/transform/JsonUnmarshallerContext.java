@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2017 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2010-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -18,9 +18,9 @@ import java.io.IOException;
 import java.util.Collections;
 import java.util.Map;
 
+import com.ibm.cloud.objectstorage.http.HttpResponse;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonToken;
-import com.ibm.cloud.objectstorage.http.HttpResponse;
 
 /**
  * Used effectively as the API to access the context of performing the

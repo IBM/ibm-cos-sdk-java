@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2017 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2014-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"). You may not use this file except in compliance with
  * the License. A copy of the License is located at
@@ -14,9 +14,8 @@ package com.ibm.cloud.objectstorage.services.kms.model;
 
 import java.io.Serializable;
 import javax.annotation.Generated;
-
-import com.ibm.cloud.objectstorage.protocol.ProtocolMarshaller;
 import com.ibm.cloud.objectstorage.protocol.StructuredPojo;
+import com.ibm.cloud.objectstorage.protocol.ProtocolMarshaller;
 
 /**
  * <p>

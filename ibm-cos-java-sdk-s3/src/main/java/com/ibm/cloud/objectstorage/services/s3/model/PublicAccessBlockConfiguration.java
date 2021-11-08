@@ -21,7 +21,6 @@ public class PublicAccessBlockConfiguration implements Serializable, Cloneable {
 
     private Boolean blockPublicAcls;
     private Boolean ignorePublicAcls;
-    
     // IBM COS does not support these flags.
     // private Boolean blockPublicPolicy;
     // private Boolean restrictPublicBuckets;
@@ -96,7 +95,6 @@ public class PublicAccessBlockConfiguration implements Serializable, Cloneable {
         if (ignorePublicAcls != null ? !ignorePublicAcls.equals(that.ignorePublicAcls) : that.ignorePublicAcls != null) {
             return false;
         }
-
         // IBM COS does not support these flags.
         // if (blockPublicPolicy != null ? !blockPublicPolicy.equals(that.blockPublicPolicy) : that.blockPublicPolicy != null) {
         //     return false;

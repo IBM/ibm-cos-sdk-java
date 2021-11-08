@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2017 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2010-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -82,7 +82,6 @@ import com.ibm.cloud.objectstorage.services.s3.model.metrics.MetricsPredicateVis
 import com.ibm.cloud.objectstorage.services.s3.model.metrics.MetricsPrefixPredicate;
 import com.ibm.cloud.objectstorage.services.s3.model.metrics.MetricsTagPredicate;
 import com.ibm.cloud.objectstorage.util.CollectionUtils;
-
 import java.util.List;
 import java.util.Map;
 
@@ -431,10 +430,10 @@ public class BucketConfigurationXmlFactory {
         XmlWriter xml = new XmlWriter();
         xml.start("LifecycleConfiguration");
 
-        if(config.getRules() != null) {
-	        for (Rule rule : config.getRules()) {
-	            writeRule(xml, rule);
-	        }
+        if (config.getRules() != null) {
+            for (Rule rule : config.getRules()) {
+                writeRule(xml, rule);
+            }
         }
 
         xml.end();
@@ -472,7 +471,7 @@ public class BucketConfigurationXmlFactory {
 
         return xml.getBytes();
     }
-    
+
     /**
      * Converts the specified {@link BucketProtectionConfiguration} object to an XML fragment that
      * can be sent to Amazon S3.
@@ -482,17 +481,17 @@ public class BucketConfigurationXmlFactory {
      */
     /*
     * <ProtectionConfiguration>
-     		<Status>Retention</Status>
-      		<MinimumRetention>
-      			<Days>10</Days>
-      		</MinimumRetention>
-     		<DefaultRetention>
-     			<Days>100</Days>
-     		</DefaultRetention>
-     		<MaximumRetention>
-     			<Days>1000</Days>
-     		</MaximumRetention>
-     		<EnablePermanentRetention>True</EnablePermanentRetention>
+          <Status>Retention</Status>
+          <MinimumRetention>
+              <Days>10</Days>
+          </MinimumRetention>
+          <DefaultRetention>
+              <Days>100</Days>
+          </DefaultRetention>
+          <MaximumRetention>
+              <Days>1000</Days>
+          </MaximumRetention>
+          <EnablePermanentRetention>True</EnablePermanentRetention>
       </ProtectionConfiguration>
      */
     public byte[] convertToXmlByteArray(BucketProtectionConfiguration config) throws SdkClientException {
@@ -505,35 +504,34 @@ public class BucketConfigurationXmlFactory {
         
         // Minimum retention
         xml.start("MinimumRetention");
-        if(config.getMinimumRetentionInDays() != null) {
-        	String days = Integer.toString(config.getMinimumRetentionInDays());
-        	addParameterIfNotNull(xml, "Days", days);
+        if (config.getMinimumRetentionInDays() != null) {
+            String days = Integer.toString(config.getMinimumRetentionInDays());
+            addParameterIfNotNull(xml, "Days", days);
         }
         xml.end();
-        
+
         // Default retention
         xml.start("DefaultRetention");
-        if(config.getDefaultRetentionInDays() != null) {
-        	String days = Integer.toString(config.getDefaultRetentionInDays());
-        	addParameterIfNotNull(xml, "Days", days);
+        if (config.getDefaultRetentionInDays() != null) {
+            String days = Integer.toString(config.getDefaultRetentionInDays());
+            addParameterIfNotNull(xml, "Days", days);
         }
         xml.end();
-        
+
         // Maximum retention
         xml.start("MaximumRetention");
-        if(config.getMaximumRetentionInDays() != null) {
-        	String days = Integer.toString(config.getMaximumRetentionInDays());
-        	addParameterIfNotNull(xml, "Days", days);
+        if (config.getMaximumRetentionInDays() != null) {
+            String days = Integer.toString(config.getMaximumRetentionInDays());
+            addParameterIfNotNull(xml, "Days", days);
         }
         xml.end();
-        
+
         // Permanent retention
         Boolean permanentRetentionEnabled = config.isPermanentRetentionEnabled();
         if (permanentRetentionEnabled != null) {
-        	xml.start("EnablePermanentRetention")
-        		.value(permanentRetentionEnabled.toString()).end();
+            xml.start("EnablePermanentRetention").value(permanentRetentionEnabled.toString()).end();
         }
-        
+
         xml.end();
 
         return xml.getBytes();
@@ -631,7 +629,7 @@ public class BucketConfigurationXmlFactory {
                 }
 
                 xml.start("StorageClass");
-                xml.value(t.getStorageClass().toString());
+                xml.value(t.getStorageClassAsString());
                 xml.end(); // </StorageClass>
                 xml.end(); // </NoncurrentVersionTransition>
             }
@@ -1172,8 +1170,7 @@ public class BucketConfigurationXmlFactory {
         if (rule.getFilter() == null) {
             xml.start("Prefix").value(rule.getPrefix() == null ? "" : rule.getPrefix()).end();
         } else if (rule.getPrefix() != null) {
-            throw new IllegalArgumentException(
-                    "Prefix cannot be used with Filter. Use LifecyclePrefixPredicate to create a LifecycleFilter");
+            throw new IllegalArgumentException("Prefix cannot be used with Filter. Use LifecyclePrefixPredicate to create a LifecycleFilter");
         }
     }
 

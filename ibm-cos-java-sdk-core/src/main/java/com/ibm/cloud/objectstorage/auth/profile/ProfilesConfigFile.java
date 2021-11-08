@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2017 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2014-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -13,11 +13,6 @@
  * permissions and limitations under the License.
  */
 package com.ibm.cloud.objectstorage.auth.profile;
-
-import java.io.File;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 import com.ibm.cloud.objectstorage.SdkClientException;
 import com.ibm.cloud.objectstorage.auth.AWSCredentials;
@@ -34,6 +29,10 @@ import com.ibm.cloud.objectstorage.auth.profile.internal.securitytoken.STSProfil
 import com.ibm.cloud.objectstorage.internal.StaticCredentialsProvider;
 import com.ibm.cloud.objectstorage.profile.path.AwsProfileFileLocationProvider;
 import com.ibm.cloud.objectstorage.util.ValidationUtils;
+import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Loads the local AWS credential profiles from the standard location (~/.aws/credentials), which
@@ -53,7 +52,7 @@ import com.ibm.cloud.objectstorage.util.ValidationUtils;
  * aws_session_token=testSessionToken
  * </pre>
  *
- * <p> These credential profiles allow you to share multiple sets of AWS security credentails
+ * <p> These credential profiles allow you to share multiple sets of AWS security credentials
  * between different tools such as the AWS SDK for Java and the AWS CLI.
  *
  * <p> For more information on setting up AWS credential profiles, see:
@@ -168,9 +167,14 @@ public class ProfilesConfigFile {
      */
     public void refresh() {
         if (profileFile.lastModified() > profileFileLastModified) {
-            profileFileLastModified = profileFile.lastModified();
-            allProfiles = loadProfiles(profileFile);
+            synchronized (this) {
+                if (profileFile.lastModified() > profileFileLastModified) {
+                    allProfiles = loadProfiles(profileFile);
+                    profileFileLastModified = profileFile.lastModified();
+                }
+            }
         }
+
         credentialProviderCache.clear();
     }
 

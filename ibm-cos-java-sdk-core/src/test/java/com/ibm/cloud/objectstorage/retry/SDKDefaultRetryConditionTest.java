@@ -1,5 +1,5 @@
 /*
- * Copyright 2011-2017 Amazon.com, Inc. or its affiliates. All Rights
+ * Copyright 2011-2019 Amazon.com, Inc. or its affiliates. All Rights
  * Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
@@ -18,14 +18,10 @@
  */
 package com.ibm.cloud.objectstorage.retry;
 
-import org.junit.Assert;
-import org.junit.Test;
-
 import com.ibm.cloud.objectstorage.AmazonClientException;
 import com.ibm.cloud.objectstorage.AmazonServiceException;
-import com.ibm.cloud.objectstorage.retry.PredefinedRetryPolicies;
-import com.ibm.cloud.objectstorage.retry.RetryPolicy;
-import com.ibm.cloud.objectstorage.retry.RetryUtils;
+import org.junit.Assert;
+import org.junit.Test;
 
 import java.io.IOException;
 import java.util.Random;
@@ -72,6 +68,7 @@ public class SDKDefaultRetryConditionTest {
         }
     }
 
+    @Test
     public void shouldNotRetryBad4xxErrorCodeAseExcept429() {
         // Try all 4xx status codes except 429 which should be retryable
         for (int i = 400; i < 500; ++i) {

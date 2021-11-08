@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2017 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2010-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -13,6 +13,8 @@
  * permissions and limitations under the License.
  */
 package com.ibm.cloud.objectstorage.services.s3;
+
+import com.ibm.cloud.objectstorage.SdkClientException;
 
 /**
  * S3 client configuration options such as the request access style.
@@ -62,8 +64,13 @@ public class S3ClientOptions {
         private Builder() {}
 
         public S3ClientOptions build() {
-            return new S3ClientOptions(pathStyleAccess, chunkedEncodingDisabled, accelerateModeEnabled,
-                                       payloadSigningEnabled, dualstackEnabled, forceGlobalBucketAccessEnabled);
+            if (pathStyleAccess && accelerateModeEnabled) {
+                throw new SdkClientException("Both accelerate mode and path style access are being enabled either through "
+                                             + "S3ClientOptions or AmazonS3ClientBuilder. These options are mutually exclusive "
+                                             + "and cannot be enabled together. Please disable one of them");
+            }
+
+            return new S3ClientOptions(this);
         }
         /**
          * <p>
@@ -215,14 +222,13 @@ public class S3ClientOptions {
         this.forceGlobalBucketAccessEnabled = other.forceGlobalBucketAccessEnabled;
     }
 
-    private S3ClientOptions(boolean pathStyleAccess, boolean chunkedEncodingDisabled, boolean accelerateModeEnabled,
-                            boolean payloadSigningEnabled, boolean dualstackEnabled, boolean forceGlobalBucketAccessEnabled) {
-        this.pathStyleAccess = pathStyleAccess;
-        this.chunkedEncodingDisabled = chunkedEncodingDisabled;
-        this.accelerateModeEnabled = accelerateModeEnabled;
-        this.payloadSigningEnabled = payloadSigningEnabled;
-        this.dualstackEnabled = dualstackEnabled;
-        this.forceGlobalBucketAccessEnabled = forceGlobalBucketAccessEnabled;
+    private S3ClientOptions(Builder b) {
+        this.pathStyleAccess = b.pathStyleAccess;
+        this.chunkedEncodingDisabled = b.chunkedEncodingDisabled;
+        this.accelerateModeEnabled = b.accelerateModeEnabled;
+        this.payloadSigningEnabled = b.payloadSigningEnabled;
+        this.dualstackEnabled = b.dualstackEnabled;
+        this.forceGlobalBucketAccessEnabled = b.forceGlobalBucketAccessEnabled;
     }
 
     /**

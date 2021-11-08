@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2017 Amazon.com, Inc. or its affiliates. All Rights
+ * Copyright 2010-2019 Amazon.com, Inc. or its affiliates. All Rights
  * Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
@@ -21,8 +21,6 @@ package com.ibm.cloud.objectstorage.unmarshaller;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-import com.fasterxml.jackson.core.JsonFactory;
-import com.fasterxml.jackson.core.JsonParser;
 import com.ibm.cloud.objectstorage.http.HttpResponse;
 import com.ibm.cloud.objectstorage.protocol.json.SdkStructuredPlainJsonFactory;
 import com.ibm.cloud.objectstorage.transform.JsonUnmarshallerContext;
@@ -30,7 +28,8 @@ import com.ibm.cloud.objectstorage.transform.JsonUnmarshallerContextImpl;
 import com.ibm.cloud.objectstorage.transform.ListUnmarshaller;
 import com.ibm.cloud.objectstorage.transform.MapUnmarshaller;
 import com.ibm.cloud.objectstorage.transform.SimpleTypeJsonUnmarshallers;
-
+import com.fasterxml.jackson.core.JsonFactory;
+import com.fasterxml.jackson.core.JsonParser;
 import java.io.ByteArrayInputStream;
 import java.util.Arrays;
 import java.util.Collections;

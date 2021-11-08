@@ -15,14 +15,10 @@
 
 package com.ibm.cloud.objectstorage.internal.config;
 
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.ibm.cloud.objectstorage.internal.config.InternalConfig;
-import com.ibm.cloud.objectstorage.internal.config.InternalConfigJsonHelper;
-import com.ibm.cloud.objectstorage.internal.config.SignerConfig;
 import com.ibm.cloud.objectstorage.regions.Regions;
 import com.ibm.cloud.objectstorage.util.ClassLoaderHelper;
-
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -179,7 +175,7 @@ public class InternalConfigTest {
     private void loadFrom(String resource) throws Exception {
         URL url = ClassLoaderHelper.getResource(resource);
         assertNotNull(url);
-        InternalConfigJsonHelper config = InternalConfig.loadfrom(url);
+        InternalConfigJsonHelper config = InternalConfig.loadfrom(url, InternalConfigJsonHelper.class);
         assertNotNull(config);
     }
 

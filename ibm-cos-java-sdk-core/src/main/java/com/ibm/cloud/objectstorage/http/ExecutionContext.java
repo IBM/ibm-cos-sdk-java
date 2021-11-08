@@ -1,5 +1,5 @@
 /*
- * Copyright 2011-2017 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2011-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -14,9 +14,6 @@
  */
 package com.ibm.cloud.objectstorage.http;
 
-import java.net.URI;
-import java.util.List;
-
 import com.ibm.cloud.objectstorage.AmazonWebServiceClient;
 import com.ibm.cloud.objectstorage.annotation.NotThreadSafe;
 import com.ibm.cloud.objectstorage.auth.AWSCredentials;
@@ -25,11 +22,14 @@ import com.ibm.cloud.objectstorage.auth.Signer;
 import com.ibm.cloud.objectstorage.handlers.RequestHandler2;
 import com.ibm.cloud.objectstorage.http.timers.client.ClientExecutionAbortTrackerTask;
 import com.ibm.cloud.objectstorage.internal.auth.NoOpSignerProvider;
-import com.ibm.cloud.objectstorage.internal.auth.SignerProvider;
 import com.ibm.cloud.objectstorage.internal.auth.SignerProviderContext;
+import com.ibm.cloud.objectstorage.internal.auth.SignerProvider;
 import com.ibm.cloud.objectstorage.retry.internal.AuthErrorRetryStrategy;
 import com.ibm.cloud.objectstorage.util.AWSRequestMetrics;
 import com.ibm.cloud.objectstorage.util.AWSRequestMetricsFullSupport;
+
+import java.net.URI;
+import java.util.List;
 
 /**
  * @NotThreadSafe This class should only be accessed by a single thread and be used throughout

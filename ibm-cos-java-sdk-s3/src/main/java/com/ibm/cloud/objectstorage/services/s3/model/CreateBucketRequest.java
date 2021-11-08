@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2017 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2010-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -28,7 +28,7 @@ public class CreateBucketRequest extends AmazonWebServiceRequest implements
 
     /** The name of the Amazon S3 bucket to create. */
     private String bucketName;
-    
+
     /** The IBM Service Instance Id to apply to the bucket */ 
     private String serviceInstanceId; 
 
@@ -36,7 +36,7 @@ public class CreateBucketRequest extends AmazonWebServiceRequest implements
     /** The encryptionType of S3 bucket to create. */
     private EncryptionType encryptionType;
 
-	/** The name of the Amazon S3 region in which to create this bucket. */
+    /** The name of the Amazon S3 region in which to create this bucket. */
     @Deprecated
     private String region;
 
@@ -130,7 +130,6 @@ public class CreateBucketRequest extends AmazonWebServiceRequest implements
     public String getBucketName() {
         return bucketName;
     }
-    
 
     /**
      * Gets the encryptionType of the S3 bucket to create.
@@ -140,8 +139,8 @@ public class CreateBucketRequest extends AmazonWebServiceRequest implements
      * @see CreateBucketRequest#setEncryptionType(EncryptionType)
      */
     public EncryptionType getEncryptionType() {
-		return encryptionType;
-	}
+        return encryptionType;
+    }
 
     /**
      * Sets the encryptionType bucket to create.
@@ -151,12 +150,12 @@ public class CreateBucketRequest extends AmazonWebServiceRequest implements
      *
      * @see CreateBucketRequest#getEncryptionType()
      */
-	public void setEncryptionType(EncryptionType encryptionType) {
-		this.encryptionType = encryptionType;
-	}
-	
-	public CreateBucketRequest withEncryptionType(EncryptionType encryptionType) {
-		setEncryptionType(encryptionType);
+    public void setEncryptionType(EncryptionType encryptionType) {
+        this.encryptionType = encryptionType;
+    }
+
+    public CreateBucketRequest withEncryptionType(EncryptionType encryptionType) {
+        setEncryptionType(encryptionType);
         return this;
     }
 
@@ -189,26 +188,26 @@ public class CreateBucketRequest extends AmazonWebServiceRequest implements
     public String getRegion() {
         return region;
     }
-    
-    /** 
-     * Gets the IBM service instance Id 
-     *  
-     * @return The IBM Service Instance Id 
+
+    /**
+     * Gets the IBM service instance Id
+     *
+     * @return The IBM Service Instance Id
+     */
+     public String getServiceInstanceId() {
+	 return serviceInstanceId;
+     }
+
+    /**
+     * Set the IBM service instance Id used on the header for the
+     * CreateBucketRequest
+     *
+     * @param serviceInstanceId
+     * 	      IBM service instance Id
      */ 
-     public String getServiceInstanceId() { 
-	 return serviceInstanceId; 
-     } 
-     
-    /** 
-     * Set the IBM service instance Id used on the header for the  
-     * CreateBucketRequest 
-     *  
-     * @param serviceInstanceId 
-     * 		IBM service instance Id 
-     */ 
-    public void setServiceInstanceId(String serviceInstanceId) { 
-	this.serviceInstanceId = serviceInstanceId; 
-    } 
+    public void setServiceInstanceId(String serviceInstanceId) {
+	this.serviceInstanceId = serviceInstanceId;
+    }
 
     /**
      * Returns the optional Canned ACL to set for the new bucket.
@@ -275,14 +274,14 @@ public class CreateBucketRequest extends AmazonWebServiceRequest implements
         setAccessControlList(accessControlList);
         return this;
     }
-    
+
     /**
      * Sets the serviceInstanceId on the Request Object.
      * This value will supersede any already set on by CredentialProvider
      *
      * @param serviceInstanceId
-     *            The IBM Service Instance Id
-     *         
+     *        The IBM Service Instance Id
+     *
      * @return This updated object, so that additional method calls can be
      *         chained together.
      */

@@ -18,8 +18,6 @@ package com.ibm.cloud.objectstorage.util;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.ibm.cloud.objectstorage.util.CapacityManager;
-
 /**
  * Tests the behavior of the {@link CapacityManager}
  */

@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2017 Amazon.com, Inc. or its affiliates. All Rights
+ * Copyright 2010-2019 Amazon.com, Inc. or its affiliates. All Rights
  * Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
@@ -26,9 +26,6 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 
 import com.ibm.cloud.objectstorage.Request;
-import com.ibm.cloud.objectstorage.handlers.RequestHandler;
-import com.ibm.cloud.objectstorage.handlers.RequestHandler2;
-import com.ibm.cloud.objectstorage.handlers.RequestHandler2Adaptor;
 import com.ibm.cloud.objectstorage.util.TimingInfo;
 
 public class RequestHandler2AdaptorTest {

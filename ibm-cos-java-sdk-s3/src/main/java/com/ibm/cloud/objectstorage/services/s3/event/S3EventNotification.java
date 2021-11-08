@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2017 Amazon Technologies, Inc.
+ * Copyright 2014-2019 Amazon Technologies, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,15 +17,15 @@ package com.ibm.cloud.objectstorage.services.s3.event;
 import com.ibm.cloud.objectstorage.services.s3.model.S3Event;
 import java.util.List;
 
+import com.ibm.cloud.objectstorage.util.SdkHttpUtils;
 import org.joda.time.DateTime;
 
+import com.ibm.cloud.objectstorage.internal.DateTimeJsonSerializer;
+import com.ibm.cloud.objectstorage.util.json.Jackson;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.ibm.cloud.objectstorage.internal.DateTimeJsonSerializer;
-import com.ibm.cloud.objectstorage.util.SdkHttpUtils;
-import com.ibm.cloud.objectstorage.util.json.Jackson;
 
 /**
 * A helper class that represents a strongly typed S3 EventNotification item sent

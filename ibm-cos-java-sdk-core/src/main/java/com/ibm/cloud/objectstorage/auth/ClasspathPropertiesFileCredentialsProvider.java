@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2017 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2012-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -86,12 +86,11 @@ public class ClasspathPropertiesFileCredentialsProvider implements AWSCredential
 
         try {
             PropertiesCredentials credentials = new PropertiesCredentials(inputStream);
-        	if(credentials.getApiKey() != null && tokenManager == null){
+        	if (credentials.getApiKey() != null && tokenManager == null) {
         		tokenManager = new DefaultTokenManager(credentials.getApiKey());
 
         	}
     		credentials.setTokenManager(tokenManager);
-        	
             return credentials;
         } catch (IOException e) {
             throw new SdkClientException("Unable to load AWS credentials from the " + credentialsFilePath + " file on the classpath", e);

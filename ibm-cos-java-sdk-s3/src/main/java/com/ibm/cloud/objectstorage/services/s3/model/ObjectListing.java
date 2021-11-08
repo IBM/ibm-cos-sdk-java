@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2017 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2010-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -92,46 +92,52 @@ public class ObjectListing implements Serializable {
      * object listing was returned.
      */
     private String encodingType;
-    
+
+    // IBM-specific
     /**
      * The KP enabled header value returned from the GET operation on the bucket
      */
     private boolean IBMSSEKPEnabled;
-    
+
+    // IBM-specific
     /**
      * The CRK header value returned from the GET operation on the bucket
      */
     private String IBMSSEKPCrk;
 
+    // IBM-specific
     /**
-	 * Returns if KP has been enabled
-	 */
+     * Returns if KP has been enabled
+     */
     public boolean getIBMSSEKPEnabled() {
-		return IBMSSEKPEnabled;
-	}
+        return IBMSSEKPEnabled;
+    }
 
+    // IBM-specific
     /**
      * Sets if KP is enabled
      * @param iBMSSEKPEnabled
      */
-	public void setIBMSSEKPEnabled(boolean iBMSSEKPEnabled) {
-		this.IBMSSEKPEnabled = iBMSSEKPEnabled;
-	}
+    public void setIBMSSEKPEnabled(boolean iBMSSEKPEnabled) {
+        this.IBMSSEKPEnabled = iBMSSEKPEnabled;
+    }
 
-	/**
-	 * Returns the CRK header of the GET Bucket request
-	 */
-	public String getIBMSSEKPCrk() {
-		return IBMSSEKPCrk;
-	}
+    // IBM-specific
+    /**
+     * Returns the CRK header of the GET Bucket request
+     */
+    public String getIBMSSEKPCrk() {
+        return IBMSSEKPCrk;
+    }
 
-	/**
-	 * Sets the CRK value
-	 * @param iBMSSEKPCrkName
-	 */
-	public void setIBMSSEKPCrk(String iBMSSEKPCrk) {
-		this.IBMSSEKPCrk = iBMSSEKPCrk;
-	}
+    // IBM-specific
+    /**
+     * Sets the CRK value
+     * @param iBMSSEKPCrkName
+     */
+    public void setIBMSSEKPCrk(String iBMSSEKPCrk) {
+        this.IBMSSEKPCrk = iBMSSEKPCrk;
+    }
 
 
     /**

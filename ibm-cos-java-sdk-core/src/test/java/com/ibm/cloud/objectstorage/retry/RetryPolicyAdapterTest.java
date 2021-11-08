@@ -1,5 +1,5 @@
 /*
- * Copyright 2011-2017 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2011-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -17,8 +17,6 @@ package com.ibm.cloud.objectstorage.retry;
 import com.ibm.cloud.objectstorage.AmazonClientException;
 import com.ibm.cloud.objectstorage.AmazonWebServiceRequest;
 import com.ibm.cloud.objectstorage.ClientConfiguration;
-import com.ibm.cloud.objectstorage.retry.RetryPolicy;
-import com.ibm.cloud.objectstorage.retry.RetryPolicyAdapter;
 import com.ibm.cloud.objectstorage.retry.v2.RetryPolicyContext;
 import com.ibm.cloud.objectstorage.retry.v2.RetryPolicyContexts;
 

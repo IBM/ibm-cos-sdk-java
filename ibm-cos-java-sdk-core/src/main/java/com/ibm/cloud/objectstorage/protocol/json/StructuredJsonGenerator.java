@@ -17,12 +17,13 @@
 
 package com.ibm.cloud.objectstorage.protocol.json;
 
+import com.ibm.cloud.objectstorage.annotation.SdkProtectedApi;
+
+import com.ibm.cloud.objectstorage.util.TimestampFormat;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.nio.ByteBuffer;
 import java.util.Date;
-
-import com.ibm.cloud.objectstorage.annotation.SdkProtectedApi;
 
 /**
  * Interface for generating a JSON
@@ -108,7 +109,7 @@ public interface StructuredJsonGenerator {
         }
 
         @Override
-        public StructuredJsonGenerator writeValue(Date date) {
+        public StructuredJsonGenerator writeValue(Date date, TimestampFormat timestampFormat) {
             return this;
         }
 
@@ -161,7 +162,7 @@ public interface StructuredJsonGenerator {
 
     StructuredJsonGenerator writeValue(ByteBuffer bytes);
 
-    StructuredJsonGenerator writeValue(Date date);
+    StructuredJsonGenerator writeValue(Date date, TimestampFormat timestampFormat);
 
     StructuredJsonGenerator writeValue(BigDecimal value);
 

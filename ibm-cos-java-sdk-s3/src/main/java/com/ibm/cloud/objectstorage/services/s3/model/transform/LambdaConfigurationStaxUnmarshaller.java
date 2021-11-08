@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2017 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2015-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -25,9 +25,9 @@ import com.ibm.cloud.objectstorage.services.s3.model.CloudFunctionConfiguration;
 import com.ibm.cloud.objectstorage.services.s3.model.Filter;
 import com.ibm.cloud.objectstorage.services.s3.model.LambdaConfiguration;
 import com.ibm.cloud.objectstorage.services.s3.model.NotificationConfiguration;
+import com.ibm.cloud.objectstorage.transform.SimpleTypeStaxUnmarshallers.StringStaxUnmarshaller;
 import com.ibm.cloud.objectstorage.transform.StaxUnmarshallerContext;
 import com.ibm.cloud.objectstorage.transform.Unmarshaller;
-import com.ibm.cloud.objectstorage.transform.SimpleTypeStaxUnmarshallers.StringStaxUnmarshaller;
 
 /**
  * CloudFunctionConfiguration is a little different then Topic or Queue Configurations and thus
@@ -40,7 +40,7 @@ import com.ibm.cloud.objectstorage.transform.SimpleTypeStaxUnmarshallers.StringS
 class LambdaConfigurationStaxUnmarshaller implements
         Unmarshaller<Entry<String, NotificationConfiguration>, StaxUnmarshallerContext> {
 
-    private static LambdaConfigurationStaxUnmarshaller instance = new LambdaConfigurationStaxUnmarshaller();
+    private static final LambdaConfigurationStaxUnmarshaller instance = new LambdaConfigurationStaxUnmarshaller();
 
     public static LambdaConfigurationStaxUnmarshaller getInstance() {
         return instance;

@@ -1,5 +1,5 @@
 /*
- * Copyright 2011-2017 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2011-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -27,6 +27,7 @@ import com.ibm.cloud.objectstorage.auth.AWSCredentialsProvider;
 import com.ibm.cloud.objectstorage.auth.DefaultAWSCredentialsProviderChain;
 import com.ibm.cloud.objectstorage.client.AwsAsyncClientParams;
 import com.ibm.cloud.objectstorage.client.AwsSyncClientParams;
+import com.ibm.cloud.objectstorage.monitoring.MonitoringListener;
 import com.ibm.cloud.objectstorage.handlers.RequestHandler2;
 import com.ibm.cloud.objectstorage.metrics.RequestMetricCollector;
 import com.ibm.cloud.objectstorage.oauth.DefaultTokenManager;
@@ -37,7 +38,6 @@ import com.ibm.cloud.objectstorage.regions.DefaultAwsRegionProviderChain;
 import com.ibm.cloud.objectstorage.regions.Region;
 import com.ibm.cloud.objectstorage.regions.RegionUtils;
 import com.ibm.cloud.objectstorage.regions.Regions;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -79,6 +79,7 @@ public abstract class AwsClientBuilder<Subclass extends AwsClientBuilder, TypeTo
     private Region region;
     private List<RequestHandler2> requestHandlers;
     private EndpointConfiguration endpointConfiguration;
+    private MonitoringListener monitoringListener;
     private String iamEndpoint;
     private double iamTokenRefreshOffset;
     private int iamMaxRetry;
@@ -109,29 +110,28 @@ public abstract class AwsClientBuilder<Subclass extends AwsClientBuilder, TypeTo
      */
     public final void setCredentials(AWSCredentialsProvider credentialsProvider) {
         this.credentials = credentialsProvider;
-        
         if (null != this.iamEndpoint){
-	        if ((this.credentials.getCredentials() instanceof IBMOAuthCredentials) &&
-        		((IBMOAuthCredentials)this.credentials.getCredentials()).getTokenManager() instanceof DefaultTokenManager){
-        			((DefaultTokenManager)((IBMOAuthCredentials)this.credentials.getCredentials()).getTokenManager()).setIamEndpoint(iamEndpoint);
-        			if (((DefaultTokenManager)((IBMOAuthCredentials)this.credentials.getCredentials()).getTokenManager()).getProvider() instanceof DefaultTokenProvider){
-        				((DefaultTokenProvider)((DefaultTokenManager)((IBMOAuthCredentials)this.credentials.getCredentials()).getTokenManager()).getProvider()).setIamEndpoint(iamEndpoint);
-        			}
-	        }
+            if ((this.credentials.getCredentials() instanceof IBMOAuthCredentials) &&
+                ((IBMOAuthCredentials)this.credentials.getCredentials()).getTokenManager() instanceof DefaultTokenManager){
+                    ((DefaultTokenManager)((IBMOAuthCredentials)this.credentials.getCredentials()).getTokenManager()).setIamEndpoint(iamEndpoint);
+                    if (((DefaultTokenManager)((IBMOAuthCredentials)this.credentials.getCredentials()).getTokenManager()).getProvider() instanceof DefaultTokenProvider){
+                        ((DefaultTokenProvider)((DefaultTokenManager)((IBMOAuthCredentials)this.credentials.getCredentials()).getTokenManager()).getProvider()).setIamEndpoint(iamEndpoint);
+                    }
+            }
         }
-        
+
         if (this.iamTokenRefreshOffset > 0){
-	        if ((this.credentials.getCredentials() instanceof IBMOAuthCredentials) &&
-        		((IBMOAuthCredentials)this.credentials.getCredentials()).getTokenManager() instanceof DefaultTokenManager){
-        			((DefaultTokenManager)((IBMOAuthCredentials)this.credentials.getCredentials()).getTokenManager()).setIamRefreshOffset(iamTokenRefreshOffset);
-	        }
+            if ((this.credentials.getCredentials() instanceof IBMOAuthCredentials) &&
+                ((IBMOAuthCredentials)this.credentials.getCredentials()).getTokenManager() instanceof DefaultTokenManager){
+                    ((DefaultTokenManager)((IBMOAuthCredentials)this.credentials.getCredentials()).getTokenManager()).setIamRefreshOffset(iamTokenRefreshOffset);
+            }
         }
-        
+
         if (this.iamMaxRetry > 0){
-	        if ((this.credentials.getCredentials() instanceof IBMOAuthCredentials) &&
-        		((IBMOAuthCredentials)this.credentials.getCredentials()).getTokenManager() instanceof DefaultTokenManager){
-        			((DefaultTokenManager)((IBMOAuthCredentials)this.credentials.getCredentials()).getTokenManager()).setIamMaxRetry(iamMaxRetry);;
-	        }
+            if ((this.credentials.getCredentials() instanceof IBMOAuthCredentials) &&
+                    ((IBMOAuthCredentials)this.credentials.getCredentials()).getTokenManager() instanceof DefaultTokenManager){
+                    ((DefaultTokenManager)((IBMOAuthCredentials)this.credentials.getCredentials()).getTokenManager()).setIamMaxRetry(iamMaxRetry);;
+            }
         }
     }
 
@@ -159,52 +159,52 @@ public abstract class AwsClientBuilder<Subclass extends AwsClientBuilder, TypeTo
         this.iamEndpoint = iamEndpoint;
 
         if ((this.credentials.getCredentials() instanceof IBMOAuthCredentials) &&
-        		((IBMOAuthCredentials)this.credentials.getCredentials()).getTokenManager() instanceof DefaultTokenManager){
-        			((DefaultTokenManager)((IBMOAuthCredentials)this.credentials.getCredentials()).getTokenManager()).setIamEndpoint(iamEndpoint);
-        			if (((DefaultTokenManager)((IBMOAuthCredentials)this.credentials.getCredentials()).getTokenManager()).getProvider() instanceof DefaultTokenProvider){
-        				((DefaultTokenProvider)((DefaultTokenManager)((IBMOAuthCredentials)this.credentials.getCredentials()).getTokenManager()).getProvider()).setIamEndpoint(iamEndpoint);
-        				((DefaultTokenProvider)((DefaultTokenManager)((IBMOAuthCredentials)this.credentials.getCredentials()).getTokenManager()).getProvider()).retrieveToken();
-        			}
+                ((IBMOAuthCredentials)this.credentials.getCredentials()).getTokenManager() instanceof DefaultTokenManager){
+                    ((DefaultTokenManager)((IBMOAuthCredentials)this.credentials.getCredentials()).getTokenManager()).setIamEndpoint(iamEndpoint);
+                    if (((DefaultTokenManager)((IBMOAuthCredentials)this.credentials.getCredentials()).getTokenManager()).getProvider() instanceof DefaultTokenProvider){
+                        ((DefaultTokenProvider)((DefaultTokenManager)((IBMOAuthCredentials)this.credentials.getCredentials()).getTokenManager()).getProvider()).setIamEndpoint(iamEndpoint);
+                        ((DefaultTokenProvider)((DefaultTokenManager)((IBMOAuthCredentials)this.credentials.getCredentials()).getTokenManager()).getProvider()).retrieveToken();
+                    }
         }
         return getSubclass();
     }
-    
+
     /**
      * Sets the time offset used for IAM token refresh by the DefaultTokenManager.
      * This should only be over written for a dev or staging environment
      *
-     * @param offset, percentage of token life before expiration that token should be refreshed.  
+     * @param offset, percentage of token life before expiration that token should be refreshed.
      * @return This object for method chaining.
      */
     public Subclass withIAMTokenRefresh(double offset) {
         this.iamTokenRefreshOffset = offset;
 
-        if ((offset > 0) && 
-        		(this.credentials.getCredentials() instanceof IBMOAuthCredentials) &&
-        		((IBMOAuthCredentials)this.credentials.getCredentials()).getTokenManager() instanceof DefaultTokenManager){
-        			((DefaultTokenManager)((IBMOAuthCredentials)this.credentials.getCredentials()).getTokenManager()).setIamRefreshOffset(iamTokenRefreshOffset);
+        if ((offset > 0) &&
+                (this.credentials.getCredentials() instanceof IBMOAuthCredentials) &&
+                ((IBMOAuthCredentials)this.credentials.getCredentials()).getTokenManager() instanceof DefaultTokenManager){
+                ((DefaultTokenManager)((IBMOAuthCredentials)this.credentials.getCredentials()).getTokenManager()).setIamRefreshOffset(iamTokenRefreshOffset);
         }
         return getSubclass();
     }
-    
+
     /**
      * Sets the maximum number of attempts for retrieving/refreshing IAM token by the DefaultTokenManager.
      * This should only be over written for a dev or staging environment
      *
-     * @param offset, offset in seconds from token expiry time.  
+     * @param offset, offset in seconds from token expiry time.
      * @return This object for method chaining.
      */
     public Subclass withIAMMaxRetry(int retryCount) {
         this.iamMaxRetry = retryCount;
 
         if ((retryCount > 0) &&
-        		(this.credentials.getCredentials() instanceof IBMOAuthCredentials) &&
-        		((IBMOAuthCredentials)this.credentials.getCredentials()).getTokenManager() instanceof DefaultTokenManager){
-        			((DefaultTokenManager)((IBMOAuthCredentials)this.credentials.getCredentials()).getTokenManager()).setIamMaxRetry(iamMaxRetry);
+            (this.credentials.getCredentials() instanceof IBMOAuthCredentials) &&
+            ((IBMOAuthCredentials)this.credentials.getCredentials()).getTokenManager() instanceof DefaultTokenManager){
+            ((DefaultTokenManager)((IBMOAuthCredentials)this.credentials.getCredentials()).getTokenManager()).setIamMaxRetry(iamMaxRetry);
         }
         return getSubclass();
     }
-    
+
     /**
      * If the builder isn't explicitly configured with credentials we use the {@link
      * DefaultAWSCredentialsProviderChain}.
@@ -250,6 +250,13 @@ public abstract class AwsClientBuilder<Subclass extends AwsClientBuilder, TypeTo
     private ClientConfiguration resolveClientConfiguration() {
         return (clientConfig == null) ? clientConfigFactory.getConfig() :
                 new ClientConfiguration(clientConfig);
+    }
+
+    /**
+     * Gets the {@link RequestMetricCollector} in use by the builder.
+     */
+    public final RequestMetricCollector getMetricsCollector() {
+        return this.metricsCollector;
     }
 
     /**
@@ -308,13 +315,6 @@ public abstract class AwsClientBuilder<Subclass extends AwsClientBuilder, TypeTo
     }
 
     /**
-	 * Gets the {@link RequestMetricCollector} in use by the builder.
-	 */
-	public final RequestMetricCollector getMetricsCollector() {
-	    return this.metricsCollector;
-	}
-
-	/**
      * Sets the region to be used by the client. This will be used to determine both the
      * service endpoint (eg: https://sns.us-west-1.amazonaws.com) and signing region (eg: us-west-1)
      * for requests. If neither region or endpoint configuration {@link #setEndpointConfiguration(EndpointConfiguration)}
@@ -324,7 +324,23 @@ public abstract class AwsClientBuilder<Subclass extends AwsClientBuilder, TypeTo
      * @return This object for method chaining.
      */
     public final Subclass withRegion(String region) {
-        return withRegion(RegionUtils.getRegion(region));
+        return withRegion(getRegionObject(region));
+    }
+
+    /**
+     * Lookups the {@link Region} object for the given string region name.
+     *
+     * @param regionStr Region name.
+     * @return Region object.
+     * @throws SdkClientException If region cannot be found in the metadata.
+     */
+    private Region getRegionObject(String regionStr) {
+        Region regionObj = RegionUtils.getRegion(regionStr);
+        if (regionObj == null) {
+            throw new SdkClientException(String.format("Could not find region information for '%s' in SDK metadata.",
+                                                             regionStr));
+        }
+        return regionObj;
     }
 
     /**
@@ -454,7 +470,7 @@ public abstract class AwsClientBuilder<Subclass extends AwsClientBuilder, TypeTo
         } else {
             final String region = determineRegionFromRegionProvider();
             if (region != null) {
-                client.setRegion(RegionUtils.getRegion(region));
+                client.setRegion(getRegionObject(region));
             } else {
                 throw new SdkClientException(
                         "Unable to find a region via the region provider chain. " +
@@ -494,12 +510,14 @@ public abstract class AwsClientBuilder<Subclass extends AwsClientBuilder, TypeTo
         private final AWSCredentialsProvider _credentials;
         private final RequestMetricCollector _metricsCollector;
         private final List<RequestHandler2> _requestHandlers;
+        private final MonitoringListener _monitoringListener;
 
         protected SyncBuilderParams() {
             this._clientConfig = resolveClientConfiguration();
             this._credentials = resolveCredentials();
             this._metricsCollector = metricsCollector;
             this._requestHandlers = resolveRequestHandlers();
+            this._monitoringListener = monitoringListener;
         }
 
         @Override
@@ -520,6 +538,11 @@ public abstract class AwsClientBuilder<Subclass extends AwsClientBuilder, TypeTo
         @Override
         public List<RequestHandler2> getRequestHandlers() {
             return this._requestHandlers;
+        }
+
+        @Override
+        public MonitoringListener getMonitoringListener() {
+            return this._monitoringListener;
         }
 
         @Override

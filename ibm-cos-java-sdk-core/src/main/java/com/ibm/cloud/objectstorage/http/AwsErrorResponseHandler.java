@@ -1,5 +1,5 @@
 /*
- * Copyright 2011-2017 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2011-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -17,6 +17,8 @@ package com.ibm.cloud.objectstorage.http;
 import com.ibm.cloud.objectstorage.AmazonServiceException;
 import com.ibm.cloud.objectstorage.annotation.SdkInternalApi;
 import com.ibm.cloud.objectstorage.util.AWSRequestMetrics;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * Wrapper around protocol specific error handler to deal with some default scenarios and fill in common information.
@@ -26,6 +28,7 @@ class AwsErrorResponseHandler implements HttpResponseHandler<AmazonServiceExcept
 
     private final HttpResponseHandler<AmazonServiceException> delegate;
     private final AWSRequestMetrics awsRequestMetrics;
+
 
     AwsErrorResponseHandler(HttpResponseHandler<AmazonServiceException> errorResponseHandler,
                             AWSRequestMetrics awsRequestMetrics) {
@@ -76,4 +79,5 @@ class AwsErrorResponseHandler implements HttpResponseHandler<AmazonServiceExcept
     public boolean needsConnectionLeftOpen() {
         return delegate.needsConnectionLeftOpen();
     }
+
 }

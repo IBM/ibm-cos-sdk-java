@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2017 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2010-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -15,7 +15,6 @@
 package com.ibm.cloud.objectstorage.auth.policy.conditions;
 
 import com.ibm.cloud.objectstorage.auth.policy.Condition;
-import com.ibm.cloud.objectstorage.auth.policy.conditions.StringCondition;
 import com.ibm.cloud.objectstorage.auth.policy.conditions.StringCondition.StringComparisonType;
 import com.ibm.cloud.objectstorage.services.s3.model.CannedAccessControlList;
 

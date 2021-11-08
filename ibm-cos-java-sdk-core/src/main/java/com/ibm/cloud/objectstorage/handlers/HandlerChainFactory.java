@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2017 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2010-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -14,6 +14,9 @@
  */
 package com.ibm.cloud.objectstorage.handlers;
 
+import com.ibm.cloud.objectstorage.AmazonClientException;
+import com.ibm.cloud.objectstorage.util.ClassLoaderHelper;
+import com.ibm.cloud.objectstorage.util.StringUtils;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -21,18 +24,15 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Enumeration;
 import java.util.List;
-
-import com.ibm.cloud.objectstorage.AmazonClientException;
-import com.ibm.cloud.objectstorage.util.ClassLoaderHelper;
-import com.ibm.cloud.objectstorage.util.StringUtils;
 
 /**
  * Factory for creating request/response handler chains.
  */
 public class HandlerChainFactory {
 
-    private static final String GLOBAL_HANDLER_PATH = "com/amazonaws/global/handlers/request.handler2s";
+    private static final String GLOBAL_HANDLER_PATH = "com/ibm/cloud/objectstorage/global/handlers/request.handler2s";
 
     /**
      * For backward compatibility, constructs a new request handler chain adapted to {@link RequestHandler2} by analyzing the
@@ -61,7 +61,7 @@ public class HandlerChainFactory {
 
         try {
             List<URL> globalHandlerListLocations = Collections
-                    .list(HandlerChainFactory.class.getClassLoader().getResources(GLOBAL_HANDLER_PATH));
+                    .list(getGlobalHandlerResources());
 
             for (URL url : globalHandlerListLocations) {
 
@@ -91,6 +91,14 @@ public class HandlerChainFactory {
             }
         }
         return handlers;
+    }
+
+    private Enumeration<URL> getGlobalHandlerResources() throws IOException {
+        // Classloader may be null if loaded by bootstrap classloader.
+        if (HandlerChainFactory.class.getClassLoader() == null) {
+            return ClassLoader.getSystemResources(GLOBAL_HANDLER_PATH);
+        }
+        return HandlerChainFactory.class.getClassLoader().getResources(GLOBAL_HANDLER_PATH);
     }
 
     private RequestHandler2 createRequestHandler(String handlerClassName, Class<?> handlerApiClass)

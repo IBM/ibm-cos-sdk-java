@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2017 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2015-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -16,10 +16,10 @@ package com.ibm.cloud.objectstorage.internal.http;
 
 import java.util.Map;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.ibm.cloud.objectstorage.annotation.SdkInternalApi;
 import com.ibm.cloud.objectstorage.http.HttpResponse;
 import com.ibm.cloud.objectstorage.protocol.json.JsonContent;
+import com.fasterxml.jackson.databind.JsonNode;
 
 @SdkInternalApi
 public class JsonErrorCodeParser implements ErrorCodeParser {

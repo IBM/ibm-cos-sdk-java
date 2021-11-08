@@ -17,9 +17,6 @@
 
 package com.ibm.cloud.objectstorage.protocol.json;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.ibm.cloud.objectstorage.AmazonServiceException;
 import com.ibm.cloud.objectstorage.AmazonWebServiceResponse;
 import com.ibm.cloud.objectstorage.SDKGlobalConfiguration;
@@ -32,6 +29,8 @@ import com.ibm.cloud.objectstorage.protocol.ProtocolRequestMarshaller;
 import com.ibm.cloud.objectstorage.transform.JsonErrorUnmarshaller;
 import com.ibm.cloud.objectstorage.transform.JsonUnmarshallerContext;
 import com.ibm.cloud.objectstorage.transform.Unmarshaller;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Factory to generate the various JSON protocol handlers and generators depending on the wire protocol to be used for

@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2017 Amazon Technologies, Inc.
+ * Copyright 2012-2019 Amazon Technologies, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,7 +20,6 @@ import com.ibm.cloud.objectstorage.metrics.AwsSdkMetrics;
 import com.ibm.cloud.objectstorage.metrics.MetricFilterInputStream;
 import com.ibm.cloud.objectstorage.services.s3.metrics.S3ServiceMetric;
 import com.ibm.cloud.objectstorage.util.IOUtils;
-
 import java.io.IOException;
 import java.io.InputStream;
 import org.apache.http.client.HttpClient;

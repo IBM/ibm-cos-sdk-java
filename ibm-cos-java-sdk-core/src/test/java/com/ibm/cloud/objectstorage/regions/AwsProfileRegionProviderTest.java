@@ -1,5 +1,5 @@
 /*
- * Copyright 2011-2017 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2011-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -20,8 +20,6 @@ import com.ibm.cloud.objectstorage.auth.profile.internal.BasicProfile;
 import com.ibm.cloud.objectstorage.auth.profile.internal.BasicProfileConfigLoader;
 import com.ibm.cloud.objectstorage.auth.profile.internal.ProfileKeyConstants;
 import com.ibm.cloud.objectstorage.profile.path.AwsProfileFileLocationProvider;
-import com.ibm.cloud.objectstorage.regions.AwsProfileRegionProvider;
-import com.ibm.cloud.objectstorage.regions.AwsRegionProvider;
 import com.ibm.cloud.objectstorage.util.ImmutableMapParameter;
 
 import org.junit.Before;

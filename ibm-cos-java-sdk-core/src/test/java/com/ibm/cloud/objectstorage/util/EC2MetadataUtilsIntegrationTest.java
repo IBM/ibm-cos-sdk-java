@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2017 Amazon.com, Inc. or its affiliates. All Rights
+ * Copyright 2010-2019 Amazon.com, Inc. or its affiliates. All Rights
  * Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
@@ -31,7 +31,6 @@ import org.junit.Test;
 import com.ibm.cloud.objectstorage.SDKGlobalConfiguration;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
-import com.ibm.cloud.objectstorage.util.EC2MetadataUtils;
 
 @RunWith(Parameterized.class)
 public class EC2MetadataUtilsIntegrationTest {
@@ -53,7 +52,6 @@ public class EC2MetadataUtilsIntegrationTest {
 
     @BeforeClass
     public static void setUp() throws IOException {
-
         SERVER = new EC2MetadataUtilsServer("localhost", 0, tokenEnabled);
         SERVER.start();
 

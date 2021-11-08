@@ -1,5 +1,5 @@
 /*
- * Copyright 2011-2017 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2011-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -14,14 +14,14 @@
  */
 package com.ibm.cloud.objectstorage;
 
-import java.util.List;
-import java.util.Map;
-
 import com.ibm.cloud.objectstorage.annotation.SdkProtectedApi;
 import com.ibm.cloud.objectstorage.auth.AWSCredentialsProvider;
 import com.ibm.cloud.objectstorage.event.ProgressListener;
 import com.ibm.cloud.objectstorage.internal.AmazonWebServiceRequestAdapter;
 import com.ibm.cloud.objectstorage.metrics.RequestMetricCollector;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * Generic representation of request level configuration. The customer interface for specifying

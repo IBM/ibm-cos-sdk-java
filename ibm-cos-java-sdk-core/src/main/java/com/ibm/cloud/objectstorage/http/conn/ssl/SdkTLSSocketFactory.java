@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2017 Amazon Technologies, Inc.
+ * Copyright 2014-2019 Amazon Technologies, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,19 +14,19 @@
  */
 package com.ibm.cloud.objectstorage.http.conn.ssl;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.apache.http.HttpHost;
-import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
-import org.apache.http.protocol.HttpContext;
-
 import com.ibm.cloud.objectstorage.annotation.ThreadSafe;
+import com.ibm.cloud.objectstorage.http.apache.utils.HttpContextUtils;
 import com.ibm.cloud.objectstorage.internal.SdkMetricsSocket;
 import com.ibm.cloud.objectstorage.internal.SdkSSLMetricsSocket;
 import com.ibm.cloud.objectstorage.internal.SdkSSLSocket;
 import com.ibm.cloud.objectstorage.internal.SdkSocket;
 import com.ibm.cloud.objectstorage.metrics.AwsSdkMetrics;
 import com.ibm.cloud.objectstorage.util.JavaVersionParser;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.http.HttpHost;
+import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
+import org.apache.http.protocol.HttpContext;
 
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLContext;
@@ -36,6 +36,7 @@ import javax.net.ssl.SSLSessionContext;
 import javax.net.ssl.SSLSocket;
 import java.io.IOException;
 import java.net.InetSocketAddress;
+import java.net.Proxy;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -62,6 +63,14 @@ public class SdkTLSSocketFactory extends SSLConnectionSocketFactory {
         this.sslContext = sslContext;
         this.masterSecretValidator = MasterSecretValidators.getMasterSecretValidator();
         this.shouldClearSslSessionsPredicate = new ShouldClearSslSessionPredicate(JavaVersionParser.getCurrentJavaVersion());
+    }
+
+    @Override
+    public Socket createSocket(HttpContext ctx) throws IOException {
+        if (HttpContextUtils.disableSocketProxy(ctx)) {
+            return new Socket(Proxy.NO_PROXY);
+        }
+        return super.createSocket(ctx);
     }
 
     /**

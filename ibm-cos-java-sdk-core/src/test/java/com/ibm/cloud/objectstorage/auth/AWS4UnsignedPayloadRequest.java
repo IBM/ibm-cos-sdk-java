@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2017 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2010-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -14,14 +14,9 @@
  */
 package com.ibm.cloud.objectstorage.auth;
 
+import com.ibm.cloud.objectstorage.SignableRequest;
 import org.junit.BeforeClass;
 import org.junit.Test;
-
-import com.ibm.cloud.objectstorage.SignableRequest;
-import com.ibm.cloud.objectstorage.auth.AWS4UnsignedPayloadSigner;
-import com.ibm.cloud.objectstorage.auth.AWSCredentials;
-import com.ibm.cloud.objectstorage.auth.BasicAWSCredentials;
-import com.ibm.cloud.objectstorage.auth.SdkClock;
 
 import java.io.ByteArrayInputStream;
 import java.io.UnsupportedEncodingException;

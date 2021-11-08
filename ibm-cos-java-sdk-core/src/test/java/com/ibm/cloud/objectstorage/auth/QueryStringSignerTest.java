@@ -14,13 +14,8 @@
  */
 package com.ibm.cloud.objectstorage.auth;
 
-import org.junit.Test;
-
 import com.ibm.cloud.objectstorage.SignableRequest;
-import com.ibm.cloud.objectstorage.auth.AWSCredentials;
-import com.ibm.cloud.objectstorage.auth.AnonymousAWSCredentials;
-import com.ibm.cloud.objectstorage.auth.BasicAWSCredentials;
-import com.ibm.cloud.objectstorage.auth.QueryStringSigner;
+import org.junit.Test;
 
 import java.util.Calendar;
 import java.util.GregorianCalendar;

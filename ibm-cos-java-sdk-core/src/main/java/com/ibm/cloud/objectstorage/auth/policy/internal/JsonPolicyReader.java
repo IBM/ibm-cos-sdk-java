@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2017 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2010-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -14,19 +14,18 @@
  */
 package com.ibm.cloud.objectstorage.auth.policy.internal;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.ibm.cloud.objectstorage.SdkClientException;
 import com.ibm.cloud.objectstorage.auth.policy.Action;
 import com.ibm.cloud.objectstorage.auth.policy.Condition;
 import com.ibm.cloud.objectstorage.auth.policy.Policy;
 import com.ibm.cloud.objectstorage.auth.policy.PolicyReaderOptions;
 import com.ibm.cloud.objectstorage.auth.policy.Principal;
+import com.ibm.cloud.objectstorage.auth.policy.Principal.WebIdentityProviders;
 import com.ibm.cloud.objectstorage.auth.policy.Resource;
 import com.ibm.cloud.objectstorage.auth.policy.Statement;
-import com.ibm.cloud.objectstorage.auth.policy.Principal.WebIdentityProviders;
 import com.ibm.cloud.objectstorage.auth.policy.Statement.Effect;
 import com.ibm.cloud.objectstorage.util.json.Jackson;
-
+import com.fasterxml.jackson.databind.JsonNode;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -78,7 +77,7 @@ public class JsonPolicyReader {
 
         JsonNode policyNode;
         JsonNode idNode;
-        JsonNode statementNodes;
+        JsonNode statementsNode;
         Policy policy = new Policy();
         List<Statement> statements = new LinkedList<Statement>();
 
@@ -90,10 +89,14 @@ public class JsonPolicyReader {
                 policy.setId(idNode.asText());
             }
 
-            statementNodes = policyNode.get(JsonDocumentFields.STATEMENT);
-            if (isNotNull(statementNodes)) {
-                for (JsonNode node : statementNodes) {
-                    statements.add(statementOf(node));
+            statementsNode = policyNode.get(JsonDocumentFields.STATEMENT);
+            if (isNotNull(statementsNode)) {
+                if (statementsNode.isObject()) {
+                    statements.add(statementOf(statementsNode));
+                } else if (statementsNode.isArray()) {
+                    for (JsonNode statementNode : statementsNode) {
+                        statements.add(statementOf(statementNode));
+                    }
                 }
             }
 
@@ -143,17 +146,30 @@ public class JsonPolicyReader {
         if (isNotNull(actionNodes))
             statement.setActions(actionsOf(actionNodes));
 
+        List<Resource> resources = new LinkedList<Resource>();
         JsonNode resourceNodes = jStatement.get(JsonDocumentFields.RESOURCE);
-        if (isNotNull(resourceNodes))
-            statement.setResources(resourcesOf(resourceNodes));
+        if (isNotNull(resourceNodes)) {
+            resources.addAll(resourcesOf(resourceNodes, false));
+        }
+
+        JsonNode notResourceNodes = jStatement.get(JsonDocumentFields.NOT_RESOURCE);
+        if (isNotNull(notResourceNodes)) {
+            resources.addAll(resourcesOf(notResourceNodes, true));
+        }
+
+        if (!resources.isEmpty()) {
+            statement.setResources(resources);
+        }
 
         JsonNode conditionNodes = jStatement.get(JsonDocumentFields.CONDITION);
-        if (isNotNull(conditionNodes))
+        if (isNotNull(conditionNodes)) {
             statement.setConditions(conditionsOf(conditionNodes));
+        }
 
         JsonNode principalNodes = jStatement.get(JsonDocumentFields.PRINCIPAL);
-        if (isNotNull(principalNodes))
+        if (isNotNull(principalNodes)) {
             statement.setPrincipals(principalOf(principalNodes));
+        }
 
         return statement;
     }
@@ -179,21 +195,24 @@ public class JsonPolicyReader {
     }
 
     /**
-     * Generates a list of resources from the Resource Json Node.
+     * Generates a list of resources from the Resource Json Node
+     * using the is not type specified.
      *
      * @param resourceNodes
      *            the resource Json node to be parsed.
+     * @param isNotType
+     *            whether the nodes being parsed are isNotType.
      * @return the list of resources.
      */
-    private List<Resource> resourcesOf(JsonNode resourceNodes) {
+    private List<Resource> resourcesOf(JsonNode resourceNodes, boolean isNotType) {
         List<Resource> resources = new LinkedList<Resource>();
 
         if (resourceNodes.isArray()) {
             for (JsonNode resource : resourceNodes) {
-                resources.add(new Resource(resource.asText()));
+                resources.add(new Resource(resource.asText()).withIsNotType(isNotType));
             }
         } else {
-            resources.add(new Resource(resourceNodes.asText()));
+            resources.add(new Resource(resourceNodes.asText()).withIsNotType(isNotType));
         }
 
         return resources;
@@ -336,6 +355,7 @@ public class JsonPolicyReader {
             this.actionName = actionName;
         }
 
+        @Override
         public String getActionName() {
             return actionName;
         }

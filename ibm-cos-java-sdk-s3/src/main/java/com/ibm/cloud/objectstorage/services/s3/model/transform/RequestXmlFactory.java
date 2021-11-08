@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2017 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2010-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -17,8 +17,11 @@ package com.ibm.cloud.objectstorage.services.s3.model.transform;
 import com.ibm.cloud.objectstorage.SdkClientException;
 import com.ibm.cloud.objectstorage.services.s3.internal.XmlWriter;
 import com.ibm.cloud.objectstorage.services.s3.model.GlacierJobParameters;
+import com.ibm.cloud.objectstorage.services.s3.model.ObjectTagging;
 import com.ibm.cloud.objectstorage.services.s3.model.PartETag;
 import com.ibm.cloud.objectstorage.services.s3.model.RestoreObjectRequest;
+import com.ibm.cloud.objectstorage.services.s3.model.Tag;
+
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -76,10 +79,14 @@ public class RequestXmlFactory {
      * @throws SdkClientException
      */
     public static byte[] convertToXmlByteArray(RestoreObjectRequest restoreObjectRequest) throws SdkClientException {
+
         XmlWriter xml = new XmlWriter();
 
         xml.start("RestoreRequest");
-        xml.start("Days").value(Integer.toString(restoreObjectRequest.getExpirationInDays())).end();
+        if (restoreObjectRequest.getExpirationInDays() != -1) {
+            xml.start("Days").value(Integer.toString(restoreObjectRequest.getExpirationInDays())).end();
+        }
+
         final GlacierJobParameters glacierJobParameters = restoreObjectRequest.getGlacierJobParameters();
         if (glacierJobParameters != null) {
             xml.start("GlacierJobParameters");
@@ -91,9 +98,32 @@ public class RequestXmlFactory {
         return xml.getBytes();
     }
 
+    private static void addTaggingIfNotNull(XmlWriter xml, ObjectTagging tagSet) {
+        if (tagSet == null) {
+            return;
+        }
+
+        xml.start("Tagging");
+        xml.start("TagSet");
+        for(Tag tag : tagSet.getTagSet()) {
+            xml.start("Tag");
+            xml.start("Key").value(tag.getKey()).end();
+            xml.start("Value").value(tag.getValue()).end();
+            xml.end();
+        }
+        xml.end();
+        xml.end();
+    }
+
     private static void addIfNotNull(XmlWriter xml, String xmlTag, String value) {
         if (value != null) {
             xml.start(xmlTag).value(value).end();
+        }
+    }
+
+    private static void addIfNotNull(XmlWriter xml, String xmlTag, Object value) {
+        if (value != null && value.toString() != null) {
+            xml.start(xmlTag).value(value.toString()).end();
         }
     }
 }

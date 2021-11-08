@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016. Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright (c) 2016-2019. Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -13,6 +13,13 @@
  * permissions and limitations under the License.
  */
 package com.ibm.cloud.objectstorage.http.apache.utils;
+
+import com.ibm.cloud.objectstorage.Request;
+import com.ibm.cloud.objectstorage.SdkClientException;
+import com.ibm.cloud.objectstorage.http.HttpResponse;
+import com.ibm.cloud.objectstorage.http.settings.HttpClientSettings;
+import com.ibm.cloud.objectstorage.util.FakeIOException;
+import com.ibm.cloud.objectstorage.util.ReflectionMethodInvoker;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -33,18 +40,11 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.auth.BasicScheme;
 import org.apache.http.impl.client.BasicAuthCache;
 import org.apache.http.impl.client.BasicCredentialsProvider;
-import org.apache.http.protocol.HttpContext;
-
-import com.ibm.cloud.objectstorage.Request;
-import com.ibm.cloud.objectstorage.SdkClientException;
-import com.ibm.cloud.objectstorage.http.HttpResponse;
-import com.ibm.cloud.objectstorage.http.settings.HttpClientSettings;
-import com.ibm.cloud.objectstorage.util.FakeIOException;
-import com.ibm.cloud.objectstorage.util.ReflectionMethodInvoker;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.Map;
+import org.apache.http.protocol.HttpContext;
 
 public class ApacheUtils {
     private static final Log log = LogFactory.getLog(ApacheUtils.class);

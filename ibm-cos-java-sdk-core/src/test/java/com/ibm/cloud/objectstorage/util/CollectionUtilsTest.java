@@ -16,8 +16,6 @@ package com.ibm.cloud.objectstorage.util;
 
 import org.junit.Test;
 
-import com.ibm.cloud.objectstorage.util.CollectionUtils;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;

@@ -1,5 +1,5 @@
 /*
- * Copyright 2016-2017 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2016-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -18,6 +18,9 @@ import static org.hamcrest.Matchers.instanceOf;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 
+import com.ibm.cloud.objectstorage.transform.JsonErrorUnmarshaller;
+import com.ibm.cloud.objectstorage.transform.JsonUnmarshallerContext;
+import com.fasterxml.jackson.databind.JsonNode;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.util.LinkedList;
@@ -32,8 +35,6 @@ import com.ibm.cloud.objectstorage.AmazonServiceException;
 import com.ibm.cloud.objectstorage.DefaultRequest;
 import com.ibm.cloud.objectstorage.http.HttpResponse;
 import com.ibm.cloud.objectstorage.http.JsonErrorResponseHandler;
-import com.ibm.cloud.objectstorage.protocol.json.SdkStructuredIonFactory;
-import com.ibm.cloud.objectstorage.transform.JsonErrorUnmarshaller;
 
 import software.amazon.ion.IonStruct;
 import software.amazon.ion.IonSystem;
@@ -138,7 +139,7 @@ public class SdkStructuredIonFactoryTest {
 
     private AmazonServiceException handleError(HttpResponse error) throws Exception {
         List<JsonErrorUnmarshaller> unmarshallers = new LinkedList<JsonErrorUnmarshaller>();
-        unmarshallers.add(new JsonErrorUnmarshaller(InvalidParameterException.class, ERROR_TYPE));
+        unmarshallers.add(new InvalidParameterExceptionUnmarshaller(ERROR_TYPE));
 
         JsonErrorResponseHandler handler = SdkStructuredIonFactory.SDK_ION_BINARY_FACTORY.createErrorResponseHandler(unmarshallers, NO_CUSTOM_ERROR_CODE_FIELD_NAME);
         return handler.handle(error);
@@ -149,6 +150,18 @@ public class SdkStructuredIonFactoryTest {
 
         public InvalidParameterException(String errorMessage) {
             super(errorMessage);
+        }
+    }
+
+    private static class InvalidParameterExceptionUnmarshaller extends JsonErrorUnmarshaller {
+
+        public InvalidParameterExceptionUnmarshaller(String handledErrorCode) {
+            super(InvalidParameterException.class, handledErrorCode);
+        }
+
+        @Override
+        public InvalidParameterException unmarshall(JsonNode in) throws Exception {
+            return new InvalidParameterException(null);
         }
     }
 }

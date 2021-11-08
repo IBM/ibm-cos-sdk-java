@@ -12,6 +12,7 @@
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
+
 package com.ibm.cloud.objectstorage.internal;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.equalTo;
@@ -19,12 +20,13 @@ import static com.github.tomakehurst.wiremock.client.WireMock.getRequestedFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlMatching;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
+
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import org.junit.After;
 import org.junit.ClassRule;
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
+
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.Inet4Address;
@@ -36,7 +38,7 @@ public class ConnectionUtilsTest {
 
     @ClassRule
     public static WireMockRule mockProxyServer = new WireMockRule(0);
-    
+
     @Rule
     public WireMockRule mockServer = new WireMockRule(0);
 
@@ -47,8 +49,10 @@ public class ConnectionUtilsTest {
         System.getProperties().remove("http.proxyHost");
         System.getProperties().remove("http.proxyPort");
     }
+
     @Test
     public void proxiesAreNotUsedEvenIfPropertyIsSet() throws IOException {
+
         System.getProperties().put("http.proxyHost", "localhost");
         System.getProperties().put("http.proxyPort", String.valueOf(mockProxyServer.port()));
         HttpURLConnection connection = sut.connectToEndpoint(URI.create("http://localhost:" + mockServer.port()), new HashMap<String, String>());
@@ -57,7 +61,6 @@ public class ConnectionUtilsTest {
         assertThat(connection.usingProxy(), is(false));
     }
 
-    @Ignore
     @Test
     public void headersArePassedAsPartOfRequest() throws IOException {
         HttpURLConnection connection = sut.connectToEndpoint(URI.create("http://localhost:" + mockServer.port()), Collections.singletonMap("HeaderA", "ValueA"));

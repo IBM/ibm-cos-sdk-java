@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2017 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2010-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -14,9 +14,9 @@
  */
 package com.ibm.cloud.objectstorage.services.s3.model;
 
-import java.io.Serializable;
-
 import com.ibm.cloud.objectstorage.AmazonWebServiceRequest;
+
+import java.io.Serializable;
 
 /**
  * <p>
@@ -34,14 +34,25 @@ import com.ibm.cloud.objectstorage.AmazonWebServiceRequest;
 public class RestoreObjectRequest extends AmazonWebServiceRequest implements Serializable {
 
     /**
-     * The time, in days, between when an object is restored to the bucket and
-     * when it expires.
+     * Lifetime of the active copy in days. Do not use with restores that specify OutputLocation.
      */
     private int expirationInDays;
 
     /**
      * The name of the bucket containing the reference to the object to restore
      * which is now stored in Amazon Glacier.
+     *
+     * <p>
+     * When using this API with an access point, you must direct requests
+     * to the access point hostname. The access point hostname takes the form
+     * <i>AccessPointName</i>-<i>AccountId</i>.s3-accesspoint.<i>Region</i>.amazonaws.com.
+     * </p>
+     * <p>
+     * When using this operation using an access point through the AWS SDKs, you provide
+     * the access point ARN in place of the bucket name. For more information about access point
+     * ARNs, see <a href=\"https://docs.aws.amazon.com/AmazonS3/latest/dev/using-access-points.html\">
+     * Using Access Points</a> in the <i>Amazon Simple Storage Service Developer Guide</i>.
+     * </p>
      */
     private String bucketName;
 
@@ -68,6 +79,10 @@ public class RestoreObjectRequest extends AmazonWebServiceRequest implements Ser
      */
     private boolean isRequesterPays;
 
+    /**
+     * Glacier related parameters pertaining to this job.
+     * <p>This should not be used for restores with a specified OutputLocation.</p>
+     */
     private GlacierJobParameters glacierJobParameters;
 
     /**
@@ -75,8 +90,20 @@ public class RestoreObjectRequest extends AmazonWebServiceRequest implements Ser
      * Constructs a new RestoreObjectRequest.
      * </p>
      *
+     * <p>
+     * When using this API with an access point, you must direct requests
+     * to the access point hostname. The access point hostname takes the form
+     * <i>AccessPointName</i>-<i>AccountId</i>.s3-accesspoint.<i>Region</i>.amazonaws.com.
+     * </p>
+     * <p>
+     * When using this operation using an access point through the AWS SDKs, you provide
+     * the access point ARN in place of the bucket name. For more information about access point
+     * ARNs, see <a href=\"https://docs.aws.amazon.com/AmazonS3/latest/dev/using-access-points.html\">
+     * Using Access Points</a> in the <i>Amazon Simple Storage Service Developer Guide</i>.
+     * </p>
+     *
      * @param bucketName
-     *            The name of the bucket containing the reference to the object
+     *            The name of the bucket, or access point ARN, containing the reference to the object
      *            to restore which is now stored in Amazon Glacier.
      * @param key
      *            The key, the name of the reference to the object to restore, which
@@ -93,8 +120,20 @@ public class RestoreObjectRequest extends AmazonWebServiceRequest implements Ser
      * Constructs a new RestoreObjectRequest.
      * </p>
      *
+     * <p>
+     * When using this API with an access point, you must direct requests
+     * to the access point hostname. The access point hostname takes the form
+     * <i>AccessPointName</i>-<i>AccountId</i>.s3-accesspoint.<i>Region</i>.amazonaws.com.
+     * </p>
+     * <p>
+     * When using this operation using an access point through the AWS SDKs, you provide
+     * the access point ARN in place of the bucket name. For more information about access point
+     * ARNs, see <a href=\"https://docs.aws.amazon.com/AmazonS3/latest/dev/using-access-points.html\">
+     * Using Access Points</a> in the <i>Amazon Simple Storage Service Developer Guide</i>.
+     * </p>
+     *
      * @param bucketName
-     *            The name of the bucket containing the reference to the object
+     *            The name of the bucket, or access point ARN, containing the reference to the object
      *            to restore which is now stored in Amazon Glacier.
      * @param key
      *            The key, the name of the reference to the object to restore, which
@@ -127,6 +166,18 @@ public class RestoreObjectRequest extends AmazonWebServiceRequest implements Ser
      * restore which is now stored in Amazon Glacier, and returns a reference
      * to this object(RestoreObjectRequest) for method chaining.
      *
+     * <p>
+     * When using this API with an access point, you must direct requests
+     * to the access point hostname. The access point hostname takes the form
+     * <i>AccessPointName</i>-<i>AccountId</i>.s3-accesspoint.<i>Region</i>.amazonaws.com.
+     * </p>
+     * <p>
+     * When using this operation using an access point through the AWS SDKs, you provide
+     * the access point ARN in place of the bucket name. For more information about access point
+     * ARNs, see <a href=\"https://docs.aws.amazon.com/AmazonS3/latest/dev/using-access-points.html\">
+     * Using Access Points</a> in the <i>Amazon Simple Storage Service Developer Guide</i>.
+     * </p>
+     *
      * @see RestoreObjectRequest#setBucketName(String)
      * @see RestoreObjectRequest#getBucketName()
      */
@@ -138,6 +189,18 @@ public class RestoreObjectRequest extends AmazonWebServiceRequest implements Ser
     /**
      * Sets the name of the bucket containing the reference to the object to
      * restore which is now stored in Amazon Glacier.
+     *
+     * <p>
+     * When using this API with an access point, you must direct requests
+     * to the access point hostname. The access point hostname takes the form
+     * <i>AccessPointName</i>-<i>AccountId</i>.s3-accesspoint.<i>Region</i>.amazonaws.com.
+     * </p>
+     * <p>
+     * When using this operation using an access point through the AWS SDKs, you provide
+     * the access point ARN in place of the bucket name. For more information about access point
+     * ARNs, see <a href=\"https://docs.aws.amazon.com/AmazonS3/latest/dev/using-access-points.html\">
+     * Using Access Points</a> in the <i>Amazon Simple Storage Service Developer Guide</i>.
+     * </p>
      *
      * @see RestoreObjectRequest#getBucketName()
      * @see RestoreObjectRequest#withBucketName(String)
@@ -207,6 +270,8 @@ public class RestoreObjectRequest extends AmazonWebServiceRequest implements Ser
     /**
      * Sets the time, in days, between when an object is uploaded to the bucket
      * and when it expires.
+     *
+     * <p>Do not use with restores that specify OutputLocation.</p>
      */
     public void setExpirationInDays(int expirationInDays) {
         this.expirationInDays = expirationInDays;
@@ -223,6 +288,8 @@ public class RestoreObjectRequest extends AmazonWebServiceRequest implements Ser
      * Sets the time, in days, between when an object is uploaded to the bucket
      * and when it expires, and returns a reference to this object(RestoreObjectRequest) for method
      * chaining.
+     *
+     * <p>Do not use with restores that specify OutputLocation.</p>
      */
     public RestoreObjectRequest withExpirationInDays(int expirationInDays) {
         this.expirationInDays = expirationInDays;
@@ -243,7 +310,7 @@ public class RestoreObjectRequest extends AmazonWebServiceRequest implements Ser
      * this bucket
      *
      * @return true if the user has enabled Requester Pays option for
-     *         conducting this operation from Requester Pays Bucket.
+     * conducting this operation from Requester Pays Bucket.
      */
     public boolean isRequesterPays() {
         return isRequesterPays;
@@ -295,14 +362,17 @@ public class RestoreObjectRequest extends AmazonWebServiceRequest implements Ser
     }
 
     /**
-     * @return Glacier related prameters pertaining to this job.
+     * @return Glacier related parameters pertaining to this job.
      */
     public GlacierJobParameters getGlacierJobParameters() {
         return glacierJobParameters;
     }
 
     /**
-     * Sets Glacier related prameters pertaining to this job.
+     * Sets Glacier related parameters pertaining to this job.
+     *
+     * <p>This should not be used for restores with a specified OutputLocation.</p>
+     *
      * @param glacierJobParameters New value for Glacier job parameters.
      */
     public void setGlacierJobParameters(GlacierJobParameters glacierJobParameters) {
@@ -310,7 +380,9 @@ public class RestoreObjectRequest extends AmazonWebServiceRequest implements Ser
     }
 
     /**
-     * Sets Glacier related prameters pertaining to this job.
+     * Sets Glacier related parameters pertaining to this job.
+     *
+     * <p>This should not be used for restores with a specified OutputLocation.</p>
      *
      * @param glacierJobParameters New value for Glacier job parameters.
      * @return This object for method chaining.

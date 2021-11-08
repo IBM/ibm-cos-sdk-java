@@ -1,5 +1,5 @@
 /*
- * Copyright 2011-2017 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2011-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -15,8 +15,6 @@
 package com.ibm.cloud.objectstorage.regions;
 
 
-import java.io.File;
-
 import com.ibm.cloud.objectstorage.SdkClientException;
 import com.ibm.cloud.objectstorage.annotation.SdkTestInternalApi;
 import com.ibm.cloud.objectstorage.auth.profile.internal.AllProfiles;
@@ -25,6 +23,8 @@ import com.ibm.cloud.objectstorage.auth.profile.internal.BasicProfile;
 import com.ibm.cloud.objectstorage.auth.profile.internal.BasicProfileConfigLoader;
 import com.ibm.cloud.objectstorage.profile.path.AwsProfileFileLocationProvider;
 import com.ibm.cloud.objectstorage.util.StringUtils;
+
+import java.io.File;
 
 /**
  * Loads region information from the shared AWS config file. Uses the default profile unless

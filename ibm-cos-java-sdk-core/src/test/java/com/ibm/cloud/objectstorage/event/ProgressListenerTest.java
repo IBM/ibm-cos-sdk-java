@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2017 Amazon.com, Inc. or its affiliates. All Rights
+ * Copyright 2010-2019 Amazon.com, Inc. or its affiliates. All Rights
  * Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
@@ -28,10 +28,6 @@ import java.util.concurrent.CountDownLatch;
 import org.junit.Test;
 
 import com.ibm.cloud.objectstorage.AmazonClientException;
-import com.ibm.cloud.objectstorage.event.ProgressEvent;
-import com.ibm.cloud.objectstorage.event.ProgressEventType;
-import com.ibm.cloud.objectstorage.event.ProgressListener;
-import com.ibm.cloud.objectstorage.event.SyncProgressListener;
 import com.ibm.cloud.objectstorage.event.ProgressListener.ExceptionReporter;
 
 public class ProgressListenerTest {

@@ -1,5 +1,5 @@
 /*
- * Copyright 2011-2017 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2011-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -14,12 +14,12 @@
  */
 package com.ibm.cloud.objectstorage.auth.profile.internal;
 
-import java.util.Collections;
-import java.util.Map;
-
 import com.ibm.cloud.objectstorage.SDKGlobalConfiguration;
 import com.ibm.cloud.objectstorage.annotation.Immutable;
 import com.ibm.cloud.objectstorage.annotation.SdkInternalApi;
+
+import java.util.Collections;
+import java.util.Map;
 
 /**
  * Represents a CLI style config profile with a name and simple properties. Provides convenient
@@ -98,15 +98,31 @@ public class BasicProfile {
         return getPropertyValue(ProfileKeyConstants.REGION);
     }
 
+    public String getEndpointDiscovery() {
+        return getPropertyValue(ProfileKeyConstants.ENDPOINT_DISCOVERY);
+    }
+
+    public String getCredentialProcess() {
+        return getPropertyValue(ProfileKeyConstants.CREDENTIAL_PROCESS);
+    }
+
+    public String getWebIdentityTokenFilePath() {
+        return getPropertyValue(ProfileKeyConstants.WEB_IDENTITY_TOKEN);
+    }
+
+    public boolean isRoleBasedProfile() {
+        return getRoleArn() != null;
+    }
+
+    public boolean isProcessBasedProfile() {
+        return getCredentialProcess() != null;
+    }
+
     public String getIBMApiKey() {
         return getPropertyValue(SDKGlobalConfiguration.IBM_API_KEY_SYSTEM_PROPERTY);
     }
 
     public String getIBMServiceInstanceId() {
         return getPropertyValue(SDKGlobalConfiguration.IBM_SERVICE_INSTANCE_ID_SYSTEM_PROPERTY);
-    }
-
-    public boolean isRoleBasedProfile() {
-        return getRoleArn() != null;
     }
 }

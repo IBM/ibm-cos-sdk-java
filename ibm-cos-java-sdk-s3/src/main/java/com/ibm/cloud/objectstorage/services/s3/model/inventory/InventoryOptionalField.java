@@ -1,5 +1,5 @@
 /*
- * Copyright 2011-2017 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2011-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -46,5 +46,26 @@ public enum InventoryOptionalField {
     @Override
     public String toString() {
         return field;
+    }
+
+    /**
+     * Use this in place of valueOf.
+     *
+     * @param value real value
+     * @return InventoryOptionalField corresponding to the value
+     * @throws IllegalArgumentException If the specified value does not map to one of the known values in this enum.
+     */
+    public static InventoryOptionalField fromValue(String value) {
+        if (value == null || "".equals(value)) {
+            throw new IllegalArgumentException("Value cannot be null or empty!");
+        }
+
+        for (InventoryOptionalField enumEntry : InventoryOptionalField.values()) {
+            if (enumEntry.toString().equals(value)) {
+                return enumEntry;
+            }
+        }
+
+        throw new IllegalArgumentException("Cannot create enum from " + value + " value!");
     }
 }

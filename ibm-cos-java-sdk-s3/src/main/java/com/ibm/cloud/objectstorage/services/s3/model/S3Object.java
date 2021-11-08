@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2017 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2010-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -18,13 +18,12 @@
 package com.ibm.cloud.objectstorage.services.s3.model;
 import java.io.Serializable;
 import java.util.Date;
-
-import com.ibm.cloud.objectstorage.services.s3.AmazonS3;
-import com.ibm.cloud.objectstorage.services.s3.internal.S3RequesterChargedResult;
-
 import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
+
+import com.ibm.cloud.objectstorage.services.s3.AmazonS3;
+import com.ibm.cloud.objectstorage.services.s3.internal.S3RequesterChargedResult;
 
 /**
  * Represents an object stored in Amazon S3. This object contains
@@ -60,17 +59,20 @@ public class S3Object implements Closeable,Serializable, S3RequesterChargedResul
      * Requester Pays Buckets.
      */
     private boolean isRequesterCharged;
-    
+
+    // IBM-specific
     /**
      * Date on which it will be legal to delete or modify the object.
      */
     private Date retentionExpirationDate;
-    
+
+    // IBM-specific
     /**
      * The number of legal holds applied to the object.
      */
     private Integer retentionLegalHoldCount;
-    
+
+    // IBM-specific
     /**
      * Retention period to store on the object in seconds.
      */
@@ -252,27 +254,33 @@ public class S3Object implements Closeable,Serializable, S3RequesterChargedResul
         this.isRequesterCharged = isRequesterCharged;
     }
 
-	public Date getRetentionExpirationDate() {
-		return retentionExpirationDate;
-	}
+    // IBM-specific
+    public Date getRetentionExpirationDate() {
+        return retentionExpirationDate;
+    }
 
-	public void setRetentionExpirationDate(Date retentionExpirationDate) {
-		this.retentionExpirationDate = retentionExpirationDate;
-	}
+    // IBM-specific
+    public void setRetentionExpirationDate(Date retentionExpirationDate) {
+        this.retentionExpirationDate = retentionExpirationDate;
+    }
 
-	public Integer getRetentionLegalHoldCount() {
-		return retentionLegalHoldCount;
-	}
+    // IBM-specific
+    public Integer getRetentionLegalHoldCount() {
+        return retentionLegalHoldCount;
+    }
 
-	public void setRetentionLegalHoldCount(Integer retentionLegalHoldCount) {
-		this.retentionLegalHoldCount = retentionLegalHoldCount;
-	}
+    // IBM-specific
+    public void setRetentionLegalHoldCount(Integer retentionLegalHoldCount) {
+        this.retentionLegalHoldCount = retentionLegalHoldCount;
+    }
 
-	public Long getRetentionPeriod() {
-		return retentionPeriod;
-	}
+    // IBM-specific
+    public Long getRetentionPeriod() {
+        return retentionPeriod;
+    }
 
-	public void setRetentionPeriod(Long retentionPeriod) {
-		this.retentionPeriod = retentionPeriod;
-	}
+    // IBM-specific
+    public void setRetentionPeriod(Long retentionPeriod) {
+        this.retentionPeriod = retentionPeriod;
+    }
 }

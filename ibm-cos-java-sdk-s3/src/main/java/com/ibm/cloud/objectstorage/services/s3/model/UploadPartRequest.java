@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2017 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2010-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -47,6 +47,18 @@ public class UploadPartRequest extends AmazonWebServiceRequest implements
     /**
      * The name of the bucket containing the initiated multipart upload with
      * which this new part will be associated.
+     *
+     * <p>
+     * When using this API with an access point, you must direct requests
+     * to the access point hostname. The access point hostname takes the form
+     * <i>AccessPointName</i>-<i>AccountId</i>.s3-accesspoint.<i>Region</i>.amazonaws.com.
+     * </p>
+     * <p>
+     * When using this operation using an access point through the AWS SDKs, you provide
+     * the access point ARN in place of the bucket name. For more information about access point
+     * ARNs, see <a href=\"https://docs.aws.amazon.com/AmazonS3/latest/dev/using-access-points.html\">
+     * Using Access Points</a> in the <i>Amazon Simple Storage Service Developer Guide</i>.
+     * </p>
      */
     private String bucketName;
 
@@ -112,7 +124,7 @@ public class UploadPartRequest extends AmazonWebServiceRequest implements
      * Requester Pays Buckets.
      */
     private boolean isRequesterPays;
-    
+
     /**
      * Allows the caller to indicate that SDK should calculate the Content-MD5
      * for part. Defaults to true. 
@@ -170,8 +182,20 @@ public class UploadPartRequest extends AmazonWebServiceRequest implements
      * Sets the name of the bucket containing the existing, initiated multipart
      * upload, with which this new part will be associated.
      *
+     * <p>
+     * When using this API with an access point, you must direct requests
+     * to the access point hostname. The access point hostname takes the form
+     * <i>AccessPointName</i>-<i>AccountId</i>.s3-accesspoint.<i>Region</i>.amazonaws.com.
+     * </p>
+     * <p>
+     * When using this operation using an access point through the AWS SDKs, you provide
+     * the access point ARN in place of the bucket name. For more information about access point
+     * ARNs, see <a href=\"https://docs.aws.amazon.com/AmazonS3/latest/dev/using-access-points.html\">
+     * Using Access Points</a> in the <i>Amazon Simple Storage Service Developer Guide</i>.
+     * </p>
+     *
      * @param bucketName
-     *            the name of the bucket containing the existing, initiated
+     *            the name of the bucket, or access point ARN, containing the existing, initiated
      *            multipart upload, with which this new part will be associated.
      */
     public void setBucketName(String bucketName) {
@@ -183,8 +207,20 @@ public class UploadPartRequest extends AmazonWebServiceRequest implements
      * upload, with which this new part will be associated, and returns this
      * updated object so that additional method calls can be chained together.
      *
+     * <p>
+     * When using this API with an access point, you must direct requests
+     * to the access point hostname. The access point hostname takes the form
+     * <i>AccessPointName</i>-<i>AccountId</i>.s3-accesspoint.<i>Region</i>.amazonaws.com.
+     * </p>
+     * <p>
+     * When using this operation using an access point through the AWS SDKs, you provide
+     * the access point ARN in place of the bucket name. For more information about access point
+     * ARNs, see <a href=\"https://docs.aws.amazon.com/AmazonS3/latest/dev/using-access-points.html\">
+     * Using Access Points</a> in the <i>Amazon Simple Storage Service Developer Guide</i>.
+     * </p>
+     *
      * @param bucketName
-     *            the name of the bucket containing the existing, initiated
+     *            the name of the bucket, or access point ARN, containing the existing, initiated
      *            multipart upload, with which this new part will be associated.
      *
      * @return This updated UploadPartRequest object.
@@ -693,7 +729,7 @@ public class UploadPartRequest extends AmazonWebServiceRequest implements
         setRequesterPays(isRequesterPays);
         return this;
     }
-    
+
     /**
      * Returns true if the creator of this request has indicated this content
      * MD5 should be calculated for this part.

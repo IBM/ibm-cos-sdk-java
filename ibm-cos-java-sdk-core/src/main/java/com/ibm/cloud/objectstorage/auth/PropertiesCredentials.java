@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2017 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2010-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -72,18 +72,18 @@ public class PropertiesCredentials implements IBMOAuthCredentials {
             accountProperties.load(stream);
 
             if ((accountProperties.getProperty(SDKGlobalConfiguration.IBM_API_KEY_SYSTEM_PROPERTY) == null) && 
-            	(accountProperties.getProperty("accessKey") == null ||
-            	accountProperties.getProperty("secretKey") == null)) {
+                (accountProperties.getProperty("accessKey") == null ||
+                accountProperties.getProperty("secretKey") == null)) {
                 throw new IllegalArgumentException(
                     "The specified file (" + file.getAbsolutePath()
                     + ") doesn't contain the expected properties 'accessKey' "
                     + "and 'secretKey'."
                 );
-            } 
-        	accessKey = accountProperties.getProperty("accessKey");
-        	secretAccessKey = accountProperties.getProperty("secretKey");
-    		ibmApiKey = accountProperties.getProperty(SDKGlobalConfiguration.IBM_API_KEY_SYSTEM_PROPERTY);
-        	ibmServiceInstanceId = accountProperties.getProperty(SDKGlobalConfiguration.IBM_SERVICE_INSTANCE_ID_SYSTEM_PROPERTY);
+            }
+            accessKey = accountProperties.getProperty("accessKey");
+            secretAccessKey = accountProperties.getProperty("secretKey");
+            ibmApiKey = accountProperties.getProperty(SDKGlobalConfiguration.IBM_API_KEY_SYSTEM_PROPERTY);
+            ibmServiceInstanceId = accountProperties.getProperty(SDKGlobalConfiguration.IBM_SERVICE_INSTANCE_ID_SYSTEM_PROPERTY);
 
         } finally {
             try {
@@ -112,18 +112,16 @@ public class PropertiesCredentials implements IBMOAuthCredentials {
             try {inputStream.close();} catch (Exception e) {}
         }
         if ((accountProperties.getProperty(SDKGlobalConfiguration.IBM_API_KEY_SYSTEM_PROPERTY) == null) && 
-        	(accountProperties.getProperty("accessKey") == null ||
+            (accountProperties.getProperty("accessKey") == null ||
             accountProperties.getProperty("secretKey") == null)) {
             throw new IllegalArgumentException("The specified properties data " +
                     "doesn't contain the expected properties 'accessKey' and 'secretKey'.");
-        
         }
-	        
+
         accessKey = accountProperties.getProperty("accessKey");
-	    secretAccessKey = accountProperties.getProperty("secretKey");
-		ibmApiKey = accountProperties.getProperty(SDKGlobalConfiguration.IBM_API_KEY_SYSTEM_PROPERTY);
-    	ibmServiceInstanceId = accountProperties.getProperty(SDKGlobalConfiguration.IBM_SERVICE_INSTANCE_ID_SYSTEM_PROPERTY);
-        
+        secretAccessKey = accountProperties.getProperty("secretKey");
+        ibmApiKey = accountProperties.getProperty(SDKGlobalConfiguration.IBM_API_KEY_SYSTEM_PROPERTY);
+        ibmServiceInstanceId = accountProperties.getProperty(SDKGlobalConfiguration.IBM_SERVICE_INSTANCE_ID_SYSTEM_PROPERTY);
     }
 
     /* (non-Javadoc)
@@ -140,28 +138,28 @@ public class PropertiesCredentials implements IBMOAuthCredentials {
         return secretAccessKey;
     }
 
-	@Override
-	public String getApiKey() {
-		return ibmApiKey;
-	}
+    @Override
+    public String getApiKey() {
+        return ibmApiKey;
+    }
 
-	@Override
-	public String getServiceInstanceId() {
-		return ibmServiceInstanceId;
-	}
+    @Override
+    public String getServiceInstanceId() {
+        return ibmServiceInstanceId;
+    }
 
-	@Override
-	public TokenManager getTokenManager() {
-		return tokenManager;
-	}
-	
-	/**
-	 * allows the token manager to be set outside this class. PropertiesFileCredentialsProvider creates a new instance 
-	 * of PropertiesCredentials each time getCredentials are called. This created a new instance of TokenManager also.
-	 * setter needed to ensure one instance of token manager per s3client 
-	 */
-	public void setTokenManager(TokenManager tokenManager) {
-		this.tokenManager = tokenManager;
-	}
+    @Override
+    public TokenManager getTokenManager() {
+        return tokenManager;
+    }
+
+    /**
+     * allows the token manager to be set outside this class. PropertiesFileCredentialsProvider creates a new instance 
+     * of PropertiesCredentials each time getCredentials are called. This created a new instance of TokenManager also.
+     * setter needed to ensure one instance of token manager per s3client.
+     */
+    public void setTokenManager(TokenManager tokenManager) {
+        this.tokenManager = tokenManager;
+    }
 
 }

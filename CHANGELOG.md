@@ -1,5 +1,19 @@
 # CHANGELOG
 
+## 2.11.0
+
+### Content
+
+#### Features
+
+* Versioning Support with Object Expiration
+* Abort Multipart Upload Expiration Support
+
+#### Defect Fixes
+
+* Several bug fixes from re-applying AWS patches aligned to version 1.11.687 of the AWS Java SDK
+* Legacy notice for `cos-aspera`
+
 ## 2.10.1
 
 ### Content

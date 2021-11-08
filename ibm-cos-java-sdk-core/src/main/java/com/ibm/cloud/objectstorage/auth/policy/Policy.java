@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2017 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2010-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -14,15 +14,14 @@
  */
 package com.ibm.cloud.objectstorage.auth.policy;
 
+import com.ibm.cloud.objectstorage.auth.policy.internal.JsonPolicyReader;
+import com.ibm.cloud.objectstorage.auth.policy.internal.JsonPolicyWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
-import com.ibm.cloud.objectstorage.auth.policy.internal.JsonPolicyReader;
-import com.ibm.cloud.objectstorage.auth.policy.internal.JsonPolicyWriter;
 
 /**
  * An AWS access control policy is a object that acts as a container for one or

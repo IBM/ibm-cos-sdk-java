@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2017 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2010-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -14,12 +14,11 @@
  */
 package com.ibm.cloud.objectstorage.services.s3.internal;
 
+import com.ibm.cloud.objectstorage.internal.SdkFilterInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-
-import com.ibm.cloud.objectstorage.internal.SdkFilterInputStream;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -28,7 +27,7 @@ import org.apache.commons.logging.LogFactory;
  * they are read and calculates and MD5 digest.
  */
 public class MD5DigestCalculatingInputStream extends SdkFilterInputStream {
-    private static final Log LOGGER = LogFactory.getLog(MD5DigestCalculatingInputStream.class);
+    private static Log log = LogFactory.getLog(MD5DigestCalculatingInputStream.class);
 
     /** The MD5 message digest being calculated by this input stream */
     private MessageDigest digest;
@@ -45,7 +44,7 @@ public class MD5DigestCalculatingInputStream extends SdkFilterInputStream {
         super(in);
         resetDigest();
         if (in.markSupported() && !digestCanBeCloned) {
-            LOGGER.debug("Mark-and-reset disabled on MD5 calculation because the digest implementation does not support cloning. "
+            log.debug("Mark-and-reset disabled on MD5 calculation because the digest implementation does not support cloning. "
                       + "This will limit the SDK's ability to retry requests that failed. Consider pre-calculating the MD5 "
                       + "checksum for the request or switching to a security provider that supports message digest cloning.");
         }
@@ -61,7 +60,7 @@ public class MD5DigestCalculatingInputStream extends SdkFilterInputStream {
         digestCanBeCloned = canBeCloned(digest);
     }
 
-    private static boolean canBeCloned(MessageDigest digest) {
+    private boolean canBeCloned(MessageDigest digest) {
         try {
             digest.clone();
             return true;

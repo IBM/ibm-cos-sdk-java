@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2017 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2010-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -14,11 +14,11 @@
  */
 package com.ibm.cloud.objectstorage;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import static com.ibm.cloud.objectstorage.SDKGlobalConfiguration.PROFILING_SYSTEM_PROPERTY;
 
 import com.ibm.cloud.objectstorage.annotation.SdkInternalApi;
 import com.ibm.cloud.objectstorage.annotation.SdkProtectedApi;
+import com.ibm.cloud.objectstorage.auth.AWSCredentialsProvider;
 import com.ibm.cloud.objectstorage.auth.RegionAwareSigner;
 import com.ibm.cloud.objectstorage.auth.Signer;
 import com.ibm.cloud.objectstorage.auth.SignerFactory;
@@ -35,20 +35,23 @@ import com.ibm.cloud.objectstorage.internal.auth.SignerProviderContext;
 import com.ibm.cloud.objectstorage.log.CommonsLogFactory;
 import com.ibm.cloud.objectstorage.metrics.AwsSdkMetrics;
 import com.ibm.cloud.objectstorage.metrics.RequestMetricCollector;
+import com.ibm.cloud.objectstorage.monitoring.MonitoringListener;
+import com.ibm.cloud.objectstorage.monitoring.internal.ClientSideMonitoringRequestHandler;
 import com.ibm.cloud.objectstorage.regions.Region;
 import com.ibm.cloud.objectstorage.regions.Regions;
 import com.ibm.cloud.objectstorage.util.AWSRequestMetrics;
+import com.ibm.cloud.objectstorage.util.AWSRequestMetrics.Field;
 import com.ibm.cloud.objectstorage.util.AwsHostNameUtils;
 import com.ibm.cloud.objectstorage.util.Classes;
 import com.ibm.cloud.objectstorage.util.RuntimeHttpUtils;
 import com.ibm.cloud.objectstorage.util.StringUtils;
-import com.ibm.cloud.objectstorage.util.AWSRequestMetrics.Field;
-
-import static com.ibm.cloud.objectstorage.SDKGlobalConfiguration.PROFILING_SYSTEM_PROPERTY;
-
 import java.net.URI;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 /**
  * Abstract base class for Amazon Web Service Java clients.
@@ -136,6 +139,8 @@ public abstract class AmazonWebServiceClient {
      */
     private volatile String endpointPrefix;
 
+    private Collection<MonitoringListener> monitoringListeners;
+
     /**
      * Constructs a new AmazonWebServiceClient object using the specified
      * configuration.
@@ -163,22 +168,58 @@ public abstract class AmazonWebServiceClient {
     }
 
     @SdkProtectedApi
-    protected AmazonWebServiceClient(ClientConfiguration clientConfiguration,
-                                     RequestMetricCollector requestMetricCollector,
+    protected AmazonWebServiceClient(final ClientConfiguration clientConfiguration,
+                                     final RequestMetricCollector requestMetricCollector,
                                      boolean disableStrictHostNameVerification) {
-        this.clientConfiguration = clientConfiguration;
-        requestHandler2s = new CopyOnWriteArrayList<RequestHandler2>();
-        client = new AmazonHttpClient(clientConfiguration,
-                requestMetricCollector, disableStrictHostNameVerification,
-                calculateCRC32FromCompressedData());
+        this(new AwsSyncClientParams() {
+            @Override
+            public AWSCredentialsProvider getCredentialsProvider() {
+                return null;
+            }
+
+            @Override
+            public ClientConfiguration getClientConfiguration() {
+                return clientConfiguration;
+            }
+
+            @Override
+            public RequestMetricCollector getRequestMetricCollector() {
+                return requestMetricCollector;
+            }
+
+            @Override
+            public List<RequestHandler2> getRequestHandlers() {
+                return new CopyOnWriteArrayList<RequestHandler2>();
+            }
+
+            @Override
+            public MonitoringListener getMonitoringListener() {
+                return null;
+            }
+        }, !disableStrictHostNameVerification);
     }
 
     protected AmazonWebServiceClient(AwsSyncClientParams clientParams) {
+        this(clientParams, null);
+    }
+
+    private AmazonWebServiceClient(AwsSyncClientParams clientParams, Boolean useStrictHostNameVerification) {
         this.clientConfiguration = clientParams.getClientConfiguration();
-        requestHandler2s = clientParams.getRequestHandlers();
-        client = new AmazonHttpClient(clientConfiguration, clientParams.getRequestMetricCollector(),
-                                      !useStrictHostNameVerification(),
-                                      calculateCRC32FromCompressedData());
+        this.requestHandler2s = clientParams.getRequestHandlers();
+        this.monitoringListeners = new CopyOnWriteArrayList<MonitoringListener>();
+
+        useStrictHostNameVerification = useStrictHostNameVerification != null ? useStrictHostNameVerification
+                                                                              : useStrictHostNameVerification();
+
+        this.client = new AmazonHttpClient(clientConfiguration,
+                                           clientParams.getRequestMetricCollector(),
+                                           !useStrictHostNameVerification,
+                                           calculateCRC32FromCompressedData());
+
+        if (clientParams.getMonitoringListener() != null) {
+            monitoringListeners.add(clientParams.getMonitoringListener());
+        }
+
     }
 
     /**
@@ -225,8 +266,8 @@ public abstract class AmazonWebServiceClient {
      * <p>
      * For more information on using AWS regions with the AWS SDK for Java, and
      * a complete list of all available endpoints for all AWS services, see:
-     * <a href="http://developer.amazonwebservices.com/connect/entry.jspa?externalID=3912">
-     * http://developer.amazonwebservices.com/connect/entry.jspa?externalID=3912</a>
+     * <a href="https://docs.aws.amazon.com/sdk-for-java/v1/developer-guide/java-dg-region-selection.html#region-selection-choose-endpoint">
+     * https://docs.aws.amazon.com/sdk-for-java/v1/developer-guide/java-dg-region-selection.html#region-selection-choose-endpoint</a>
      *
      * @param endpoint
      *            The endpoint (ex: "ec2.amazonaws.com") or a full URL,
@@ -244,7 +285,7 @@ public abstract class AmazonWebServiceClient {
         checkMutability();
         URI uri = toURI(endpoint);
         Signer signer = computeSignerByURI(uri, signerRegionOverride, false);
-        synchronized(this)  {
+        synchronized (this) {
             this.isEndpointOverridden = true;
             this.endpoint = uri;
             this.signerProvider = createSignerProvider(signer);
@@ -293,7 +334,6 @@ public abstract class AmazonWebServiceClient {
         }
         String service = getServiceNameIntern();
         String region = AwsHostNameUtils.parseRegionName(uri.getHost(), service);
-
         return computeSignerByServiceRegion(
                 service, region, signerRegionOverride, isRegionIdAsSignerParam);
     }
@@ -320,13 +360,13 @@ public abstract class AmazonWebServiceClient {
             String serviceName, String regionId,
             String signerRegionOverride,
             boolean isRegionIdAsSignerParam) {
-
         String signerType = clientConfiguration.getSignerOverride();
         Signer signer = signerType == null
              ? SignerFactory.getSigner(serviceName, regionId)
              : SignerFactory.getSignerByTypeAndService(signerType, serviceName)
              ;
-         if (signer instanceof RegionAwareSigner) {
+
+        if (signer instanceof RegionAwareSigner) {
              // Overrides the default region computed
              RegionAwareSigner regionAwareSigner = (RegionAwareSigner)signer;
             // (signerRegionOverride != null) means that it is likely to be AWS
@@ -400,10 +440,8 @@ public abstract class AmazonWebServiceClient {
 
     /**
      * Shuts down this client object, releasing any resources that might be held
-     * open. This is an optional method, and callers are not expected to call
-     * it, but can if they want to explicitly release any open resources. Once a
-     * client has been shutdown, it should not be used to make any more
-     * requests.
+     * open. If this method is not invoked, resources may be leaked. Once a client
+     * has been shutdown, it should not be used to make any more requests.
      */
     public void shutdown() {
         client.shutdown();
@@ -490,10 +528,10 @@ public abstract class AmazonWebServiceClient {
                                                       SignerProvider signerProvider) {
         boolean isMetricsEnabled = isRequestMetricsEnabled(req) || isProfilingEnabled();
         return ExecutionContext.builder()
-                .withRequestHandler2s(requestHandler2s)
-                .withUseRequestMetrics(isMetricsEnabled)
-                .withAwsClient(this)
-                .withSignerProvider(signerProvider).build();
+                               .withRequestHandler2s(requestHandler2s)
+                               .withUseRequestMetrics(isMetricsEnabled)
+                               .withAwsClient(this)
+                               .withSignerProvider(signerProvider).build();
     }
 
     protected final ExecutionContext createExecutionContext(Request<?> req) {
@@ -582,6 +620,13 @@ public abstract class AmazonWebServiceClient {
     }
 
     /**
+     * Returns {@link MonitoringListener}; or null if there is none.
+     */
+    public Collection<MonitoringListener> getMonitoringListeners() {
+        return Collections.unmodifiableCollection(monitoringListeners);
+    }
+
+    /**
      * Returns the client specific request metric collector if there is one; or
      * the one at the AWS SDK level otherwise.
      */
@@ -596,13 +641,17 @@ public abstract class AmazonWebServiceClient {
      */
     private final RequestMetricCollector findRequestMetricCollector(
             RequestMetricCollector reqLevelMetricsCollector) {
+
+        RequestMetricCollector requestMetricCollector;
+
         if (reqLevelMetricsCollector != null) {
-            return reqLevelMetricsCollector;
+            requestMetricCollector = reqLevelMetricsCollector;
         } else if (getRequestMetricsCollector() != null) {
-            return getRequestMetricsCollector();
+            requestMetricCollector =  getRequestMetricsCollector();
         } else {
-            return AwsSdkMetrics.getRequestMetricCollector();
+            requestMetricCollector = AwsSdkMetrics.getRequestMetricCollector();
         }
+        return requestMetricCollector;
     }
 
     /**
@@ -900,14 +949,7 @@ public abstract class AmazonWebServiceClient {
         return clientConfiguration.getSignerOverride();
     }
 
-    /**
-     * Return the client configuration so http calls made outside the Client, but within the SDK,
-     * can ascertain any options set in original client
-     * 
-     * @return
-     * 	ClientConfiguration
-     */
-	public ClientConfiguration getClientConfiguration() {
-		return clientConfiguration;
-	}
+    public ClientConfiguration getClientConfiguration() {
+        return new ClientConfiguration(clientConfiguration);
+    }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2017 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2010-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -15,12 +15,12 @@
 
 package com.ibm.cloud.objectstorage.util;
 
-import java.util.Collections;
-import java.util.List;
-
 import com.ibm.cloud.objectstorage.annotation.NotThreadSafe;
 import com.ibm.cloud.objectstorage.metrics.MetricType;
 import com.ibm.cloud.objectstorage.metrics.RequestMetricType;
+
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Used as both a base class and a minimal support of AWS SDK request metrics.

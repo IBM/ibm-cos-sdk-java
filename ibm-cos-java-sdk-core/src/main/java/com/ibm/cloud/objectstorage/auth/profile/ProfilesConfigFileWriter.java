@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2017 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2014-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -14,14 +14,14 @@
  */
 package com.ibm.cloud.objectstorage.auth.profile;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import com.ibm.cloud.objectstorage.SdkClientException;
 import com.ibm.cloud.objectstorage.auth.profile.internal.AbstractProfilesConfigFileScanner;
 import com.ibm.cloud.objectstorage.auth.profile.internal.Profile;
 import com.ibm.cloud.objectstorage.auth.profile.internal.ProfileKeyConstants;
 import com.ibm.cloud.objectstorage.util.StringUtils;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import java.io.File;
 import java.io.FileOutputStream;

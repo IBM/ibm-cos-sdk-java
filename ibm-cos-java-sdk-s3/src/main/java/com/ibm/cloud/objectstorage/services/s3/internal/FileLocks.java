@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2017 Amazon Technologies, Inc.
+ * Copyright 2015-2019 Amazon Technologies, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,8 +23,8 @@ import java.util.TreeMap;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
 import com.ibm.cloud.objectstorage.annotation.ThreadSafe;
+
 import com.ibm.cloud.objectstorage.services.s3.transfer.exception.FileLockException;
 import com.ibm.cloud.objectstorage.util.IOUtils;
 

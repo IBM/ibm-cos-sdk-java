@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2017 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2010-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -16,6 +16,17 @@ package com.ibm.cloud.objectstorage.auth;
 
 import static com.ibm.cloud.objectstorage.util.StringUtils.UTF8;
 
+import com.ibm.cloud.objectstorage.AmazonClientException;
+import com.ibm.cloud.objectstorage.ReadLimitInfo;
+import com.ibm.cloud.objectstorage.SDKGlobalTime;
+import com.ibm.cloud.objectstorage.SdkClientException;
+import com.ibm.cloud.objectstorage.SignableRequest;
+import com.ibm.cloud.objectstorage.internal.SdkDigestInputStream;
+import com.ibm.cloud.objectstorage.internal.SdkThreadLocalsRegistry;
+import com.ibm.cloud.objectstorage.util.Base64;
+import com.ibm.cloud.objectstorage.util.BinaryUtils;
+import com.ibm.cloud.objectstorage.util.SdkHttpUtils;
+import com.ibm.cloud.objectstorage.util.StringUtils;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
@@ -23,21 +34,15 @@ import java.net.URI;
 import java.security.DigestInputStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.*;
-
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+import java.util.SortedMap;
+import java.util.TreeMap;
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
-
-import com.ibm.cloud.objectstorage.AmazonClientException;
-import com.ibm.cloud.objectstorage.ReadLimitInfo;
-import com.ibm.cloud.objectstorage.SDKGlobalTime;
-import com.ibm.cloud.objectstorage.SdkClientException;
-import com.ibm.cloud.objectstorage.SignableRequest;
-import com.ibm.cloud.objectstorage.internal.SdkDigestInputStream;
-import com.ibm.cloud.objectstorage.util.Base64;
-import com.ibm.cloud.objectstorage.util.BinaryUtils;
-import com.ibm.cloud.objectstorage.util.SdkHttpUtils;
-import com.ibm.cloud.objectstorage.util.StringUtils;
 
 /**
  * Abstract base class for AWS signing protocol implementations. Provides
@@ -52,18 +57,19 @@ public abstract class AbstractAWSSigner implements Signer {
     private static final ThreadLocal<MessageDigest> SHA256_MESSAGE_DIGEST;
 
     static {
-        SHA256_MESSAGE_DIGEST = new ThreadLocal<MessageDigest>() {
-            @Override
-            protected MessageDigest initialValue() {
-                try {
-                    return MessageDigest.getInstance("SHA-256");
-                } catch (NoSuchAlgorithmException e) {
-                    throw new SdkClientException(
-                            "Unable to get SHA256 Function"
-                                    + e.getMessage(), e);
-                }
-            }
-        };
+        SHA256_MESSAGE_DIGEST = SdkThreadLocalsRegistry.register(
+                new ThreadLocal<MessageDigest>() {
+                    @Override
+                    protected MessageDigest initialValue() {
+                        try {
+                            return MessageDigest.getInstance("SHA-256");
+                        } catch (NoSuchAlgorithmException e) {
+                            throw new SdkClientException(
+                                    "Unable to get SHA256 Function"
+                                            + e.getMessage(), e);
+                        }
+                    }
+                });
         EMPTY_STRING_SHA256_HEX = BinaryUtils.toHex(doHash(""));
     }
 

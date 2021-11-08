@@ -1,5 +1,5 @@
 /*
- * Copyright 2011-2017 Amazon Technologies, Inc.
+ * Copyright 2011-2019 Amazon Technologies, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,6 +16,15 @@ package com.ibm.cloud.objectstorage.services.s3.transfer.internal;
 
 import static com.ibm.cloud.objectstorage.event.SDKProgressPublisher.publishProgress;
 
+import com.ibm.cloud.objectstorage.SdkClientException;
+import com.ibm.cloud.objectstorage.event.ProgressEventType;
+import com.ibm.cloud.objectstorage.event.ProgressListenerChain;
+import com.ibm.cloud.objectstorage.services.s3.AmazonS3;
+import com.ibm.cloud.objectstorage.services.s3.model.CopyObjectRequest;
+import com.ibm.cloud.objectstorage.services.s3.model.PartETag;
+import com.ibm.cloud.objectstorage.services.s3.transfer.Transfer.TransferState;
+import com.ibm.cloud.objectstorage.services.s3.transfer.TransferManager;
+import com.ibm.cloud.objectstorage.services.s3.transfer.model.CopyResult;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Callable;
@@ -23,16 +32,6 @@ import java.util.concurrent.CancellationException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicReference;
-
-import com.ibm.cloud.objectstorage.SdkClientException;
-import com.ibm.cloud.objectstorage.event.ProgressEventType;
-import com.ibm.cloud.objectstorage.event.ProgressListenerChain;
-import com.ibm.cloud.objectstorage.services.s3.AmazonS3;
-import com.ibm.cloud.objectstorage.services.s3.model.CopyObjectRequest;
-import com.ibm.cloud.objectstorage.services.s3.model.PartETag;
-import com.ibm.cloud.objectstorage.services.s3.transfer.TransferManager;
-import com.ibm.cloud.objectstorage.services.s3.transfer.Transfer.TransferState;
-import com.ibm.cloud.objectstorage.services.s3.transfer.model.CopyResult;
 
 /**
  * Monitors an copy operation by periodically checking to see if the operation is

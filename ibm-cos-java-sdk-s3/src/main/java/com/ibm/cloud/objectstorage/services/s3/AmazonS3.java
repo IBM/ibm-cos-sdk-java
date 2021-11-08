@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2017 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2010-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -13,6 +13,7 @@
  * permissions and limitations under the License.
  */
 package com.ibm.cloud.objectstorage.services.s3;
+
 import com.ibm.cloud.objectstorage.AmazonServiceException;
 import com.ibm.cloud.objectstorage.AmazonWebServiceRequest;
 import com.ibm.cloud.objectstorage.ClientConfiguration;
@@ -22,18 +23,72 @@ import com.ibm.cloud.objectstorage.regions.RegionUtils;
 import com.ibm.cloud.objectstorage.services.s3.internal.Constants;
 import com.ibm.cloud.objectstorage.services.s3.internal.S3DirectSpi;
 import com.ibm.cloud.objectstorage.services.s3.model.*;
+import com.ibm.cloud.objectstorage.services.s3.model.AbortMultipartUploadRequest;
+import com.ibm.cloud.objectstorage.services.s3.model.AccessControlList;
+import com.ibm.cloud.objectstorage.services.s3.model.Bucket;
+import com.ibm.cloud.objectstorage.services.s3.model.BucketLifecycleConfiguration;
+import com.ibm.cloud.objectstorage.services.s3.model.BucketWebsiteConfiguration;
+import com.ibm.cloud.objectstorage.services.s3.model.CannedAccessControlList;
+import com.ibm.cloud.objectstorage.services.s3.model.CompleteMultipartUploadRequest;
+import com.ibm.cloud.objectstorage.services.s3.model.CompleteMultipartUploadResult;
+import com.ibm.cloud.objectstorage.services.s3.model.CopyObjectRequest;
+import com.ibm.cloud.objectstorage.services.s3.model.CopyObjectResult;
+import com.ibm.cloud.objectstorage.services.s3.model.CopyPartRequest;
+import com.ibm.cloud.objectstorage.services.s3.model.CopyPartResult;
+import com.ibm.cloud.objectstorage.services.s3.model.CreateBucketRequest;
+import com.ibm.cloud.objectstorage.services.s3.model.DeleteBucketLifecycleConfigurationRequest;
+import com.ibm.cloud.objectstorage.services.s3.model.DeleteBucketWebsiteConfigurationRequest;
+import com.ibm.cloud.objectstorage.services.s3.model.DeleteObjectRequest;
 import com.ibm.cloud.objectstorage.services.s3.model.DeleteObjectTaggingRequest;
 import com.ibm.cloud.objectstorage.services.s3.model.DeleteObjectTaggingResult;
+import com.ibm.cloud.objectstorage.services.s3.model.DeleteObjectsRequest;
+import com.ibm.cloud.objectstorage.services.s3.model.DeleteObjectsResult;
+import com.ibm.cloud.objectstorage.services.s3.model.DeletePublicAccessBlockRequest;
+import com.ibm.cloud.objectstorage.services.s3.model.DeletePublicAccessBlockResult;
+import com.ibm.cloud.objectstorage.services.s3.model.DeleteVersionRequest;
+import com.ibm.cloud.objectstorage.services.s3.model.GeneratePresignedUrlRequest;
+import com.ibm.cloud.objectstorage.services.s3.model.GetBucketAclRequest;
+import com.ibm.cloud.objectstorage.services.s3.model.GetBucketLifecycleConfigurationRequest;
+import com.ibm.cloud.objectstorage.services.s3.model.GetBucketWebsiteConfigurationRequest;
+import com.ibm.cloud.objectstorage.services.s3.model.GetObjectMetadataRequest;
+import com.ibm.cloud.objectstorage.services.s3.model.GetObjectRequest;
 import com.ibm.cloud.objectstorage.services.s3.model.GetObjectTaggingRequest;
 import com.ibm.cloud.objectstorage.services.s3.model.GetObjectTaggingResult;
+import com.ibm.cloud.objectstorage.services.s3.model.GetPublicAccessBlockRequest;
+import com.ibm.cloud.objectstorage.services.s3.model.GetPublicAccessBlockResult;
+import com.ibm.cloud.objectstorage.services.s3.model.HeadBucketRequest;
+import com.ibm.cloud.objectstorage.services.s3.model.HeadBucketResult;
+import com.ibm.cloud.objectstorage.services.s3.model.InitiateMultipartUploadRequest;
+import com.ibm.cloud.objectstorage.services.s3.model.InitiateMultipartUploadResult;
+import com.ibm.cloud.objectstorage.services.s3.model.ListBucketsRequest;
+import com.ibm.cloud.objectstorage.services.s3.model.ListMultipartUploadsRequest;
+import com.ibm.cloud.objectstorage.services.s3.model.ListObjectsV2Request;
+import com.ibm.cloud.objectstorage.services.s3.model.ListObjectsV2Result;
+import com.ibm.cloud.objectstorage.services.s3.model.ListPartsRequest;
+import com.ibm.cloud.objectstorage.services.s3.model.ListVersionsRequest;
+import com.ibm.cloud.objectstorage.services.s3.model.MultiObjectDeleteException;
+import com.ibm.cloud.objectstorage.services.s3.model.MultipartUploadListing;
+import com.ibm.cloud.objectstorage.services.s3.model.ObjectListing;
+import com.ibm.cloud.objectstorage.services.s3.model.ObjectMetadata;
+import com.ibm.cloud.objectstorage.services.s3.model.PresignedUrlDownloadRequest;
+import com.ibm.cloud.objectstorage.services.s3.model.PresignedUrlDownloadResult;
+import com.ibm.cloud.objectstorage.services.s3.model.PresignedUrlUploadRequest;
+import com.ibm.cloud.objectstorage.services.s3.model.PresignedUrlUploadResult;
+import com.ibm.cloud.objectstorage.services.s3.model.PutObjectRequest;
+import com.ibm.cloud.objectstorage.services.s3.model.PutObjectResult;
+import com.ibm.cloud.objectstorage.services.s3.model.RestoreObjectRequest;
+import com.ibm.cloud.objectstorage.services.s3.model.S3Object;
+import com.ibm.cloud.objectstorage.services.s3.model.SetBucketAclRequest;
+import com.ibm.cloud.objectstorage.services.s3.model.SetBucketLifecycleConfigurationRequest;
+import com.ibm.cloud.objectstorage.services.s3.model.SetBucketWebsiteConfigurationRequest;
+import com.ibm.cloud.objectstorage.services.s3.model.SetObjectAclRequest;
 import com.ibm.cloud.objectstorage.services.s3.model.SetObjectTaggingRequest;
 import com.ibm.cloud.objectstorage.services.s3.model.SetObjectTaggingResult;
 import com.ibm.cloud.objectstorage.services.s3.model.SetPublicAccessBlockRequest;
 import com.ibm.cloud.objectstorage.services.s3.model.SetPublicAccessBlockResult;
-import com.ibm.cloud.objectstorage.services.s3.model.GetPublicAccessBlockRequest;
-import com.ibm.cloud.objectstorage.services.s3.model.GetPublicAccessBlockResult;
-import com.ibm.cloud.objectstorage.services.s3.model.DeletePublicAccessBlockRequest;
-import com.ibm.cloud.objectstorage.services.s3.model.DeletePublicAccessBlockResult;
+import com.ibm.cloud.objectstorage.services.s3.model.UploadPartRequest;
+import com.ibm.cloud.objectstorage.services.s3.model.UploadPartResult;
+import com.ibm.cloud.objectstorage.services.s3.model.VersionListing;
 import com.ibm.cloud.objectstorage.services.s3.waiters.AmazonS3Waiters;
 import java.io.File;
 import java.io.InputStream;
@@ -961,6 +1016,11 @@ public interface AmazonS3 extends S3DirectSpi {
      * client is not able to distinguish between bucket permission errors and
      * invalid credential errors, and this method could return an incorrect
      * result.
+     *
+     * <p>
+     * Internally this uses the {@link #headBucket(HeadBucketRequest)} operation to determine
+     * whether the bucket exists.
+     * </p>
      *
      * @param bucketName
      *            The name of the bucket to check.
@@ -3136,8 +3196,7 @@ public interface AmazonS3 extends S3DirectSpi {
 
     /**
      * Gets the lifecycle configuration for the specified bucket, or null if
-     * the specified bucket does not exists, or an empty list if no
-     * configuration has been established.
+     * the specified bucket does not exist or if no configuration has been established.
      *
      * @param bucketName
      *            The name of the bucket for which to retrieve lifecycle
@@ -3150,8 +3209,7 @@ public interface AmazonS3 extends S3DirectSpi {
 
     /**
      * Gets the lifecycle configuration for the specified bucket, or null if
-     * the specified bucket does not exists, or an empty list if no
-     * configuration has been established.
+     * the specified bucket does not exist or if no configuration has been established.
      *
      * @param getBucketLifecycleConfigurationRequest
      *            The request object for retrieving the bucket lifecycle
@@ -3208,7 +3266,7 @@ public interface AmazonS3 extends S3DirectSpi {
 
     /**
      * Gets the cross origin configuration for the specified bucket, or null if
-     * the specified bucket does not exists, or an empty list if no
+     * the specified bucket does not exist, or an empty list if no
      * configuration has been established.
      *
      * @param bucketName
@@ -3279,8 +3337,7 @@ public interface AmazonS3 extends S3DirectSpi {
     /**
      * @exclude
      * Gets the tagging configuration for the specified bucket, or null if
-     * the specified bucket does not exists, or an empty list if no
-     * configuration has been established.
+     * the specified bucket does not exist, or if no configuration has been established.
      *
      * @param bucketName
      *            The name of the bucket for which to retrieve tagging
@@ -3294,8 +3351,7 @@ public interface AmazonS3 extends S3DirectSpi {
     /**
      * @exclude
      * Gets the tagging configuration for the specified bucket, or null if
-     * the specified bucket does not exists, or an empty list if no
-     * configuration has been established.
+     * the specified bucket does not exist, or if no configuration has been established.
      *
      * @param getBucketTaggingConfigurationRequest
      *            The request object for retrieving the bucket tagging
@@ -3354,7 +3410,7 @@ public interface AmazonS3 extends S3DirectSpi {
      */
     public void deleteBucketTaggingConfiguration(
             DeleteBucketTaggingConfigurationRequest deleteBucketTaggingConfigurationRequest);
-    
+
     /**
      * Returns the website configuration for the specified bucket. Bucket
      * website configuration allows you to host your static websites entirely
@@ -3577,39 +3633,6 @@ public interface AmazonS3 extends S3DirectSpi {
      */
     public void deleteBucketWebsiteConfiguration(DeleteBucketWebsiteConfigurationRequest deleteBucketWebsiteConfigurationRequest)
         throws SdkClientException, AmazonServiceException;
-
-    /**
-     * Creates or modifies the Public Access Block configuration for an Amazon S3 bucket.
-     *
-     * @param request The request object for setting the buckets Public Access Block configuration.
-     * @return A {@link SetPublicAccessBlockResult}.
-     * @throws AmazonServiceException
-     * @throws SdkClientException
-     * @see <a href="http://docs.aws.amazon.com/goto/WebAPI/s3-2006-03-01/SetPublicAccessBlock">AWS API Documentation</a>
-     */
-    SetPublicAccessBlockResult setPublicAccessBlock(SetPublicAccessBlockRequest request);
-
-    /**
-     * Retrieves the Public Access Block configuration for an Amazon S3 bucket.
-     *
-     * @param request The request object for getting the buckets Public Access Block configuration.
-     * @return A {@link GetPublicAccessBlockResult}.
-     * @throws AmazonServiceException
-     * @throws SdkClientException
-     * @see <a href="http://docs.aws.amazon.com/goto/WebAPI/s3-2006-03-01/GetPublicAccessBlock">AWS API Documentation</a>
-     */
-    GetPublicAccessBlockResult getPublicAccessBlock(GetPublicAccessBlockRequest request);
-
-    /**
-     * Removes the Public Access Block configuration for an Amazon S3 bucket.
-     *
-     * @param request The request object for deleting the buckets Public Access Block configuration.
-     * @return A {@link DeletePublicAccessBlockResult}.
-     * @throws AmazonServiceException
-     * @throws SdkClientException
-     * @see <a href="http://docs.aws.amazon.com/goto/WebAPI/s3-2006-03-01/DeletePublicAccessBlock">AWS API Documentation</a>
-     */
-    DeletePublicAccessBlockResult deletePublicAccessBlock(DeletePublicAccessBlockRequest request);
 
     /**
      * <p>
@@ -4319,6 +4342,173 @@ public interface AmazonS3 extends S3DirectSpi {
 	 */
 	public void extendObjectRetention(ExtendObjectRetentionRequest extendObjectRetentionRequest)
 	    throws SdkClientException, AmazonServiceException;
+
+    /**
+     * Creates or modifies the Public Access Block configuration for an Amazon S3 bucket.
+     *
+     * @param request The request object for setting the buckets Public Access Block configuration.
+     * @return A {@link SetPublicAccessBlockResult}.
+     * @throws AmazonServiceException
+     * @throws SdkClientException
+     * @see <a href="http://docs.aws.amazon.com/goto/WebAPI/s3-2006-03-01/SetPublicAccessBlock">AWS API Documentation</a>
+     */
+    SetPublicAccessBlockResult setPublicAccessBlock(SetPublicAccessBlockRequest request);
+
+    /**
+     * Retrieves the Public Access Block configuration for an Amazon S3 bucket.
+     *
+     * @param request The request object for getting the buckets Public Access Block configuration.
+     * @return A {@link GetPublicAccessBlockResult}.
+     * @throws AmazonServiceException
+     * @throws SdkClientException
+     * @see <a href="http://docs.aws.amazon.com/goto/WebAPI/s3-2006-03-01/GetPublicAccessBlock">AWS API Documentation</a>
+     */
+    GetPublicAccessBlockResult getPublicAccessBlock(GetPublicAccessBlockRequest request);
+
+    /**
+     * Removes the Public Access Block configuration for an Amazon S3 bucket.
+     *
+     * @param request The request object for deleting the buckets Public Access Block configuration.
+     * @return A {@link DeletePublicAccessBlockResult}.
+     * @throws AmazonServiceException
+     * @throws SdkClientException
+     * @see <a href="http://docs.aws.amazon.com/goto/WebAPI/s3-2006-03-01/DeletePublicAccessBlock">AWS API Documentation</a>
+     */
+    DeletePublicAccessBlockResult deletePublicAccessBlock(DeletePublicAccessBlockRequest request);
+
+    /**
+    /**
+     * <p>
+     * Gets the object stored in Amazon S3 using a presigned url.
+     * <p>
+     * The result contains {@link S3Object} representing the downloaded object.
+     * Be extremely careful when using this method; the returned Amazon S3
+     * object contains a direct stream of data from the HTTP connection. The
+     * underlying HTTP connection cannot be reused until the user finishes
+     * reading the data and closes the stream. Also note that if not all data
+     * is read from the stream then the SDK will abort the underlying connection,
+     * this may have a negative impact on performance. Therefore:
+     * </p>
+     * <ul>
+     * <li>Use the data from the input stream in Amazon S3 object as soon as possible</li>
+     * <li>Read all data from the stream
+     *      (use {@link PresignedUrlDownloadRequest#setRange(long, long)} to request only the bytes you need)</li>
+     * <li>Close the input stream in Amazon S3 object as soon as possible</li>
+     * </ul>
+     * If these rules are not followed, the client can run out of resources by
+     * allocating too many open, but unused, HTTP connections. </p>
+     * <p>
+     *
+     * @param presignedUrlDownloadRequest The request object to download the object.
+     * @return result shape containing the downloaded stream
+     *
+     * @throws SdkClientException
+     *             If any errors are encountered in the client while making the
+     *             request or handling the response.
+     * @throws AmazonServiceException
+     *             If any errors occurred in Amazon S3 while processing the
+     *             request.
+     */
+     PresignedUrlDownloadResult download(PresignedUrlDownloadRequest presignedUrlDownloadRequest);
+
+    /**
+     * <p>
+     * Gets the object stored in Amazon S3 using a presigned url.
+     * <p>
+     * The result contains {@link S3Object} representing the downloaded object.
+     * Be extremely careful when using this method; the returned Amazon S3
+     * object contains a direct stream of data from the HTTP connection. The
+     * underlying HTTP connection cannot be reused until the user finishes
+     * reading the data and closes the stream. Also note that if not all data
+     * is read from the stream then the SDK will abort the underlying connection,
+     * this may have a negative impact on performance. Therefore:
+     * </p>
+     * <ul>
+     * <li>Use the data from the input stream in Amazon S3 object as soon as possible</li>
+     * <li>Read all data from the stream
+     *      (use {@link PresignedUrlDownloadRequest#setRange(long, long)} to request only the bytes you need)</li>
+     * <li>Close the input stream in Amazon S3 object as soon as possible</li>
+     * </ul>
+     * If these rules are not followed, the client can run out of resources by
+     * allocating too many open, but unused, HTTP connections. </p>
+     * <p>
+     *
+     * @param presignedUrlDownloadRequest The request object to download the object.
+     * @param destinationFile Indicates the file (which might already exist) where
+     *                        to save the object content being downloading from Amazon S3.
+     *
+     * @throws SdkClientException
+     *             If any errors are encountered in the client while making the
+     *             request or handling the response.
+     * @throws AmazonServiceException
+     *             If any errors occurred in Amazon S3 while processing the
+     *             request.
+     */
+     void download(PresignedUrlDownloadRequest presignedUrlDownloadRequest, File destinationFile);
+
+    /**
+     * <p>
+     * Uploads a new object into S3 using the given presigned url.
+     *
+     * <p></p>
+     * Depending on whether a file or input stream is being uploaded,
+     * this request has slightly different behavior.
+     * </p>
+     * <p>
+     * When uploading a file:
+     * </p>
+     * <ul>
+     * <li>
+     * The client automatically computes a checksum of the file. Amazon S3 uses
+     * checksums to validate the data in each file.</li>
+     * <li>
+     * Using the file extension, Amazon S3 attempts to determine the correct content
+     * type and content disposition to use for the object with some exceptions. See below.
+     * </li>
+     * <li>
+     * If the given presigned url is created using <b>SigV2 signer</b> and content type is not provided,
+     * then SDK will not attempt to determine the content type and instead sends an empty string for content type.
+     * This is because content type is signed header in SigV2 and so the content type can only be sent
+     * if it is used in creating presigned url.
+     * </li>
+     * <li>
+     * If the given presigned url is created using <b>SigV4 signer</b>, then SDK attempts to determine
+     * the correct content type and sends it with the request if not provided. Note that this only works
+     * if you have not used content type while creating the presigned url. If you have used content type while
+     * creating the url, then you should set the same content type while making this API call through
+     * {@link PresignedUrlUploadRequest#setMetadata(ObjectMetadata)} or
+     * {@link PresignedUrlUploadRequest#putCustomRequestHeader(String, String)}
+     * </li>
+     * </ul>
+     * <p>
+     * When uploading directly from an input stream, content length <b>must</b> be
+     * specified before data can be uploaded to Amazon S3. If not provided, the
+     * library will <b>have to</b> buffer the contents of the input stream in order
+     * to calculate it. Amazon S3 explicitly requires that the content length be
+     * sent in the request headers before any of the data is sent.</li>
+     * <p>
+     * Amazon S3 is a distributed system. If Amazon S3 receives multiple write
+     * requests for the same object nearly simultaneously, all of the objects might
+     * be stored. However, only one object will obtain the key.
+     * </p>
+     *
+     *
+     * @param presignedUrlUploadRequest
+     *            The request object containing all the parameters to upload a
+     *            new object to Amazon S3.
+     *
+     * @return A {@link PresignedUrlUploadResult} object containing the information
+     *         returned by Amazon S3 for the newly created object.
+     *
+     * @throws SdkClientException
+     *             If any errors are encountered in the client while making the
+     *             request or handling the response.
+     * @throws AmazonServiceException
+     *             If any errors occurred in Amazon S3 while processing the
+     *             request.
+     */
+     PresignedUrlUploadResult upload(PresignedUrlUploadRequest presignedUrlUploadRequest);
+
 
     /**
      * Shuts down this client object, releasing any resources that might be held

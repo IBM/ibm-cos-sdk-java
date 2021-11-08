@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2017 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2010-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -14,12 +14,12 @@
  */
 package com.ibm.cloud.objectstorage.http.impl.client;
 
+import com.ibm.cloud.objectstorage.annotation.ThreadSafe;
+
 import java.io.IOException;
 
 import org.apache.http.impl.client.DefaultHttpRequestRetryHandler;
 import org.apache.http.protocol.HttpContext;
-
-import com.ibm.cloud.objectstorage.annotation.ThreadSafe;
 
 @ThreadSafe
 public class HttpRequestNoRetryHandler extends DefaultHttpRequestRetryHandler {

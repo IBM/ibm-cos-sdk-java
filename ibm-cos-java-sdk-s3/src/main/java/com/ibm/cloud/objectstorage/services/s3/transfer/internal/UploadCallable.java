@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2017 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2010-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -40,19 +40,17 @@ import com.ibm.cloud.objectstorage.services.s3.model.EncryptedInitiateMultipartU
 import com.ibm.cloud.objectstorage.services.s3.model.EncryptedPutObjectRequest;
 import com.ibm.cloud.objectstorage.services.s3.model.InitiateMultipartUploadRequest;
 import com.ibm.cloud.objectstorage.services.s3.model.ListPartsRequest;
-import com.ibm.cloud.objectstorage.services.s3.model.ObjectTagging;
 import com.ibm.cloud.objectstorage.services.s3.model.PartETag;
 import com.ibm.cloud.objectstorage.services.s3.model.PartListing;
 import com.ibm.cloud.objectstorage.services.s3.model.PartSummary;
 import com.ibm.cloud.objectstorage.services.s3.model.PutObjectRequest;
 import com.ibm.cloud.objectstorage.services.s3.model.PutObjectResult;
-import com.ibm.cloud.objectstorage.services.s3.model.SetObjectTaggingRequest;
 import com.ibm.cloud.objectstorage.services.s3.model.UploadPartRequest;
 import com.ibm.cloud.objectstorage.services.s3.transfer.PersistableUpload;
+import com.ibm.cloud.objectstorage.services.s3.transfer.Transfer.TransferState;
 import com.ibm.cloud.objectstorage.services.s3.transfer.TransferManager;
 import com.ibm.cloud.objectstorage.services.s3.transfer.TransferManagerConfiguration;
 import com.ibm.cloud.objectstorage.services.s3.transfer.TransferProgress;
-import com.ibm.cloud.objectstorage.services.s3.transfer.Transfer.TransferState;
 import com.ibm.cloud.objectstorage.services.s3.transfer.model.UploadResult;
 
 public class UploadCallable implements Callable<UploadResult> {
@@ -296,7 +294,7 @@ public class UploadCallable implements Callable<UploadResult> {
                 transferProgress.updateProgress(summary.getSize());
                 continue;
             }
-            futures.add(threadPool.submit(new UploadPartCallable(s3, request)));
+            futures.add(threadPool.submit(new UploadPartCallable(s3, request, shouldCalculatePartMd5())));
         }
     }
 
@@ -343,6 +341,8 @@ public class UploadCallable implements Callable<UploadResult> {
                 .withObjectMetadata(origReq.getMetadata());
         }
 
+        req.withTagging(origReq.getTagging());
+
         TransferManager.appendMultipartUserAgent(req);
 
         req.withAccessControlList(origReq.getAccessControlList())
@@ -359,5 +359,9 @@ public class UploadCallable implements Callable<UploadResult> {
         log.debug("Initiated new multipart upload: " + uploadId);
 
         return uploadId;
+    }
+
+    private boolean shouldCalculatePartMd5() {
+        return false;  // IBM does not support Object Locking
     }
 }

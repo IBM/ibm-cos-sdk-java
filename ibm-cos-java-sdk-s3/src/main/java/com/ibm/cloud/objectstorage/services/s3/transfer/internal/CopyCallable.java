@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2017 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2010-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -39,9 +39,9 @@ import com.ibm.cloud.objectstorage.services.s3.model.CopyPartRequest;
 import com.ibm.cloud.objectstorage.services.s3.model.InitiateMultipartUploadRequest;
 import com.ibm.cloud.objectstorage.services.s3.model.ObjectMetadata;
 import com.ibm.cloud.objectstorage.services.s3.model.PartETag;
+import com.ibm.cloud.objectstorage.services.s3.transfer.Transfer.TransferState;
 import com.ibm.cloud.objectstorage.services.s3.transfer.TransferManager;
 import com.ibm.cloud.objectstorage.services.s3.transfer.TransferManagerConfiguration;
-import com.ibm.cloud.objectstorage.services.s3.transfer.Transfer.TransferState;
 import com.ibm.cloud.objectstorage.services.s3.transfer.model.CopyResult;
 
 /**
@@ -120,8 +120,7 @@ public class CopyCallable implements Callable<CopyResult> {
      * @return True if this CopyCallable is processing a multi-part copy.
      */
     public boolean isMultipartCopy() {
-        return (metadata.getContentLength() > configuration
-                .getMultipartCopyThreshold());
+        return metadata.getContentLength() > configuration.getMultipartCopyThreshold();
     }
 
     public CopyResult call() throws Exception {
@@ -237,6 +236,8 @@ public class CopyCallable implements Callable<CopyResult> {
         req.setObjectMetadata(newObjectMetadata);
 
         populateMetadataWithEncryptionParams(metadata,newObjectMetadata);
+
+        req.setTagging(origReq.getNewObjectTagging());
 
         String uploadId = s3.initiateMultipartUpload(req).getUploadId();
         log.debug("Initiated new multipart upload: " + uploadId);

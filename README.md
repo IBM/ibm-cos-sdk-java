@@ -59,10 +59,6 @@ If the Service Credential contain [HMAC keys](https://cloud.ibm.com/docs/service
 the client will use those and authenticate using a signature, otherwise the client will use the provided API key to authenticate
 using bearer tokens.
 
-## Aspera high-speed transfer
-
-It is now possible to use the IBM Aspera high-speed transfer service as an alternative method to managed transfers of larger objects. The Aspera high-speed transfer service is especially effective across long distances or in environments with high rates of packet loss. For more details, check out the [IBM Cloud documentation](https://cloud.ibm.com/docs/services/cloud-object-storage/basics/aspera.html#using-libraries-and-sdks).
-
 ## Archive Tier Support
 
 You can automatically archive objects after a specified length of time or after a specified date.  Once archived, a temporary copy of an object can be restored for access as needed.  Restore time may take up to 15 hours.
@@ -80,6 +76,10 @@ Immutable Object Storage does not support Aspera transfers via the SDK to upload
 ## Accelerated Archive
 
 Users can set an archive rule that would allow data restore from an archive in 2 hours or 12 hours.
+
+## LEGACY: Aspera high-speed transfer
+
+Aspera high-speed transfer through the COS SDK using the `cos-aspera` library is now legacy. New users and applications should use the [Aspera Transfer SDK](https://developer.ibm.com/apis/catalog/aspera--aspera-transfer-sdk/Introduction) instead. Existing users should begin new projects with the Aspera Transfer SDK and make plans to migrate existing applications. Users who use S3 for transfers and do not install `cos-aspera` are unaffected.
 
 ## Getting help
 

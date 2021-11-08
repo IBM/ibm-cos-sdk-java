@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2017 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2010-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -23,11 +23,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.ibm.cloud.objectstorage.util.PolicyUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import com.fasterxml.jackson.core.JsonGenerationException;
-import com.fasterxml.jackson.core.JsonGenerator;
 import com.ibm.cloud.objectstorage.SdkClientException;
 import com.ibm.cloud.objectstorage.auth.policy.Action;
 import com.ibm.cloud.objectstorage.auth.policy.Condition;
@@ -36,6 +35,8 @@ import com.ibm.cloud.objectstorage.auth.policy.Principal;
 import com.ibm.cloud.objectstorage.auth.policy.Resource;
 import com.ibm.cloud.objectstorage.auth.policy.Statement;
 import com.ibm.cloud.objectstorage.util.json.Jackson;
+import com.fasterxml.jackson.core.JsonGenerationException;
+import com.fasterxml.jackson.core.JsonGenerator;
 
 /**
  * Serializes an AWS policy object to a JSON string, suitable for sending to an
@@ -186,12 +187,19 @@ public class JsonPolicyWriter {
     private void writeResources(List<Resource> resources)
             throws JsonGenerationException, IOException {
 
+        PolicyUtils.validateResourceList(resources);
         List<String> resourceStrings = new ArrayList<String>();
 
         for (Resource resource : resources) {
             resourceStrings.add(resource.getId());
         }
-        writeJsonArray(JsonDocumentFields.RESOURCE, resourceStrings);
+
+        // all resources are validated to be of the same type, so it is safe to take the type of the first one
+        if (resources.get(0).isNotType()) {
+            writeJsonArray(JsonDocumentFields.NOT_RESOURCE, resourceStrings);
+        } else {
+            writeJsonArray(JsonDocumentFields.RESOURCE, resourceStrings);
+        }
     }
 
     /**

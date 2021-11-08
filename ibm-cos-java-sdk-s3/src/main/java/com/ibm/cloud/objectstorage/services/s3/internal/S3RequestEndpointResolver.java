@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2017 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2010-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -14,15 +14,15 @@
  */
 package com.ibm.cloud.objectstorage.services.s3.internal;
 
-import java.net.URI;
-import java.net.URISyntaxException;
-
-import com.ibm.cloud.objectstorage.Request;
 import com.ibm.cloud.objectstorage.SdkClientException;
+import com.ibm.cloud.objectstorage.Request;
 import com.ibm.cloud.objectstorage.internal.ServiceEndpointBuilder;
 import com.ibm.cloud.objectstorage.regions.Region;
 import com.ibm.cloud.objectstorage.regions.RegionUtils;
 import com.ibm.cloud.objectstorage.util.SdkHttpUtils;
+
+import java.net.URI;
+import java.net.URISyntaxException;
 
 /**
  * Sets endpoint and resource path on a request object
@@ -116,9 +116,7 @@ public class S3RequestEndpointResolver {
             request.setResourcePath(SdkHttpUtils.urlEncode(getHostStyleResourcePath(), true));
         } else {
             request.setEndpoint(endpoint);
-            if (bucketName != null) {
-                request.setResourcePath(SdkHttpUtils.urlEncode(getPathStyleResourcePath(), true));
-            }
+            request.setResourcePath(SdkHttpUtils.urlEncode(getPathStyleResourcePath(), true));
         }
     }
 
@@ -141,6 +139,10 @@ public class S3RequestEndpointResolver {
     }
 
     private String getPathStyleResourcePath() {
+        if (bucketName == null) {
+            return key;
+        }
+
         return bucketName + "/" + (key != null ? key : "");
     }
 }

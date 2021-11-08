@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2017 Amazon.com, Inc. or its affiliates. All Rights
+ * Copyright 2010-2019 Amazon.com, Inc. or its affiliates. All Rights
  * Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
@@ -27,14 +27,13 @@ import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.fail;
 
 import com.ibm.cloud.objectstorage.AmazonClientException;
-import com.ibm.cloud.objectstorage.auth.AWSSessionCredentials;
-import com.ibm.cloud.objectstorage.auth.InstanceProfileCredentialsProvider;
 import com.ibm.cloud.objectstorage.util.LogCaptor;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
@@ -72,6 +71,12 @@ public class InstanceProfileCredentialsProviderIntegrationTest extends LogCaptor
     public void tearDown() throws Exception {
         mockServer.stop();
         Thread.sleep(1000);
+    }
+
+    @Test
+    public void getInstance_ReturnsSameInstance() {
+        assertEquals(InstanceProfileCredentialsProvider.getInstance(),
+                     InstanceProfileCredentialsProvider.getInstance());
     }
 
     /** Tests that we correctly handle the metadata service returning credentials. */
@@ -122,6 +127,25 @@ public class InstanceProfileCredentialsProviderIntegrationTest extends LogCaptor
         } catch (AmazonClientException ace) {
             assertNotNull(ace.getMessage());
         }
+    }
+
+    @Ignore("Not supported by IBM COS")
+    @Test
+    public void getCredentialsDisabled_shouldGetCredentialsAfterEnabled() throws Exception {
+        InstanceProfileCredentialsProvider credentialsProvider = null;
+        try {
+            System.setProperty("com.ibm.cloud.objectstorage.sdk.disableEc2Metadata", "true");
+            credentialsProvider = new InstanceProfileCredentialsProvider();
+            credentialsProvider.getCredentials();
+            fail("exception not thrown when ec2Metadata disabled");
+        } catch (AmazonClientException ex) {
+            //expected
+        } finally {
+            System.clearProperty("com.ibm.cloud.objectstorage.sdk.disableEc2Metadata");
+        }
+        mockServer.setResponseFileName("sessionResponse");
+        mockServer.setAvailableSecurityCredentials("test-credentials");
+        assertNotNull(credentialsProvider.getCredentials());
     }
 
     /**

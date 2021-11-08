@@ -1,5 +1,5 @@
 /*
- * Copyright 2011-2017 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2011-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"). You may not
  * use this file except in compliance with the License. A copy of the License is
@@ -24,7 +24,6 @@ import java.util.TimeZone;
 
 import org.junit.Test;
 
-import com.fasterxml.jackson.core.JsonParser;
 import com.ibm.cloud.objectstorage.protocol.json.IonFactory;
 import com.ibm.cloud.objectstorage.transform.JsonUnmarshallerContext;
 import com.ibm.cloud.objectstorage.transform.JsonUnmarshallerContextImpl;
@@ -41,6 +40,7 @@ import com.ibm.cloud.objectstorage.transform.SimpleTypeIonUnmarshallers.LongIonU
 import com.ibm.cloud.objectstorage.transform.SimpleTypeIonUnmarshallers.ShortIonUnmarshaller;
 import com.ibm.cloud.objectstorage.transform.SimpleTypeIonUnmarshallers.StringIonUnmarshaller;
 import com.ibm.cloud.objectstorage.util.StringInputStream;
+import com.fasterxml.jackson.core.JsonParser;
 
 import software.amazon.ion.system.IonSystemBuilder;
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2017 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2010-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -23,9 +23,9 @@ import java.util.Set;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import com.ibm.cloud.objectstorage.SdkClientException;
 import com.ibm.cloud.objectstorage.AmazonWebServiceResponse;
 import com.ibm.cloud.objectstorage.ResponseMetadata;
-import com.ibm.cloud.objectstorage.SdkClientException;
 import com.ibm.cloud.objectstorage.http.HttpResponse;
 import com.ibm.cloud.objectstorage.http.HttpResponseHandler;
 import com.ibm.cloud.objectstorage.services.s3.Headers;
@@ -132,6 +132,8 @@ public abstract class AbstractS3ResponseHandler<T>
             } else if (key.equalsIgnoreCase(Headers.ETAG)) {
                 metadata.setHeader(key, ServiceUtils.removeQuotes(header.getValue()));
             } else if (key.equalsIgnoreCase(Headers.EXPIRES)) {
+                // Set the raw header then try to parse it as a date
+                metadata.setHeader(Headers.EXPIRES, header.getValue());
                 try {
                     metadata.setHttpExpiresDate(DateUtils.parseRFC822Date(header.getValue()));
                 } catch (Exception pe) {
@@ -155,19 +157,19 @@ public abstract class AbstractS3ResponseHandler<T>
                             "Unable to parse part count. Header x-amz-mp-parts-count has corrupted data" + nfe.getMessage(), nfe);
                 }
             } else if (key.equalsIgnoreCase(Headers.RETENTION_EXPIRATION_DATE)) {
-            	try {
+                try {
                     metadata.setRetentionExpirationDate(ServiceUtils.parseRfc822Date(header.getValue()));
                 } catch (Exception pe) {
                     log.warn("Unable to parse retention expiration date: " + header.getValue(), pe);
                 }
             } else if (key.equalsIgnoreCase(Headers.RETENTION_LEGAL_HOLD_COUNT)) {
-            	try {
+                try {
                     metadata.setRetentionLegalHoldCount(Integer.parseInt(header.getValue()));
                 } catch (NumberFormatException nfe) {
                     log.warn("Unable to parse legal hold count: " + header.getValue(), nfe);
                 }
             } else if (key.equalsIgnoreCase(Headers.RETENTION_PERIOD)) {
-            	try {
+                try {
                     metadata.setRetentionPeriod(Long.parseLong(header.getValue()));
                 } catch (NumberFormatException nfe) {
                     log.warn("Unable to parse retention period: " + header.getValue(), nfe);

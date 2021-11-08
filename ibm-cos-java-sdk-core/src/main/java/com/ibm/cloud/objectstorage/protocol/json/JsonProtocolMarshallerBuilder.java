@@ -1,5 +1,5 @@
 /*
- * Copyright 2011-2017 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2011-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -15,11 +15,15 @@
 package com.ibm.cloud.objectstorage.protocol.json;
 
 import com.ibm.cloud.objectstorage.annotation.SdkProtectedApi;
+import com.ibm.cloud.objectstorage.protocol.MarshallLocation;
+import com.ibm.cloud.objectstorage.protocol.MarshallingType;
 import com.ibm.cloud.objectstorage.protocol.OperationInfo;
 import com.ibm.cloud.objectstorage.protocol.ProtocolMarshaller;
 import com.ibm.cloud.objectstorage.protocol.ProtocolRequestMarshaller;
 import com.ibm.cloud.objectstorage.protocol.json.internal.JsonProtocolMarshaller;
+import com.ibm.cloud.objectstorage.protocol.json.internal.MarshallerRegistry;
 import com.ibm.cloud.objectstorage.protocol.json.internal.NullAsEmptyBodyProtocolRequestMarshaller;
+import com.ibm.cloud.objectstorage.protocol.json.internal.SimpleTypeJsonMarshallers;
 
 /**
  * Builder to create an appropriate implementation of {@link ProtocolMarshaller} for JSON based services.
@@ -34,6 +38,7 @@ public class JsonProtocolMarshallerBuilder<T> {
     private OperationInfo operationInfo;
     private boolean sendExplicitNullForPayload;
     private T originalRequest;
+    private MarshallerRegistry.Builder marshallerRegistry;
 
     public static <T> JsonProtocolMarshallerBuilder<T> standard() {
         return new JsonProtocolMarshallerBuilder<T>();
@@ -68,11 +73,33 @@ public class JsonProtocolMarshallerBuilder<T> {
         return this;
     }
 
+    /**
+     * Registers an override for the marshaller registry.
+     *
+     * @param marshallLocation Location to override marshaller for.
+     * @param marshallingType  Type to override marshaller for.
+     * @param marshaller       Marshaller to use for the given location and type.
+     * @param <MarshallT>      Type of thing being marshalled.
+     * @return This builder for method chaining.
+     */
+    public <MarshallT> JsonProtocolMarshallerBuilder<T> marshallerOverride(MarshallLocation marshallLocation,
+                                                                           MarshallingType<MarshallT> marshallingType,
+                                                                           StructuredJsonMarshaller<MarshallT> marshaller) {
+        if (marshallerRegistry == null) {
+            this.marshallerRegistry = MarshallerRegistry.builder();
+        }
+        marshallerRegistry.addMarshaller(marshallLocation, marshallingType, SimpleTypeJsonMarshallers.adapt(marshaller));
+        return this;
+    }
+
     public ProtocolRequestMarshaller<T> build() {
         final ProtocolRequestMarshaller<T> protocolMarshaller = new JsonProtocolMarshaller<T>(jsonGenerator,
                                                                                               contentType,
                                                                                               operationInfo,
-                                                                                              originalRequest);
-        return sendExplicitNullForPayload ? protocolMarshaller : new NullAsEmptyBodyProtocolRequestMarshaller<T>(protocolMarshaller);
+                                                                                              originalRequest,
+                                                                                              marshallerRegistry);
+        return sendExplicitNullForPayload ? protocolMarshaller :
+                new NullAsEmptyBodyProtocolRequestMarshaller<T>(protocolMarshaller);
     }
+
 }

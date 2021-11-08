@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2017 Amazon.com, Inc. or its affiliates. All Rights
+ * Copyright 2010-2019 Amazon.com, Inc. or its affiliates. All Rights
  * Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
@@ -25,11 +25,6 @@ import java.util.List;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
-
-import com.ibm.cloud.objectstorage.regions.InMemoryRegionImpl;
-import com.ibm.cloud.objectstorage.regions.InMemoryRegionsProvider;
-import com.ibm.cloud.objectstorage.regions.Region;
-import com.ibm.cloud.objectstorage.regions.RegionMetadata;
 
 public class RegionMetadataTest {
 

@@ -64,7 +64,6 @@ public class GetPublicAccessBlockStaxUnmarshaller implements Unmarshaller<GetPub
                 if (context.testExpression("IgnorePublicAcls", targetDepth)) {
                     configuration.setIgnorePublicAcls(BooleanStaxUnmarshaller.getInstance().unmarshall(context));
                 }
-
                 // IBM COS does not support these flags.
                 // if (context.testExpression("BlockPublicPolicy", targetDepth)) {
                 //     configuration.setBlockPublicPolicy(BooleanStaxUnmarshaller.getInstance().unmarshall(context));

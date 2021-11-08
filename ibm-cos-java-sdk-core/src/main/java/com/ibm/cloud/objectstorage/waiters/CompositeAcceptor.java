@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2017 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2010-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -15,12 +15,12 @@
 
 package com.ibm.cloud.objectstorage.waiters;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.ibm.cloud.objectstorage.AmazonServiceException;
 import com.ibm.cloud.objectstorage.annotation.SdkInternalApi;
 import com.ibm.cloud.objectstorage.util.ValidationUtils;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @SdkInternalApi
 class CompositeAcceptor<Output> {

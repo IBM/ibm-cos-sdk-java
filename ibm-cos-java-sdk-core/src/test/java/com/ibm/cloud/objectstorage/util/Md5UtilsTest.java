@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2017 Amazon.com, Inc. or its affiliates. All Rights
+ * Copyright 2010-2019 Amazon.com, Inc. or its affiliates. All Rights
  * Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
@@ -26,10 +26,6 @@ import java.io.IOException;
 
 import org.apache.commons.io.FileUtils;
 import org.junit.Test;
-
-import com.ibm.cloud.objectstorage.util.Base16;
-import com.ibm.cloud.objectstorage.util.Md5Utils;
-import com.ibm.cloud.objectstorage.util.StringUtils;
 
 public class Md5UtilsTest {
 

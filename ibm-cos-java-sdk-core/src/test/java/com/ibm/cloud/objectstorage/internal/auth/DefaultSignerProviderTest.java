@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2017 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2010-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -13,13 +13,6 @@
  * permissions and limitations under the License.
  */package com.ibm.cloud.objectstorage.internal.auth;
 
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
-
 import com.ibm.cloud.objectstorage.AmazonWebServiceClient;
 import com.ibm.cloud.objectstorage.AmazonWebServiceRequest;
 import com.ibm.cloud.objectstorage.DefaultRequest;
@@ -32,8 +25,13 @@ import com.ibm.cloud.objectstorage.auth.ServiceAwareSigner;
 import com.ibm.cloud.objectstorage.auth.Signer;
 import com.ibm.cloud.objectstorage.auth.SignerFactory;
 import com.ibm.cloud.objectstorage.auth.SignerTypeAware;
-import com.ibm.cloud.objectstorage.internal.auth.DefaultSignerProvider;
-import com.ibm.cloud.objectstorage.internal.auth.SignerProviderContext;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Ignore;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -110,6 +108,28 @@ public class DefaultSignerProviderTest {
         FooSigner fooSigner = (FooSigner) signer;
 
         assertThat(fooSigner.getRegionName(), is(equalTo("us-east-1")));
+        assertThat(fooSigner.getServiceName(), is(equalTo("MockService")));
+    }
+
+    @Ignore("Not supported by IBM COS")
+    @Test
+    public void testSignerRegionWhenUsingNonStandardEndpoint() throws URISyntaxException {
+        when(mockClient.getServiceName()).thenReturn("MockService");
+        when(mockClient.getEndpointPrefix()).thenReturn("MockEndpointPrefix");
+
+        Request<?> signerAwareRequest = new DefaultRequest<FooSignedRequest>(new FooSignedRequest(), "MockService");
+        String bjsEndpoint = "https://MockEndpointPrefix.cn-north-1.amazonaws.com.cn";
+        signerAwareRequest.setEndpoint(new URI(bjsEndpoint));
+
+        SignerProviderContext ctx = SignerProviderContext.builder()
+                .withRequest(signerAwareRequest)
+                .build();
+
+        Signer signer = defaultSignerProvider.getSigner(ctx);
+
+        FooSigner fooSigner = (FooSigner) signer;
+
+        assertThat(fooSigner.getRegionName(), is(equalTo("cn-north-1")));
         assertThat(fooSigner.getServiceName(), is(equalTo("MockService")));
     }
 

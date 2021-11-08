@@ -15,10 +15,8 @@
 
 package com.ibm.cloud.objectstorage.util;
 
-import org.junit.Assert;
-
 import com.ibm.cloud.objectstorage.http.ExecutionContext;
-import com.ibm.cloud.objectstorage.util.AWSRequestMetrics;
+import org.junit.Assert;
 
 public class RetryTestUtils {
 

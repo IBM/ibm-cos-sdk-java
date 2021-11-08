@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2017 Amazon.com, Inc. or its affiliates. All Rights
+ * Copyright 2010-2019 Amazon.com, Inc. or its affiliates. All Rights
  * Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
@@ -26,8 +26,6 @@ import java.util.UUID;
 
 import org.junit.Assert;
 import org.junit.Test;
-
-import com.ibm.cloud.objectstorage.util.Base32;
 
 /**
  * @author hchar

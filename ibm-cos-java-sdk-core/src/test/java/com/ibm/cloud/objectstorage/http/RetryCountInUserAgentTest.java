@@ -1,5 +1,5 @@
 /*
- * Copyright 2011-2017 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2011-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -14,6 +14,7 @@
  */
 package com.ibm.cloud.objectstorage.http;
 
+import static com.ibm.cloud.objectstorage.http.AmazonHttpClient.HEADER_SDK_RETRY_INFO;
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
 import static com.github.tomakehurst.wiremock.client.WireMock.containing;
 import static com.github.tomakehurst.wiremock.client.WireMock.get;
@@ -21,7 +22,6 @@ import static com.github.tomakehurst.wiremock.client.WireMock.getRequestedFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.stubFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 import static com.github.tomakehurst.wiremock.client.WireMock.verify;
-import static com.ibm.cloud.objectstorage.http.AmazonHttpClient.HEADER_SDK_RETRY_INFO;
 import static org.junit.Assert.fail;
 
 import org.apache.log4j.BasicConfigurator;
@@ -29,7 +29,6 @@ import org.junit.Test;
 
 import com.ibm.cloud.objectstorage.AmazonServiceException;
 import com.ibm.cloud.objectstorage.ClientConfiguration;
-import com.ibm.cloud.objectstorage.http.AmazonHttpClient;
 import com.ibm.cloud.objectstorage.retry.RetryPolicy;
 
 import utils.http.WireMockTestBase;

@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2017 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2014-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"). You may not use this file except in compliance with
  * the License. A copy of the License is located at
@@ -16,8 +16,8 @@ import javax.annotation.Generated;
 
 import com.ibm.cloud.objectstorage.ClientConfigurationFactory;
 import com.ibm.cloud.objectstorage.annotation.NotThreadSafe;
-import com.ibm.cloud.objectstorage.client.AwsAsyncClientParams;
 import com.ibm.cloud.objectstorage.client.builder.AwsAsyncClientBuilder;
+import com.ibm.cloud.objectstorage.client.AwsAsyncClientParams;
 
 /**
  * Fluent builder for {@link com.ibm.cloud.objectstorage.services.kms.AWSKMSAsync}. Use of the builder is preferred over using

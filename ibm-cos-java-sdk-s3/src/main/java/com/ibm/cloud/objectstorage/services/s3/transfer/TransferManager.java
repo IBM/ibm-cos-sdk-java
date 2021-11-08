@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2017 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2010-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -14,6 +14,9 @@
  */
 package com.ibm.cloud.objectstorage.services.s3.transfer;
 
+import static com.ibm.cloud.objectstorage.services.s3.internal.ServiceUtils.APPEND_MODE;
+import static com.ibm.cloud.objectstorage.services.s3.internal.ServiceUtils.OVERWRITE_MODE;
+
 import com.ibm.cloud.objectstorage.AbortedException;
 import com.ibm.cloud.objectstorage.AmazonClientException;
 import com.ibm.cloud.objectstorage.AmazonServiceException;
@@ -27,11 +30,14 @@ import com.ibm.cloud.objectstorage.event.ProgressListener;
 import com.ibm.cloud.objectstorage.event.ProgressListenerChain;
 import com.ibm.cloud.objectstorage.services.s3.AmazonS3;
 import com.ibm.cloud.objectstorage.services.s3.AmazonS3Client;
+import com.ibm.cloud.objectstorage.services.s3.AmazonS3Encryption;
 import com.ibm.cloud.objectstorage.services.s3.internal.FileLocks;
 import com.ibm.cloud.objectstorage.services.s3.internal.Mimetypes;
 import com.ibm.cloud.objectstorage.services.s3.internal.RequestCopyUtils;
 import com.ibm.cloud.objectstorage.services.s3.internal.ServiceUtils;
 import com.ibm.cloud.objectstorage.services.s3.model.AbortMultipartUploadRequest;
+import com.ibm.cloud.objectstorage.services.s3.model.CannedAccessControlList;
+import com.ibm.cloud.objectstorage.services.s3.model.AmazonS3Exception;
 import com.ibm.cloud.objectstorage.services.s3.model.CopyObjectRequest;
 import com.ibm.cloud.objectstorage.services.s3.model.GetObjectMetadataRequest;
 import com.ibm.cloud.objectstorage.services.s3.model.GetObjectRequest;
@@ -42,7 +48,11 @@ import com.ibm.cloud.objectstorage.services.s3.model.MultipartUploadListing;
 import com.ibm.cloud.objectstorage.services.s3.model.ObjectListing;
 import com.ibm.cloud.objectstorage.services.s3.model.ObjectMetadata;
 import com.ibm.cloud.objectstorage.services.s3.model.ObjectTagging;
+import com.ibm.cloud.objectstorage.services.s3.model.PresignedUrlDownloadConfig;
+import com.ibm.cloud.objectstorage.services.s3.model.PresignedUrlDownloadRequest;
 import com.ibm.cloud.objectstorage.services.s3.model.PutObjectRequest;
+import com.ibm.cloud.objectstorage.services.s3.model.S3Object;
+import com.ibm.cloud.objectstorage.services.s3.model.S3ObjectInputStream;
 import com.ibm.cloud.objectstorage.services.s3.model.S3ObjectSummary;
 import com.ibm.cloud.objectstorage.services.s3.transfer.Transfer.TransferState;
 import com.ibm.cloud.objectstorage.services.s3.transfer.exception.FileLockException;
@@ -55,6 +65,8 @@ import com.ibm.cloud.objectstorage.services.s3.transfer.internal.MultipleFileDow
 import com.ibm.cloud.objectstorage.services.s3.transfer.internal.MultipleFileTransferMonitor;
 import com.ibm.cloud.objectstorage.services.s3.transfer.internal.MultipleFileUploadImpl;
 import com.ibm.cloud.objectstorage.services.s3.transfer.internal.PreparedDownloadContext;
+import com.ibm.cloud.objectstorage.services.s3.transfer.internal.PresignUrlDownloadCallable;
+import com.ibm.cloud.objectstorage.services.s3.transfer.internal.PresignedUrlDownloadImpl;
 import com.ibm.cloud.objectstorage.services.s3.transfer.internal.S3ProgressListener;
 import com.ibm.cloud.objectstorage.services.s3.transfer.internal.S3ProgressListenerChain;
 import com.ibm.cloud.objectstorage.services.s3.transfer.internal.TransferManagerUtils;
@@ -63,14 +75,8 @@ import com.ibm.cloud.objectstorage.services.s3.transfer.internal.TransferStateCh
 import com.ibm.cloud.objectstorage.services.s3.transfer.internal.UploadCallable;
 import com.ibm.cloud.objectstorage.services.s3.transfer.internal.UploadImpl;
 import com.ibm.cloud.objectstorage.services.s3.transfer.internal.UploadMonitor;
+import com.ibm.cloud.objectstorage.util.IOUtils;
 import com.ibm.cloud.objectstorage.util.VersionInfoUtils;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
-import static com.ibm.cloud.objectstorage.services.s3.internal.ServiceUtils.APPEND_MODE;
-import static com.ibm.cloud.objectstorage.services.s3.internal.ServiceUtils.OVERWRITE_MODE;
-
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -86,6 +92,8 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.atomic.AtomicInteger;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 /**
  * High level utility for managing transfers to Amazon S3.
@@ -106,7 +114,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  * <code> TransferManager.shutdownNow()</code> to release the resources once the
  * transfer is complete.
  * <p>
- * Using <code>TransferManager</code> to upload options to Amazon S3 is easy:
+ * Using <code>TransferManager</code> to upload objects to Amazon S3 is easy:
  *
  * <pre class="brush: java">
  * DefaultAWSCredentialsProviderChain credentialProviderChain = new DefaultAWSCredentialsProviderChain();
@@ -1031,28 +1039,27 @@ public class TransferManager {
             final Long lastFullyDownloadedPartPosition) {
 
         PreparedDownloadContext prepared = prepareDownload(getObjectRequest,
-                file,
-                stateListener,
-                s3progressListener,
-                resumeExistingDownload,
-                timeoutMillis,
-                lastFullyDownloadedPart,
-                lastModifiedTimeRecordedDuringPause,
-                resumeOnRetry,
-                lastFullyDownloadedPartPosition);
+                                                           file,
+                                                           stateListener,
+                                                           s3progressListener,
+                                                           resumeExistingDownload,
+                                                           timeoutMillis,
+                                                           lastFullyDownloadedPart,
+                                                           lastModifiedTimeRecordedDuringPause,
+                                                           resumeOnRetry,
+                                                           lastFullyDownloadedPartPosition);
         return submitDownload(prepared);
     }
 
     private PreparedDownloadContext prepareDownload(final GetObjectRequest getObjectRequest,
-         final File file, final TransferStateChangeListener stateListener,
-         final S3ProgressListener s3progressListener,
-         final boolean resumeExistingDownload,
-         final long timeoutMillis,
-         final Integer lastFullyDownloadedPart,
-         final long lastModifiedTimeRecordedDuringPause,
-         final boolean resumeOnRetry,
-         final Long lastFullyDownloadedPartPosition) {
-
+                                                    final File file, final TransferStateChangeListener stateListener,
+                                                    final S3ProgressListener s3progressListener,
+                                                    final boolean resumeExistingDownload,
+                                                    final long timeoutMillis,
+                                                    final Integer lastFullyDownloadedPart,
+                                                    final long lastModifiedTimeRecordedDuringPause,
+                                                    final boolean resumeOnRetry,
+                                                    final Long lastFullyDownloadedPartPosition) {
         assertParameterNotNull(getObjectRequest,
                 "A valid GetObjectRequest must be provided to initiate download");
         assertParameterNotNull(file,
@@ -1157,6 +1164,7 @@ public class TransferManager {
         }
 
         final CountDownLatch latch = new CountDownLatch(1);
+
         DownloadCallable downloadCallable = new DownloadCallable(s3, latch,
                 getObjectRequest, resumeExistingDownload,
                 download, file, origStartingByte, fileLength, timeoutMillis, timedThreadPool,
@@ -1177,6 +1185,143 @@ public class TransferManager {
     private boolean isS3ObjectModifiedSincePause(final long lastModifiedTimeRecordedDuringResume,
             long lastModifiedTimeRecordedDuringPause) {
         return lastModifiedTimeRecordedDuringResume != lastModifiedTimeRecordedDuringPause;
+    }
+
+    /**
+     * Schedules a new transfer to download data from Amazon S3 using presigned url
+     * and save it to the specified file. This method is non-blocking and returns immediately
+     * (i.e. before the data has been fully downloaded).
+     * <p>
+     * Use the returned {@link PresignedUrlDownload} object to query the progress of the transfer,
+     * add listeners for progress events, and wait for the download to complete.
+     * </p>
+     * <p>
+     * Note: The result of the operation doesn't support pause and resume functionality.
+     * </p>
+     * @param request The request containing all the parameters for the download.
+     * @param destFile  The file to download the object data to.
+     *
+     * @return A new {@link PresignedUrlDownload} object to check the state of the download,
+     *         listen for progress notifications, and otherwise manage the download.
+     */
+    public PresignedUrlDownload download(final PresignedUrlDownloadRequest request, final File destFile) {
+        return download(request, destFile, new PresignedUrlDownloadConfig());
+    }
+
+    /**
+     * Schedules a new transfer to download data from Amazon S3 using presigned url
+     * and save it to the specified file. This method is non-blocking and returns immediately
+     * (i.e. before the data has been fully downloaded).
+     * <p>
+     * Use the returned {@link PresignedUrlDownload} object to query the progress of the transfer,
+     * add listeners for progress events, and wait for the download to complete.
+     * </p>
+     * <p>
+     * Note: The result of the operation doesn't support pause and resume functionality.
+     * </p>
+     *
+     * @param request The request containing all the parameters for the download.
+     * @param destFile  The file to download the object data to.
+     * @param downloadContext Additional configuration to control the download behavior
+     *
+     * @return A new {@link PresignedUrlDownload} object to check the state of the download,
+     *         listen for progress notifications, and otherwise manage the download.
+     */
+    public PresignedUrlDownload download(final PresignedUrlDownloadRequest request,
+                                         final File destFile,
+                                         final PresignedUrlDownloadConfig downloadContext) {
+        assertParameterNotNull(request,
+                               "A valid PresignedUrlDownloadRequest must be provided to initiate download");
+        assertParameterNotNull(destFile,
+                               "A valid file must be provided to download into");
+        assertParameterNotNull(downloadContext,
+                               "A valid PresignedUrlDownloadContext must be provided");
+
+        appendSingleObjectUserAgent(request);
+        String description = "Downloading from the given presigned url: " + request.getPresignedUrl();
+
+        TransferProgress transferProgress = new TransferProgress();
+        S3ProgressListenerChain listenerChain = new S3ProgressListenerChain(new TransferProgressUpdatingListener(transferProgress),
+                                                                            request.getGeneralProgressListener(),
+                                                                            downloadContext.getS3progressListener());
+        request.setGeneralProgressListener(new ProgressListenerChain(new TransferCompletionFilter(), listenerChain));
+
+        Long startByte = 0L;
+        Long endByte = null;
+
+        long[] range = request.getRange();
+        if (range != null && range.length == 2) {
+            startByte = range[0];
+            endByte = range[1];
+        } else {
+            // Get content length by making a range GET call
+            final ObjectMetadata objectMetadata = getObjectMetadataUsingRange(request);
+            if (objectMetadata != null) {
+                Long contentLength = TransferManagerUtils.getContentLengthFromContentRange(objectMetadata);
+                endByte = contentLength != null ? contentLength - 1 : null;
+            }
+        }
+
+        final long perRequestDownloadSize = downloadContext.getDownloadSizePerRequest();
+        final boolean isDownloadParallel = isDownloadParallel(request, startByte, endByte, perRequestDownloadSize);
+
+        final PresignedUrlDownloadImpl download =
+            new PresignedUrlDownloadImpl(description, transferProgress, listenerChain, request);
+
+        if (startByte != null && endByte != null) {
+            transferProgress.setTotalBytesToTransfer(endByte - startByte + 1);
+        }
+
+        final CountDownLatch latch = new CountDownLatch(1);
+        Future<?> future = executorService.submit(
+            new PresignUrlDownloadCallable(executorService, destFile, latch, download, isDownloadParallel, timedThreadPool,
+                                           downloadContext.getTimeoutMillis(), s3, request, perRequestDownloadSize,
+                                           startByte, endByte, downloadContext.isResumeOnRetry()));
+
+        download.setMonitor(new DownloadMonitor(download, future));
+        latch.countDown();
+        return download;
+    }
+
+    /**
+     * Returns the object metadata using the {@link PresignedUrlDownloadRequest}.
+     * Returns null if object size is zero.
+     */
+    private ObjectMetadata getObjectMetadataUsingRange(final PresignedUrlDownloadRequest request) {
+        PresignedUrlDownloadRequest copy = request.clone();
+        S3Object s3Object = null;
+        try {
+            s3Object = s3.download(copy.withRange(0, 0))
+                     .getS3Object();
+
+            return s3Object.getObjectMetadata();
+        } catch (AmazonS3Exception exception) {
+            // This handles error case when trying a range GET on object with zero size
+            if (exception.getStatusCode() == 416 && "InvalidRange".equals(exception.getErrorCode())) {
+                return null;
+            }
+            throw exception;
+        } finally {
+            if (s3Object != null) {
+                S3ObjectInputStream objectContent = s3Object.getObjectContent();
+                IOUtils.drainInputStream(objectContent);
+                IOUtils.closeQuietly(objectContent, log);
+            }
+        }
+    }
+
+    /**
+     * Returns a boolean value indicating if object can be downloaded in parallel
+     * when using presigned url.
+     */
+    private boolean isDownloadParallel(PresignedUrlDownloadRequest request, Long startByte, Long endByte,
+                                       long partialObjectMaxSize) {
+        return !configuration.isDisableParallelDownloads() && !(s3 instanceof AmazonS3Encryption)
+               // Can't rely on set range as endbyte can be set to random number longer than actual size. This results in
+               // making large number of partial requests even after the entire file is read from S3
+               && request.getRange() == null
+               // This is when SDK can compute the endByte through the object metadata
+               && (startByte != null && endByte != null && endByte - startByte + 1 > partialObjectMaxSize);
     }
 
     public MultipleFileDownload downloadDirectory(String bucketName, String keyPrefix, File destinationDirectory) {
@@ -1323,8 +1468,10 @@ public class TransferManager {
             GetObjectRequest req = new GetObjectRequest(summary.getBucketName(), summary.getKey())
                     .<GetObjectRequest>withGeneralProgressListener(
                                             listener);
+
+
             PreparedDownloadContext ctx = prepareDownload(req, f, transferListener, null, false, 0,
-                            null, 0L, resumeOnRetry, null);
+                                                          null, 0L, resumeOnRetry, null);
             preparedDownloadContexts.add(ctx);
         }
 
@@ -1463,6 +1610,49 @@ public class TransferManager {
      * @return
      */
     public MultipleFileUpload uploadDirectory(String bucketName, String virtualDirectoryKeyPrefix, File directory, boolean includeSubdirectories, ObjectMetadataProvider metadataProvider, ObjectTaggingProvider taggingProvider) {
+        return uploadDirectory(bucketName, virtualDirectoryKeyPrefix, directory, includeSubdirectories, metadataProvider, taggingProvider, null);
+    }
+
+    /**
+     * Uploads all files in the directory given to the bucket named, optionally
+     * recursing for all subdirectories.
+     * <p>
+     * S3 will overwrite any existing objects that happen to have the same key,
+     * just as when uploading individual files, so use with caution.
+     * </p>
+     * <p>
+     * If you are uploading <a href="http://aws.amazon.com/kms/">AWS
+     * KMS</a>-encrypted objects, you need to specify the correct region of the
+     * bucket on your client and configure AWS Signature Version 4 for added
+     * security. For more information on how to do this, see
+     * http://docs.aws.amazon.com/AmazonS3/latest/dev/UsingAWSSDK.html#
+     * specify-signature-version
+     * </p>
+     * @param bucketName
+     *            The name of the bucket to upload objects to.
+     * @param virtualDirectoryKeyPrefix
+     *            The key prefix of the virtual directory to upload to. Use the
+     *            null or empty string to upload files to the root of the
+     *            bucket.
+     * @param directory
+     *            The directory to upload.
+     * @param includeSubdirectories
+     *            Whether to include subdirectories in the upload. If true,
+     *            files found in subdirectories will be included with an
+     *            appropriate concatenation to the key prefix.
+     * @param metadataProvider
+     *            A callback of type <code>ObjectMetadataProvider</code> which
+     *            is used to provide metadata for each file being uploaded.
+     * @param taggingProvider
+     *            A callback of type <code>ObjectTaggingProvider</code> which
+     *            is used to provide the tags for each file being uploaded.
+     * @param cannedAclProvider
+     *            A callback of type <code>ObjectCannedAclProvider</code> which
+     *            is used to provide the CannedAccessControlList for each file
+     *            being uploaded.
+     * @return
+     */
+    public MultipleFileUpload uploadDirectory(String bucketName, String virtualDirectoryKeyPrefix, File directory, boolean includeSubdirectories, ObjectMetadataProvider metadataProvider, ObjectTaggingProvider taggingProvider, ObjectCannedAclProvider cannedAclProvider) {
         if ( directory == null || !directory.exists() || !directory.isDirectory() ) {
             throw new IllegalArgumentException("Must provide a directory to upload");
         }
@@ -1470,7 +1660,7 @@ public class TransferManager {
         List<File> files = new LinkedList<File>();
         listFiles(directory, files, includeSubdirectories);
 
-        return uploadFileList(bucketName, virtualDirectoryKeyPrefix, directory, files, metadataProvider, taggingProvider);
+        return uploadFileList(bucketName, virtualDirectoryKeyPrefix, directory, files, metadataProvider, taggingProvider, cannedAclProvider);
     }
 
     /**
@@ -1580,11 +1770,57 @@ public class TransferManager {
      * 			  A callback of type <code>ObjectMetadataProvider</code> which
      *            is used to provide metadata for each file being uploaded.
      * @param taggingProvider
-     *             A callback of type <code>ObjectTaggingProvider</code> which
+     *            A callback of type <code>ObjectTaggingProvider</code> which
      *            is used to provide the tags for each file being uploaded.
      * @return
      */
     public MultipleFileUpload uploadFileList(String bucketName, String virtualDirectoryKeyPrefix, File directory, List<File> files, ObjectMetadataProvider metadataProvider, ObjectTaggingProvider taggingProvider) {
+        return uploadFileList(bucketName, virtualDirectoryKeyPrefix, directory, files, metadataProvider, taggingProvider, null);
+    }
+
+    /**
+     * Uploads all specified files to the bucket named, constructing
+     * relative keys depending on the commonParentDirectory given.
+     * <p>
+     * S3 will overwrite any existing objects that happen to have the same key,
+     * just as when uploading individual files, so use with caution.
+     * </p>
+     * <p>
+     * If you are uploading <a href="http://aws.amazon.com/kms/">AWS
+     * KMS</a>-encrypted objects, you need to specify the correct region of the
+     * bucket on your client and configure AWS Signature Version 4 for added
+     * security. For more information on how to do this, see
+     * http://docs.aws.amazon.com/AmazonS3/latest/dev/UsingAWSSDK.html#
+     * specify-signature-version
+     * </p>
+     *
+     * @param bucketName
+     *            The name of the bucket to upload objects to.
+     * @param virtualDirectoryKeyPrefix
+     *            The key prefix of the virtual directory to upload to. Use the
+     *            null or empty string to upload files to the root of the
+     *            bucket.
+     * @param directory
+     *            The common parent directory of files to upload. The keys
+     *            of the files in the list of files are constructed relative to
+     *            this directory and the virtualDirectoryKeyPrefix.
+     * @param files
+     *            A list of files to upload. The keys of the files are
+     *            calculated relative to the common parent directory and the
+     *            virtualDirectoryKeyPrefix.
+     * @param metadataProvider
+     * 			  A callback of type <code>ObjectMetadataProvider</code> which
+     *            is used to provide metadata for each file being uploaded.
+     * @param taggingProvider
+     *            A callback of type <code>ObjectTaggingProvider</code> which
+     *            is used to provide the tags for each file being uploaded.
+     * @param cannedAclProvider
+     *            A callback of type <code>ObjectCannedAclProvider</code> which
+     *            is used to provide the CannedAccessControlList for each file
+     *            being uploaded.
+     * @return
+     */
+    public MultipleFileUpload uploadFileList(String bucketName, String virtualDirectoryKeyPrefix, File directory, List<File> files, ObjectMetadataProvider metadataProvider, ObjectTaggingProvider taggingProvider, ObjectCannedAclProvider cannedAclProvider) {
 
         if ( directory == null || !directory.exists() || !directory.isDirectory() ) {
             throw new IllegalArgumentException("Must provide a common base directory for uploaded files");
@@ -1639,6 +1875,7 @@ public class TransferManager {
 
                     UploadContext uploadContext = new UploadContext(f, bucketName, key);
                     ObjectMetadata metadata = new ObjectMetadata();
+                    CannedAccessControlList cannedAcl = null;
                     ObjectTagging objectTagging = null;
 
                     // Invoke the callback if it's present.
@@ -1653,6 +1890,12 @@ public class TransferManager {
                     if (taggingProvider != null) {
                         objectTagging = taggingProvider.provideObjectTags(uploadContext);
                     }
+                    // Invoke the callback if it's present.
+                    // The callback allows the user to customize the canned
+                    // acl for each file being uploaded.
+                    if (cannedAclProvider != null) {
+                        cannedAcl = cannedAclProvider.provideObjectCannedAcl(f);
+                    }
 
                     // All the single-file uploads share the same
                     // MultipleFileTransferProgressUpdatingListener and
@@ -1662,6 +1905,7 @@ public class TransferManager {
                                     virtualDirectoryKeyPrefix + key, f)
                                     .withMetadata(metadata)
                                     .withTagging(objectTagging)
+                                    .withCannedAcl(cannedAcl)
                                     .<PutObjectRequest> withGeneralProgressListener(
                                             listener), transferListener, null, null));
                 }

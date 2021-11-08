@@ -1,5 +1,5 @@
 /*
- * Copyright 2016-2017 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2016-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -14,6 +14,10 @@
  */
 package com.ibm.cloud.objectstorage.regions;
 
+import com.ibm.cloud.objectstorage.ClientConfiguration;
+import com.ibm.cloud.objectstorage.annotation.SdkInternalApi;
+import com.ibm.cloud.objectstorage.util.RuntimeHttpUtils;
+
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -21,10 +25,6 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
-
-import com.ibm.cloud.objectstorage.ClientConfiguration;
-import com.ibm.cloud.objectstorage.annotation.SdkInternalApi;
-import com.ibm.cloud.objectstorage.util.RuntimeHttpUtils;
 
 @Deprecated
 @SdkInternalApi

@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2017 Amazon.com, Inc. or its affiliates. All Rights
+ * Copyright 2010-2019 Amazon.com, Inc. or its affiliates. All Rights
  * Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
@@ -18,11 +18,10 @@ package com.ibm.cloud.objectstorage.services.s3.internal.auth;
 import com.ibm.cloud.objectstorage.AmazonWebServiceClient;
 import com.ibm.cloud.objectstorage.auth.RegionAwareSigner;
 import com.ibm.cloud.objectstorage.auth.Signer;
-import com.ibm.cloud.objectstorage.internal.auth.SignerProvider;
 import com.ibm.cloud.objectstorage.internal.auth.SignerProviderContext;
+import com.ibm.cloud.objectstorage.internal.auth.SignerProvider;
 import com.ibm.cloud.objectstorage.services.s3.internal.ServiceUtils;
 import com.ibm.cloud.objectstorage.util.AwsHostNameUtils;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -51,7 +50,7 @@ public class S3SignerProvider extends SignerProvider {
             return signer;
         }
 
-        if (signer instanceof RegionAwareSigner) {
+        if (signer instanceof RegionAwareSigner && !isAccessPointUri(uri)) {
             // Parse region name from the host component of the URL and
             // assign it to the signer
             RegionAwareSigner regionSigner = (RegionAwareSigner) signer;
@@ -67,6 +66,10 @@ public class S3SignerProvider extends SignerProvider {
         }
 
         return signer;
+    }
+
+    private boolean isAccessPointUri(URI uri) {
+        return uri.toASCIIString().contains(".s3-accesspoint.");
     }
 
     private boolean isSignerRegionOverrideSet() {

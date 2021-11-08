@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2017 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2010-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -14,27 +14,27 @@
  */
 package com.ibm.cloud.objectstorage.http;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.w3c.dom.Document;
-import org.w3c.dom.Node;
-import org.xml.sax.SAXException;
-
-import com.ibm.cloud.objectstorage.AmazonServiceException;
 import com.ibm.cloud.objectstorage.SdkClientException;
+import com.ibm.cloud.objectstorage.AmazonServiceException;
 import com.ibm.cloud.objectstorage.annotation.SdkProtectedApi;
 import com.ibm.cloud.objectstorage.transform.Unmarshaller;
 import com.ibm.cloud.objectstorage.util.IOUtils;
 import com.ibm.cloud.objectstorage.util.StringUtils;
 import com.ibm.cloud.objectstorage.util.XpathUtils;
 
-import static com.ibm.cloud.objectstorage.http.AmazonHttpClient.HEADER_SDK_TRANSACTION_ID;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+import org.xml.sax.SAXException;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 
 import javax.xml.parsers.ParserConfigurationException;
+
+import static com.ibm.cloud.objectstorage.http.AmazonHttpClient.HEADER_SDK_TRANSACTION_ID;
 
 /**
  * Implementation of HttpResponseHandler that handles only error responses from Amazon Web Services.
@@ -114,7 +114,7 @@ public class DefaultErrorResponseHandler implements HttpResponseHandler<AmazonSe
         try {
             return IOUtils.toString(content);
         } catch (Exception e) {
-            log.info(String.format("Unable to read input stream to string (%s)", idString), e);
+            log.debug(String.format("Unable to read input stream to string (%s)", idString), e);
             throw e;
         }
     }
@@ -123,7 +123,7 @@ public class DefaultErrorResponseHandler implements HttpResponseHandler<AmazonSe
         try {
             return XpathUtils.documentFrom(xml);
         } catch (Exception e) {
-            log.info(String.format("Unable to parse HTTP response (%s) content to XML document '%s' ", idString, xml), e);
+            log.debug(String.format("Unable to parse HTTP response (%s) content to XML document '%s' ", idString, xml), e);
             throw e;
         }
     }
@@ -135,11 +135,13 @@ public class DefaultErrorResponseHandler implements HttpResponseHandler<AmazonSe
                 idString.append("Invocation Id:").append(errorResponse.getRequest().getHeaders().get(HEADER_SDK_TRANSACTION_ID));
             }
             if (errorResponse.getHeaders().containsKey(X_AMZN_REQUEST_ID_HEADER)) {
-                if (idString.length() > 0) { idString.append(", "); }
+                if (idString.length() > 0) {
+                    idString.append(", ");
+                }
                 idString.append("Request Id:").append(errorResponse.getHeaders().get(X_AMZN_REQUEST_ID_HEADER));
             }
         } catch (NullPointerException npe){
-            log.info("Error getting Request or Invocation ID from response", npe);
+            log.debug("Error getting Request or Invocation ID from response", npe);
         }
         return idString.length() > 0 ? idString.toString() : "Unknown";
     }

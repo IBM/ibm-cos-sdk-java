@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2017 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2010-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -18,12 +18,6 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
-import com.ibm.cloud.objectstorage.internal.config.HttpClientConfig;
-import com.ibm.cloud.objectstorage.internal.config.HttpClientConfigJsonHelper;
-import com.ibm.cloud.objectstorage.internal.config.InternalConfigJsonHelper;
-import com.ibm.cloud.objectstorage.internal.config.JsonIndex;
-import com.ibm.cloud.objectstorage.internal.config.SignerConfig;
-import com.ibm.cloud.objectstorage.internal.config.SignerConfigJsonHelper;
 import com.ibm.cloud.objectstorage.util.json.Jackson;
 
 public class InternalConfigJsonHelperTest {

@@ -17,12 +17,9 @@ package com.ibm.cloud.objectstorage.http;
 import com.ibm.cloud.objectstorage.AmazonClientException;
 import com.ibm.cloud.objectstorage.ClientConfiguration;
 import com.ibm.cloud.objectstorage.Request;
-import com.ibm.cloud.objectstorage.http.AmazonHttpClient;
-import com.ibm.cloud.objectstorage.http.HttpMethodName;
 import com.ibm.cloud.objectstorage.http.request.EmptyHttpRequest;
 import com.ibm.cloud.objectstorage.http.response.EmptyAWSResponseHandler;
 import com.ibm.cloud.objectstorage.http.server.MockServer;
-
 import org.apache.http.conn.ConnectionPoolTimeoutException;
 import org.junit.AfterClass;
 import org.junit.Assert;

@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2017 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2012-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -32,35 +32,32 @@ import com.ibm.cloud.objectstorage.util.StringUtils;
  * the <code>AWS_SESSION_TOKEN</code> environment variable is also set then temporary credentials will be used.
  */
 public class EnvironmentVariableCredentialsProvider implements AWSCredentialsProvider {
-	
-	BasicIBMOAuthCredentials oAuthCredentials;
+    BasicIBMOAuthCredentials oAuthCredentials;
+
     @Override
     public AWSCredentials getCredentials() {
-    	
-    	if (System.getenv(SDKGlobalConfiguration.IBM_API_KEY) != null) {
-    		
-    		String apiKey = System.getenv(SDKGlobalConfiguration.IBM_API_KEY);
-    		String serviceInstanceId = System.getenv(SDKGlobalConfiguration.IBM_SERVICE_INSTANCE_ID);
-    		if (oAuthCredentials == null) {
-    			oAuthCredentials = new BasicIBMOAuthCredentials(apiKey, serviceInstanceId);
-    		}
-    		
-    		return oAuthCredentials;
-    		
-	    } else {
-	        String accessKey = System.getenv(ACCESS_KEY_ENV_VAR);
-	        if (accessKey == null) {
-	            accessKey = System.getenv(ALTERNATE_ACCESS_KEY_ENV_VAR);
-	        }
-	
-	        String secretKey = System.getenv(SECRET_KEY_ENV_VAR);
-	        if (secretKey == null) {
-	            secretKey = System.getenv(ALTERNATE_SECRET_KEY_ENV_VAR);
-	        }
-	
-	        accessKey = StringUtils.trim(accessKey);
-	        secretKey = StringUtils.trim(secretKey);
-	        String sessionToken = StringUtils.trim(System.getenv(AWS_SESSION_TOKEN_ENV_VAR));
+        if (System.getenv(SDKGlobalConfiguration.IBM_API_KEY) != null) {
+            String apiKey = System.getenv(SDKGlobalConfiguration.IBM_API_KEY);
+            String serviceInstanceId = System.getenv(SDKGlobalConfiguration.IBM_SERVICE_INSTANCE_ID);
+            if (oAuthCredentials == null) {
+                oAuthCredentials = new BasicIBMOAuthCredentials(apiKey, serviceInstanceId);
+            }
+            return oAuthCredentials;
+        } else {
+            String accessKey = System.getenv(ACCESS_KEY_ENV_VAR);
+            if (accessKey == null) {
+                accessKey = System.getenv(ALTERNATE_ACCESS_KEY_ENV_VAR);
+            }
+    
+            String secretKey = System.getenv(SECRET_KEY_ENV_VAR);
+            if (secretKey == null) {
+                secretKey = System.getenv(ALTERNATE_SECRET_KEY_ENV_VAR);
+            }
+    
+            accessKey = StringUtils.trim(accessKey);
+            secretKey = StringUtils.trim(secretKey);
+            String sessionToken = StringUtils.trim(System.getenv(AWS_SESSION_TOKEN_ENV_VAR));
+
         if (StringUtils.isNullOrEmpty(accessKey) || StringUtils.isNullOrEmpty(secretKey)) {
 
             throw new SdkClientException(
@@ -73,7 +70,7 @@ public class EnvironmentVariableCredentialsProvider implements AWSCredentialsPro
                 new BasicAWSCredentials(accessKey, secretKey)
                 :
                 new BasicSessionCredentials(accessKey, secretKey, sessionToken);
-	    }
+        }
     }
 
     @Override

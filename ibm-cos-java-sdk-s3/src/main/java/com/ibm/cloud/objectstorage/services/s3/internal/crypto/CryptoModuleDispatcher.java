@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2017 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2013-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -21,8 +21,8 @@ import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 
-import com.ibm.cloud.objectstorage.AmazonServiceException;
 import com.ibm.cloud.objectstorage.SdkClientException;
+import com.ibm.cloud.objectstorage.AmazonServiceException;
 import com.ibm.cloud.objectstorage.auth.AWSCredentialsProvider;
 import com.ibm.cloud.objectstorage.services.kms.AWSKMS;
 import com.ibm.cloud.objectstorage.services.s3.internal.S3Direct;

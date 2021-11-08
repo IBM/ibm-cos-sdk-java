@@ -1,5 +1,5 @@
 /*
- * Copyright 2011-2017 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2011-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,12 +34,10 @@ import org.junit.BeforeClass;
 import org.junit.ClassRule;
 import org.junit.Test;
 
-import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import com.ibm.cloud.objectstorage.AmazonClientException;
 import com.ibm.cloud.objectstorage.AmazonServiceException;
-import com.ibm.cloud.objectstorage.auth.BasicSessionCredentials;
-import com.ibm.cloud.objectstorage.auth.ContainerCredentialsProvider;
 import com.ibm.cloud.objectstorage.internal.CredentialsEndpointProvider;
+import com.github.tomakehurst.wiremock.junit.WireMockRule;
 
 /**
  * Tests for the ContainerCredentialsProvider.

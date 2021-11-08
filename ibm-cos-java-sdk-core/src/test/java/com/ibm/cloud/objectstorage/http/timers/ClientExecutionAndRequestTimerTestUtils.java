@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2017 Amazon.com, Inc. or its affiliates. All Rights
+ * Copyright 2015-2019 Amazon.com, Inc. or its affiliates. All Rights
  * Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
@@ -31,6 +31,10 @@ import java.io.IOException;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
+import com.ibm.cloud.objectstorage.http.apache.client.impl.ApacheHttpClientFactory;
+import com.ibm.cloud.objectstorage.http.apache.client.impl.ConnectionManagerAwareHttpClient;
+import com.ibm.cloud.objectstorage.http.response.ErrorDuringUnmarshallingResponseHandler;
+import com.ibm.cloud.objectstorage.http.settings.HttpClientSettings;
 import org.apache.http.HttpEntity;
 import org.apache.http.ProtocolVersion;
 import org.apache.http.client.HttpClient;
@@ -45,16 +49,12 @@ import com.ibm.cloud.objectstorage.ClientConfiguration;
 import com.ibm.cloud.objectstorage.Request;
 import com.ibm.cloud.objectstorage.http.AmazonHttpClient;
 import com.ibm.cloud.objectstorage.http.ExecutionContext;
-import com.ibm.cloud.objectstorage.http.HttpMethodName;
-import com.ibm.cloud.objectstorage.http.apache.client.impl.ApacheHttpClientFactory;
-import com.ibm.cloud.objectstorage.http.apache.client.impl.ConnectionManagerAwareHttpClient;
 import com.ibm.cloud.objectstorage.http.client.HttpClientFactory;
+import com.ibm.cloud.objectstorage.http.HttpMethodName;
 import com.ibm.cloud.objectstorage.http.request.EmptyHttpRequest;
-import com.ibm.cloud.objectstorage.http.response.ErrorDuringUnmarshallingResponseHandler;
 import com.ibm.cloud.objectstorage.http.response.HttpResponseProxy;
 import com.ibm.cloud.objectstorage.http.response.NullErrorResponseHandler;
 import com.ibm.cloud.objectstorage.http.response.NullResponseHandler;
-import com.ibm.cloud.objectstorage.http.settings.HttpClientSettings;
 import com.ibm.cloud.objectstorage.http.timers.client.ClientExecutionTimer;
 import com.ibm.cloud.objectstorage.http.timers.request.HttpRequestTimer;
 

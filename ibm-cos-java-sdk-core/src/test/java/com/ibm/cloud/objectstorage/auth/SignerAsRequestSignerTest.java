@@ -1,5 +1,5 @@
 /*
- * Copyright 2011-2017 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2011-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -16,17 +16,12 @@
 
 package com.ibm.cloud.objectstorage.auth;
 
+import com.ibm.cloud.objectstorage.SignableRequest;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-
-import com.ibm.cloud.objectstorage.SignableRequest;
-import com.ibm.cloud.objectstorage.auth.AWSCredentials;
-import com.ibm.cloud.objectstorage.auth.AWSCredentialsProvider;
-import com.ibm.cloud.objectstorage.auth.Signer;
-import com.ibm.cloud.objectstorage.auth.SignerAsRequestSigner;
 
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;

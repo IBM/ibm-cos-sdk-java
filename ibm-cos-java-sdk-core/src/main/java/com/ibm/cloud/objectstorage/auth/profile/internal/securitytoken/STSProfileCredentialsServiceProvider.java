@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2017 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2014-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -54,7 +54,7 @@ public class STSProfileCredentialsServiceProvider implements AWSCredentialsProvi
                         .newInstance();
             } catch (ClassNotFoundException ex) {
                 throw new SdkClientException(
-                        "To use assume role profiles the aws-java-sdk-sts module must be on the class path.",
+                        "To use assume role profiles the ibm-cos-java-sdk-sts module must be on the class path.",
                         ex);
             } catch (InstantiationException ex) {
                 throw new SdkClientException("Failed to instantiate " + CLASS_NAME, ex);

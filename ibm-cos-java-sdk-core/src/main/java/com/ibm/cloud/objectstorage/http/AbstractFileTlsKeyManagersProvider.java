@@ -12,13 +12,14 @@
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-
 package com.ibm.cloud.objectstorage.http;
 
+import com.ibm.cloud.objectstorage.annotation.SdkInternalApi;
+import com.ibm.cloud.objectstorage.util.IOUtils;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
+import java.io.InputStream;;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
@@ -28,9 +29,6 @@ import javax.net.ssl.KeyManager;
 import javax.net.ssl.KeyManagerFactory;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
-import com.ibm.cloud.objectstorage.annotation.SdkInternalApi;
-import com.ibm.cloud.objectstorage.util.IOUtils;
 
 /**
  * Abstract implementation of {@link TlsKeyManagersProvider} that knows how to

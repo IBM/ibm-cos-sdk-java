@@ -1,5 +1,5 @@
 /*
- * Copyright 2011-2017 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2011-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -61,5 +61,23 @@ public class ProfileKeyConstants {
      * AWS Region to use when creating clients.
      */
     public static final String REGION = "region";
-    
+
+    /**
+     * Endpoint discovery setting when creating clients
+     * Not supported by IBM COS
+     */
+    public static final String ENDPOINT_DISCOVERY = "aws_enable_endpoint_discovery";
+
+    /**
+     * An external process that should be invoked to load credentials.
+     *
+     * Not supported by IBM COS
+     */
+    public static final String CREDENTIAL_PROCESS = "credential_process";
+
+    /**
+     * Absolute path to a JWT file containing a web identity token.
+     * Not supported by IBM COS
+     */
+    public static final String WEB_IDENTITY_TOKEN = "web_identity_token_file";
 }

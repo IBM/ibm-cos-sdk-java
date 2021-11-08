@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2017 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2015-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -25,37 +25,41 @@ public class HeadBucketResult implements Serializable {
     private boolean IBMSSEKPEnabled;
     private String IBMSSEKPCrk;
 
+    // IBM-Specifc
     /**
-	 * Returns if KP has been enabled
-	 */
+     * Returns if KP has been enabled
+     */
     public boolean getIBMSSEKPEnabled() {
-		return IBMSSEKPEnabled;
-	}
+        return IBMSSEKPEnabled;
+    }
 
+    // IBM-Specifc
     /**
      * Sets if KP is enabled
      * @param iBMSSEKPEnabled
      */
-	public void setIBMSSEKPEnabled(boolean iBMSSEKPEnabled) {
-		this.IBMSSEKPEnabled = iBMSSEKPEnabled;
-	}
+    public void setIBMSSEKPEnabled(boolean iBMSSEKPEnabled) {
+        this.IBMSSEKPEnabled = iBMSSEKPEnabled;
+    }
 
-	/**
-	 * Returns the CRK header of the HEAD request
-	 */
-	public String getIBMSSEKPCrk() {
-		return IBMSSEKPCrk;
-	}
+    // IBM-Specifc
+    /**
+     * Returns the CRK header of the HEAD request
+     */
+    public String getIBMSSEKPCrk() {
+        return IBMSSEKPCrk;
+    }
 
-	/**
-	 * Sets the CRK value
-	 * @param iBMSSEKPCrkName
-	 */
-	public void setIBMSSEKPCrk(String iBMSSEKPCrk) {
-		this.IBMSSEKPCrk = iBMSSEKPCrk;
-	}
+    // IBM-Specifc
+    /**
+     * Sets the CRK value
+     * @param iBMSSEKPCrkName
+     */
+    public void setIBMSSEKPCrk(String iBMSSEKPCrk) {
+        this.IBMSSEKPCrk = iBMSSEKPCrk;
+    }
 
-	/**
+    /**
      * Returns the AWS region where the bucket is located.
      */
     public String getBucketRegion() {

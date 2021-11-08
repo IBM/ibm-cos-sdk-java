@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2017 Amazon.com, Inc. or its affiliates. All Rights
+ * Copyright 2010-2019 Amazon.com, Inc. or its affiliates. All Rights
  * Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
@@ -20,8 +20,6 @@ package com.ibm.cloud.objectstorage.internal;
 
 import static org.junit.Assert.*;
 import org.junit.Test;
-
-import com.ibm.cloud.objectstorage.internal.FIFOCache;
 
 public class FIFOCacheTest {
 

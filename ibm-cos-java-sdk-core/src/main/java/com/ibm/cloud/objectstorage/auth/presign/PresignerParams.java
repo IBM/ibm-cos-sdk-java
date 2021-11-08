@@ -1,5 +1,5 @@
 /*
- * Copyright 2011-2017 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2011-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -14,14 +14,14 @@
  */
 package com.ibm.cloud.objectstorage.auth.presign;
 
-import java.net.URI;
-
 import com.ibm.cloud.objectstorage.annotation.Immutable;
 import com.ibm.cloud.objectstorage.annotation.SdkProtectedApi;
 import com.ibm.cloud.objectstorage.annotation.SdkTestInternalApi;
 import com.ibm.cloud.objectstorage.auth.AWSCredentialsProvider;
 import com.ibm.cloud.objectstorage.auth.SdkClock;
 import com.ibm.cloud.objectstorage.internal.auth.SignerProvider;
+
+import java.net.URI;
 
 /**
  * Params object passed to the presigner extension class for a service client and also for {@link PresignerFacade}.

@@ -1,5 +1,5 @@
 /*
- * Copyright 2011-2017 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2011-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -16,9 +16,11 @@ package com.ibm.cloud.objectstorage.protocol.json.internal;
 
 import com.ibm.cloud.objectstorage.Request;
 import com.ibm.cloud.objectstorage.annotation.SdkInternalApi;
+import com.ibm.cloud.objectstorage.protocol.MarshallingInfo;
+import com.ibm.cloud.objectstorage.protocol.MarshallingType;
+import com.ibm.cloud.objectstorage.protocol.json.StructuredJsonGenerator;
 import com.ibm.cloud.objectstorage.protocol.MarshallLocation;
 import com.ibm.cloud.objectstorage.protocol.ProtocolMarshaller;
-import com.ibm.cloud.objectstorage.protocol.json.StructuredJsonGenerator;
 
 /**
  * Dependencies needed by implemenatations of {@link JsonMarshaller}.
@@ -83,10 +85,21 @@ public class JsonMarshallerContext {
      *
      * @param marshallLocation Current {@link MarshallLocation}
      * @param val              Value to marshall.
-     * @param paramName        Name of parameter to marshall.
+     * @param marshallingInfo        Name of parameter to marshall.
      */
+    public void marshall(MarshallLocation marshallLocation, Object val, MarshallingInfo marshallingInfo) {
+        marshallerRegistry().getMarshaller(marshallLocation, val).marshall(val, this, marshallingInfo);
+    }
+
     public void marshall(MarshallLocation marshallLocation, Object val, String paramName) {
-        marshallerRegistry().getMarshaller(marshallLocation, val).marshall(val, this, paramName);
+        marshallerRegistry().getMarshaller(marshallLocation, val)
+                            // construct a new MarshallingInfo to pass the marshallLocationName
+                            .marshall(val, this, MarshallingInfo.builder(new MarshallingType<Object>() {
+                                @Override
+                                public boolean isDefaultMarshallerForType(Class<?> type) {
+                                    return false;
+                                }
+                            }).marshallLocationName(paramName).build());
     }
 
     /**

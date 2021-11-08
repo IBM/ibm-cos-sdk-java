@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2017 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2012-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -30,50 +30,39 @@ import com.ibm.cloud.objectstorage.util.StringUtils;
  */
 public class SystemPropertiesCredentialsProvider implements AWSCredentialsProvider {
 
-	private TokenManager tokenManager = null;
+    private TokenManager tokenManager = null;
 
     @Override
     public AWSCredentials getCredentials() {
-        
-    	//Load IBM properties
-    	
-    	String accessKey =
-            StringUtils.trim(System.getProperty(ACCESS_KEY_SYSTEM_PROPERTY));
+        //Load IBM properties
 
-        String secretKey =
-            StringUtils.trim(System.getProperty(SECRET_KEY_SYSTEM_PROPERTY));
-        
-    	String apiKey =
-            StringUtils.trim(System.getProperty(SDKGlobalConfiguration.IBM_API_KEY_SYSTEM_PROPERTY));
+        String accessKey = StringUtils.trim(System.getProperty(ACCESS_KEY_SYSTEM_PROPERTY));
 
-        String serviceInstance =
-            StringUtils.trim(System.getProperty(SDKGlobalConfiguration.IBM_SERVICE_INSTANCE_ID_SYSTEM_PROPERTY));
-        
+        String secretKey = StringUtils.trim(System.getProperty(SECRET_KEY_SYSTEM_PROPERTY));
+
+        String apiKey = StringUtils.trim(System.getProperty(SDKGlobalConfiguration.IBM_API_KEY_SYSTEM_PROPERTY));
+        String serviceInstance = StringUtils.trim(System.getProperty(SDKGlobalConfiguration.IBM_SERVICE_INSTANCE_ID_SYSTEM_PROPERTY));
+
         if (!StringUtils.isNullOrEmpty(apiKey) && tokenManager == null) {
-
-        	BasicIBMOAuthCredentials oAuthCreds = new BasicIBMOAuthCredentials(apiKey, serviceInstance);
-        	tokenManager = oAuthCreds.getTokenManager();
-        	return oAuthCreds;
-        	
+            BasicIBMOAuthCredentials oAuthCreds = new BasicIBMOAuthCredentials(apiKey, serviceInstance);
+            tokenManager = oAuthCreds.getTokenManager();
+            return oAuthCreds;
         } else if ((!StringUtils.isNullOrEmpty(apiKey) && tokenManager != null)) {
-
-        	return new BasicIBMOAuthCredentials(tokenManager, serviceInstance);
+            return new BasicIBMOAuthCredentials(tokenManager, serviceInstance);
         }
 
-        if (StringUtils.isNullOrEmpty(accessKey)
-                || StringUtils.isNullOrEmpty(secretKey)) {
-
+        if (StringUtils.isNullOrEmpty(accessKey) || StringUtils.isNullOrEmpty(secretKey)) {
             throw new SdkClientException(
                     "Unable to load AWS credentials from Java system "
                     + "properties (" + ACCESS_KEY_SYSTEM_PROPERTY + " and "
                     + SECRET_KEY_SYSTEM_PROPERTY + ")");
         }
-
         return new BasicAWSCredentials(accessKey, secretKey);
     }
 
     @Override
-    public void refresh() {}
+    public void refresh() {
+    }
 
     @Override
     public String toString() {

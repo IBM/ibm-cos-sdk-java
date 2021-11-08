@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2017 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2010-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Portions copyright 2006-2009 James Murty. Please see LICENSE.txt
  * for applicable license terms and NOTICE.txt for applicable notices.
@@ -66,11 +66,11 @@ public class Bucket implements Serializable {
 
     /** The date this bucket was created */
     private Date creationDate = null;
-    
-    /** The template identifier applied at bucket creation */
+
+    /** IBM: The template identifier applied at bucket creation */
     private String creationTemplateId = null;
 
-    /** locationConstraint associated with the bucket.*/
+    /** IBM: locationConstraint associated with the bucket.*/
     private String locationConstraint = null;
 
     /**
@@ -178,6 +178,7 @@ public class Bucket implements Serializable {
     }
 
     /**
+     * IBM
      * Returns the locationConstraint associated with the bucket
      * This will only have populated information when used in conjunction with
      * the Extended Listing support to the COS S3 GET Service API
@@ -188,7 +189,8 @@ public class Bucket implements Serializable {
         return locationConstraint;
     }
 
-    /** For internal use only: 
+    /** For internal use only:
+     * IBM
      * set the bucket locationConstraint from the api response 
      * 
      * @param locationConstraint
@@ -199,6 +201,7 @@ public class Bucket implements Serializable {
     }
       
     /**
+     * IBM
      * Returns the creationTemplateId associated with the bucket.
      * IBM COS returns this field only if a template was used.
      * This will only have populated information when used in conjunction with
@@ -210,7 +213,8 @@ public class Bucket implements Serializable {
         return creationTemplateId;
     }
 
-    /** For internal use only: 
+    /** For internal use only:
+     * IBM
      * set the bucket creationTemplateId from the api response 
      * 
      * @param creationTemplateId

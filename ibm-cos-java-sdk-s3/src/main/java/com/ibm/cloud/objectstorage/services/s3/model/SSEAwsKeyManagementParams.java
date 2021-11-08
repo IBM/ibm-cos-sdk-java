@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2017 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2014-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -17,23 +17,31 @@ import java.io.Serializable;
 
 public class SSEAwsKeyManagementParams implements Serializable {
 
-	/**
-	 * @exclude
-	 * The AWS Key Management Key id to be used for Server Side Encryption of
-	 * the Amazon S3 object.
-	 */
-    private final String awsKmsKeyId;
+    /**
+     * @exclude
+     * The AWS Key Management Key id to be used for Server Side Encryption of
+     * the Amazon S3 object.
+     */
+    private String awsKmsKeyId;
+
+    /*
+     * @exclude
+     * Specifies the AWS KMS Encryption Context to use for object encryption.
+     * The value of this header is a base64-encoded UTF-8 string holding JSON with the encryption context key-value pairs.
+     */
+    private String awsKmsEncryptionContext;
 
     /**
      * Constructs a new instance of SSEAwsKeyManagementParams. The default AWS
      * KMS Key id is used for encryption.
      */
     public SSEAwsKeyManagementParams() {
+        this.awsKmsEncryptionContext = null;
         this.awsKmsKeyId = null;
     }
 
     /**
-	 * @exclude
+     * @exclude
      * Constructs a new instance of SSEAwsKeyManagementParams with the user
      * specified AWS Key Management System Key Id.
      */
@@ -43,15 +51,35 @@ public class SSEAwsKeyManagementParams implements Serializable {
                     "AWS Key Management System Key id cannot be null");
         }
         this.awsKmsKeyId = awsKmsKeyId;
+        this.awsKmsEncryptionContext = null;
     }
 
     /**
-	 * @exclude
-	 * Returns the AWS Key Management System Key Id used for encryption. Returns
+     * @exclude
+     * Returns the AWS Key Management System Key Id used for encryption. Returns
      * null if default Key Id is used.
      */
     public String getAwsKmsKeyId() {
         return awsKmsKeyId;
+    }
+
+    /**
+     * @exclude
+     * Sets the awsKmsKeyId
+     *
+     * @param awsKmsKeyId The new awsKmsKeyId value.
+     * @return This object for method chaining.
+     */
+    public SSEAwsKeyManagementParams withAwsKmsKeyId(String awsKmsKeyId) {
+        setAwsKmsKeyId(awsKmsKeyId);
+        return this;
+    }
+
+    /*
+     * @exclude
+     */
+    private void setAwsKmsKeyId(String awsKmsKeyId) {
+        this.awsKmsKeyId = awsKmsKeyId;
     }
 
     /**
@@ -60,5 +88,31 @@ public class SSEAwsKeyManagementParams implements Serializable {
      */
     public String getEncryption() {
         return SSEAlgorithm.KMS.getAlgorithm();
+    }
+
+    /*
+     * @exclude
+     */
+    public String getAwsKmsEncryptionContext() {
+        return awsKmsEncryptionContext;
+    }
+
+    /**
+     * @exclude
+     * Sets the awsKmsEncryptionContext
+     *
+     * @param awsKmsEncryptionContext The new awsKmsEncryptionContext value.
+     * @return This object for method chaining.
+     */
+    public SSEAwsKeyManagementParams withAwsKmsEncryptionContext(String awsKmsEncryptionContext) {
+        setAwsKmsEncryptionContext(awsKmsEncryptionContext);
+        return this;
+    }
+
+    /*
+     * @exclude
+     */
+    private void setAwsKmsEncryptionContext(String awsKmsEncryptionContext) {
+        this.awsKmsEncryptionContext = awsKmsEncryptionContext;
     }
 }

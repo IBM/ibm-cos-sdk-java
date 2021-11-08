@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2017 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2010-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -14,10 +14,6 @@
  */
 package com.ibm.cloud.objectstorage.http;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.apache.http.impl.io.EmptyInputStream;
-
 import com.ibm.cloud.objectstorage.AmazonWebServiceResponse;
 import com.ibm.cloud.objectstorage.ResponseMetadata;
 import com.ibm.cloud.objectstorage.internal.SdkFilterInputStream;
@@ -26,29 +22,33 @@ import com.ibm.cloud.objectstorage.transform.Unmarshaller;
 import com.ibm.cloud.objectstorage.transform.VoidStaxUnmarshaller;
 import com.ibm.cloud.objectstorage.util.StringUtils;
 import com.ibm.cloud.objectstorage.util.XmlUtils;
-
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Map;
-
 import javax.xml.stream.XMLEventReader;
 import javax.xml.stream.XMLStreamException;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.http.impl.io.EmptyInputStream;
 
 /**
  * Default implementation of HttpResponseHandler that handles a successful
  * response from an AWS service and unmarshalls the result using a StAX
  * unmarshaller.
  *
- * @param <T>
- *            Indicates the type being unmarshalled by this response handler.
+ * @param <T> Indicates the type being unmarshalled by this response handler.
  */
 public class StaxResponseHandler<T> implements HttpResponseHandler<AmazonWebServiceResponse<T>> {
 
-    /** The StAX unmarshaller to use when handling the response */
+    /**
+     * The StAX unmarshaller to use when handling the response
+     */
     private Unmarshaller<T, StaxUnmarshallerContext> responseUnmarshaller;
 
-    /** Shared logger for profiling information */
+    /**
+     * Shared logger for profiling information
+     */
     private static final Log log = LogFactory.getLog("com.ibm.cloud.objectstorage.request");
 
     /**
@@ -57,8 +57,7 @@ public class StaxResponseHandler<T> implements HttpResponseHandler<AmazonWebServ
      * response element path to find the root of the business data in the
      * service's response.
      *
-     * @param responseUnmarshaller
-     *            The StAX unmarshaller to use on the response.
+     * @param responseUnmarshaller The StAX unmarshaller to use on the response.
      */
     public StaxResponseHandler(Unmarshaller<T, StaxUnmarshallerContext> responseUnmarshaller) {
         this.responseUnmarshaller = responseUnmarshaller;
@@ -82,6 +81,7 @@ public class StaxResponseHandler<T> implements HttpResponseHandler<AmazonWebServ
     public AmazonWebServiceResponse<T> handle(HttpResponse response) throws Exception {
         log.trace("Parsing service response XML");
         InputStream content = response.getContent();
+
         if (content == null) {
             content = new ByteArrayInputStream("<eof/>".getBytes(StringUtils.UTF8));
         } else if (content instanceof SdkFilterInputStream &&
@@ -111,7 +111,11 @@ public class StaxResponseHandler<T> implements HttpResponseHandler<AmazonWebServ
             if (responseHeaders != null) {
                 if (responseHeaders.get(X_AMZN_REQUEST_ID_HEADER) != null) {
                     metadata.put(ResponseMetadata.AWS_REQUEST_ID,
-                            responseHeaders.get(X_AMZN_REQUEST_ID_HEADER));
+                                 responseHeaders.get(X_AMZN_REQUEST_ID_HEADER));
+                }
+                if (responseHeaders.get(X_AMZN_EXTENDED_REQUEST_ID_HEADER) != null) {
+                    metadata.put(ResponseMetadata.AWS_EXTENDED_REQUEST_ID,
+                                 responseHeaders.get(X_AMZN_EXTENDED_REQUEST_ID_HEADER));
                 }
             }
             awsResponse.setResponseMetadata(getResponseMetadata(metadata));
@@ -152,11 +156,11 @@ public class StaxResponseHandler<T> implements HttpResponseHandler<AmazonWebServ
      * Hook for subclasses to override in order to collect additional metadata
      * from service responses.
      *
-     * @param unmarshallerContext
-     *            The unmarshaller context used to configure a service's response
-     *            data.
+     * @param unmarshallerContext The unmarshaller context used to configure a service's response
+     *                            data.
      */
-    protected void registerAdditionalMetadataExpressions(StaxUnmarshallerContext unmarshallerContext) {}
+    protected void registerAdditionalMetadataExpressions(StaxUnmarshallerContext unmarshallerContext) {
+    }
 
     /**
      * Since this response handler completely consumes all the data from the
@@ -168,4 +172,5 @@ public class StaxResponseHandler<T> implements HttpResponseHandler<AmazonWebServ
     public boolean needsConnectionLeftOpen() {
         return false;
     }
+
 }

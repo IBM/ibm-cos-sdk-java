@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2017 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2010-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Portions copyright 2006-2009 James Murty. Please see LICENSE.txt
  * for applicable license terms and NOTICE.txt for applicable notices.
@@ -28,7 +28,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -66,6 +66,8 @@ import org.apache.commons.logging.LogFactory;
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
+import org.xml.sax.SAXNotRecognizedException;
+import org.xml.sax.SAXNotSupportedException;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.DefaultHandler;
 import org.xml.sax.helpers.XMLReaderFactory;
@@ -109,6 +111,7 @@ public class XmlResponsesSaxParser {
         // Ensure we can load the XML Reader.
         try {
             xr = XMLReaderFactory.createXMLReader();
+            disableExternalResourceFetching(xr);
         } catch (SAXException e) {
             throw new SdkClientException("Couldn't initialize a SAX driver to create an XMLReader", e);
         }
@@ -138,7 +141,7 @@ public class XmlResponsesSaxParser {
             BufferedReader breader = new BufferedReader(new InputStreamReader(inputStream,
                 Constants.DEFAULT_ENCODING));
             xr.setContentHandler(handler);
-            xr.setErrorHandler(handler);          
+            xr.setErrorHandler(handler);
             xr.parse(new InputSource(breader));
 
         } catch (IOException e) {
@@ -215,6 +218,20 @@ public class XmlResponsesSaxParser {
             }
             return sanitizedInputStream;
         }
+    }
+
+    /**
+     * Disables certain dangerous features that attempt to automatically fetch DTDs
+     *
+     * See <a href="https://www.owasp.org/index.php/XML_External_Entity_(XXE)_Prevention_Cheat_Sheet#XMLReader">OWASP XXE Cheat Sheet</a>
+     * @param reader the reader to disable the features on
+     * @throws SAXNotRecognizedException
+     * @throws SAXNotSupportedException
+     */
+    private void disableExternalResourceFetching(XMLReader reader) throws SAXNotRecognizedException, SAXNotSupportedException {
+        reader.setFeature("http://xml.org/sax/features/external-general-entities", false);
+        reader.setFeature("http://xml.org/sax/features/external-parameter-entities", false);
+        reader.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd",false);
     }
 
     /**
@@ -350,7 +367,7 @@ public class XmlResponsesSaxParser {
     }
 
     /**
-     * Parses a ListAllMyBuckets response XML document from an input stream.
+     * Parses a ListAllMyBucketsExtended response XML document from an input stream.
      *
      * @param inputStream
      *            XML data input stream.
@@ -432,17 +449,17 @@ public class XmlResponsesSaxParser {
         parseXmlInputStream(handler, inputStream);
         return handler;
     }
-    
+
     public BucketProtectionConfigurationHandler parseBucketProtectionConfigurationResponse(InputStream inputStream)
             throws IOException {
         BucketProtectionConfigurationHandler handler = new BucketProtectionConfigurationHandler();
         parseXmlInputStream(handler, inputStream);
         return handler;
     }
-    
+
     public ListLegalHoldsResultHandler parseListLegalHoldsResponse(InputStream inputStream)
             throws IOException {
-    	ListLegalHoldsResultHandler handler = new ListLegalHoldsResultHandler();
+        ListLegalHoldsResultHandler handler = new ListLegalHoldsResultHandler();
         parseXmlInputStream(handler, inputStream);
         return handler;
     }
@@ -1019,7 +1036,6 @@ public class XmlResponsesSaxParser {
         private ListBucketsExtendedResponse listBucketsExtendedResponse = new ListBucketsExtendedResponse();
         private boolean isTruncated = false;
         private String marker = null;
-        
 
         private Bucket currentBucket = null;
 
@@ -1234,42 +1250,35 @@ public class XmlResponsesSaxParser {
                 String name,
                 String qName,
                 Attributes attrs) {
+            if (in("FASPConnectionInfo")) {
+                if (in("AccessKey")) {
+                    if (name.equals("Id")) {
+                        connectionInfo.setAccessKeyId(null);
+                    }
 
-        	if (in("FASPConnectionInfo")) {
-            	if (in("AccessKey")) {
-	                if (name.equals("Id")) {
-	                	connectionInfo.setAccessKeyId(null);
-	
-	                }
-	                if (name.equals("Secret")) {
-	                	connectionInfo.setAccessKeySecret(null);
-	
-	                }
-            	}
+                    if (name.equals("Secret")) {
+                        connectionInfo.setAccessKeySecret(null);
+                    }
+                }
 
                 if (name.equals("ATSEndpoint")) {
-                	connectionInfo.setAtsEndpoint(null);
-
+                    connectionInfo.setAtsEndpoint(null);
                 }
             }
         }
 
         @Override
         protected void doEndElement(String uri, String name, String qName) {
- 
-	       if (name.equals("Id")) {
-            	connectionInfo.setAccessKeyId(getText());
-
+            if (name.equals("Id")) {
+                 connectionInfo.setAccessKeyId(getText());
             }
+
             if (name.equals("Secret")) {
-            	connectionInfo.setAccessKeySecret(getText());
-
+                connectionInfo.setAccessKeySecret(getText());
             }
-        	
 
             if (name.equals("ATSEndpoint")) {
-            	connectionInfo.setAtsEndpoint(getText());
-
+                connectionInfo.setAtsEndpoint(getText());
             }
         }
     }
@@ -2353,6 +2362,8 @@ public class XmlResponsesSaxParser {
         private final BucketReplicationConfiguration bucketReplicationConfiguration = new BucketReplicationConfiguration();
         private String currentRuleId;
         private ReplicationRule currentRule;
+        private String currentTagKey;
+        private String currentTagValue;
         private ExistingObjectReplication existingObjectReplication;
         private ReplicationDestinationConfig destinationConfig;
         private static final String REPLICATION_CONFIG = "ReplicationConfiguration";
@@ -2361,10 +2372,29 @@ public class XmlResponsesSaxParser {
         private static final String DESTINATION = "Destination";
         private static final String ID = "ID";
         private static final String PREFIX = "Prefix";
+        private static final String FILTER = "Filter";
+        private static final String AND = "And";
+        private static final String TAG = "Tag";
+        private static final String TAG_KEY = "Key";
+        private static final String TAG_VALUE = "Value";
         private static final String EXISTING_OBJECT_REPLICATION = "ExistingObjectReplication";
+        private static final String DELETE_MARKER_REPLICATION = "DeleteMarkerReplication";
+        private static final String PRIORITY = "Priority";
         private static final String STATUS = "Status";
         private static final String BUCKET = "Bucket";
         private static final String STORAGECLASS = "StorageClass";
+        private static final String ACCOUNT = "Account";
+        private static final String ACCESS_CONTROL_TRANSLATION = "AccessControlTranslation";
+        private static final String OWNER = "Owner";
+        private static final String ENCRYPTION_CONFIGURATION = "EncryptionConfiguration";
+        private static final String REPLICATION_TIME = "ReplicationTime";
+        private static final String TIME = "Time";
+        private static final String MINUTES = "Minutes";
+        private static final String METRICS = "Metrics";
+        private static final String EVENT_THRESHOLD = "EventThreshold";
+        private static final String REPLICA_KMS_KEY_ID = "ReplicaKmsKeyID";
+        private static final String SOURCE_SELECTION_CRITERIA = "SourceSelectionCriteria";
+        private static final String SSE_KMS_ENCRYPTED_OBJECTS = "SseKmsEncryptedObjects";
 
         public BucketReplicationConfiguration getConfiguration() {
             return bucketReplicationConfiguration;
@@ -2415,6 +2445,18 @@ public class XmlResponsesSaxParser {
                         currentRule.setDestinationConfig(destinationConfig);
                     }
                 }
+            } else if (in(REPLICATION_CONFIG, RULE, FILTER, TAG)) {
+                if (name.equals(TAG_KEY)) {
+                    currentTagKey = getText();
+                } else if (name.equals(TAG_VALUE)) {
+                    currentTagValue = getText();
+                }
+            } else if (in(REPLICATION_CONFIG, RULE, FILTER, AND, TAG)) {
+                if (name.equals(TAG_KEY)) {
+                    currentTagKey = getText();
+                } else if (name.equals(TAG_VALUE)) {
+                    currentTagValue = getText();
+                }
             } else if (in(REPLICATION_CONFIG, RULE, EXISTING_OBJECT_REPLICATION)) {
                 if (name.equals(STATUS)) {
                     existingObjectReplication.setStatus(getText());
@@ -2451,7 +2493,7 @@ public class XmlResponsesSaxParser {
 
             if (in("Tagging")) {
                 if (name.equals("TagSet")) {
-                    currentTagSet = new HashMap<String, String>();
+                    currentTagSet = new LinkedHashMap<String, String>();
                 }
             }
         }
@@ -2997,7 +3039,7 @@ public class XmlResponsesSaxParser {
             }
         }
     }
-    
+
     /*
     HTTP/1.1 200 OK
     x-amz-id-2: Uuag1LuByRx9e6j5Onimru9pO4ZVKnJ2Qz7/C1NPcfTWAtRPfTaOFg==
@@ -3053,7 +3095,7 @@ public class XmlResponsesSaxParser {
             }
         }
     }
-    
+
     public static class ListLegalHoldsResultHandler extends AbstractHandler {
 
         private final ListLegalHoldsResult listLegalHoldsResult =
@@ -3073,34 +3115,34 @@ public class XmlResponsesSaxParser {
                 Attributes attrs) {
 
             if (in("RetentionState", "LegalHolds")) {
-            	if (name.equals("LegalHold")) {
-            		newLegalHold = new LegalHold();
-            	}
+                if (name.equals("LegalHold")) {
+                    newLegalHold = new LegalHold();
+                }
             }
         }
 
         @Override
         protected void doEndElement(String uri, String name, String qName) {
-        	if (in("RetentionState")) {
-        		if (name.equals("CreateTime")) {
-            		listLegalHoldsResult.setCreateTime(ServiceUtils.parseRfc822Date(getText()));
+            if (in("RetentionState")) {
+                if (name.equals("CreateTime")) {
+                    listLegalHoldsResult.setCreateTime(ServiceUtils.parseRfc822Date(getText()));
                 }
-        		if (name.equals("RetentionPeriod")) {
-            		listLegalHoldsResult.setRetentionPeriod(parseLong(getText()));
+                if (name.equals("RetentionPeriod")) {
+                    listLegalHoldsResult.setRetentionPeriod(parseLong(getText()));
                 }
-        		if (name.equals("RetentionPeriodExpirationDate")) {
-            		listLegalHoldsResult.setRetentionExpirationDate(ServiceUtils.parseRfc822Date(getText()));
+                if (name.equals("RetentionPeriodExpirationDate")) {
+                    listLegalHoldsResult.setRetentionExpirationDate(ServiceUtils.parseRfc822Date(getText()));
                 }
-        	} else if (in("RetentionState", "LegalHolds")) {
-            	if (name.equals("LegalHold")) {
-            		listLegalHoldsResult.getLegalHolds().add(newLegalHold);
+            } else if (in("RetentionState", "LegalHolds")) {
+                if (name.equals("LegalHold")) {
+                    listLegalHoldsResult.getLegalHolds().add(newLegalHold);
                 }
             } else if (in("RetentionState", "LegalHolds", "LegalHold")) {
                 if (name.equals("ID")) {
                     newLegalHold.setId(getText());
                 }
                 if (name.equals("Date")) {
-                	newLegalHold.setDate(ServiceUtils.parseRfc822Date(getText()));
+                    newLegalHold.setDate(ServiceUtils.parseRfc822Date(getText()));
                 }
             } 
         }
@@ -3825,7 +3867,6 @@ public class XmlResponsesSaxParser {
                 } else if (name.equals("Prefix")) {
                     s3BucketDestination.setPrefix(getText());
                 }
-
             } else if (in("InventoryConfiguration", "Filter")) {
                 if (name.equals("Prefix")) {
                     filter.setPredicate(new InventoryPrefixPredicate(getText()));

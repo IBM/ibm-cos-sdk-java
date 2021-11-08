@@ -20,23 +20,19 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
+import com.ibm.cloud.objectstorage.handlers.HandlerContextKey;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
 import org.junit.Test;
 
-import com.ibm.cloud.objectstorage.AmazonWebServiceRequest;
-import com.ibm.cloud.objectstorage.Request;
-import com.ibm.cloud.objectstorage.RequestClientOptions;
-import com.ibm.cloud.objectstorage.Response;
 import com.ibm.cloud.objectstorage.RequestClientOptions.Marker;
 import com.ibm.cloud.objectstorage.auth.AWSCredentials;
 import com.ibm.cloud.objectstorage.auth.BasicAWSCredentials;
 import com.ibm.cloud.objectstorage.event.ProgressEvent;
 import com.ibm.cloud.objectstorage.event.ProgressListener;
 import com.ibm.cloud.objectstorage.event.SyncProgressListener;
-import com.ibm.cloud.objectstorage.handlers.HandlerContextKey;
 import com.ibm.cloud.objectstorage.metrics.RequestMetricCollector;
 
 import utils.model.EmptyAmazonWebServiceRequest;

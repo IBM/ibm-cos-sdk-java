@@ -1,5 +1,5 @@
 /*
- * Copyright 2011-2017 Amazon Technologies, Inc.
+ * Copyright 2011-2019 Amazon Technologies, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,6 +22,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.Writer;
 
+import com.ibm.cloud.objectstorage.SdkClientException;
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonParser;
@@ -29,7 +30,6 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
-import com.ibm.cloud.objectstorage.SdkClientException;
 
 public enum Jackson {
     ;

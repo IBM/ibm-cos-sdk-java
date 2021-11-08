@@ -1,5 +1,5 @@
 /*
- * Copyright 2011-2017 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2011-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -14,16 +14,30 @@
  */
 package com.ibm.cloud.objectstorage.services.s3.model;
 
-import java.io.Serializable;
-
 import com.ibm.cloud.objectstorage.AmazonWebServiceRequest;
+
+import java.io.Serializable;
 
 /**
  * Request to retrieve a listing of objects in an S3 bucket.
  */
 public class ListObjectsV2Request extends AmazonWebServiceRequest implements Serializable {
 
-    /** The name of the Amazon S3 bucket to list. */
+    /**
+     * The name of the Amazon S3 bucket to list.
+     *
+     * <p>
+     * When using this API with an access point, you must direct requests
+     * to the access point hostname. The access point hostname takes the form
+     * <i>AccessPointName</i>-<i>AccountId</i>.s3-accesspoint.<i>Region</i>.amazonaws.com.
+     * </p>
+     * <p>
+     * When using this operation using an access point through the AWS SDKs, you provide
+     * the access point ARN in place of the bucket name. For more information about access point
+     * ARNs, see <a href=\"https://docs.aws.amazon.com/AmazonS3/latest/dev/using-access-points.html\">
+     * Using Access Points</a> in the <i>Amazon Simple Storage Service Developer Guide</i>.
+     * </p>
+     */
     private String bucketName;
 
     /**
@@ -94,8 +108,20 @@ public class ListObjectsV2Request extends AmazonWebServiceRequest implements Ser
     /**
      * Sets the name of the Amazon S3 bucket whose objects are to be listed.
      *
+     * <p>
+     * When using this API with an access point, you must direct requests
+     * to the access point hostname. The access point hostname takes the form
+     * <i>AccessPointName</i>-<i>AccountId</i>.s3-accesspoint.<i>Region</i>.amazonaws.com.
+     * </p>
+     * <p>
+     * When using this operation using an access point through the AWS SDKs, you provide
+     * the access point ARN in place of the bucket name. For more information about access point
+     * ARNs, see <a href=\"https://docs.aws.amazon.com/AmazonS3/latest/dev/using-access-points.html\">
+     * Using Access Points</a> in the <i>Amazon Simple Storage Service Developer Guide</i>.
+     * </p>
+     *
      * @param bucketName
-     *            The name of the Amazon S3 bucket whose objects are to be
+     *            The name of the Amazon S3 bucket, or access point ARN, whose objects are to be
      *            listed.
      */
     public void setBucketName(String bucketName) {
@@ -107,8 +133,20 @@ public class ListObjectsV2Request extends AmazonWebServiceRequest implements Ser
      * Returns this {@link ListObjectsV2Request}, enabling additional method
      * calls to be chained together.
      *
+     * <p>
+     * When using this API with an access point, you must direct requests
+     * to the access point hostname. The access point hostname takes the form
+     * <i>AccessPointName</i>-<i>AccountId</i>.s3-accesspoint.<i>Region</i>.amazonaws.com.
+     * </p>
+     * <p>
+     * When using this operation using an access point through the AWS SDKs, you provide
+     * the access point ARN in place of the bucket name. For more information about access point
+     * ARNs, see <a href=\"https://docs.aws.amazon.com/AmazonS3/latest/dev/using-access-points.html\">
+     * Using Access Points</a> in the <i>Amazon Simple Storage Service Developer Guide</i>.
+     * </p>
+     *
      * @param bucketName
-     *            The name of the Amazon S3 bucket whose objects are to be
+     *            The name of the Amazon S3 bucket, or access point ARN, whose objects are to be
      *            listed.
      *
      * @return This {@link ListObjectsV2Request}, enabling additional method

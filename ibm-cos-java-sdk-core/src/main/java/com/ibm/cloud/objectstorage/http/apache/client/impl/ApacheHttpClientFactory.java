@@ -14,14 +14,6 @@
  */
 package com.ibm.cloud.objectstorage.http.apache.client.impl;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.apache.http.HttpResponseInterceptor;
-import org.apache.http.conn.ConnectionKeepAliveStrategy;
-import org.apache.http.conn.HttpClientConnectionManager;
-import org.apache.http.impl.client.HttpClientBuilder;
-import org.apache.http.impl.client.HttpClients;
-
 import com.ibm.cloud.objectstorage.http.AmazonHttpClient;
 import com.ibm.cloud.objectstorage.http.IdleConnectionReaper;
 import com.ibm.cloud.objectstorage.http.apache.SdkProxyRoutePlanner;
@@ -32,6 +24,13 @@ import com.ibm.cloud.objectstorage.http.conn.ClientConnectionManagerFactory;
 import com.ibm.cloud.objectstorage.http.conn.SdkConnectionKeepAliveStrategy;
 import com.ibm.cloud.objectstorage.http.protocol.SdkHttpRequestExecutor;
 import com.ibm.cloud.objectstorage.http.settings.HttpClientSettings;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.http.HttpResponseInterceptor;
+import org.apache.http.conn.ConnectionKeepAliveStrategy;
+import org.apache.http.conn.HttpClientConnectionManager;
+import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.impl.client.HttpClients;
 
 /**
  * Factory class that builds the apache http client from the settings.
@@ -92,7 +91,7 @@ public class ApacheHttpClientFactory implements HttpClientFactory<ConnectionMana
                     "Proxy Port: " + settings.getProxyPort());
 
             builder.setRoutePlanner(new SdkProxyRoutePlanner(
-                    settings.getProxyHost(), settings.getProxyPort(), settings.getNonProxyHosts()));
+                    settings.getProxyHost(), settings.getProxyPort(), settings.getProxyProtocol(), settings.getNonProxyHosts()));
 
             if (settings.isAuthenticatedProxy()) {
                 builder.setDefaultCredentialsProvider(ApacheUtils.newProxyCredentialsProvider(settings));

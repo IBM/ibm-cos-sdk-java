@@ -24,9 +24,7 @@ import com.ibm.cloud.objectstorage.http.MockServerTestBase;
 import com.ibm.cloud.objectstorage.http.apache.client.impl.ConnectionManagerAwareHttpClient;
 import com.ibm.cloud.objectstorage.http.request.EmptyHttpRequest;
 import com.ibm.cloud.objectstorage.http.server.MockServer;
-import com.ibm.cloud.objectstorage.http.timers.client.ClientExecutionTimeoutException;
 import com.ibm.cloud.objectstorage.internal.SdkBufferedInputStream;
-
 import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.protocol.HttpContext;
 import org.junit.BeforeClass;
@@ -35,10 +33,14 @@ import org.junit.Test;
 import java.io.IOException;
 import java.io.InputStream;
 
-import static com.ibm.cloud.objectstorage.http.timers.ClientExecutionAndRequestTimerTestUtils.createMockGetRequest;
-import static com.ibm.cloud.objectstorage.http.timers.ClientExecutionAndRequestTimerTestUtils.createRawHttpClientSpy;
-import static com.ibm.cloud.objectstorage.http.timers.ClientExecutionAndRequestTimerTestUtils.execute;
-import static com.ibm.cloud.objectstorage.http.timers.TimeoutTestConstants.CLIENT_EXECUTION_TIMEOUT;
+import static com.ibm.cloud.objectstorage.http.timers
+        .ClientExecutionAndRequestTimerTestUtils.createMockGetRequest;
+import static com.ibm.cloud.objectstorage.http.timers
+        .ClientExecutionAndRequestTimerTestUtils.createRawHttpClientSpy;
+import static com.ibm.cloud.objectstorage.http.timers
+        .ClientExecutionAndRequestTimerTestUtils.execute;
+import static com.ibm.cloud.objectstorage.http.timers.TimeoutTestConstants
+        .CLIENT_EXECUTION_TIMEOUT;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.doThrow;
 

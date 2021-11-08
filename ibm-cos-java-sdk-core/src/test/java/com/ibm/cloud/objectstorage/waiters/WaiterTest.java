@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2017 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2010-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -15,24 +15,14 @@
 
 package com.ibm.cloud.objectstorage.waiters;
 
+import com.ibm.cloud.objectstorage.AmazonServiceException;
+import com.ibm.cloud.objectstorage.AmazonWebServiceRequest;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-
-import com.ibm.cloud.objectstorage.AmazonServiceException;
-import com.ibm.cloud.objectstorage.AmazonWebServiceRequest;
-import com.ibm.cloud.objectstorage.waiters.PollingStrategy;
-import com.ibm.cloud.objectstorage.waiters.PollingStrategyContext;
-import com.ibm.cloud.objectstorage.waiters.SdkFunction;
-import com.ibm.cloud.objectstorage.waiters.WaiterAcceptor;
-import com.ibm.cloud.objectstorage.waiters.WaiterExecution;
-import com.ibm.cloud.objectstorage.waiters.WaiterExecutionBuilder;
-import com.ibm.cloud.objectstorage.waiters.WaiterState;
-import com.ibm.cloud.objectstorage.waiters.WaiterTimedOutException;
-import com.ibm.cloud.objectstorage.waiters.WaiterUnrecoverableException;
 
 import java.util.ArrayList;
 import java.util.List;

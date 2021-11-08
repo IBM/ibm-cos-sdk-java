@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2017 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2015-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -20,10 +20,10 @@ import java.net.URL;
 import java.util.Date;
 import java.util.List;
 
+import com.ibm.cloud.objectstorage.SdkClientException;
 import com.ibm.cloud.objectstorage.AmazonServiceException;
 import com.ibm.cloud.objectstorage.AmazonWebServiceRequest;
 import com.ibm.cloud.objectstorage.HttpMethod;
-import com.ibm.cloud.objectstorage.SdkClientException;
 import com.ibm.cloud.objectstorage.regions.Region;
 import com.ibm.cloud.objectstorage.services.s3.model.*;
 import com.ibm.cloud.objectstorage.services.s3.waiters.AmazonS3Waiters;
@@ -365,6 +365,23 @@ public abstract class AbstractAmazonS3 implements AmazonS3 {
     }
 
     @Override
+    public GetObjectTaggingResult getObjectTagging(GetObjectTaggingRequest objectTaggingRequest) {
+        throw new UnsupportedOperationException("Extend AbstractAmazonS3 to provide an implementation");
+    }
+
+    @Override
+    public SetObjectTaggingResult setObjectTagging(SetObjectTaggingRequest setObjectTaggingRequest) {
+        throw new UnsupportedOperationException("Extend AbstractAmazonS3 to provide an implementation");
+
+    }
+
+    @Override
+    public DeleteObjectTaggingResult deleteObjectTagging(DeleteObjectTaggingRequest deleteObjectTaggingRequest) {
+        throw new UnsupportedOperationException("Extend AbstractAmazonS3 to provide an implementation");
+
+    }
+
+    @Override
     public void deleteBucket(String bucketName) throws SdkClientException,
             AmazonServiceException {
         deleteBucket(new DeleteBucketRequest(bucketName));
@@ -484,6 +501,42 @@ public abstract class AbstractAmazonS3 implements AmazonS3 {
     }
 
     @Override
+    public BucketLifecycleConfiguration getBucketLifecycleConfiguration(
+            String bucketName) {
+        return getBucketLifecycleConfiguration(new GetBucketLifecycleConfigurationRequest(bucketName));
+    }
+
+    @Override
+    public BucketLifecycleConfiguration getBucketLifecycleConfiguration(GetBucketLifecycleConfigurationRequest getBucketLifecycleConfigurationRequest) {
+        throw new UnsupportedOperationException("Extend AbstractAmazonS3 to provide an implementation");
+    }
+
+    @Override
+    public void setBucketLifecycleConfiguration(String bucketName,
+            BucketLifecycleConfiguration bucketLifecycleConfiguration) {
+        setBucketLifecycleConfiguration(new SetBucketLifecycleConfigurationRequest(bucketName, bucketLifecycleConfiguration));
+    }
+
+    @Override
+    public void setBucketLifecycleConfiguration(
+            SetBucketLifecycleConfigurationRequest setBucketLifecycleConfigurationRequest) {
+        throw new UnsupportedOperationException("Extend AbstractAmazonS3 to provide an implementation");
+
+    }
+
+    @Override
+    public void deleteBucketLifecycleConfiguration(String bucketName) {
+        deleteBucketLifecycleConfiguration(new DeleteBucketLifecycleConfigurationRequest(bucketName));
+    }
+
+    @Override
+    public void deleteBucketLifecycleConfiguration(
+            DeleteBucketLifecycleConfigurationRequest deleteBucketLifecycleConfigurationRequest) {
+        throw new UnsupportedOperationException("Extend AbstractAmazonS3 to provide an implementation");
+
+    }
+
+    @Override
     public BucketCrossOriginConfiguration getBucketCrossOriginConfiguration(
             String bucketName) {
         return getBucketCrossOriginConfiguration(new GetBucketCrossOriginConfigurationRequest(bucketName));
@@ -578,6 +631,49 @@ public abstract class AbstractAmazonS3 implements AmazonS3 {
     }
 
     @Override
+    public BucketWebsiteConfiguration getBucketWebsiteConfiguration(
+            String bucketName) throws SdkClientException,
+            AmazonServiceException {
+        return getBucketWebsiteConfiguration(new GetBucketWebsiteConfigurationRequest(bucketName));
+    }
+
+    @Override
+    public BucketWebsiteConfiguration getBucketWebsiteConfiguration(
+            GetBucketWebsiteConfigurationRequest getBucketWebsiteConfigurationRequest)
+            throws SdkClientException, AmazonServiceException {
+        throw new UnsupportedOperationException("Extend AbstractAmazonS3 to provide an implementation");
+    }
+
+    @Override
+    public void setBucketWebsiteConfiguration(String bucketName,
+            BucketWebsiteConfiguration configuration)
+            throws SdkClientException, AmazonServiceException {
+        setBucketWebsiteConfiguration(new SetBucketWebsiteConfigurationRequest(bucketName, configuration));
+    }
+
+    @Override
+    public void setBucketWebsiteConfiguration(
+            SetBucketWebsiteConfigurationRequest setBucketWebsiteConfigurationRequest)
+            throws SdkClientException, AmazonServiceException {
+        throw new UnsupportedOperationException("Extend AbstractAmazonS3 to provide an implementation");
+
+    }
+
+    @Override
+    public void deleteBucketWebsiteConfiguration(String bucketName)
+            throws SdkClientException, AmazonServiceException {
+        deleteBucketWebsiteConfiguration(new DeleteBucketWebsiteConfigurationRequest(bucketName));
+    }
+
+    @Override
+    public void deleteBucketWebsiteConfiguration(
+            DeleteBucketWebsiteConfigurationRequest deleteBucketWebsiteConfigurationRequest)
+            throws SdkClientException, AmazonServiceException {
+        throw new UnsupportedOperationException("Extend AbstractAmazonS3 to provide an implementation");
+
+    }
+
+    @Override
     public URL generatePresignedUrl(String bucketName, String key,
             Date expiration) throws SdkClientException {
         return generatePresignedUrl(bucketName, key, expiration, HttpMethod.GET);
@@ -646,8 +742,51 @@ public abstract class AbstractAmazonS3 implements AmazonS3 {
     }
 
     @Override
+    public void restoreObject(String bucketName, String key,
+            int expirationInDays) throws AmazonServiceException {
+        restoreObject(new RestoreObjectRequest(bucketName, key, expirationInDays));
+    }
+
+
+    @Override
+    public void restoreObject(RestoreObjectRequest request)
+            throws AmazonServiceException {
+        throw new UnsupportedOperationException("Extend AbstractAmazonS3 to provide an implementation");
+
+    }
+
     public boolean doesObjectExist(String bucketName, String objectName)
             throws AmazonServiceException, SdkClientException {
+        throw new UnsupportedOperationException("Extend AbstractAmazonS3 to provide an implementation");
+    }
+
+    @Override
+    public SetPublicAccessBlockResult setPublicAccessBlock(SetPublicAccessBlockRequest request) {
+        throw new UnsupportedOperationException("Extend AbstractAmazonS3 to provide an implementation");
+    }
+
+    @Override
+    public GetPublicAccessBlockResult getPublicAccessBlock(GetPublicAccessBlockRequest request) {
+        throw new UnsupportedOperationException("Extend AbstractAmazonS3 to provide an implementation");
+    }
+
+    @Override
+    public DeletePublicAccessBlockResult deletePublicAccessBlock(DeletePublicAccessBlockRequest request) {
+        throw new UnsupportedOperationException("Extend AbstractAmazonS3 to provide an implementation");
+    }
+
+    @Override
+    public PresignedUrlDownloadResult download(PresignedUrlDownloadRequest presignedUrlDownloadRequest) {
+        throw new UnsupportedOperationException("Extend AbstractAmazonS3 to provide an implementation");
+    }
+
+    @Override
+    public void download(PresignedUrlDownloadRequest presignedUrlDownloadRequest, File destinationFile) {
+        throw new UnsupportedOperationException("Extend AbstractAmazonS3 to provide an implementation");
+    }
+
+    @Override
+    public PresignedUrlUploadResult upload(PresignedUrlUploadRequest presignedUrlUploadRequest) {
         throw new UnsupportedOperationException("Extend AbstractAmazonS3 to provide an implementation");
     }
 

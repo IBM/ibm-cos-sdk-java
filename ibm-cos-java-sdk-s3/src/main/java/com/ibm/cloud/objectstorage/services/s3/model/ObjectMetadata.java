@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2017 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2010-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -93,24 +93,29 @@ public class ObjectMetadata implements ServerSideEncryptionResult, S3RequesterCh
      * accessed. Null if this object has not been restored from Glacier.
      */
     private Date restoreExpirationTime;
-    
+
+    // IBM-specific
     /**
      * Date on which it will be legal to delete or modify the object.
      */
     private Date retentionExpirationDate;
-    
+
+    // IBM-specific
     /**
      * The number of legal holds applied to the object.
      */
     private Integer retentionLegalHoldCount;
-    
+
+    // IBM-specific
     /**
      * Retention period to store on the object in seconds.
      */
     private Long retentionPeriod;
-    
+
+    // IBM-specific
     private String transition;
-    
+
+    // IBM-specific
     private Date transitionDate;
 
     public ObjectMetadata() {}
@@ -575,8 +580,8 @@ public class ObjectMetadata implements ServerSideEncryptionResult, S3RequesterCh
      * <p>
      * This field represents the base64 encoded 128-bit MD5 digest digest of an
      * object's content as calculated on the caller's side. The ETag metadata
-     * field represents the hex encoded 128-bit MD5 digest as computed by Amazon
-     * S3.
+     * field sometimes (but not always) represents the hex encoded 128-bit MD5 digest as computed by Amazon
+     * S3. See the documentation at {@link #getETag()} for more information on what the ETag field represents.
      * </p>
      * <p>
      * The AWS S3 Java client will attempt to calculate this field automatically
@@ -608,8 +613,8 @@ public class ObjectMetadata implements ServerSideEncryptionResult, S3RequesterCh
      * <p>
      * This field represents the base64 encoded 128-bit MD5 digest digest of an
      * object's content as calculated on the caller's side. The ETag metadata
-     * field represents the hex encoded 128-bit MD5 digest as computed by Amazon
-     * S3.
+     * field sometimes (but not always) represents the hex encoded 128-bit MD5 digest as computed by Amazon
+     * S3. See the documentation at {@link #getETag()} for more information on what the ETag field represents.
      * </p>
      * <p>
      * The AWS S3 Java client will attempt to calculate this field automatically
@@ -676,19 +681,25 @@ public class ObjectMetadata implements ServerSideEncryptionResult, S3RequesterCh
     }
 
     /**
-     * Gets the hex encoded 128-bit MD5 digest of the associated object
-     * according to RFC 1864. This data is used as an integrity check to verify
-     * that the data received by the caller is the same data that was sent by
-     * Amazon S3.
-     * <p>
-     * This field represents the hex encoded 128-bit MD5 digest of an object's
-     * content as calculated by Amazon S3. The ContentMD5 field represents the
-     * base64 encoded 128-bit MD5 digest as calculated on the caller's side.
-     * </p>
+     * The entity tag is a hash of the object. The ETag reflects changes only to the contents of an object, not its metadata.
+     * The ETag may or may not be an MD5 digest of the object data. Whether or not it is depends on how the object was created
+     * and how it is encrypted as described below:
+     * <ul>
+     * <li>
+     * Objects created by the PUT Object, POST Object, or Copy operation, or through the AWS Management Console, and are encrypted
+     * by SSE-S3 or plaintext, have ETags that are an MD5 digest of their object data.
+     * </li>
+     * <li>
+     * Objects created by the PUT Object, POST Object, or Copy operation, or through the AWS Management Console, and are encrypted
+     * by SSE-C or SSE-KMS, have ETags that are not an MD5 digest of their object data.
+     * </li>
+     * <li>
+     * If an object is created by either the Multipart Upload or Part Copy operation, the ETag is not an MD5 digest, regardless of
+     * the method of encryption.
+     * </li>
+     * </ul>
      *
-     * @return The hex encoded MD5 hash of the content for the associated object
-     *         as calculated by Amazon S3.
-     *         Returns <code>null</code> if it hasn't been set yet.
+     * @return The ETag of the object or <code>null</code>if it hasn't been set yet.
      */
     public String getETag() {
         return (String)metadata.get(Headers.ETAG);
@@ -778,7 +789,7 @@ public class ObjectMetadata implements ServerSideEncryptionResult, S3RequesterCh
     public void setSSECustomerKeyMd5(String md5Digest) {
         metadata.put(Headers.SERVER_SIDE_ENCRYPTION_CUSTOMER_KEY_MD5, md5Digest);
     }
-    
+
     /**
      * {@inheritDoc}
      */
@@ -822,11 +833,9 @@ public class ObjectMetadata implements ServerSideEncryptionResult, S3RequesterCh
     }
 
     /**
-     * Sets the {@link BucketLifecycleConfiguration} rule ID for this object's
-     * expiration
-     *
-     * @param expirationTimeRuleId
-     *            The rule ID for this object's expiration
+     * For internal use only. This will *not* set the object's expiration time
+     * rule id, and is only used to set the value in the object after receiving
+     * the value in a response from S3.
      */
     public void setExpirationTimeRuleId(String expirationTimeRuleId) {
         this.expirationTimeRuleId = expirationTimeRuleId;
@@ -871,8 +880,9 @@ public class ObjectMetadata implements ServerSideEncryptionResult, S3RequesterCh
     public Boolean getOngoingRestore() {
         return this.ongoingRestore;
     }
-    		
-	/**
+
+    // IBM-specific
+    /**
      * Returns the date at which an object will be transitioned to 
      * archive storage.
      */
@@ -880,6 +890,7 @@ public class ObjectMetadata implements ServerSideEncryptionResult, S3RequesterCh
         return cloneDate(transitionDate);
     }
 
+    // IBM-specific
     /**
      * For internal use only. This will *not* set the object's transition 
      * date, and is only used to set the value in the object after
@@ -892,6 +903,7 @@ public class ObjectMetadata implements ServerSideEncryptionResult, S3RequesterCh
         this.transitionDate = transitionDate;
     }
 
+    // IBM-specific
     /**
      * For internal use only. Sets the transition storage class. Not intended to be called by external
      * code.
@@ -900,14 +912,14 @@ public class ObjectMetadata implements ServerSideEncryptionResult, S3RequesterCh
         this.transition = transition;
     }
 
-
+    // IBM-specific
     /**
      *  Returns the transition storage class.
      */
     public String getTransition() {
         return this.transition;
     }
-	    
+
     /**
      *  Set the date when the object is no longer cacheable.
      */
@@ -973,31 +985,37 @@ public class ObjectMetadata implements ServerSideEncryptionResult, S3RequesterCh
         }
     }
 
+    // IBM-specific
     public Date getRetentionExpirationDate() {
-    	return this.retentionExpirationDate;
-	}
+        return this.retentionExpirationDate;
+    }
 
-	public void setRetentionExpirationDate(Date retentionExpirationDate) {
-		this.retentionExpirationDate = retentionExpirationDate;
-	}
+    // IBM-specific
+    public void setRetentionExpirationDate(Date retentionExpirationDate) {
+        this.retentionExpirationDate = retentionExpirationDate;
+    }
 
-	public Integer getRetentionLegalHoldCount() {
-		return this.retentionLegalHoldCount;
-	}
-	
-	public void setRetentionLegalHoldCount(Integer retentionLegalHoldCount) {
-		this.retentionLegalHoldCount = retentionLegalHoldCount;
-	}
+    // IBM-specific
+    public Integer getRetentionLegalHoldCount() {
+        return this.retentionLegalHoldCount;
+    }
 
-	public Long getRetentionPeriod() {
-		return this.retentionPeriod;
-	}
-	
-	public void setRetentionPeriod(Long retentionPeriod) {
-		this.retentionPeriod = retentionPeriod;
-	}
+    // IBM-specific
+    public void setRetentionLegalHoldCount(Integer retentionLegalHoldCount) {
+        this.retentionLegalHoldCount = retentionLegalHoldCount;
+    }
 
-	/**
+    // IBM-specific
+    public Long getRetentionPeriod() {
+        return this.retentionPeriod;
+    }
+
+    // IBM-specific
+    public void setRetentionPeriod(Long retentionPeriod) {
+        this.retentionPeriod = retentionPeriod;
+    }
+
+    /**
      * <p>
      * Returns the value of x-amz-mp-parts-count header.
      * </p>

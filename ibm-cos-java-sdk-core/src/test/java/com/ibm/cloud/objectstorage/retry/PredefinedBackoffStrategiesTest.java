@@ -1,5 +1,5 @@
 /*
- * Copyright 2011-2017 Amazon.com, Inc. or its affiliates. All Rights
+ * Copyright 2011-2019 Amazon.com, Inc. or its affiliates. All Rights
  * Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
@@ -20,9 +20,6 @@ package com.ibm.cloud.objectstorage.retry;
 
 import org.junit.Assert;
 import org.junit.Test;
-
-import com.ibm.cloud.objectstorage.retry.PredefinedBackoffStrategies;
-import com.ibm.cloud.objectstorage.retry.RetryPolicy;
 
 import java.util.ArrayList;
 import java.util.List;

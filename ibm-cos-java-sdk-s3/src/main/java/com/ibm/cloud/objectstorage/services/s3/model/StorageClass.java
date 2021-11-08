@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2010-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -32,10 +32,10 @@ package com.ibm.cloud.objectstorage.services.s3.model;
  */
 public enum StorageClass {
 
-	/**
-	 * The IBM Accelerated storage class.
-	 */
-	Accelerated("ACCELERATED"),
+    /**
+     * The IBM Accelerated storage class.
+     */
+    Accelerated("ACCELERATED"),
 
     /**
      * The default Amazon S3 storage class. This storage class

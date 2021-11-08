@@ -22,7 +22,6 @@ import javax.net.ssl.SSLException;
 
 import org.junit.Test;
 
-import com.ibm.cloud.objectstorage.http.conn.ssl.ShouldClearSslSessionPredicate;
 import com.ibm.cloud.objectstorage.util.JavaVersionParser.JavaVersion;
 
 public class ShouldClearSslSessionsPredicateTest {

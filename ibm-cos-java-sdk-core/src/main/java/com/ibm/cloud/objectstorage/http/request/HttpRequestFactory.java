@@ -1,5 +1,5 @@
 /*
- * Copyright 2011-2017 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2011-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -14,11 +14,11 @@
  */
 package com.ibm.cloud.objectstorage.http.request;
 
-import java.io.IOException;
-
 import com.ibm.cloud.objectstorage.Request;
 import com.ibm.cloud.objectstorage.annotation.Beta;
 import com.ibm.cloud.objectstorage.http.settings.HttpClientSettings;
+
+import java.io.IOException;
 
 /**
  * An interface that can be used to create the http requests that is

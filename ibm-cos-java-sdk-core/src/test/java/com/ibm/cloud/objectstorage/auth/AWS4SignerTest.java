@@ -14,14 +14,10 @@
  */
 package com.ibm.cloud.objectstorage.auth;
 
-import org.junit.Test;
-
 import com.ibm.cloud.objectstorage.SignableRequest;
-import com.ibm.cloud.objectstorage.auth.AWS4Signer;
-import com.ibm.cloud.objectstorage.auth.AWSCredentials;
-import com.ibm.cloud.objectstorage.auth.AnonymousAWSCredentials;
-import com.ibm.cloud.objectstorage.auth.BasicAWSCredentials;
 import com.ibm.cloud.objectstorage.auth.internal.AWS4SignerUtils;
+
+import org.junit.Test;
 
 import java.io.ByteArrayInputStream;
 import java.text.SimpleDateFormat;
@@ -36,7 +32,7 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 /**
- * Unit tests for the
+ * Unit tests for AWS4Signer class
  */
 public class AWS4SignerTest {
 
@@ -192,6 +188,16 @@ public class AWS4SignerTest {
                 .withHeader("x-amz-archive-description", "test  test")
                 .withPath("/")
                 .withEndpoint("http://demo.us-east-1.amazonaws.com").build();
+    }
+
+    private SignableRequest<?> generateBasicRequestToBjs() {
+        return MockRequestBuilder.create()
+                .withContent(new ByteArrayInputStream("{\"TableName\": \"foo\"}".getBytes()))
+                .withHeader("Host", "autoscaling.cn-north-1.amazonaws.com.cn")
+                .withHeader("x-amz-archive-description", "test  test")
+                .withPath("/")
+                .withEndpoint("http://autoscaling.cn-north-1.amazonaws.com.cn")
+                .build();
     }
 
     private String getOldTimeStamp(Date date) {

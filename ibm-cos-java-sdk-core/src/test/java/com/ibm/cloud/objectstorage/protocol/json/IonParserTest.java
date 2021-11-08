@@ -1,5 +1,5 @@
 /*
- * Copyright 2011-2017 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2011-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"). You may not
  * use this file except in compliance with the License. A copy of the License is
@@ -28,6 +28,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import com.ibm.cloud.objectstorage.util.StringUtils;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -35,11 +36,8 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 
-import com.fasterxml.jackson.core.JsonToken;
 import com.ibm.cloud.objectstorage.AmazonClientException;
-import com.ibm.cloud.objectstorage.protocol.json.IonParser;
-import com.ibm.cloud.objectstorage.protocol.json.SdkIonGenerator;
-import com.ibm.cloud.objectstorage.util.StringUtils;
+import com.fasterxml.jackson.core.JsonToken;
 
 import software.amazon.ion.IonReader;
 import software.amazon.ion.IonSystem;

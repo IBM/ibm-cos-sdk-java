@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2017 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2015-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -31,10 +31,10 @@ public class HeadBucketResultHandler extends AbstractS3ResponseHandler<HeadBucke
         result.setBucketRegion(response.getHeaders().get(Headers.S3_BUCKET_REGION));
 
         if (!StringUtils.isNullOrEmpty(response.getHeaders().get(Headers.IBM_SSE_KP_ENABLED))){
-        	result.setIBMSSEKPEnabled(Boolean.parseBoolean(response.getHeaders().get(Headers.IBM_SSE_KP_ENABLED)));
+            result.setIBMSSEKPEnabled(Boolean.parseBoolean(response.getHeaders().get(Headers.IBM_SSE_KP_ENABLED)));
         }
         if (!StringUtils.isNullOrEmpty(response.getHeaders().get(Headers.IBM_SSE_KP_CUSTOMER_ROOT_KEY_CRN))){
-        	result.setIBMSSEKPCrk(response.getHeaders().get(Headers.IBM_SSE_KP_CUSTOMER_ROOT_KEY_CRN));
+            result.setIBMSSEKPCrk(response.getHeaders().get(Headers.IBM_SSE_KP_CUSTOMER_ROOT_KEY_CRN));
         }
         awsResponse.setResult(result);
 

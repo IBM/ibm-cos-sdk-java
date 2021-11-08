@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2017 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2014-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -14,13 +14,13 @@
  */
 package com.ibm.cloud.objectstorage.services.s3.model;
 
+import com.ibm.cloud.objectstorage.AmazonWebServiceRequest;
+import com.ibm.cloud.objectstorage.event.ProgressListener;
+
 import java.io.File;
 import java.io.InputStream;
 import java.io.Serializable;
 import java.util.Date;
-
-import com.ibm.cloud.objectstorage.AmazonWebServiceRequest;
-import com.ibm.cloud.objectstorage.event.ProgressListener;
 
 /**
  * Abstract base class for a put object or put object like request.
@@ -31,6 +31,18 @@ public abstract class AbstractPutObjectRequest extends AmazonWebServiceRequest i
      * The name of an existing bucket, to which this request will upload a new
      * object. You must have {@link Permission#Write} permission granted to you
      * in order to upload new objects to a bucket.
+     *
+     * <p>
+     * When using this API with an access point, you must direct requests
+     * to the access point hostname. The access point hostname takes the form
+     * <i>AccessPointName</i>-<i>AccountId</i>.s3-accesspoint.<i>Region</i>.amazonaws.com.
+     * </p>
+     * <p>
+     * When using this operation using an access point through the AWS SDKs, you provide
+     * the access point ARN in place of the bucket name. For more information about access point
+     * ARNs, see <a href=\"https://docs.aws.amazon.com/AmazonS3/latest/dev/using-access-points.html\">
+     * Using Access Points</a> in the <i>Amazon Simple Storage Service Developer Guide</i>.
+     * </p>
      */
     private String bucketName;
 
@@ -98,7 +110,9 @@ public abstract class AbstractPutObjectRequest extends AmazonWebServiceRequest i
      * the the object on the server side.
      */
     private SSEAwsKeyManagementParams sseAwsKeyManagementParams;
-    
+
+    private ObjectTagging tagging;
+
     /**
      * Date on which it will be legal to delete or modify the object.
      * You can only specify this or the Retention-Period header.
@@ -107,14 +121,14 @@ public abstract class AbstractPutObjectRequest extends AmazonWebServiceRequest i
      * This header should be used to calculate a retention period in seconds and then stored in that manner.
      */
     private Date retentionExpirationDate;
-    
+
     /**
      * A single legal hold to apply to the object.
      * A legal hold is a Y character long string.
      * The object cannot be overwritten or deleted until all legal holds associated with the object are removed.
      */
     private String retentionLegalHoldId;
-    
+
     /**
      * Retention period to store on the object in seconds.
      * If this field and Retention-Expiration-Date are specified a 400 error is returned.
@@ -123,10 +137,6 @@ public abstract class AbstractPutObjectRequest extends AmazonWebServiceRequest i
      */
     private Long retentionPeriod;
 
-    /**
-     * @exclude
-     */
-    private ObjectTagging tagging;
 
     /**
      * Constructs a new
@@ -789,23 +799,14 @@ public abstract class AbstractPutObjectRequest extends AmazonWebServiceRequest i
         return t;
     }
 
-    /**
-     * @exclude
-     */
     public ObjectTagging getTagging() {
         return tagging;
     }
 
-    /**
-     * @exclude
-     */
     public void setTagging(ObjectTagging tagging) {
         this.tagging = tagging;
     }
 
-    /**
-     * @exclude
-     */
     public <T extends PutObjectRequest> T withTagging(ObjectTagging tagSet) {
         setTagging(tagSet);
         T t = (T)this;
@@ -919,27 +920,27 @@ public abstract class AbstractPutObjectRequest extends AmazonWebServiceRequest i
             ;
     }
 
-	public Date getRetentionExpirationDate() {
-		return retentionExpirationDate;
-	}
+    public Date getRetentionExpirationDate() {
+        return retentionExpirationDate;
+    }
 
-	public void setRetentionExpirationDate(Date retentionExpirationDate) {
-		this.retentionExpirationDate = retentionExpirationDate;
-	}
+    public void setRetentionExpirationDate(Date retentionExpirationDate) {
+        this.retentionExpirationDate = retentionExpirationDate;
+    }
 
-	public String getRetentionLegalHoldId() {
-		return retentionLegalHoldId;
-	}
+    public String getRetentionLegalHoldId() {
+        return retentionLegalHoldId;
+    }
 
-	public void setRetentionLegalHoldId(String retentionLegalHoldId) {
-		this.retentionLegalHoldId = retentionLegalHoldId;
-	}
+    public void setRetentionLegalHoldId(String retentionLegalHoldId) {
+        this.retentionLegalHoldId = retentionLegalHoldId;
+    }
 
-	public Long getRetentionPeriod() {
-		return retentionPeriod;
-	}
+    public Long getRetentionPeriod() {
+        return retentionPeriod;
+    }
 
-	public void setRetentionPeriod(long retentionPeriod) {
-		this.retentionPeriod = retentionPeriod;
-	}
+    public void setRetentionPeriod(long retentionPeriod) {
+        this.retentionPeriod = retentionPeriod;
+    }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2017 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2010-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -18,10 +18,8 @@ package com.ibm.cloud.objectstorage.retry;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-import org.junit.Test;
-
 import com.ibm.cloud.objectstorage.AmazonServiceException;
-import com.ibm.cloud.objectstorage.retry.RetryUtils;
+import org.junit.Test;
 
 public class RetryUtilsTest {
 
@@ -45,6 +43,15 @@ public class RetryUtilsTest {
         ase.setStatusCode(500);
         ase.setErrorCode("InternalFailure");
         assertFalse("InternalFailure error code should be false", RetryUtils.isThrottlingException(ase));
+    }
+
+    @Test
+    public void retriesOnPriorRequestNotCompleteErrorCode() {
+        AmazonServiceException ase = new AmazonServiceException("msg");
+        ase.setStatusCode(500);
+        ase.setErrorCode("PriorRequestNotComplete");
+        assertTrue("PriorRequestNotComplete should be retried", RetryUtils.isRetryableServiceException(ase));
+
     }
 
 }

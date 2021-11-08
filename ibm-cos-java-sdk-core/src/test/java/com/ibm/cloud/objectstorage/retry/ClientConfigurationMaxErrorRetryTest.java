@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2017 Amazon.com, Inc. or its affiliates. All Rights
+ * Copyright 2010-2019 Amazon.com, Inc. or its affiliates. All Rights
  * Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
@@ -25,10 +25,7 @@ import com.ibm.cloud.objectstorage.ClientConfiguration;
 import com.ibm.cloud.objectstorage.http.AmazonHttpClient;
 import com.ibm.cloud.objectstorage.http.ExecutionContext;
 import com.ibm.cloud.objectstorage.http.response.NullResponseHandler;
-import com.ibm.cloud.objectstorage.retry.PredefinedRetryPolicies;
-import com.ibm.cloud.objectstorage.retry.RetryPolicy;
 import com.ibm.cloud.objectstorage.util.RetryTestUtils;
-
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;

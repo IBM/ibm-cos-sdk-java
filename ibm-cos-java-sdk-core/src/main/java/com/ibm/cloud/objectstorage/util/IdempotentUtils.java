@@ -15,11 +15,11 @@
 
 package com.ibm.cloud.objectstorage.util;
 
-import java.util.UUID;
-
 import com.ibm.cloud.objectstorage.annotation.SdkProtectedApi;
 import com.ibm.cloud.objectstorage.annotation.SdkTestInternalApi;
 import com.ibm.cloud.objectstorage.protocol.DefaultValueSupplier;
+
+import java.util.UUID;
 
 /**
  * Utility class to manage idempotency token

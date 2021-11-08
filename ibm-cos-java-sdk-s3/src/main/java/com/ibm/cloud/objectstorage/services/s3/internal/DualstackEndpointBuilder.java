@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2017 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2010-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -14,12 +14,8 @@
  */
 package com.ibm.cloud.objectstorage.services.s3.internal;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import com.ibm.cloud.objectstorage.internal.ServiceEndpointBuilder;
 import com.ibm.cloud.objectstorage.regions.Region;
-import com.ibm.cloud.objectstorage.util.json.Jackson;
 
 import java.net.URI;
 import java.net.URISyntaxException;

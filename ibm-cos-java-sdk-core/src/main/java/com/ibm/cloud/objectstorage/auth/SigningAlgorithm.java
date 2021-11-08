@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2017 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2010-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -14,11 +14,10 @@
  */
 package com.ibm.cloud.objectstorage.auth;
 
-import javax.crypto.Mac;
-
 import com.ibm.cloud.objectstorage.SdkClientException;
-
+import com.ibm.cloud.objectstorage.internal.SdkThreadLocalsRegistry;
 import java.security.NoSuchAlgorithmException;
+import javax.crypto.Mac;
 
 public enum SigningAlgorithm {
 
@@ -29,7 +28,7 @@ public enum SigningAlgorithm {
 
     private SigningAlgorithm() {
         final String algorithmName = this.toString();
-        macReference = new ThreadLocal<Mac>() {
+        macReference = SdkThreadLocalsRegistry.register(new ThreadLocal<Mac>() {
             @Override
             protected Mac initialValue() {
                 try {
@@ -40,7 +39,7 @@ public enum SigningAlgorithm {
 
                 }
             }
-        };
+        });
     }
 
     /**

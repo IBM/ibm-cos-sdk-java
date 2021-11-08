@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2017 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2010-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -366,7 +366,7 @@ public class ClientConfiguration {
 
     private final AtomicReference<URLHolder> httpsProxyHolder = new AtomicReference<URLHolder>();
 
-    private TlsKeyManagersProvider tlsKeyManagersProvider = new SystemPropertyTlsKeyManagersProvider();
+    private TlsKeyManagersProvider tlsKeyManagersProvider;
 
     public ClientConfiguration() {
         apacheHttpClientConfig = new ApacheHttpClientConfig();
@@ -1305,7 +1305,7 @@ public class ClientConfiguration {
     }
 
     /**
-     * Sets the amount of time to wait (in milliseconds) for data to be transfered over an
+     * Sets the amount of time to wait (in milliseconds) for data to be transferred over an
      * established, open connection before the connection times out and is closed, and returns the
      * updated ClientConfiguration object so that additional method calls may be chained together.
      *
@@ -1648,6 +1648,7 @@ public class ClientConfiguration {
      * will result in a greater number of exceptions being returned up front but prevents
      * requests being tied up attempting subsequent retries which are also likely to fail.
      * </p>
+
      * @param use
      *            true if throttled retries should be used
      * @return The updated ClientConfiguration object.
@@ -1991,6 +1992,7 @@ public class ClientConfiguration {
     public void setConnectionTTL(long connectionTTL) {
         this.connectionTTL = connectionTTL;
     }
+
     /**
      * Sets the expiration time (in milliseconds) for a connection in the connection pool. When
      * retrieving a connection from the pool to make a request, the total time that the connection
@@ -2424,7 +2426,7 @@ public class ClientConfiguration {
      * constructing the client's SSL context.
      * <p>
      * The default used by the client will be {@link SystemPropertyTlsKeyManagersProvider}. Set an instance {@link
-     * com.amazonaws.http.NoneTlsKeyManagersProvider} or another instance of {@link TlsKeyManagersProvider} to override
+     * com.ibm.cloud.objectstorage.http.NoneTlsKeyManagersProvider} or another instance of {@link TlsKeyManagersProvider} to override
      * it.
      */
     public void setTlsKeyManagersProvider(TlsKeyManagersProvider tlsKeyManagersProvider) {

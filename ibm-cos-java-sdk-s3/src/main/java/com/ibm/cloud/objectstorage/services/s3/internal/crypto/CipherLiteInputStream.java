@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2017 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2013-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -84,8 +84,7 @@ public class CipherLiteInputStream extends SdkFilterInputStream {
         if (!readNextChunk())
             return -1;
         return ((int) bufout[curr_pos++] & 0xFF);
-    };
-
+    }
 
     @Override public int read(byte b[]) throws IOException {
         return read(b, 0, b.length);
@@ -129,6 +128,12 @@ public class CipherLiteInputStream extends SdkFilterInputStream {
         return true;
     }
 
+    /**
+     * {@inheritDoc}
+     * <p>
+     * Note: This implementation will only skip up to the end of the buffered
+     * data, potentially skipping 0 bytes.
+     */
     @Override public long skip(long n) throws IOException {
         abortIfNeeded();
         int available = max_pos - curr_pos;

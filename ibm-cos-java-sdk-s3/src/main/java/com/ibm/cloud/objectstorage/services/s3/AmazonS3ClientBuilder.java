@@ -1,5 +1,5 @@
 /*
- * Copyright 2011-2017 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2011-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -47,8 +47,8 @@ public final class AmazonS3ClientBuilder extends AmazonS3Builder<AmazonS3ClientB
     }
 
     /**
-     * @return Default client using the {@link com.ibm.cloud.objectstorage.services.s3.S3CredentialsProviderChain}
-     * and {@link com.ibm.cloud.objectstorage.regions.DefaultAwsRegionProviderChain} chain
+     * @return Default client using the {@link com.ibm.cloud.objectstorage.regions.DefaultAwsRegionProviderChain}
+     * chain.
      */
     public static AmazonS3 defaultClient() {
         return standard().build();

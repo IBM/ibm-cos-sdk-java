@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2017 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2010-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -47,7 +47,21 @@ public class CopyObjectRequest extends AmazonWebServiceRequest implements
                                                                Serializable,
                                                                S3AccelerateUnsupported {
 
-    /** The name of the bucket containing the object to be copied */
+    /**
+     * The name of the bucket containing the object to be copied
+     *
+     * <p>
+     * When using this API with an access point, you must direct requests
+     * to the access point hostname. The access point hostname takes the form
+     * <i>AccessPointName</i>-<i>AccountId</i>.s3-accesspoint.<i>Region</i>.amazonaws.com.
+     * </p>
+     * <p>
+     * When using this operation using an access point through the AWS SDKs, you provide
+     * the access point ARN in place of the bucket name. For more information about access point
+     * ARNs, see <a href=\"https://docs.aws.amazon.com/AmazonS3/latest/dev/using-access-points.html\">
+     * Using Access Points</a> in the <i>Amazon Simple Storage Service Developer Guide</i>.
+     * </p>
+     */
     private String sourceBucketName;
 
     /**
@@ -1239,72 +1253,72 @@ public class CopyObjectRequest extends AmazonWebServiceRequest implements
         return this;
     }
 
-	public RetentionDirective getRetentionDirective() {
-		return retentionDirective;
-	}
+    public RetentionDirective getRetentionDirective() {
+        return retentionDirective;
+    }
 
-	public void setRetentionDirective(RetentionDirective retentionDirective) {
-		this.retentionDirective = retentionDirective;
-	}
+    public void setRetentionDirective(RetentionDirective retentionDirective) {
+        this.retentionDirective = retentionDirective;
+    }
 
-	public Date getRetentionExpirationDate() {
-		return retentionExpirationDate;
-	}
+    public Date getRetentionExpirationDate() {
+        return retentionExpirationDate;
+    }
 
-	public void setRetentionExpirationDate(Date retentionExpirationDate) {
-		this.retentionExpirationDate = retentionExpirationDate;
-	}
+    public void setRetentionExpirationDate(Date retentionExpirationDate) {
+        this.retentionExpirationDate = retentionExpirationDate;
+    }
 
-	public String getRetentionLegalHoldId() {
-		return retentionLegalHoldId;
-	}
+    public String getRetentionLegalHoldId() {
+        return retentionLegalHoldId;
+    }
 
-	public void setRetentionLegalHoldId(String retentionLegalHoldId) {
-		this.retentionLegalHoldId = retentionLegalHoldId;
-	}
+    public void setRetentionLegalHoldId(String retentionLegalHoldId) {
+        this.retentionLegalHoldId = retentionLegalHoldId;
+    }
 
-	public Long getRetentionPeriod() {
-		return retentionPeriod;
-	}
+    public Long getRetentionPeriod() {
+        return retentionPeriod;
+    }
 
-	public void setRetentionPeriod(Long retentionPeriod) {
-		this.retentionPeriod = retentionPeriod;
-	}
+    public void setRetentionPeriod(Long retentionPeriod) {
+        this.retentionPeriod = retentionPeriod;
+    }
 
-	/**
-	 * Specifies whether the metadata is copied from the source object or replaced with metadata provided in the request.
-	 */
-	public String getMetadataDirective() {
-		return metadataDirective;
-	}
+    /**
+     * Specifies whether the metadata is copied from the source object or replaced with metadata provided in the request.
+     */
+    public String getMetadataDirective() {
+        return metadataDirective;
+    }
 
-	/**
-	 * Specifies whether the metadata is copied from the source object or replaced with metadata provided in the request.
-	 *
-	 * @param metadataDirective New value for the metadata directive.
-	 */
-	public void setMetadataDirective(String metadataDirective) {
-		this.metadataDirective = metadataDirective;
-	}
+    /**
+     * Specifies whether the metadata is copied from the source object or replaced with metadata provided in the request.
+     *
+     * @param metadataDirective New value for the metadata directive.
+     */
+    public void setMetadataDirective(String metadataDirective) {
+        this.metadataDirective = metadataDirective;
+    }
 
-	/**
-	 * Specifies whether the metadata is copied from the source object or replaced with metadata provided in the request.
-	 *
-	 * @param metadataDirective New value for the metadata directive.
-	 * @return Returns a reference to this object so that method calls can be chained together.
-	 */
-	public CopyObjectRequest withMetadataDirective(String metadataDirective) {
-		setMetadataDirective(metadataDirective);
-		return this;
-	}
+    /**
+     * Specifies whether the metadata is copied from the source object or replaced with metadata provided in the request.
+     *
+     * @param metadataDirective New value for the metadata directive.
+     * @return Returns a reference to this object so that method calls can be chained together.
+     */
+    public CopyObjectRequest withMetadataDirective(String metadataDirective) {
+        setMetadataDirective(metadataDirective);
+        return this;
+    }
 
-	/**
-	 * Specifies whether the metadata is copied from the source object or replaced with metadata provided in the request.
-	 *
-	 * @param metadataDirective New value for the metadata directive.
-	 * @return Returns a reference to this object so that method calls can be chained together.
-	 */
-	public CopyObjectRequest withMetadataDirective(MetadataDirective metadataDirective) {
-		return withMetadataDirective(metadataDirective == null ? null : metadataDirective.toString());
-	}
+    /**
+     * Specifies whether the metadata is copied from the source object or replaced with metadata provided in the request.
+     *
+     * @param metadataDirective New value for the metadata directive.
+     * @return Returns a reference to this object so that method calls can be chained together.
+     */
+    public CopyObjectRequest withMetadataDirective(MetadataDirective metadataDirective) {
+        return withMetadataDirective(metadataDirective == null ? null : metadataDirective.toString());
+    }
 }

@@ -54,171 +54,171 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  */
 public class DefaultTokenProvider implements TokenProvider {
 
-	protected static final InternalLogApi log = InternalLogFactory.getLog(DefaultTokenProvider.class);
+    protected static final InternalLogApi log = InternalLogFactory.getLog(DefaultTokenProvider.class);
 
-	// Http paramaters
-	private static final String BASIC_AUTH = "Basic Yng6Yng=";
-	private static final String CONTENT_TYPE = "application/x-www-form-urlencoded";
-	private static final String ACCEPT = "application/json";
+    // Http parameters
+    private static final String BASIC_AUTH = "Basic Yng6Yng=";
+    private static final String CONTENT_TYPE = "application/x-www-form-urlencoded";
+    private static final String ACCEPT = "application/json";
 
-	private static final String GRANT_TYPE = "urn:ibm:params:oauth:grant-type:apikey";
-	private static final String REFRESH_GRANT_TYPE = "refresh_token";
-	private static final String RESPONSE_TYPE = "cloud_iam";
+    private static final String GRANT_TYPE = "urn:ibm:params:oauth:grant-type:apikey";
+    private static final String REFRESH_GRANT_TYPE = "refresh_token";
+    private static final String RESPONSE_TYPE = "cloud_iam";
 
-	private String apiKey;
+    private String apiKey;
 
-	/** variable to overwrite the global SDKGlobalConfiguration.IAM_ENDPOINT **/
-	private String iamEndpoint = SDKGlobalConfiguration.IAM_ENDPOINT;
+    /** variable to overwrite the global SDKGlobalConfiguration.IAM_ENDPOINT **/
+    private String iamEndpoint = SDKGlobalConfiguration.IAM_ENDPOINT;
 
-	/** The client http setting */
-	private HttpClientSettings httpClientSettings;
+    /** The client http setting */
+    private HttpClientSettings httpClientSettings;
 
-	/**
-	 * Default implmentation will use the apiKey to retrieve the Token from the
-	 * IAM Service
-	 *
-	 * @param apiKey
-	 *            The IBM apiKey
-	 */
-	public DefaultTokenProvider(String apiKey) {
-		this.apiKey = apiKey;
-	}
+    /**
+     * Default implmentation will use the apiKey to retrieve the Token from the
+     * IAM Service
+     *
+     * @param apiKey
+     *            The IBM apiKey
+     */
+    public DefaultTokenProvider(String apiKey) {
+        this.apiKey = apiKey;
+    }
 
-	/**
-	 * Overwrite the default IAM endpoint. This should only be done in a
-	 * development or staging environment
-	 *
-	 * @param iamEndpoint
-	 *            The http endpoint to retrieve the token
-	 */
-	public void setIamEndpoint(String iamEndpoint) {
-		this.iamEndpoint = iamEndpoint;
-	}
+    /**
+     * Overwrite the default IAM endpoint. This should only be done in a
+     * development or staging environment
+     *
+     * @param iamEndpoint
+     *            The http endpoint to retrieve the token
+     */
+    public void setIamEndpoint(String iamEndpoint) {
+        this.iamEndpoint = iamEndpoint;
+    }
 
-	/**
-	 * Apply http Settings when available to match those set on the s3Client.
-	 * This is needed for proxy host & port config
-	 *
-	 * @param httpClientSettings
-	 */
-	public void setHttpClientSettings(HttpClientSettings httpClientSettings) {
-		this.httpClientSettings = httpClientSettings;
-	}
+    /**
+     * Apply http Settings when available to match those set on the s3Client.
+     * This is needed for proxy host & port config
+     *
+     * @param httpClientSettings
+     */
+    public void setHttpClientSettings(HttpClientSettings httpClientSettings) {
+        this.httpClientSettings = httpClientSettings;
+    }
 
-	/**
-	 * Retrieve the token using the Apache httpclient in a synchronous manner
-	 */
-	@Override
-	public Token retrieveToken() {
-		log.debug("DefaultTokenProvider retrieveToken()");
-		return retrieveTokenHelper(null);
-	}
+    /**
+     * Retrieve the token using the Apache httpclient in a synchronous manner
+     */
+    @Override
+    public Token retrieveToken() {
+        log.debug("DefaultTokenProvider retrieveToken()");
+        return retrieveTokenHelper(null);
+    }
 
-	/**
-	 * Retrieve a token using the refresh token instead of the IBM apiKey
-	 */
-	public Token retrieveTokenWithRefresh(String refreshToken) {
-		log.debug("DefaultTokenProvider retrieveTokenWithRefresh()");
-		return retrieveTokenHelper(refreshToken);
-	}
+    /**
+     * Retrieve a token using the refresh token instead of the IBM apiKey
+     */
+    public Token retrieveTokenWithRefresh(String refreshToken) {
+        log.debug("DefaultTokenProvider retrieveTokenWithRefresh()");
+        return retrieveTokenHelper(refreshToken);
+    }
 
-	/**
-	 * Helper function for retrieving a new token
-	 *
-	 * @param refreshToken
-	 *        Use the passed refresh token instead of the apiKey
-	 *        If null, the apiKey will be used
-	 */
-	private Token retrieveTokenHelper(String refreshToken) {
-		log.debug("DefaultTokenProvider retrieveTokenHelper()");
+    /**
+     * Helper function for retrieving a new token
+     *
+     * @param refreshToken
+     *        Use the passed refresh token instead of the apiKey
+     *        If null, the apiKey will be used
+     */
+    private Token retrieveTokenHelper(String refreshToken) {
+        log.debug("DefaultTokenProvider retrieveTokenHelper()");
 
-		try {
-			SSLContext sslContext;
-			/*
-			 * If SSL cert checking for endpoints has been explicitly disabled,
-			 * register a new scheme for HTTPS that won't cause self-signed
-			 * certs to error out.
-			 */
-			if (SDKGlobalConfiguration.isCertCheckingDisabled()) {
-				if (log.isWarnEnabled()) {
-					log.warn("SSL Certificate checking for endpoints has been " + "explicitly disabled.");
-				}
-				sslContext = SSLContext.getInstance("TLS");
-				sslContext.init(null, new TrustManager[] { new TrustingX509TrustManager() }, null);
-			} else {
-				sslContext = SSLContexts.createDefault();
-			}
+        try {
+            SSLContext sslContext;
+            /*
+             * If SSL cert checking for endpoints has been explicitly disabled,
+             * register a new scheme for HTTPS that won't cause self-signed
+             * certs to error out.
+             */
+            if (SDKGlobalConfiguration.isCertCheckingDisabled()) {
+                if (log.isWarnEnabled()) {
+                    log.warn("SSL Certificate checking for endpoints has been " + "explicitly disabled.");
+                }
+                sslContext = SSLContext.getInstance("TLS");
+                sslContext.init(null, new TrustManager[] { new TrustingX509TrustManager() }, null);
+            } else {
+                sslContext = SSLContexts.createDefault();
+            }
 
-			SSLConnectionSocketFactory sslsf = new SdkTLSSocketFactory(sslContext, new DefaultHostnameVerifier());
+            SSLConnectionSocketFactory sslsf = new SdkTLSSocketFactory(sslContext, new DefaultHostnameVerifier());
 
-			HttpClientBuilder builder = HttpClientBuilder.create();
-			if (httpClientSettings != null){
-				DefaultTokenManager.addProxyConfig(builder, httpClientSettings);
-			}
+            HttpClientBuilder builder = HttpClientBuilder.create();
+            if (httpClientSettings != null){
+                DefaultTokenManager.addProxyConfig(builder, httpClientSettings);
+            }
 
-			HttpClient client = builder.setSSLSocketFactory(sslsf).build();
+            HttpClient client = builder.setSSLSocketFactory(sslsf).build();
 
-			HttpPost post = new HttpPost(iamEndpoint);
-			post.setHeader("Authorization", BASIC_AUTH);
-			post.setHeader("Content-Type", CONTENT_TYPE);
-			post.setHeader("Accept", ACCEPT);
+            HttpPost post = new HttpPost(iamEndpoint);
+            post.setHeader("Authorization", BASIC_AUTH);
+            post.setHeader("Content-Type", CONTENT_TYPE);
+            post.setHeader("Accept", ACCEPT);
 
-			List<NameValuePair> urlParameters = new ArrayList<NameValuePair>();
-			urlParameters.add(new BasicNameValuePair("response_type", RESPONSE_TYPE));
-			if (refreshToken != null) {
-				urlParameters.add(new BasicNameValuePair("grant_type", REFRESH_GRANT_TYPE));
-				urlParameters.add(new BasicNameValuePair("refresh_token", refreshToken));
-			} else {
-				urlParameters.add(new BasicNameValuePair("grant_type", GRANT_TYPE));
-				urlParameters.add(new BasicNameValuePair("apikey", apiKey));
-			}
+            List<NameValuePair> urlParameters = new ArrayList<NameValuePair>();
+            urlParameters.add(new BasicNameValuePair("response_type", RESPONSE_TYPE));
+            if (refreshToken != null) {
+                urlParameters.add(new BasicNameValuePair("grant_type", REFRESH_GRANT_TYPE));
+                urlParameters.add(new BasicNameValuePair("refresh_token", refreshToken));
+            } else {
+                urlParameters.add(new BasicNameValuePair("grant_type", GRANT_TYPE));
+                urlParameters.add(new BasicNameValuePair("apikey", apiKey));
+            }
 
-			post.setEntity(new UrlEncodedFormEntity(urlParameters));
+            post.setEntity(new UrlEncodedFormEntity(urlParameters));
 
-			final HttpResponse response = client.execute(post);
+            final HttpResponse response = client.execute(post);
 
-			if (response.getStatusLine().getStatusCode() != 200) {
-				log.info("Response code= " + response.getStatusLine().getStatusCode()
-						+ ", Reason= " + response.getStatusLine().getReasonPhrase()
-						+ ".Throwing OAuthServiceException");
-				OAuthServiceException exception = new OAuthServiceException("Token retrieval from IAM service failed");
-				exception.setStatusCode(response.getStatusLine().getStatusCode());
-				exception.setStatusMessage(response.getStatusLine().getReasonPhrase());
-				throw exception;
-			}
+            if (response.getStatusLine().getStatusCode() != 200) {
+                log.info("Response code= " + response.getStatusLine().getStatusCode()
+                        + ", Reason= " + response.getStatusLine().getReasonPhrase()
+                        + ".Throwing OAuthServiceException");
+                OAuthServiceException exception = new OAuthServiceException("Token retrieval from IAM service failed");
+                exception.setStatusCode(response.getStatusLine().getStatusCode());
+                exception.setStatusMessage(response.getStatusLine().getReasonPhrase());
+                throw exception;
+            }
 
-			final HttpEntity entity = response.getEntity();
-			final String resultStr = EntityUtils.toString(entity);
+            final HttpEntity entity = response.getEntity();
+            final String resultStr = EntityUtils.toString(entity);
 
-			final ObjectMapper mapper = new ObjectMapper();
+            final ObjectMapper mapper = new ObjectMapper();
 
-			final Token token = mapper.readValue(resultStr, Token.class);
+            final Token token = mapper.readValue(resultStr, Token.class);
 
-			if (token == null) {
-				throw new OAuthServiceException("Parsing this response mapped to a null Token object with no exceptions thrown: " + response);
-			}
+            if (token == null) {
+                throw new OAuthServiceException("Parsing this response mapped to a null Token object with no exceptions thrown: " + response);
+            }
 
-			return token;
+            return token;
 
-		} catch (UnsupportedEncodingException e) {
-			OAuthServiceException exception = new OAuthServiceException("Received " + e.toString() + " retrieving IAM token (" + e.getCause() + ")");
-			exception.setStatusMessage(e.toString());
-			throw exception;
-		} catch (ClientProtocolException e) {
-			OAuthServiceException exception = new OAuthServiceException("Received " + e.toString() + " retrieving IAM token (" + e.getCause() + ")");
-			throw exception;
-		} catch (IOException e) {
-			OAuthServiceException exception = new OAuthServiceException("Received " + e.toString() + " retrieving IAM token (" + e.getCause() + ")");
-			exception.setStatusMessage(e.toString());
-			throw exception;
-		} catch (NoSuchAlgorithmException e) {
-			OAuthServiceException exception = new OAuthServiceException("Received " + e.toString() + " retrieving IAM token (" + e.getCause() + ")");
-			exception.setStatusMessage(e.toString());
-			throw exception;
-		} catch (KeyManagementException e) {
-			OAuthServiceException exception = new OAuthServiceException("Received " + e.toString() + " retrieving IAM token (" + e.getCause() + ")");
-			exception.setStatusMessage(e.toString());
-			throw exception;
-		}
-	}
+        } catch (UnsupportedEncodingException e) {
+            OAuthServiceException exception = new OAuthServiceException("Received " + e.toString() + " retrieving IAM token (" + e.getCause() + ")");
+            exception.setStatusMessage(e.toString());
+            throw exception;
+        } catch (ClientProtocolException e) {
+            OAuthServiceException exception = new OAuthServiceException("Received " + e.toString() + " retrieving IAM token (" + e.getCause() + ")");
+            throw exception;
+        } catch (IOException e) {
+            OAuthServiceException exception = new OAuthServiceException("Received " + e.toString() + " retrieving IAM token (" + e.getCause() + ")");
+            exception.setStatusMessage(e.toString());
+            throw exception;
+        } catch (NoSuchAlgorithmException e) {
+            OAuthServiceException exception = new OAuthServiceException("Received " + e.toString() + " retrieving IAM token (" + e.getCause() + ")");
+            exception.setStatusMessage(e.toString());
+            throw exception;
+        } catch (KeyManagementException e) {
+            OAuthServiceException exception = new OAuthServiceException("Received " + e.toString() + " retrieving IAM token (" + e.getCause() + ")");
+            exception.setStatusMessage(e.toString());
+            throw exception;
+        }
+    }
 }

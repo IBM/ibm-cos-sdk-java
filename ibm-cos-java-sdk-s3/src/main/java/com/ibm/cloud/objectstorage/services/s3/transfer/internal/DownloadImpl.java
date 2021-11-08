@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2017 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2012-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -14,9 +14,6 @@
  */
 package com.ibm.cloud.objectstorage.services.s3.transfer.internal;
 
-import java.io.File;
-import java.io.IOException;
-
 import com.ibm.cloud.objectstorage.annotation.SdkInternalApi;
 import com.ibm.cloud.objectstorage.event.ProgressEventType;
 import com.ibm.cloud.objectstorage.event.ProgressListenerChain;
@@ -27,6 +24,8 @@ import com.ibm.cloud.objectstorage.services.s3.transfer.Download;
 import com.ibm.cloud.objectstorage.services.s3.transfer.PersistableDownload;
 import com.ibm.cloud.objectstorage.services.s3.transfer.TransferProgress;
 import com.ibm.cloud.objectstorage.services.s3.transfer.exception.PauseException;
+import java.io.File;
+import java.io.IOException;
 
 public class DownloadImpl extends AbstractTransfer implements Download {
     private S3Object s3Object;

@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2017 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2010-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -22,16 +22,16 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import com.ibm.cloud.objectstorage.annotation.Immutable;
+import com.ibm.cloud.objectstorage.log.InternalLogApi;
+import com.ibm.cloud.objectstorage.log.InternalLogFactory;
+import com.ibm.cloud.objectstorage.util.ClassLoaderHelper;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.ibm.cloud.objectstorage.annotation.Immutable;
-import com.ibm.cloud.objectstorage.log.InternalLogApi;
-import com.ibm.cloud.objectstorage.log.InternalLogFactory;
-import com.ibm.cloud.objectstorage.util.ClassLoaderHelper;
 
 /**
  * Internal configuration for the AWS Java SDK.
@@ -230,10 +230,11 @@ public class InternalConfig {
         return userAgentTemplate;
     }
 
-    static InternalConfigJsonHelper loadfrom(URL url) throws JsonParseException, JsonMappingException, IOException {
+
+    static <T> T loadfrom(URL url, Class<T> clazz) throws JsonParseException, JsonMappingException, IOException {
         if (url == null)
             throw new IllegalArgumentException();
-        InternalConfigJsonHelper target = MAPPER.readValue(url, InternalConfigJsonHelper.class);
+        T target = MAPPER.readValue(url, clazz);
         return target;
     }
 
@@ -241,27 +242,36 @@ public class InternalConfig {
      * Loads and returns the AWS Java SDK internal configuration from the classpath.
      */
     static InternalConfig load() throws JsonParseException, JsonMappingException, IOException {
-        // First try loading via the class by using a relative path
-        URL url = ClassLoaderHelper.getResource(DEFAULT_CONFIG_RESOURCE_RELATIVE_PATH, true, InternalConfig.class); // classesFirst=true
-        if (url == null) { // Then try with the absolute path
-            url = ClassLoaderHelper.getResource(DEFAULT_CONFIG_RESOURCE_ABSOLUTE_PATH, InternalConfig.class);
+        URL configUrl = getResource(DEFAULT_CONFIG_RESOURCE_RELATIVE_PATH, true, false);
+        if (configUrl == null) {
+            configUrl = getResource(DEFAULT_CONFIG_RESOURCE_ABSOLUTE_PATH, false, false);
         }
-        InternalConfigJsonHelper config = loadfrom(url);
+
+        InternalConfigJsonHelper config = loadfrom(configUrl, InternalConfigJsonHelper.class);
         InternalConfigJsonHelper configOverride;
-        URL overrideUrl = ClassLoaderHelper.getResource("/" + CONFIG_OVERRIDE_RESOURCE, InternalConfig.class);
-        if (overrideUrl == null) { // Try without a leading "/"
-            overrideUrl = ClassLoaderHelper.getResource(CONFIG_OVERRIDE_RESOURCE, InternalConfig.class);
+
+        URL overrideUrl = getResource(CONFIG_OVERRIDE_RESOURCE, false, true);
+        if (overrideUrl == null) {
+            overrideUrl = getResource(CONFIG_OVERRIDE_RESOURCE, false, false);
         }
         if (overrideUrl == null) {
             log.debug("Configuration override " + CONFIG_OVERRIDE_RESOURCE + " not found.");
             configOverride = new InternalConfigJsonHelper();
         } else {
-            configOverride = loadfrom(overrideUrl);
+            configOverride = loadfrom(overrideUrl, InternalConfigJsonHelper.class);
         }
         InternalConfig merged = new InternalConfig(config, configOverride);
-        merged.setDefaultConfigFileLocation(url);
+        merged.setDefaultConfigFileLocation(configUrl);
         merged.setOverrideConfigFileLocation(overrideUrl);
         return merged;
+    }
+
+    private static URL getResource(String path, boolean classesFirst, boolean addLeadingSlash) {
+        path = addLeadingSlash ? "/" + path : path;
+
+        URL resourceUrl = ClassLoaderHelper.getResource(path, classesFirst, InternalConfig.class);
+
+        return resourceUrl;
     }
 
     /*

@@ -1,5 +1,5 @@
 /*
- * Copyright 2011-2017 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2011-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -14,11 +14,17 @@
  */
 package com.ibm.cloud.objectstorage.regions;
 
-import com.ibm.cloud.objectstorage.SDKGlobalConfiguration;
-import com.ibm.cloud.objectstorage.regions.AwsRegionProvider;
-import com.ibm.cloud.objectstorage.regions.InstanceMetadataRegionProvider;
-import com.ibm.cloud.objectstorage.util.EC2MetadataUtilsServer;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.fail;
 
+import com.ibm.cloud.objectstorage.AmazonClientException;
+import com.ibm.cloud.objectstorage.SDKGlobalConfiguration;
+import com.ibm.cloud.objectstorage.util.EC2MetadataUtilsServer;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -27,13 +33,6 @@ import org.junit.Test;
 import org.junit.experimental.runners.Enclosed;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
 
 /**
  * Tests broken up by fixture.
@@ -72,12 +71,27 @@ public class InstanceMetadataRegionProviderTest {
             regionProvider = new InstanceMetadataRegionProvider();
         }
 
-        @Ignore
+        @Ignore("Not supported by IBM COS")
         @Test
         public void metadataServiceRunning_ProvidesCorrectRegion() {
             assertEquals("us-east-1", regionProvider.getRegion());
         }
 
+        @Ignore("Not supported by IBM COS")
+        @Test
+        public void ec2MetadataDisabled_shouldReturnRegionAfterEnabled() {
+            try {
+                System.setProperty("com.ibm.cloud.objectstorage.sdk.disableEc2Metadata", "true");
+                regionProvider.getRegion();
+                fail("exception not thrown when EC2Metadata disabled");
+            } catch (AmazonClientException ex) {
+                //expected
+            } finally {
+                System.clearProperty("com.ibm.cloud.objectstorage.sdk.disableEc2Metadata");
+            }
+
+            assertNotNull("region should not be null", regionProvider.getRegion());
+        }
     }
 
     /**
@@ -96,7 +110,7 @@ public class InstanceMetadataRegionProviderTest {
             regionProvider = new InstanceMetadataRegionProvider();
         }
 
-        @Ignore
+        @Ignore("Not supported by IBM COS")
         @Test
         public void metadataServiceRunning_ProvidesCorrectRegion() {
             assertNull(regionProvider.getRegion());

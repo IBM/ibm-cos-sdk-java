@@ -1,5 +1,5 @@
 /*
- * Copyright 2011-2017 Amazon Technologies, Inc.
+ * Copyright 2011-2019 Amazon Technologies, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,8 +19,8 @@ import java.util.List;
 
 import com.ibm.cloud.objectstorage.services.s3.AmazonS3Client;
 import com.ibm.cloud.objectstorage.services.s3.model.DeleteObjectsResult;
-import com.ibm.cloud.objectstorage.services.s3.model.MultiObjectDeleteException;
 import com.ibm.cloud.objectstorage.services.s3.model.DeleteObjectsResult.DeletedObject;
+import com.ibm.cloud.objectstorage.services.s3.model.MultiObjectDeleteException;
 import com.ibm.cloud.objectstorage.services.s3.model.MultiObjectDeleteException.DeleteError;
 
 /**

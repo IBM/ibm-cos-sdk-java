@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2017 Amazon.com, Inc. or its affiliates. All Rights
+ * Copyright 2010-2019 Amazon.com, Inc. or its affiliates. All Rights
  * Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
@@ -28,7 +28,6 @@ import org.junit.Test;
 
 import com.ibm.cloud.objectstorage.AmazonWebServiceRequest;
 import com.ibm.cloud.objectstorage.ResponseMetadata;
-import com.ibm.cloud.objectstorage.util.ResponseMetadataCache;
 
 /** Tests for the response metadata cache class. */
 public class ResponseMetadataCacheTest {

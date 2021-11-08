@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2017 Amazon.com, Inc. or its affiliates. All Rights
+ * Copyright 2010-2019 Amazon.com, Inc. or its affiliates. All Rights
  * Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
@@ -22,8 +22,6 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 
 import org.junit.Test;
-
-import com.ibm.cloud.objectstorage.adapters.types.StringToByteBufferAdapter;
 
 public class StringToByteBufferAdapterTest {
 

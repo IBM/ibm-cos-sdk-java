@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2017 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2014-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -14,13 +14,13 @@
  */
 package com.ibm.cloud.objectstorage.event;
 
-import java.io.IOException;
-import java.io.InputStream;
-
 import com.ibm.cloud.objectstorage.AmazonWebServiceRequest;
 import com.ibm.cloud.objectstorage.annotation.NotThreadSafe;
 import com.ibm.cloud.objectstorage.annotation.SdkInternalApi;
 import com.ibm.cloud.objectstorage.internal.SdkFilterInputStream;
+
+import java.io.IOException;
+import java.io.InputStream;
 
 /**
  * Used for input stream progress tracking purposes.

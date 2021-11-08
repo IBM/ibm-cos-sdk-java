@@ -1,5 +1,5 @@
 /*
- * Copyright 2011-2017 Amazon Technologies, Inc.
+ * Copyright 2011-2019 Amazon Technologies, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,8 +34,8 @@ import com.ibm.cloud.objectstorage.services.s3.model.PutObjectRequest;
 import com.ibm.cloud.objectstorage.services.s3.transfer.PauseResult;
 import com.ibm.cloud.objectstorage.services.s3.transfer.PauseStatus;
 import com.ibm.cloud.objectstorage.services.s3.transfer.PersistableUpload;
-import com.ibm.cloud.objectstorage.services.s3.transfer.TransferManager;
 import com.ibm.cloud.objectstorage.services.s3.transfer.Transfer.TransferState;
+import com.ibm.cloud.objectstorage.services.s3.transfer.TransferManager;
 import com.ibm.cloud.objectstorage.services.s3.transfer.model.UploadResult;
 
 /**

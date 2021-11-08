@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2017 Amazon.com, Inc. or its affiliates. All Rights
+ * Copyright 2010-2019 Amazon.com, Inc. or its affiliates. All Rights
  * Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
@@ -25,8 +25,6 @@ import java.io.IOException;
 import java.util.zip.CRC32;
 
 import org.junit.Test;
-
-import com.ibm.cloud.objectstorage.util.CRC32ChecksumCalculatingInputStream;
 
 /**
  * Test CRC32ChecksumInputStream can calculate CRC32 checksum correctly.

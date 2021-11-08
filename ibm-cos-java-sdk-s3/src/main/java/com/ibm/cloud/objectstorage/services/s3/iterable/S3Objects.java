@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2017 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2012-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -14,12 +14,11 @@
  */
 package com.ibm.cloud.objectstorage.services.s3.iterable;
 
-import java.util.Iterator;
-
 import com.ibm.cloud.objectstorage.services.s3.AmazonS3;
 import com.ibm.cloud.objectstorage.services.s3.model.ListObjectsRequest;
 import com.ibm.cloud.objectstorage.services.s3.model.ObjectListing;
 import com.ibm.cloud.objectstorage.services.s3.model.S3ObjectSummary;
+import java.util.Iterator;
 
 /**
  * Provides an easy way to iterate Amazon S3 objects in a "foreach" statement.
@@ -131,9 +130,9 @@ public class S3Objects implements Iterable<S3ObjectSummary> {
         }
 
         private void prepareCurrentListing() {
-            while ( currentListing == null || (!currentIterator.hasNext() && currentListing.isTruncated()) ) {
+            while (currentListing == null || (!currentIterator.hasNext() && currentListing.isTruncated())) {
 
-                if ( currentListing == null ) {
+                if (currentListing == null) {
                     ListObjectsRequest req = new ListObjectsRequest();
                     req.setBucketName(getBucketName());
                     req.setPrefix(getPrefix());

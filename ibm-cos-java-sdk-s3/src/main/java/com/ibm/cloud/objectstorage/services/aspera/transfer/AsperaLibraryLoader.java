@@ -36,9 +36,9 @@ import com.ibm.aspera.faspmanager2.faspmanager2;
  * Utility class to support extracting and loading native Aspera
  * assets (ascp, dynamic libraries, configuration) from the cos-aspera dependency
  */
-public final class AsperaLibraryLoader { 
+public final class AsperaLibraryLoader {
 	protected static Log log = LogFactory.getLog(AsperaLibraryLoader.class);
-	
+
 	private static final List<String> MAC_DYNAMIC_LIBS = Collections.unmodifiableList(
 			Arrays.asList("libfaspmanager2.jnilib", "_faspmanager2.so"));
 	private static final List<String> UNIX_DYNAMIC_LIBS = Collections.unmodifiableList(
@@ -50,9 +50,9 @@ public final class AsperaLibraryLoader {
 			new File(System.getProperty("user.home") +
 					SEPARATOR +
 					".aspera" +
-					SEPARATOR + 
+					SEPARATOR +
 					"cos-aspera");
-	
+
 	/**
 	 * Prepares and loads the Aspera library in preparation for its use. May conditionally
 	 * extract Aspera library jar contents to a location on the local filesystem, determined
@@ -62,19 +62,20 @@ public final class AsperaLibraryLoader {
 	public static String load() {
 		JarFile jar = null;
 		String location = null;
+		log.warn("Using Aspera through the COS SDK is deprecated. Refer to the project readme: https://github.com/IBM/ibm-cos-sdk-java");
 		try {
 			jar = createJar();
 			String version = jarVersion(jar);
 			location = EXTRACT_LOCATION_ROOT + SEPARATOR + version;
 			File extractedLocation = new File(location);
-			if(!extractedLocation.exists()) {
+			if (!extractedLocation.exists()) {
 				extractJar(jar, extractedLocation);
 			}
 			loadLibrary(extractedLocation, osLibs());
 		} catch (Exception e) {
 			throw new AsperaLibraryLoadException("Unable to load Aspera Library", e);
 		} finally {
-			if(jar != null) {
+			if (jar != null) {
 				try {
 					jar.close();
 				} catch (IOException e) {
@@ -105,33 +106,33 @@ public final class AsperaLibraryLoader {
 	 */
 	public static String jarVersion(JarFile jar) throws IOException {
 		String version = jar.getManifest().getMainAttributes().getValue(Attributes.Name.IMPLEMENTATION_VERSION);
-		
-		if(version == null) {
+
+		if (version == null) {
 			version = String.format("%d", System.currentTimeMillis());
 		}
 		return version;
 	}
-	
+
 	/**
 	 * Creates a 1:1 copy of all contents from a jar file to the specified location on the local filesystem
 	 * @param jar The source jar to extract contents from
-	 * @param extractedLocation The target location for extracted jar contents 
+	 * @param extractedLocation The target location for extracted jar contents
 	 * @throws IOException if jar extraction fails IO
 	 */
-	public static void extractJar(JarFile jar, File extractedLocation) throws IOException {		
+	public static void extractJar(JarFile jar, File extractedLocation) throws IOException {
 		Enumeration<JarEntry> entries = jar.entries();
 		while(entries.hasMoreElements()) {
 			JarEntry entry = entries.nextElement();
-			
+
 			File destPath = new File(extractedLocation, SEPARATOR + entry.getName());
 
 			// is Directory
-			if(entry.isDirectory()) {
+			if (entry.isDirectory()) {
 				log.debug("Creating directory: " + destPath);
 				destPath.mkdirs();
 				continue;
 			}
-			
+
 			// is File
 			log.debug("Creating parent directories for file: " + destPath);
 			destPath.getParentFile().mkdirs();
@@ -143,13 +144,13 @@ public final class AsperaLibraryLoader {
 	 * Extracts a jar entry from a jar file to a target location on the local file system
 	 * @param jar The jar in which the desired file resides
 	 * @param entry The desired entry (file) to extract from the jar
-	 * @param destPath The target location to extract the jar entry to 
+	 * @param destPath The target location to extract the jar entry to
 	 * @throws IOException if any IO failure occurs during file extraction
 	 */
 	public static void extractFile(JarFile jar, JarEntry entry, File destPath) throws IOException {
 		InputStream in = null;
 		OutputStream out = null;
-		
+
 		try {
 			in = jar.getInputStream(entry);
 			out = new FileOutputStream(destPath);
@@ -159,10 +160,10 @@ public final class AsperaLibraryLoader {
 	           out.write(buf, 0, i);
 	        }
 		} finally {
-			if(in != null) {
+			if (in != null) {
 				in.close();
 			}
-			if(out != null) {
+			if (out != null) {
 				out.close();
 			}
 		}
@@ -174,7 +175,7 @@ public final class AsperaLibraryLoader {
 		}
 	}
 
-	
+
 	/**
 	 * Determine which os the jvm is running on
 	 * @return 	the os specific list of native files to load
@@ -191,7 +192,7 @@ public final class AsperaLibraryLoader {
 			throw new AsperaLibraryLoadException("OS is not supported for Aspera");
 		}
 	}
-	
+
 	/**
 	 * Loads a dynamic library into the JVM from a list of candidates
 	 * @param extractedPath The base directory where candidate dynamic libraries reside
@@ -213,13 +214,13 @@ public final class AsperaLibraryLoader {
 		}
 		throw new RuntimeException("Failed to load Aspera dynamic library from candidates " + candidates + " at location: " + extractedPath);
 	}
-	
+
 	/**
 	 * An exception that represents a failed attempt to load the Aspera library
 	 */
 	public static class AsperaLibraryLoadException extends RuntimeException {
 		private static final long serialVersionUID = 1L;
-		
+
 		/**
 	     * Creates a new AsperaLibraryLoadException with the specified message.
 	     *

@@ -1,5 +1,5 @@
 /*
- * Copyright 2016-2017 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2016-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -14,6 +14,12 @@
  */
 package com.ibm.cloud.objectstorage.partitions;
 
+import com.ibm.cloud.objectstorage.annotation.SdkInternalApi;
+import com.ibm.cloud.objectstorage.partitions.model.Partition;
+import com.ibm.cloud.objectstorage.regions.AbstractRegionMetadataProvider;
+import com.ibm.cloud.objectstorage.regions.Region;
+import com.ibm.cloud.objectstorage.util.ValidationUtils;
+
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -21,12 +27,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-
-import com.ibm.cloud.objectstorage.annotation.SdkInternalApi;
-import com.ibm.cloud.objectstorage.partitions.model.Partition;
-import com.ibm.cloud.objectstorage.regions.AbstractRegionMetadataProvider;
-import com.ibm.cloud.objectstorage.regions.Region;
-import com.ibm.cloud.objectstorage.util.ValidationUtils;
 
 /**
  * Region metadata provider based on partitions.
@@ -81,7 +81,13 @@ public class PartitionMetadataProvider extends AbstractRegionMetadataProvider {
                 return cacheRegion(new PartitionRegionImpl(regionName, p));
             }
         }
-        return null;
+        // If we can't match the regex with any partition then assume the AWS partition if it's available.
+        Partition awsPartition = partitionMap.get("aws");
+        if (awsPartition != null) {
+            return cacheRegion(new PartitionRegionImpl(regionName, awsPartition));
+        } else {
+            return null;
+        }
     }
 
     private Region getRegionFromCache(String regionName) {

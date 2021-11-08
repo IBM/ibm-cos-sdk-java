@@ -14,6 +14,21 @@
  */
 package com.ibm.cloud.objectstorage.http.apache.client.impl;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+
+import com.ibm.cloud.objectstorage.ClientConfiguration;
+import com.ibm.cloud.objectstorage.DefaultRequest;
+import com.ibm.cloud.objectstorage.ProxyAuthenticationMethod;
+import com.ibm.cloud.objectstorage.Request;
+import com.ibm.cloud.objectstorage.handlers.HandlerContextKey;
+import com.ibm.cloud.objectstorage.http.HttpMethodName;
+import com.ibm.cloud.objectstorage.http.RepeatableInputStreamRequestEntity;
+import com.ibm.cloud.objectstorage.http.apache.request.impl.ApacheHttpRequestFactory;
+import com.ibm.cloud.objectstorage.http.apache.request.impl.HttpGetWithBody;
+import com.ibm.cloud.objectstorage.http.request.HttpRequestFactory;
+import com.ibm.cloud.objectstorage.http.settings.HttpClientSettings;
+import com.ibm.cloud.objectstorage.util.IOUtils;
+import com.ibm.cloud.objectstorage.util.StringInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -27,26 +42,18 @@ import org.apache.http.HttpEntity;
 import org.apache.http.HttpHeaders;
 import org.apache.http.client.config.AuthSchemes;
 import org.apache.http.client.methods.HttpDelete;
-import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpEntityEnclosingRequestBase;
 import org.apache.http.client.methods.HttpHead;
 import org.apache.http.client.methods.HttpPatch;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpRequestBase;
+import org.apache.http.entity.BufferedHttpEntity;
+import org.apache.http.impl.io.EmptyInputStream;
+import org.hamcrest.CoreMatchers;
 import org.hamcrest.Matchers;
 import org.hamcrest.core.StringContains;
 import org.junit.Assert;
 import org.junit.Test;
-
-import com.ibm.cloud.objectstorage.ClientConfiguration;
-import com.ibm.cloud.objectstorage.DefaultRequest;
-import com.ibm.cloud.objectstorage.ProxyAuthenticationMethod;
-import com.ibm.cloud.objectstorage.Request;
-import com.ibm.cloud.objectstorage.http.HttpMethodName;
-import com.ibm.cloud.objectstorage.http.apache.request.impl.ApacheHttpRequestFactory;
-import com.ibm.cloud.objectstorage.http.request.HttpRequestFactory;
-import com.ibm.cloud.objectstorage.http.settings.HttpClientSettings;
-import com.ibm.cloud.objectstorage.util.IOUtils;
-import com.ibm.cloud.objectstorage.util.StringInputStream;
 
 public class ApacheDefaultHttpRequestFactoryTest {
 
@@ -127,8 +134,7 @@ public class ApacheDefaultHttpRequestFactoryTest {
     @Test
     public void get_request_returns_correct_apache_requests() throws IOException, URISyntaxException {
         final Request<Object> request = newDefaultRequest(HttpMethodName.GET);
-        Assert.assertThat(requestFactory.create(request, settings), Matchers.instanceOf(HttpGet
-                .class));
+        Assert.assertThat(requestFactory.create(request, settings), Matchers.instanceOf(HttpGetWithBody.class));
     }
 
     @Test
@@ -214,6 +220,84 @@ public class ApacheDefaultHttpRequestFactoryTest {
         HttpRequestBase requestBase = requestFactory.create(newDefaultRequest(HttpMethodName.POST), settings);
         Assert.assertEquals(expectedAuthMethods, requestBase.getConfig().getProxyPreferredAuthSchemes());
     }
+
+    @Test
+    public void request_with_post_and_noRequiresLength_uses_RepeatableHttpEntity() throws IOException, URISyntaxException {
+        final Request<Object> request = newDefaultRequest(HttpMethodName.POST);
+        request.setResourcePath("//foo");
+        request.setEndpoint(new URI(ENDPOINT));
+
+        HttpRequestBase requestBase = requestFactory.create(request, settings);
+
+        assertThat(requestBase, CoreMatchers.instanceOf(HttpEntityEnclosingRequestBase.class));
+        HttpEntity entity = ((HttpEntityEnclosingRequestBase) requestBase).getEntity();
+        assertThat(entity, CoreMatchers.instanceOf(RepeatableInputStreamRequestEntity.class));
+    }
+
+    @Test
+    public void request_with_post_and_requiresLength_uses_BufferedHttpEntity() throws IOException, URISyntaxException {
+        final Request<Object> request = newDefaultRequest(HttpMethodName.POST);
+        request.setResourcePath("//foo");
+        request.setEndpoint(new URI(ENDPOINT));
+        request.addHandlerContext(HandlerContextKey.REQUIRES_LENGTH, Boolean.TRUE);
+
+        HttpRequestBase requestBase = requestFactory.create(request, settings);
+
+        assertThat(requestBase, CoreMatchers.instanceOf(HttpEntityEnclosingRequestBase.class));
+        HttpEntity entity = ((HttpEntityEnclosingRequestBase) requestBase).getEntity();
+        assertThat(entity, CoreMatchers.instanceOf(BufferedHttpEntity.class));
+    }
+
+    @Test
+    public void request_with_put_and_streaming_and_noRequiresLength_uses_RepeatableHttpEntity() throws IOException, URISyntaxException {
+        final Request<Object> request = newDefaultRequest(HttpMethodName.PUT);
+        request.setResourcePath("//foo");
+        request.setEndpoint(new URI(ENDPOINT));
+        request.setContent(EmptyInputStream.INSTANCE);
+        request.addHandlerContext(HandlerContextKey.HAS_STREAMING_INPUT, Boolean.TRUE);
+        request.addHandlerContext(HandlerContextKey.REQUIRES_LENGTH, Boolean.FALSE);
+
+        HttpRequestBase requestBase = requestFactory.create(request, settings);
+
+        assertThat(requestBase, CoreMatchers.instanceOf(HttpEntityEnclosingRequestBase.class));
+        HttpEntity entity = ((HttpEntityEnclosingRequestBase) requestBase).getEntity();
+        assertThat(entity, CoreMatchers.instanceOf(RepeatableInputStreamRequestEntity.class));
+    }
+
+    @Test
+    public void request_with_put_and_streaming_and_requiresLength_uses_BufferedHttpEntity() throws IOException, URISyntaxException {
+        final Request<Object> request = newDefaultRequest(HttpMethodName.PUT);
+        request.setResourcePath("//foo");
+        request.setEndpoint(new URI(ENDPOINT));
+        request.setContent(EmptyInputStream.INSTANCE);
+        request.addHandlerContext(HandlerContextKey.HAS_STREAMING_INPUT, Boolean.TRUE);
+        request.addHandlerContext(HandlerContextKey.REQUIRES_LENGTH, Boolean.TRUE);
+
+        HttpRequestBase requestBase = requestFactory.create(request, settings);
+
+        assertThat(requestBase, CoreMatchers.instanceOf(HttpEntityEnclosingRequestBase.class));
+        HttpEntity entity = ((HttpEntityEnclosingRequestBase) requestBase).getEntity();
+        assertThat(entity, CoreMatchers.instanceOf(BufferedHttpEntity.class));
+    }
+
+    @Test
+    public void request_with_put_and_nonStreaming_uses_BufferedHttpEntity() throws IOException, URISyntaxException {
+        final Request<Object> request = newDefaultRequest(HttpMethodName.PUT);
+        request.setResourcePath("//foo");
+        request.setEndpoint(new URI(ENDPOINT));
+        request.setContent(EmptyInputStream.INSTANCE);
+        request.addHandlerContext(HandlerContextKey.REQUIRES_LENGTH, Boolean.TRUE);
+        request.addHandlerContext(HandlerContextKey.HAS_STREAMING_INPUT, Boolean.FALSE);
+
+
+        HttpRequestBase requestBase = requestFactory.create(request, settings);
+
+        assertThat(requestBase, CoreMatchers.instanceOf(HttpEntityEnclosingRequestBase.class));
+        HttpEntity entity = ((HttpEntityEnclosingRequestBase) requestBase).getEntity();
+        assertThat(entity, CoreMatchers.instanceOf(BufferedHttpEntity.class));
+    }
+
+
 
     private void assertContentTypeContains(String expected, Header[]
             contentTypes) {

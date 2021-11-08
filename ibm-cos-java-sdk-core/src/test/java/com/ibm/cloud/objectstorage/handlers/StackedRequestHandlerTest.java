@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2017 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2015-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -36,8 +36,6 @@ import com.ibm.cloud.objectstorage.AmazonServiceException;
 import com.ibm.cloud.objectstorage.AmazonWebServiceRequest;
 import com.ibm.cloud.objectstorage.Request;
 import com.ibm.cloud.objectstorage.Response;
-import com.ibm.cloud.objectstorage.handlers.RequestHandler2;
-import com.ibm.cloud.objectstorage.handlers.StackedRequestHandler;
 import com.ibm.cloud.objectstorage.http.HttpResponse;
 
 @RunWith(Enclosed.class)

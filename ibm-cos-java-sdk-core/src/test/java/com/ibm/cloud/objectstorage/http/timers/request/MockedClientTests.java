@@ -1,5 +1,5 @@
 /*
- * Copyright 2011-2017 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2011-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -33,21 +33,21 @@ import static org.mockito.Mockito.doReturn;
 
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 
-import com.ibm.cloud.objectstorage.AmazonClientException;
-import com.ibm.cloud.objectstorage.ClientConfiguration;
-import com.ibm.cloud.objectstorage.TestPreConditions;
-import com.ibm.cloud.objectstorage.http.AmazonHttpClient;
 import com.ibm.cloud.objectstorage.http.apache.client.impl.ConnectionManagerAwareHttpClient;
 import com.ibm.cloud.objectstorage.http.response.ErrorDuringUnmarshallingResponseHandler;
-import com.ibm.cloud.objectstorage.http.response.HttpResponseProxy;
-import com.ibm.cloud.objectstorage.http.response.NullResponseHandler;
-
 import org.apache.http.client.methods.HttpHead;
 import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.entity.BufferedHttpEntity;
 import org.apache.http.protocol.HttpContext;
 import org.junit.BeforeClass;
 import org.junit.Test;
+
+import com.ibm.cloud.objectstorage.AmazonClientException;
+import com.ibm.cloud.objectstorage.ClientConfiguration;
+import com.ibm.cloud.objectstorage.TestPreConditions;
+import com.ibm.cloud.objectstorage.http.AmazonHttpClient;
+import com.ibm.cloud.objectstorage.http.response.HttpResponseProxy;
+import com.ibm.cloud.objectstorage.http.response.NullResponseHandler;
 
 /**
  * These tests don't actually start up a mock server. They use a partially mocked Apache HTTP client

@@ -1,5 +1,5 @@
 /*
- * Copyright 2011-2017 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2011-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -52,13 +52,11 @@ public class ProfileStaticCredentialsProvider implements AWSCredentialsProvider 
     }
 
     private AWSCredentials fromStaticCredentials() {
-    	
-    	//IBM bx Credentials loaded
-    	if (!StringUtils.isNullOrEmpty(profile.getIBMApiKey())){
-    		return new BasicIBMOAuthCredentials(profile.getIBMApiKey(),
-                    profile.getIBMServiceInstanceId());
-    	}
-    	
+        //IBM bx Credentials loaded
+        if (!StringUtils.isNullOrEmpty(profile.getIBMApiKey())){
+            return new BasicIBMOAuthCredentials(profile.getIBMApiKey(), profile.getIBMServiceInstanceId());
+        }
+
         if (StringUtils.isNullOrEmpty(profile.getAwsAccessIdKey())) {
             throw new SdkClientException(String.format(
                     "Unable to load credentials into profile [%s]: AWS Access Key ID is not specified.",

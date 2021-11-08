@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2017 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2010-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -68,7 +68,21 @@ import com.ibm.cloud.objectstorage.services.s3.AmazonS3Client;
 public class ListObjectsRequest extends AmazonWebServiceRequest implements 
         WormMirrorDestinationProvider, Serializable {
 
-    /** The name of the Amazon S3 bucket to list. */
+    /**
+     * The name of the Amazon S3 bucket to list.
+     *
+     * <p>
+     * When using this API with an access point, you must direct requests
+     * to the access point hostname. The access point hostname takes the form
+     * <i>AccessPointName</i>-<i>AccountId</i>.s3-accesspoint.<i>Region</i>.amazonaws.com.
+     * </p>
+     * <p>
+     * When using this operation using an access point through the AWS SDKs, you provide
+     * the access point ARN in place of the bucket name. For more information about access point
+     * ARNs, see <a href=\"https://docs.aws.amazon.com/AmazonS3/latest/dev/using-access-points.html\">
+     * Using Access Points</a> in the <i>Amazon Simple Storage Service Developer Guide</i>.
+     * </p>
+     */
     private String bucketName;
 
     /**
@@ -118,6 +132,13 @@ public class ListObjectsRequest extends AmazonWebServiceRequest implements
     private String encodingType;
 
     /**
+     * If enabled, the requester is charged for conducting this operation from
+     * Requester Pays Buckets.
+     */
+    // private boolean isRequesterPays;  // IBM not supported
+
+    // IBM-Specifc
+    /**
      * Optional parameter setting the mirror-destination on a WORM enabled bucket.
      */
     private String wormMirrorDestination;
@@ -136,8 +157,20 @@ public class ListObjectsRequest extends AmazonWebServiceRequest implements
      * Constructs a new {@link ListObjectsRequest} object and
      * initializes all required and optional object fields.
      *
+     * <p>
+     * When using this API with an access point, you must direct requests
+     * to the access point hostname. The access point hostname takes the form
+     * <i>AccessPointName</i>-<i>AccountId</i>.s3-accesspoint.<i>Region</i>.amazonaws.com.
+     * </p>
+     * <p>
+     * When using this operation using an access point through the AWS SDKs, you provide
+     * the access point ARN in place of the bucket name. For more information about access point
+     * ARNs, see <a href=\"https://docs.aws.amazon.com/AmazonS3/latest/dev/using-access-points.html\">
+     * Using Access Points</a> in the <i>Amazon Simple Storage Service Developer Guide</i>.
+     * </p>
+     *
      * @param bucketName
-     *            The name of the bucket whose objects are to be listed.
+     *            The name of the bucket, or access point ARN, whose objects are to be listed.
      * @param prefix
      *            The prefix restricting what keys will be listed.
      * @param marker
@@ -175,8 +208,20 @@ public class ListObjectsRequest extends AmazonWebServiceRequest implements
     /**
      * Sets the name of the Amazon S3 bucket whose objects are to be listed.
      *
+     * <p>
+     * When using this API with an access point, you must direct requests
+     * to the access point hostname. The access point hostname takes the form
+     * <i>AccessPointName</i>-<i>AccountId</i>.s3-accesspoint.<i>Region</i>.amazonaws.com.
+     * </p>
+     * <p>
+     * When using this operation using an access point through the AWS SDKs, you provide
+     * the access point ARN in place of the bucket name. For more information about access point
+     * ARNs, see <a href=\"https://docs.aws.amazon.com/AmazonS3/latest/dev/using-access-points.html\">
+     * Using Access Points</a> in the <i>Amazon Simple Storage Service Developer Guide</i>.
+     * </p>
+     *
      * @param bucketName
-     *            The name of the Amazon S3 bucket whose objects are to be
+     *            The name of the Amazon S3 bucket, or access point ARN, whose objects are to be
      *            listed.
      *
      * @see ListObjectsRequest#getBucketName()
@@ -191,8 +236,20 @@ public class ListObjectsRequest extends AmazonWebServiceRequest implements
      * Returns this {@link ListObjectsRequest}, enabling additional method
      * calls to be chained together.
      *
+     * <p>
+     * When using this API with an access point, you must direct requests
+     * to the access point hostname. The access point hostname takes the form
+     * <i>AccessPointName</i>-<i>AccountId</i>.s3-accesspoint.<i>Region</i>.amazonaws.com.
+     * </p>
+     * <p>
+     * When using this operation using an access point through the AWS SDKs, you provide
+     * the access point ARN in place of the bucket name. For more information about access point
+     * ARNs, see <a href=\"https://docs.aws.amazon.com/AmazonS3/latest/dev/using-access-points.html\">
+     * Using Access Points</a> in the <i>Amazon Simple Storage Service Developer Guide</i>.
+     * </p>
+     *
      * @param bucketName
-     *            The name of the Amazon S3 bucket whose objects are to be
+     *            The name of the Amazon S3 bucket, or access point ARN, whose objects are to be
      *            listed.
      *
      * @return This {@link ListObjectsRequest}, enabling additional method
@@ -475,6 +532,72 @@ public class ListObjectsRequest extends AmazonWebServiceRequest implements
         return this;
     }
 
+    /**
+     * Returns true if the user has enabled Requester Pays option when
+     * conducting this operation from Requester Pays Bucket; else false.
+     *
+     * <p>
+     * If a bucket is enabled for Requester Pays, then any attempt to upload or
+     * download an object from it without Requester Pays enabled will result in
+     * a 403 error and the bucket owner will be charged for the request.
+     *
+     * <p>
+     * Enabling Requester Pays disables the ability to have anonymous access to
+     * this bucket
+     *
+     * @return true if the user has enabled Requester Pays option for
+     *         conducting this operation from Requester Pays Bucket.
+     */
+    //public boolean isRequesterPays() {
+    //    return isRequesterPays;
+    //}
+
+    /**
+     * Used for conducting this operation from a Requester Pays Bucket. If
+     * set the requester is charged for requests from the bucket.
+     *
+     * <p>
+     * If a bucket is enabled for Requester Pays, then any attempt to upload or
+     * download an object from it without Requester Pays enabled will result in
+     * a 403 error and the bucket owner will be charged for the request.
+     *
+     * <p>
+     * Enabling Requester Pays disables the ability to have anonymous access to
+     * this bucket.
+     *
+     * @param isRequesterPays
+     *            Enable Requester Pays option for the operation.
+     */
+    //public void setRequesterPays(boolean isRequesterPays) {
+    //    this.isRequesterPays = isRequesterPays;
+    //}
+
+    /**
+     * Used for conducting this operation from a Requester Pays Bucket. If
+     * set the requester is charged for requests from the bucket. It returns this
+     * updated ListObjectsRequest object so that additional method calls can be
+     * chained together.
+     *
+     * <p>
+     * If a bucket is enabled for Requester Pays, then any attempt to upload or
+     * download an object from it without Requester Pays enabled will result in
+     * a 403 error and the bucket owner will be charged for the request.
+     *
+     * <p>
+     * Enabling Requester Pays disables the ability to have anonymous access to
+     * this bucket.
+     *
+     * @param isRequesterPays
+     *            Enable Requester Pays option for the operation.
+     *
+     * @return The updated ListObjectsRequest object.
+     */
+    //public ListObjectsRequest withRequesterPays(boolean isRequesterPays) {
+    //    setRequesterPays(isRequesterPays);
+    //    return this;
+    //}
+
+    // IBM-specific
     /**
      * Returns the optional mirror-destination value for WORM mirroring
      *

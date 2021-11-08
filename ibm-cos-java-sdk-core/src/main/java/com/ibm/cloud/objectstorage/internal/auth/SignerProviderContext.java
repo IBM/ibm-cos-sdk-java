@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2017 Amazon.com, Inc. or its affiliates. All Rights
+ * Copyright 2010-2019 Amazon.com, Inc. or its affiliates. All Rights
  * Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
@@ -15,10 +15,10 @@
  */
 package com.ibm.cloud.objectstorage.internal.auth;
 
-import java.net.URI;
-
 import com.ibm.cloud.objectstorage.Request;
 import com.ibm.cloud.objectstorage.RequestConfig;
+
+import java.net.URI;
 
 public class SignerProviderContext {
 

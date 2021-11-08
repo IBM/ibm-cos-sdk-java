@@ -1,5 +1,5 @@
 /*
- * Copyright 2011-2017 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2011-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -14,37 +14,7 @@
  */
 package com.ibm.cloud.objectstorage.client.builder;
 
-import org.junit.Test;
-
-import com.ibm.cloud.objectstorage.AmazonClientException;
-import com.ibm.cloud.objectstorage.AmazonWebServiceClient;
-import com.ibm.cloud.objectstorage.ClientConfiguration;
-import com.ibm.cloud.objectstorage.ClientConfigurationFactory;
-import com.ibm.cloud.objectstorage.PredefinedClientConfigurations;
-import com.ibm.cloud.objectstorage.auth.AWSCredentialsProvider;
-import com.ibm.cloud.objectstorage.auth.BasicAWSCredentials;
-import com.ibm.cloud.objectstorage.auth.DefaultAWSCredentialsProviderChain;
-import com.ibm.cloud.objectstorage.client.AwsAsyncClientParams;
-import com.ibm.cloud.objectstorage.client.AwsSyncClientParams;
-import com.ibm.cloud.objectstorage.client.builder.AwsAsyncClientBuilder;
-import com.ibm.cloud.objectstorage.client.builder.AwsSyncClientBuilder;
-import com.ibm.cloud.objectstorage.client.builder.AwsClientBuilder.EndpointConfiguration;
-import com.ibm.cloud.objectstorage.handlers.RequestHandler2;
-import com.ibm.cloud.objectstorage.internal.StaticCredentialsProvider;
-import com.ibm.cloud.objectstorage.metrics.RequestMetricCollector;
-import com.ibm.cloud.objectstorage.regions.AwsRegionProvider;
-import com.ibm.cloud.objectstorage.regions.Regions;
-
-import java.net.URI;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ThreadPoolExecutor;
-
-import utils.builder.StaticExecutorFactory;
-
+import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.not;
@@ -52,8 +22,40 @@ import static org.hamcrest.Matchers.sameInstance;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.fail;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+
+import com.ibm.cloud.objectstorage.AmazonClientException;
+import com.ibm.cloud.objectstorage.AmazonWebServiceClient;
+import com.ibm.cloud.objectstorage.ClientConfiguration;
+import com.ibm.cloud.objectstorage.ClientConfigurationFactory;
+import com.ibm.cloud.objectstorage.PredefinedClientConfigurations;
+import com.ibm.cloud.objectstorage.SdkClientException;
+import com.ibm.cloud.objectstorage.auth.AWSCredentialsProvider;
+import com.ibm.cloud.objectstorage.auth.BasicAWSCredentials;
+import com.ibm.cloud.objectstorage.auth.DefaultAWSCredentialsProviderChain;
+import com.ibm.cloud.objectstorage.client.AwsAsyncClientParams;
+import com.ibm.cloud.objectstorage.client.AwsSyncClientParams;
+import com.ibm.cloud.objectstorage.client.builder.AwsClientBuilder.EndpointConfiguration;
+import com.ibm.cloud.objectstorage.handlers.RequestHandler2;
+import com.ibm.cloud.objectstorage.internal.StaticCredentialsProvider;
+import com.ibm.cloud.objectstorage.metrics.RequestMetricCollector;
+import com.ibm.cloud.objectstorage.regions.AwsRegionProvider;
+import com.ibm.cloud.objectstorage.regions.RegionMetadata;
+import com.ibm.cloud.objectstorage.regions.RegionMetadataProvider;
+import com.ibm.cloud.objectstorage.regions.RegionUtils;
+import com.ibm.cloud.objectstorage.regions.Regions;
+import java.net.URI;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadPoolExecutor;
+import org.junit.Test;
+import org.mockito.Mockito;
+import utils.builder.StaticExecutorFactory;
 
 public class AwsClientBuilderTest {
 
@@ -182,6 +184,41 @@ public class AwsClientBuilderTest {
     }
 
     @Test
+    public void regionProvidedExplicitly_WhenRegionNotFoundInMetadata_ThrowsIllegalArgumentException() throws Exception {
+        try {
+            RegionUtils.initializeWithMetadata(new RegionMetadata(Mockito.mock(RegionMetadataProvider.class)));
+            new ConcreteAsyncBuilder().withRegion(Regions.AP_NORTHEAST_1);
+            fail("Expected SdkClientException");
+        } catch (SdkClientException e) {
+            assertThat(e.getMessage(), containsString("Could not find region information"));
+        } finally {
+            // Reset region metadata
+            RegionUtils.initialize();
+        }
+    }
+
+    /**
+     * Customers may not need to explicitly configure a builder with a region if one can be found
+     * from the {@link AwsRegionProvider} implementation. We mock the provider to yield consistent
+     * results for the tests.
+     */
+    @Test
+    public void regionProvidedByChain_WhenRegionNotFoundInMetadata_ThrowsIllegalArgumentException() {
+        try {
+            RegionUtils.initializeWithMetadata(new RegionMetadata(Mockito.mock(RegionMetadataProvider.class)));
+            AwsRegionProvider mockRegionProvider = mock(AwsRegionProvider.class);
+            when(mockRegionProvider.getRegion()).thenReturn("ap-southeast-2");
+            new ConcreteAsyncBuilder(mockRegionProvider).build();
+            fail("Expected SdkClientException");
+        } catch (SdkClientException e) {
+            assertThat(e.getMessage(), containsString("Could not find region information"));
+        } finally {
+            // Reset region metadata
+            RegionUtils.initialize();
+        }
+    }
+
+    @Test
     public void credentialsExplicitlySet_UsesExplicitCredentials() throws Exception {
         AWSCredentialsProvider provider = new StaticCredentialsProvider(
                 new BasicAWSCredentials("akid", "skid"));
@@ -248,6 +285,16 @@ public class AwsClientBuilderTest {
         when(mockRegionProvider.getRegion()).thenReturn("ap-southeast-2");
         final URI actualUri = new ConcreteAsyncBuilder(mockRegionProvider).build().getEndpoint();
         assertEquals(URI.create("https://mockprefix.ap-southeast-2.amazonaws.com"), actualUri);
+    }
+
+    @Test
+    public void customRegionUrlEncodesString() {
+        AmazonConcreteClient client = new ConcreteSyncBuilder()
+            .withRegion("http://my-host.com/?")
+            .build();
+
+        assertEquals(URI.create("https://mockprefix.http%3A%2F%2Fmy-host.com%2F%3F.amazonaws.com"),
+                     client.getEndpoint());
     }
 
     @Test

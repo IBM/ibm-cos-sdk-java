@@ -1,5 +1,5 @@
 /*
- * Copyright 2011-2017 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2011-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -54,6 +54,8 @@ import utils.http.SocketUtils;
 
 @RunWith(MockitoJUnitRunner.class)
 public class EC2ResourceFetcherTest {
+
+    private static final String USER_AGENT = VersionInfoUtils.getUserAgent();
 
     @ClassRule
     public static WireMockRule mockServer = new WireMockRule(0);
@@ -166,6 +168,7 @@ public class EC2ResourceFetcherTest {
      * the request is not retried.
      */
     @Test
+    @SuppressWarnings("unchecked")
     public void readResourceWithDefaultRetryPolicy_DoesNotRetry_ForIoException() throws IOException {
         Mockito.when(mockConnection.connectToEndpoint(eq(endpoint), any(Map.class), eq("GET"))).thenThrow(new IOException());
 
@@ -183,6 +186,7 @@ public class EC2ResourceFetcherTest {
      * returned by getMaxRetries method of the custom retry policy.
      */
     @Test
+    @SuppressWarnings("unchecked")
     public void readResourceWithCustomRetryPolicy_DoesRetry_ForIoException() throws IOException {
         Mockito.when(mockConnection.connectToEndpoint(eq(endpoint), any(Map.class), eq("GET"))).thenThrow(new IOException());
 
@@ -190,7 +194,7 @@ public class EC2ResourceFetcherTest {
             new DefaultEC2ResourceFetcher(mockConnection).readResource(endpoint, customRetryPolicy);
             fail("Expected an IOexception");
         } catch (Exception exception) {
-            Mockito.verify(mockConnection, Mockito.times(CustomRetryPolicy.MAX_RETRIES + 1)).connectToEndpoint(eq(endpoint), any(Map.class), eq("GET"));
+             Mockito.verify(mockConnection, Mockito.times(CustomRetryPolicy.MAX_RETRIES + 1)).connectToEndpoint(eq(endpoint), any(Map.class), eq("GET"));
         }
     }
 
@@ -200,6 +204,7 @@ public class EC2ResourceFetcherTest {
      * then the request is not retried.
      */
     @Test
+    @SuppressWarnings("unchecked")
     public void readResourceWithCustomRetryPolicy_DoesNotRetry_ForNonIoException() throws IOException {
         generateStub(500, "Non Json error body");
 
@@ -211,9 +216,70 @@ public class EC2ResourceFetcherTest {
         }
     }
 
+    /**
+     * When readResource is called,
+     * the SDK User-Agent should be added.
+     */
+    @Test
+    @SuppressWarnings("unchecked")
+    public void readResource_AddsSDKUserAgent() throws IOException {
+        Mockito.when(mockConnection.connectToEndpoint(eq(endpoint), any(Map.class), eq("GET"))).thenThrow(new IOException());
+
+        try {
+            new DefaultEC2ResourceFetcher(mockConnection).readResource(endpoint);
+            fail("Expected an IOexception");
+        } catch (Exception exception) {
+            Matcher<Map<? extends String, ? extends String>> expectedHeaders = hasEntry("User-Agent", USER_AGENT);
+            Mockito.verify(mockConnection, Mockito.times(1)).connectToEndpoint(eq(endpoint), (Map<String, String>) argThat(expectedHeaders), eq("GET"));
+        }
+    }
+
+    /**
+     * When readResource is called with custom retry policy,
+     * the SDK User-Agent should be added.
+     */
+    @Test
+    @SuppressWarnings("unchecked")
+    public void readResourceWithCustomRetryPolicy_AddsSDKUserAgent() throws IOException {
+        Mockito.when(mockConnection.connectToEndpoint(eq(endpoint), any(Map.class), eq("GET"))).thenThrow(new IOException());
+
+        try {
+            new DefaultEC2ResourceFetcher(mockConnection).readResource(endpoint, customRetryPolicy, new HashMap<String, String>());
+            fail("Expected an IOexception");
+        } catch (Exception exception) {
+            Matcher<Map<? extends String, ? extends String>> expectedHeaders = hasEntry("User-Agent", USER_AGENT);
+            Mockito.verify(mockConnection, Mockito.times(CustomRetryPolicy.MAX_RETRIES + 1)).connectToEndpoint(eq(endpoint), (Map<String, String>) argThat(expectedHeaders), eq("GET"));
+        }
+    }
+
+    /**
+     * When readResource is called with custom retry policy
+     * and additional headers, the SDK User-Agent should be
+     * added.
+     */
+    @Test
+    @SuppressWarnings("unchecked")
+    public void readResourceWithCustomRetryPolicyAndHeaders_AddsSDKUserAgent() throws IOException {
+        Mockito.when(mockConnection.connectToEndpoint(eq(endpoint), any(Map.class), eq("GET"))).thenThrow(new IOException());
+
+        try {
+            Map<String, String> headers = new HashMap<String, String>();
+            headers.put("Foo","Bar");
+            new DefaultEC2ResourceFetcher(mockConnection).readResource(endpoint, customRetryPolicy, headers);
+            fail("Expected an IOexception");
+        } catch (Exception exception) {
+            Matcher<Map<? extends String, ? extends String>> expectedHeaders = allOf(
+                hasEntry("User-Agent", USER_AGENT),
+                hasEntry("Foo", "Bar")
+            );
+            Mockito.verify(mockConnection, Mockito.times(CustomRetryPolicy.MAX_RETRIES + 1)).connectToEndpoint(eq(endpoint), (Map<String, String>) argThat(expectedHeaders), eq("GET"));
+        }
+    }
+
     private void generateStub(int statusCode, String message) {
         stubFor(
                 get(urlPathEqualTo(CREDENTIALS_PATH))
+                .withHeader("User-Agent", equalTo(VersionInfoUtils.getUserAgent()))
                 .willReturn(aResponse()
                                 .withStatus(statusCode)
                                 .withHeader("Content-Type", "application/json")
@@ -245,3 +311,4 @@ public class EC2ResourceFetcherTest {
     }
 
 }
+

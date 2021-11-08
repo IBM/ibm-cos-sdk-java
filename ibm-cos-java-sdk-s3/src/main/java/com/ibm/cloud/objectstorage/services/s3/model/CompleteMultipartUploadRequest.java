@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2017 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2010-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -41,7 +41,21 @@ import com.ibm.cloud.objectstorage.services.s3.AmazonS3;
  */
 public class CompleteMultipartUploadRequest extends AmazonWebServiceRequest implements Serializable {
 
-    /** The name of the bucket containing the multipart upload to complete */
+    /**
+     * The name of the bucket containing the multipart upload to complete
+     *
+     * <p>
+     * When using this API with an access point, you must direct requests
+     * to the access point hostname. The access point hostname takes the form
+     * <i>AccessPointName</i>-<i>AccountId</i>.s3-accesspoint.<i>Region</i>.amazonaws.com.
+     * </p>
+     * <p>
+     * When using this operation using an access point through the AWS SDKs, you provide
+     * the access point ARN in place of the bucket name. For more information about access point
+     * ARNs, see <a href=\"https://docs.aws.amazon.com/AmazonS3/latest/dev/using-access-points.html\">
+     * Using Access Points</a> in the <i>Amazon Simple Storage Service Developer Guide</i>.
+     * </p>
+     */
     private String bucketName;
 
     /** The key of the multipart upload to complete */
@@ -52,7 +66,7 @@ public class CompleteMultipartUploadRequest extends AmazonWebServiceRequest impl
 
     /** The list of part numbers and ETags to use when completing the multipart upload */
     private List<PartETag> partETags = new ArrayList<PartETag>();
-    
+
     /**
      * Date on which it will be legal to delete or modify the object.
      * You can only specify this or the Retention-Period header.
@@ -288,47 +302,47 @@ public class CompleteMultipartUploadRequest extends AmazonWebServiceRequest impl
         }
         return this;
     }
-    
+
     public Date getRetentionExpirationDate() {
-		return retentionExpirationDate;
-	}
-    
-	public void setRetentionExpirationDate(Date retentionExpirationDate) {
-		this.retentionExpirationDate = retentionExpirationDate;
-	}
-	
-	public CompleteMultipartUploadRequest withRetentionExpirationDate(Date retentionExpirationDate) {
-		this.retentionExpirationDate = retentionExpirationDate;
-		return this;
-	}
-	
-	public String getRetentionLegalHoldId() {
-		return retentionLegalHoldId;
-	}
-	
-	public void setRetentionLegalHoldId(String retentionLegalHoldId) {
-		this.retentionLegalHoldId = retentionLegalHoldId;
-	}
-	
-	public CompleteMultipartUploadRequest withRetentionLegalHoldId(String retentionLegalHoldId) {
-		this.retentionLegalHoldId = retentionLegalHoldId;
-		return this;
-	}
-	
-	public Long getRetentionPeriod() {
-		return retentionPeriod;
-	}
-	
-	public void setRetentionPeriod(Long retentionPeriod) {
-		this.retentionPeriod = retentionPeriod;
-	}
-	
-	public CompleteMultipartUploadRequest withRetentionPeriod(Long retentionPeriod) {
-		this.retentionPeriod = retentionPeriod;
-		return this;
-	}
-	
-	/**
+        return retentionExpirationDate;
+    }
+
+    public void setRetentionExpirationDate(Date retentionExpirationDate) {
+        this.retentionExpirationDate = retentionExpirationDate;
+    }
+
+    public CompleteMultipartUploadRequest withRetentionExpirationDate(Date retentionExpirationDate) {
+        this.retentionExpirationDate = retentionExpirationDate;
+        return this;
+    }
+
+    public String getRetentionLegalHoldId() {
+        return retentionLegalHoldId;
+    }
+
+    public void setRetentionLegalHoldId(String retentionLegalHoldId) {
+        this.retentionLegalHoldId = retentionLegalHoldId;
+    }
+
+    public CompleteMultipartUploadRequest withRetentionLegalHoldId(String retentionLegalHoldId) {
+        this.retentionLegalHoldId = retentionLegalHoldId;
+        return this;
+}
+
+    public Long getRetentionPeriod() {
+        return retentionPeriod;
+    }
+
+    public void setRetentionPeriod(Long retentionPeriod) {
+        this.retentionPeriod = retentionPeriod;
+    }
+
+    public CompleteMultipartUploadRequest withRetentionPeriod(Long retentionPeriod) {
+        this.retentionPeriod = retentionPeriod;
+        return this;
+    }
+
+    /**
      * Returns true if the user has enabled Requester Pays option when
      * conducting this operation from Requester Pays Bucket; else false.
      *

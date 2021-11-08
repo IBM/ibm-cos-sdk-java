@@ -15,11 +15,10 @@
 
 package com.ibm.cloud.objectstorage.http.conn.ssl;
 
-import javax.net.ssl.SSLException;
-
 import com.ibm.cloud.objectstorage.internal.SdkPredicate;
 import com.ibm.cloud.objectstorage.util.JavaVersionParser.JavaVersion;
 
+import javax.net.ssl.SSLException;
 import java.util.Arrays;
 import java.util.List;
 

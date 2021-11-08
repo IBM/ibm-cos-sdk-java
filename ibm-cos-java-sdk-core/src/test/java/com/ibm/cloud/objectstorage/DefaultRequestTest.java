@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2017 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2015-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -14,13 +14,9 @@
  */
 package com.ibm.cloud.objectstorage;
 
+import com.ibm.cloud.objectstorage.handlers.HandlerContextKey;
 import org.junit.Assert;
 import org.junit.Test;
-
-import com.ibm.cloud.objectstorage.AmazonWebServiceRequest;
-import com.ibm.cloud.objectstorage.DefaultRequest;
-import com.ibm.cloud.objectstorage.Request;
-import com.ibm.cloud.objectstorage.handlers.HandlerContextKey;
 
 /**
  * Unit tests for context in a DefaultRequest class.
@@ -61,5 +57,18 @@ public class DefaultRequestTest {
 
         Assert.assertEquals("Hello2", modelRequest.getHandlerContext(context));
         Assert.assertEquals("Hello3", request.getHandlerContext(context));
+    }
+
+    @Test
+    public void defaultRequestShouldTreatHeadersCaseInsensitive() {
+
+        AmazonWebServiceRequest modelRequest = new AmazonWebServiceRequest() {};
+        DefaultRequest<?> request = new DefaultRequest<Object>(modelRequest, "service-name");
+
+        request.addHeader("Content-Length", "100");
+        request.addHeader("content-length", "0");
+
+        Assert.assertEquals("0", request.getHeaders().get("Content-Length"));
+        Assert.assertEquals("0", request.getHeaders().get("content-length"));
     }
 }

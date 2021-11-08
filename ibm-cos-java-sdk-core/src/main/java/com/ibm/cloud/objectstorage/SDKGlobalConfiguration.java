@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2017 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2010-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -49,6 +49,19 @@ public class SDKGlobalConfiguration {
 
     /** System property name for the AWS secret key */
     public  static final String SECRET_KEY_SYSTEM_PROPERTY = "aws.secretKey";
+
+    /**
+     * @exclude
+     * System property name for the AWS session token
+     */
+    public static final String SESSION_TOKEN_SYSTEM_PROPERTY = "aws.sessionToken";
+
+    /**
+     * @exclude
+     * System property for the AWS region to use when creating clients.
+     * See {@link com.ibm.cloud.objectstorage.regions.DefaultAwsRegionProviderChain}.
+     */
+    public static final String AWS_REGION_SYSTEM_PROPERTY = "aws.region";
 
     /**
      * @exclude
@@ -201,19 +214,19 @@ public class SDKGlobalConfiguration {
 
     /** Global System Property variable name for ibm service instance id */
     public static final String IBM_SERVICE_INSTANCE_ID_SYSTEM_PROPERTY = "ibm.serviceInstanceId";
-    
+
     /** Global variable name for ibm api key */
     public static final String IBM_API_KEY = "IBM_API_KEY_ID";
 
     /** Global variable name for ibm service instance id */
     public static final String IBM_SERVICE_INSTANCE_ID = "IBM_SERVICE_INSTANCE_ID";
-    
+
     /** Global variable IAM Endpoint */
     public static String IAM_ENDPOINT = "https://iam.cloud.ibm.com/identity/token";
-    
+
     /** Global variable IAM token retrieval max retry **/
     public static int IAM_MAX_RETRY = 2;
-    
+
     /** Global variable IAM token refresh time offset in seconds **/
     public static double IAM_REFRESH_OFFSET = 0.25;
 
@@ -340,5 +353,4 @@ public class SDKGlobalConfiguration {
         }
         return false;
     }
-
 }

@@ -19,8 +19,6 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
-import com.ibm.cloud.objectstorage.auth.AbstractAWSSigner;
-
 public class AbstractAWSSignerTest {
 
     @Test

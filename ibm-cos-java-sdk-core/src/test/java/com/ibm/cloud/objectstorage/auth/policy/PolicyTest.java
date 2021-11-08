@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2017 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2010-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -19,6 +19,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -26,20 +27,15 @@ import junit.framework.Assert;
 
 import org.junit.Test;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.ibm.cloud.objectstorage.auth.policy.Action;
-import com.ibm.cloud.objectstorage.auth.policy.Policy;
-import com.ibm.cloud.objectstorage.auth.policy.Principal;
-import com.ibm.cloud.objectstorage.auth.policy.Resource;
-import com.ibm.cloud.objectstorage.auth.policy.Statement;
 import com.ibm.cloud.objectstorage.auth.policy.Principal.Services;
 import com.ibm.cloud.objectstorage.auth.policy.Principal.WebIdentityProviders;
 import com.ibm.cloud.objectstorage.auth.policy.Statement.Effect;
 import com.ibm.cloud.objectstorage.auth.policy.conditions.IpAddressCondition;
-import com.ibm.cloud.objectstorage.auth.policy.conditions.StringCondition;
 import com.ibm.cloud.objectstorage.auth.policy.conditions.IpAddressCondition.IpAddressComparisonType;
+import com.ibm.cloud.objectstorage.auth.policy.conditions.StringCondition;
 import com.ibm.cloud.objectstorage.auth.policy.conditions.StringCondition.StringComparisonType;
 import com.ibm.cloud.objectstorage.util.json.Jackson;
+import com.fasterxml.jackson.databind.JsonNode;
 
 /**
  * Unit tests for constructing policy objects and serializing them to JSON.
@@ -358,6 +354,72 @@ public class PolicyTest {
                         .withActions(new TestAction("action2")));
 
         assertValidStatementIds(policy);
+    }
+
+    /**
+     * Tests that a Statement including a Resource specified as a NotResource element is
+     * serialized to JSON with a "NotResource" attribute
+     */
+    @Test
+    public void testNotResourceElement() {
+        Policy policy = new Policy("S3PolicyId1").withStatements(
+                new Statement(Effect.Allow).withId("0")
+                        .withPrincipals(Principal.AllUsers)
+                        .withActions(new TestAction("action1"))
+                        .withResources(new Resource("any-resource").withIsNotType(true)));
+
+        JsonNode jsonPolicyNode = Jackson.jsonNodeOf(policy.toJson());
+        JsonNode statementArray = jsonPolicyNode.get("Statement");
+        assertTrue(statementArray.size() == 1);
+
+        JsonNode statement = statementArray.get(0);
+        assertTrue(statement.has("NotResource"));
+    }
+
+    /**
+     * Tests that a Statement with an empty resources list results in no Resource element
+     */
+    @Test
+    public void testPolicyWithNoResources() {
+        Statement statement = new Statement(Effect.Allow).withId("0")
+                .withPrincipals(Principal.AllUsers)
+                .withActions(new TestAction("action1"));
+        statement.setResources(new ArrayList<Resource>());
+
+        Policy policy = new Policy("S3PolicyId1").withStatements(statement);
+        JsonNode jsonPolicyNode = Jackson.jsonNodeOf(policy.toJson());
+        JsonNode statementArray = jsonPolicyNode.get("Statement");
+
+        JsonNode statementNode = statementArray.get(0);
+        assertFalse(statementNode.has("Resource"));
+    }
+
+    /**
+     * Tests that constructing a Statement with a Resource and a NotResource element will fail
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void testCannotCreateStatementWithBothResourceAndNotResource() {
+        new Policy("S3PolicyId1").withStatements(
+                new Statement(Effect.Allow).withId("0")
+                        .withPrincipals(Principal.AllUsers)
+                        .withActions(new TestAction("action1"))
+                        .withResources(new Resource("any-resource").withIsNotType(true),
+                                new Resource("any-other-resource")));
+    }
+
+    /**
+     * Tests that serializing a Statement with a Resource and a NotResource element will fail
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void testCannotSerializeStatementWithBothResourceAndNotResource() {
+        Statement statement = new Statement(Effect.Allow).withId("0")
+                .withPrincipals(Principal.AllUsers)
+                .withActions(new TestAction("action1"))
+                .withResources(new Resource("any-resource").withIsNotType(true));
+        statement.getResources().add(new Resource("any-other-resource"));
+
+        Policy policy = new Policy("S3PolicyId1").withStatements(statement);
+        policy.toJson();
     }
 
     private class TestAction implements Action {

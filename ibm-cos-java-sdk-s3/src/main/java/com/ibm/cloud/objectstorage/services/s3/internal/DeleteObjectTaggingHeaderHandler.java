@@ -1,5 +1,5 @@
 /*
- * Copyright 2016-2017 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2016-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -17,8 +17,6 @@ package com.ibm.cloud.objectstorage.services.s3.internal;
 import com.ibm.cloud.objectstorage.http.HttpResponse;
 import com.ibm.cloud.objectstorage.services.s3.Headers;
 import com.ibm.cloud.objectstorage.services.s3.model.DeleteObjectTaggingResult;
-
-import java.util.Map;
 
 /**
  * Handler for retrieving headers from the {@link

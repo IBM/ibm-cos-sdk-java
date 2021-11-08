@@ -1,5 +1,5 @@
 /*
- * Copyright 2011-2017 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2011-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,13 +14,12 @@
  */
 package com.ibm.cloud.objectstorage.auth;
 
-import java.net.URI;
-import java.util.Date;
-
 import com.ibm.cloud.objectstorage.SdkClientException;
 import com.ibm.cloud.objectstorage.annotation.SdkInternalApi;
 import com.ibm.cloud.objectstorage.internal.CredentialsEndpointProvider;
 import com.ibm.cloud.objectstorage.retry.internal.CredentialsEndpointRetryPolicy;
+import java.net.URI;
+import java.util.Date;
 
 /**
  * <p>
@@ -42,13 +41,16 @@ public class ContainerCredentialsProvider implements AWSCredentialsProvider {
 
     private final ContainerCredentialsFetcher credentialsFetcher;
 
+    /**
+     * @deprecated use {@link #ContainerCredentialsProvider(CredentialsEndpointProvider)}
+     */
+    @Deprecated
     public ContainerCredentialsProvider() {
         this(new ECSCredentialsEndpointProvider());
     }
 
-    @SdkInternalApi
-    public ContainerCredentialsProvider(CredentialsEndpointProvider credentailsEndpointProvider) {
-        this.credentialsFetcher = new ContainerCredentialsFetcher(credentailsEndpointProvider);
+    public ContainerCredentialsProvider(CredentialsEndpointProvider credentialsEndpointProvider) {
+        this.credentialsFetcher = new ContainerCredentialsFetcher(credentialsEndpointProvider);
     }
 
     @Override
@@ -66,7 +68,7 @@ public class ContainerCredentialsProvider implements AWSCredentialsProvider {
     }
 
 
-    private static class ECSCredentialsEndpointProvider extends CredentialsEndpointProvider {
+    static class ECSCredentialsEndpointProvider extends CredentialsEndpointProvider {
         @Override
         public URI getCredentialsEndpoint() {
             String path = System.getenv(ECS_CONTAINER_CREDENTIALS_PATH);
@@ -77,11 +79,11 @@ public class ContainerCredentialsProvider implements AWSCredentialsProvider {
 
             return URI.create(ECS_CREDENTIALS_ENDPOINT + path);
         }
-
         @Override
         public CredentialsEndpointRetryPolicy getRetryPolicy() {
             return ContainerCredentialsRetryPolicy.getInstance();
         }
+
     }
 
 }

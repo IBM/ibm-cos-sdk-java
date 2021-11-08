@@ -1,5 +1,5 @@
 /*
- * Copyright 2016-2017 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2016-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -27,7 +27,6 @@ import javax.net.ssl.SSLSocket;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.ibm.cloud.objectstorage.internal.SdkSSLMetricsSocket;
 import com.ibm.cloud.objectstorage.util.AWSRequestMetrics;
 
 public class SdkSSLMetricsSocketTest {

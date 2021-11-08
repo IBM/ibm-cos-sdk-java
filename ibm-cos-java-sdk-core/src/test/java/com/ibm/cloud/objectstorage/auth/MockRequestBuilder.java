@@ -15,11 +15,10 @@
 
 package com.ibm.cloud.objectstorage.auth;
 
-import org.mockito.invocation.InvocationOnMock;
-import org.mockito.stubbing.Answer;
-
 import com.ibm.cloud.objectstorage.SignableRequest;
 import com.ibm.cloud.objectstorage.http.HttpMethodName;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
 
 import java.io.InputStream;
 import java.net.URI;

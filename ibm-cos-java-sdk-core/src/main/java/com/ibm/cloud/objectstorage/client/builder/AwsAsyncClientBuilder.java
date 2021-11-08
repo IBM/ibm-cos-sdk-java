@@ -1,5 +1,5 @@
 /*
- * Copyright 2011-2017 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2011-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -14,15 +14,15 @@
  */
 package com.ibm.cloud.objectstorage.client.builder;
 
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-
 import com.ibm.cloud.objectstorage.ClientConfigurationFactory;
 import com.ibm.cloud.objectstorage.annotation.NotThreadSafe;
 import com.ibm.cloud.objectstorage.annotation.SdkProtectedApi;
 import com.ibm.cloud.objectstorage.annotation.SdkTestInternalApi;
 import com.ibm.cloud.objectstorage.client.AwsAsyncClientParams;
 import com.ibm.cloud.objectstorage.regions.AwsRegionProvider;
+
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * Base class for all service specific async client builders.

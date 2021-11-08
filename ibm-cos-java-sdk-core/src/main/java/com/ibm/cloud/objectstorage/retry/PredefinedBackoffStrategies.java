@@ -1,5 +1,5 @@
 /*
- * Copyright 2011-2017 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2011-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -14,11 +14,11 @@
  */
 package com.ibm.cloud.objectstorage.retry;
 
-import java.util.Random;
-
 import com.ibm.cloud.objectstorage.retry.v2.BackoffStrategy;
 import com.ibm.cloud.objectstorage.retry.v2.RetryPolicyContext;
 import com.ibm.cloud.objectstorage.util.ValidationUtils;
+
+import java.util.Random;
 
 /**
  * This class includes a set of pre-defined backoff policies.
@@ -120,19 +120,19 @@ public class PredefinedBackoffStrategies {
     /**
      * A private class that implements the default back-off strategy.
      **/
-    static class SDKDefaultBackoffStrategy extends V2CompatibleBackoffStrategyAdapter {
+    public static class SDKDefaultBackoffStrategy extends V2CompatibleBackoffStrategyAdapter {
 
         private final BackoffStrategy fullJitterBackoffStrategy;
         private final BackoffStrategy equalJitterBackoffStrategy;
 
-        SDKDefaultBackoffStrategy() {
+        public SDKDefaultBackoffStrategy() {
             fullJitterBackoffStrategy = new PredefinedBackoffStrategies.FullJitterBackoffStrategy(
                     SDK_DEFAULT_BASE_DELAY, SDK_DEFAULT_MAX_BACKOFF_IN_MILLISECONDS);
             equalJitterBackoffStrategy = new PredefinedBackoffStrategies.EqualJitterBackoffStrategy(
                     SDK_DEFAULT_THROTTLED_BASE_DELAY, SDK_DEFAULT_MAX_BACKOFF_IN_MILLISECONDS);
         }
 
-        SDKDefaultBackoffStrategy(final int baseDelay, final int throttledBaseDelay, final int maxBackoff) {
+        public SDKDefaultBackoffStrategy(final int baseDelay, final int throttledBaseDelay, final int maxBackoff) {
             fullJitterBackoffStrategy = new PredefinedBackoffStrategies.FullJitterBackoffStrategy(
                     baseDelay, maxBackoff);
             equalJitterBackoffStrategy = new PredefinedBackoffStrategies.EqualJitterBackoffStrategy(

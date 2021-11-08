@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2017 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2013-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -14,10 +14,10 @@
  */
 package com.ibm.cloud.objectstorage.services.s3.internal;
 
+import com.ibm.cloud.objectstorage.SdkClientException;
 import com.ibm.cloud.objectstorage.ReadLimitInfo;
 import com.ibm.cloud.objectstorage.Request;
 import com.ibm.cloud.objectstorage.ResetException;
-import com.ibm.cloud.objectstorage.SdkClientException;
 import com.ibm.cloud.objectstorage.SignableRequest;
 import com.ibm.cloud.objectstorage.auth.AWS4Signer;
 import com.ibm.cloud.objectstorage.auth.AwsChunkedEncodingInputStream;
@@ -28,10 +28,10 @@ import com.ibm.cloud.objectstorage.services.s3.model.UploadPartRequest;
 import com.ibm.cloud.objectstorage.services.s3.request.S3HandlerContextKeys;
 import com.ibm.cloud.objectstorage.util.BinaryUtils;
 
-import static com.ibm.cloud.objectstorage.auth.internal.SignerConstants.X_AMZ_CONTENT_SHA256;
-
 import java.io.IOException;
 import java.io.InputStream;
+
+import static com.ibm.cloud.objectstorage.auth.internal.SignerConstants.X_AMZ_CONTENT_SHA256;
 
 /**
  * AWS4 signer implementation for AWS S3
