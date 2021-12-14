@@ -15,10 +15,6 @@
 
 package com.ibm.cloud.objectstorage.util;
 
-import org.apache.log4j.AppenderSkeleton;
-import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
-import org.apache.log4j.spi.LoggingEvent;
 import org.junit.After;
 import org.junit.Before;
 
@@ -50,6 +46,14 @@ import java.util.List;
  */
 
 public interface LogCaptor {
+    class LoggingEvent {}  // IBM
+    class AppenderSkeleton {}  // IBM
+    class DefaultLogCaptor extends AppenderSkeleton implements LogCaptor {  // IBM
+        public void clear() {}  // IBM
+        public List<LoggingEvent> loggedEvents() {  // IBM
+            return new ArrayList<LoggingEvent>();  // IBM
+        }  // IBM
+    }  // IBM
 
     List<LoggingEvent> loggedEvents();
 
@@ -57,68 +61,68 @@ public interface LogCaptor {
 
     class LogCaptorTestBase extends DefaultLogCaptor {
         public LogCaptorTestBase() {
-            super(Level.ALL);
+            // IBM super(Level.ALL);
         }
 
         @Before
         public void setupLogging() {
-            super.setupLogging();
+            // IBM super.setupLogging();
         }
 
         @After
         public void stopLogging() {
-            super.stopLogging();
+            // IBM super.stopLogging();
         }
     }
 
-    class DefaultLogCaptor extends AppenderSkeleton implements LogCaptor {
-
-        private final List<LoggingEvent> loggedEvents = new ArrayList<LoggingEvent>();
-        private final Level originalLoggingLevel = Logger.getRootLogger().getLevel();
-        private final Level levelToCapture;
-
-        public DefaultLogCaptor(Level levelToCapture) {
-            super();
-            this.levelToCapture = levelToCapture;
-            setupLogging();
-        }
-
-        @Override
-        public void finalize() {
-            super.finalize();
-            stopLogging();
-        }
-
-        @Override
-        public List<LoggingEvent> loggedEvents() {
-            return new ArrayList<LoggingEvent>(loggedEvents);
-        }
-
-        @Override
-        public void clear() {
-            loggedEvents.clear();
-        }
-
-        protected void setupLogging() {
-            loggedEvents.clear();
-            Logger.getRootLogger().addAppender(this);
-            Logger.getRootLogger().setLevel(levelToCapture);
-        }
-
-        protected void stopLogging() {
-            Logger.getRootLogger().removeAppender(this);
-            Logger.getRootLogger().setLevel(originalLoggingLevel);
-        }
-
-        @Override
-        protected void append(LoggingEvent loggingEvent) {
-            loggedEvents.add(loggingEvent);
-        }
-
-        @Override
-        public boolean requiresLayout() { return false; }
-
-        @Override
-        public void close() { }
-    }
+    // IBM class DefaultLogCaptor extends AppenderSkeleton implements LogCaptor {
+    // IBM
+    // IBM     private final List<LoggingEvent> loggedEvents = new ArrayList<LoggingEvent>();
+    // IBM     private final Level originalLoggingLevel = Logger.getRootLogger().getLevel();
+    // IBM     private final Level levelToCapture;
+    // IBM
+    // IBM     public DefaultLogCaptor(Level levelToCapture) {
+    // IBM         super();
+    // IBM         this.levelToCapture = levelToCapture;
+    // IBM         setupLogging();
+    // IBM     }
+    // IBM
+    // IBM     @Override
+    // IBM     public void finalize() {
+    // IBM         super.finalize();
+    // IBM         stopLogging();
+    // IBM     }
+    // IBM
+    // IBM     @Override
+    // IBM     public List<LoggingEvent> loggedEvents() {
+    // IBM         return new ArrayList<LoggingEvent>(loggedEvents);
+    // IBM     }
+    // IBM
+    // IBM     @Override
+    // IBM     public void clear() {
+    // IBM         loggedEvents.clear();
+    // IBM     }
+    // IBM
+    // IBM     protected void setupLogging() {
+    // IBM         loggedEvents.clear();
+    // IBM         Logger.getRootLogger().addAppender(this);
+    // IBM         Logger.getRootLogger().setLevel(levelToCapture);
+    // IBM     }
+    // IBM
+    // IBM     protected void stopLogging() {
+    // IBM         Logger.getRootLogger().removeAppender(this);
+    // IBM         Logger.getRootLogger().setLevel(originalLoggingLevel);
+    // IBM     }
+    // IBM
+    // IBM     @Override
+    // IBM     protected void append(LoggingEvent loggingEvent) {
+    // IBM         loggedEvents.add(loggingEvent);
+    // IBM     }
+    // IBM
+    // IBM     @Override
+    // IBM     public boolean requiresLayout() { return false; }
+    // IBM
+    // IBM     @Override
+    // IBM     public void close() { }
+    // IBM }
 }

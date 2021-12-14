@@ -193,6 +193,7 @@ public class InstanceProfileCredentialsProviderIntegrationTest extends LogCaptor
         assertNotSame(credentials, newCredentials);
     }
 
+    @Ignore("IBM: Backend logger is no longer supported; no exception thrown cannot be verified")
     @Test(expected = AmazonClientException.class)
     public void canBeConfiguredToOnlyRefreshCredentialsAfterFirstCallToGetCredentials() throws InterruptedException {
         mockServer.setResponseFileName("sessionResponseExpired");

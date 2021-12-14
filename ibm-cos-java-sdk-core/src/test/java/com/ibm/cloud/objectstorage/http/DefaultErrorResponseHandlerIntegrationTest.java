@@ -32,24 +32,24 @@ import com.ibm.cloud.objectstorage.util.LogCaptor;
 import java.util.ArrayList;
 import java.util.List;
 import org.apache.commons.lang.RandomStringUtils;
-import org.apache.log4j.Level;
-import org.apache.log4j.spi.LoggingEvent;
 import org.hamcrest.Matcher;
 import org.junit.Before;
+import org.junit.Ignore;  // IBM
 import org.junit.Test;
 import org.w3c.dom.Node;
 import utils.http.WireMockTestBase;
 
+@Ignore("IBM - Backend logger used in this test is no longer supported")
 public class DefaultErrorResponseHandlerIntegrationTest extends WireMockTestBase {
 
     private static final String RESOURCE = "/some-path";
-    private LogCaptor logCaptor = new LogCaptor.DefaultLogCaptor(Level.DEBUG);
+    // IBM private LogCaptor logCaptor = new LogCaptor.DefaultLogCaptor(Level.DEBUG);
     private final AmazonHttpClient client = new AmazonHttpClient(new ClientConfiguration());
     private final DefaultErrorResponseHandler sut = new DefaultErrorResponseHandler(new ArrayList<Unmarshaller<AmazonServiceException, Node>>());
 
     @Before
     public void setUp() {
-        logCaptor.clear();
+        // IBM logCaptor.clear();
     }
 
     @Test
@@ -58,8 +58,8 @@ public class DefaultErrorResponseHandlerIntegrationTest extends WireMockTestBase
 
         executeRequest();
 
-        Matcher<Iterable<? super LoggingEvent>> matcher = hasItem(hasEventWithContent("Invocation Id"));
-        assertThat(debugEvents(), matcher);
+        // IBM Matcher<Iterable<? super LoggingEvent>> matcher = hasItem(hasEventWithContent("Invocation Id"));
+        // IBM assertThat(debugEvents(), matcher);
     }
 
     @Test
@@ -69,8 +69,8 @@ public class DefaultErrorResponseHandlerIntegrationTest extends WireMockTestBase
 
         executeRequest();
 
-        Matcher<Iterable<? super LoggingEvent>> matcher = hasItem(hasEventWithContent(content));
-        assertThat(debugEvents(), matcher);
+        // IBM Matcher<Iterable<? super LoggingEvent>> matcher = hasItem(hasEventWithContent(content));
+        // IBM assertThat(debugEvents(), matcher);
     }
 
     @Test
@@ -81,8 +81,8 @@ public class DefaultErrorResponseHandlerIntegrationTest extends WireMockTestBase
 
         executeRequest();
 
-        Matcher<Iterable<? super LoggingEvent>> matcher = hasItem(hasEventWithContent(requestId));
-        assertThat(debugEvents(), matcher);
+        // IBM Matcher<Iterable<? super LoggingEvent>> matcher = hasItem(hasEventWithContent(requestId));
+        // IBM assertThat(debugEvents(), matcher);
     }
 
     private void executeRequest() {
@@ -103,19 +103,19 @@ public class DefaultErrorResponseHandlerIntegrationTest extends WireMockTestBase
         }
     }
 
-    private List<LoggingEvent> debugEvents() {
-        List<LoggingEvent> events = new ArrayList<LoggingEvent>();
-        List<LoggingEvent> loggingEvents = logCaptor.loggedEvents();
-        for (LoggingEvent le : loggingEvents) {
-            if (le.getLevel().equals(Level.DEBUG)) {
-                events.add(le);
-            }
-        }
-        return events;
-    }
+    // IBM private List<LoggingEvent> debugEvents() {
+    // IBM     List<LoggingEvent> events = new ArrayList<LoggingEvent>();
+    // IBM     List<LoggingEvent> loggingEvents = logCaptor.loggedEvents();
+    // IBM     for (LoggingEvent le : loggingEvents) {
+    // IBM         if (le.getLevel().equals(Level.DEBUG)) {
+    // IBM             events.add(le);
+    // IBM         }
+    // IBM     }
+    // IBM     return events;
+    // IBM }
 
-    private org.hamcrest.Matcher<? super LoggingEvent> hasEventWithContent(String content) {
-        return hasProperty("message", containsString(content));
-    }
+    // IBM private org.hamcrest.Matcher<? super LoggingEvent> hasEventWithContent(String content) {
+    // IBM     return hasProperty("message", containsString(content));
+    // IBM }
 }
 
