@@ -36,6 +36,8 @@ import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.ssl.SSLContexts;
 import org.apache.http.util.EntityUtils;
 
+import org.apache.http.client.config.RequestConfig;
+
 import com.ibm.cloud.objectstorage.SDKGlobalConfiguration;
 import com.ibm.cloud.objectstorage.http.apache.client.impl.ApacheConnectionManagerFactory.TrustingX509TrustManager;
 import com.ibm.cloud.objectstorage.http.conn.ssl.SdkTLSSocketFactory;
@@ -152,11 +154,16 @@ public class DefaultTokenProvider implements TokenProvider {
             SSLConnectionSocketFactory sslsf = new SdkTLSSocketFactory(sslContext, new DefaultHostnameVerifier());
 
             HttpClientBuilder builder = HttpClientBuilder.create();
-            if (httpClientSettings != null){
+            HttpClient client;
+            if (httpClientSettings != null) {
                 DefaultTokenManager.addProxyConfig(builder, httpClientSettings);
+                RequestConfig config = RequestConfig.custom().setConnectTimeout(httpClientSettings.getConnectionTimeout()).build();
+                client = builder.setSSLSocketFactory(sslsf).setDefaultRequestConfig(config).build();
+            }
+            else {
+                client = builder.setSSLSocketFactory(sslsf).build();
             }
 
-            HttpClient client = builder.setSSLSocketFactory(sslsf).build();
 
             HttpPost post = new HttpPost(iamEndpoint);
             post.setHeader("Authorization", BASIC_AUTH);
@@ -201,22 +208,22 @@ public class DefaultTokenProvider implements TokenProvider {
             return token;
 
         } catch (UnsupportedEncodingException e) {
-            OAuthServiceException exception = new OAuthServiceException("Received " + e.toString() + " retrieving IAM token (" + e.getCause() + ")");
+            OAuthServiceException exception = new OAuthServiceException("Received " + e.toString() + " retrieving IAM token (" + e.getCause() + ")", e);
             exception.setStatusMessage(e.toString());
             throw exception;
         } catch (ClientProtocolException e) {
-            OAuthServiceException exception = new OAuthServiceException("Received " + e.toString() + " retrieving IAM token (" + e.getCause() + ")");
+            OAuthServiceException exception = new OAuthServiceException("Received " + e.toString() + " retrieving IAM token (" + e.getCause() + ")", e);
             throw exception;
         } catch (IOException e) {
-            OAuthServiceException exception = new OAuthServiceException("Received " + e.toString() + " retrieving IAM token (" + e.getCause() + ")");
+            OAuthServiceException exception = new OAuthServiceException("Received " + e.toString() + " retrieving IAM token (" + e.getCause() + ")", e);
             exception.setStatusMessage(e.toString());
             throw exception;
         } catch (NoSuchAlgorithmException e) {
-            OAuthServiceException exception = new OAuthServiceException("Received " + e.toString() + " retrieving IAM token (" + e.getCause() + ")");
+            OAuthServiceException exception = new OAuthServiceException("Received " + e.toString() + " retrieving IAM token (" + e.getCause() + ")", e);
             exception.setStatusMessage(e.toString());
             throw exception;
         } catch (KeyManagementException e) {
-            OAuthServiceException exception = new OAuthServiceException("Received " + e.toString() + " retrieving IAM token (" + e.getCause() + ")");
+            OAuthServiceException exception = new OAuthServiceException("Received " + e.toString() + " retrieving IAM token (" + e.getCause() + ")", e);
             exception.setStatusMessage(e.toString());
             throw exception;
         }

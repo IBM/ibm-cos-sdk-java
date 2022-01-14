@@ -1,5 +1,17 @@
 # CHANGELOG
 
+## 2.11.1
+
+### Content
+
+#### Defect Fixes
+
+* COSSDK-79868: <https://github.com/IBM/ibm-cos-sdk-java/issues/37>
+* COSSDK-86226: <https://github.com/IBM/ibm-cos-sdk-java/issues/44>
+* COSSDK-85949: <https://github.com/IBM/ibm-cos-sdk-java/issues/45>
+* COSSDK-86451: <https://github.com/IBM/ibm-cos-sdk-java/issues/46>
+* Drop support for Java 6 and 7
+
 ## 2.11.0
 
 ### Content
