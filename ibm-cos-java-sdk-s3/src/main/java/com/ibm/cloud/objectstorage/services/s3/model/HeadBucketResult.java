@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2015-2022 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -25,7 +25,7 @@ public class HeadBucketResult implements Serializable {
     private boolean IBMSSEKPEnabled;
     private String IBMSSEKPCrk;
 
-    // IBM-Specifc
+    // IBM-Specific
     /**
      * Returns if KP has been enabled
      */
@@ -33,7 +33,7 @@ public class HeadBucketResult implements Serializable {
         return IBMSSEKPEnabled;
     }
 
-    // IBM-Specifc
+    // IBM-Specific
     /**
      * Sets if KP is enabled
      * @param iBMSSEKPEnabled
@@ -42,7 +42,7 @@ public class HeadBucketResult implements Serializable {
         this.IBMSSEKPEnabled = iBMSSEKPEnabled;
     }
 
-    // IBM-Specifc
+    // IBM-Specific
     /**
      * Returns the CRK header of the HEAD request
      */
@@ -50,7 +50,7 @@ public class HeadBucketResult implements Serializable {
         return IBMSSEKPCrk;
     }
 
-    // IBM-Specifc
+    // IBM-Specific
     /**
      * Sets the CRK value
      * @param iBMSSEKPCrkName
@@ -60,7 +60,7 @@ public class HeadBucketResult implements Serializable {
     }
 
     /**
-     * Returns the AWS region where the bucket is located.
+     * Returns the Amazon Web Services region where the bucket is located.
      */
     public String getBucketRegion() {
         return bucketRegion;

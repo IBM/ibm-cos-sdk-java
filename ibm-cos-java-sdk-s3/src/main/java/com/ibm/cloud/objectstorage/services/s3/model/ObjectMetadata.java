@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2010-2022 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -14,14 +14,6 @@
  */
 package com.ibm.cloud.objectstorage.services.s3.model;
 
-import static com.ibm.cloud.objectstorage.util.DateUtils.cloneDate;
-
-import java.io.Serializable;
-import java.util.Collections;
-import java.util.Date;
-import java.util.TreeMap;
-import java.util.Map;
-
 import com.ibm.cloud.objectstorage.SdkClientException;
 import com.ibm.cloud.objectstorage.services.s3.Headers;
 import com.ibm.cloud.objectstorage.services.s3.internal.Constants;
@@ -31,6 +23,14 @@ import com.ibm.cloud.objectstorage.services.s3.internal.ObjectTransitionResult;
 import com.ibm.cloud.objectstorage.services.s3.internal.S3RequesterChargedResult;
 import com.ibm.cloud.objectstorage.services.s3.internal.ServerSideEncryptionResult;
 import com.ibm.cloud.objectstorage.services.s3.internal.ServiceUtils;
+
+import java.io.Serializable;
+import java.util.Collections;
+import java.util.Date;
+import java.util.Map;
+import java.util.TreeMap;
+
+import static com.ibm.cloud.objectstorage.util.DateUtils.cloneDate;
 
 /**
  * Represents the object metadata that is stored with Amazon S3. This includes custom
@@ -93,6 +93,12 @@ public class ObjectMetadata implements ServerSideEncryptionResult, S3RequesterCh
      * accessed. Null if this object has not been restored from Glacier.
      */
     private Date restoreExpirationTime;
+    
+    /**
+     * Whether or not the object is encrypted with Bucket Key
+     */
+//IBM unsupported    
+//    private Boolean bucketKeyEnabled;
 
     // IBM-specific
     /**
@@ -302,7 +308,7 @@ public class ObjectMetadata implements ServerSideEncryptionResult, S3RequesterCh
      * associated object in bytes.
      * </p>
      * <p>
-     * This field is required when uploading objects to S3, but the AWS S3 Java
+     * This field is required when uploading objects to S3, but the Amazon Web Services S3 Java
      * client will automatically set it when working directly with files. When
      * uploading directly from a stream, set this field if
      * possible. Otherwise the client must buffer the entire stream in
@@ -350,7 +356,7 @@ public class ObjectMetadata implements ServerSideEncryptionResult, S3RequesterCh
      * associated object in bytes.
      * </p>
      * <p>
-     * This field is required when uploading objects to S3, but the AWS S3 Java
+     * This field is required when uploading objects to S3, but the Amazon Web Services S3 Java
      * client will automatically set it when working directly with files. When
      * uploading directly from a stream, set this field if
      * possible. Otherwise the client must buffer the entire stream in
@@ -380,7 +386,7 @@ public class ObjectMetadata implements ServerSideEncryptionResult, S3RequesterCh
      * MIME type.
      * </p>
      * <p>
-     * When uploading files, the AWS S3 Java client will attempt to determine
+     * When uploading files, the Amazon Web Services S3 Java client will attempt to determine
      * the correct content type if one hasn't been set yet. Users are
      * responsible for ensuring a suitable content type is set when uploading
      * streams. If no content type is provided and cannot be determined by
@@ -411,7 +417,7 @@ public class ObjectMetadata implements ServerSideEncryptionResult, S3RequesterCh
      * MIME type.
      * </p>
      * <p>
-     * When uploading files, the AWS S3 Java client will attempt to determine
+     * When uploading files, the Amazon Web Services S3 Java client will attempt to determine
      * the correct content type if one hasn't been set yet. Users are
      * responsible for ensuring a suitable content type is set when uploading
      * streams. If no content type is provided and cannot be determined by
@@ -584,7 +590,7 @@ public class ObjectMetadata implements ServerSideEncryptionResult, S3RequesterCh
      * S3. See the documentation at {@link #getETag()} for more information on what the ETag field represents.
      * </p>
      * <p>
-     * The AWS S3 Java client will attempt to calculate this field automatically
+     * The Amazon Web Services S3 Java client will attempt to calculate this field automatically
      * when uploading files to Amazon S3.
      * </p>
      *
@@ -617,7 +623,7 @@ public class ObjectMetadata implements ServerSideEncryptionResult, S3RequesterCh
      * S3. See the documentation at {@link #getETag()} for more information on what the ETag field represents.
      * </p>
      * <p>
-     * The AWS S3 Java client will attempt to calculate this field automatically
+     * The Amazon Web Services S3 Java client will attempt to calculate this field automatically
      * when uploading files to Amazon S3.
      * </p>
      *
@@ -686,11 +692,11 @@ public class ObjectMetadata implements ServerSideEncryptionResult, S3RequesterCh
      * and how it is encrypted as described below:
      * <ul>
      * <li>
-     * Objects created by the PUT Object, POST Object, or Copy operation, or through the AWS Management Console, and are encrypted
+     * Objects created by the PUT Object, POST Object, or Copy operation, or through the Amazon Web Services Management Console, and are encrypted
      * by SSE-S3 or plaintext, have ETags that are an MD5 digest of their object data.
      * </li>
      * <li>
-     * Objects created by the PUT Object, POST Object, or Copy operation, or through the AWS Management Console, and are encrypted
+     * Objects created by the PUT Object, POST Object, or Copy operation, or through the Amazon Web Services Management Console, and are encrypted
      * by SSE-C or SSE-KMS, have ETags that are not an MD5 digest of their object data.
      * </li>
      * <li>
@@ -718,7 +724,7 @@ public class ObjectMetadata implements ServerSideEncryptionResult, S3RequesterCh
 
     /**
      * Returns the server-side encryption algorithm when encrypting the object
-     * using AWS-managed keys .
+     * using Amazon Web Services-managed keys .
      */
     @Override
     public String getSSEAlgorithm() {
@@ -735,11 +741,11 @@ public class ObjectMetadata implements ServerSideEncryptionResult, S3RequesterCh
 
     /**
      * Sets the server-side encryption algorithm when encrypting the object
-     * using AWS-managed keys.
+     * using Amazon Web Services-managed keys.
      *
      * @param algorithm
      *            The server-side encryption algorithm when encrypting the
-     *            object using AWS-managed keys .
+     *            object using Amazon Web Services-managed keys .
      */
     @Override
     public void setSSEAlgorithm(String algorithm) {
@@ -947,6 +953,17 @@ public class ObjectMetadata implements ServerSideEncryptionResult, S3RequesterCh
     }
 
     /**
+     * @return The archive status for the object. Returns null if the object is not archived.
+     */
+    public String getArchiveStatus() {
+        final Object archiveStatus = metadata.get(Headers.ARCHIVE_STATUS);
+        if (archiveStatus == null) {
+            return null;
+        }
+        return archiveStatus.toString();
+    }
+
+    /**
      * Returns the value of the specified user meta datum.
      */
     public String getUserMetaDataOf(String key) {
@@ -965,13 +982,23 @@ public class ObjectMetadata implements ServerSideEncryptionResult, S3RequesterCh
 
     /**
      * @exclude
-     * Returns the AWS Key Management System key id used for Server Side
+     * Returns the Amazon Web Services Key Management System key id used for Server Side
      * Encryption of the Amazon S3 object.
      */
     public String getSSEAwsKmsKeyId() {
         return (String) metadata
                 .get(Headers.SERVER_SIDE_ENCRYPTION_AWS_KMS_KEYID);
     }
+
+    /**
+     * Returns the AWS Key Management System encryption context used for Server Side
+     * Encryption of the Amazon S3 object.
+     */
+//IBM unsupported
+//    public String getSSEAwsKmsEncryptionContext() {
+//        return (String) metadata
+//            .get(Headers.SERVER_SIDE_ENCRYPTION_AWS_KMS_CONTEXT);
+//    }
 
     @Override
     public boolean isRequesterCharged() {
@@ -1068,4 +1095,24 @@ public class ObjectMetadata implements ServerSideEncryptionResult, S3RequesterCh
     public String getReplicationStatus() {
         return (String) metadata.get(Headers.OBJECT_REPLICATION_STATUS);
     }
+
+    /**
+     * Returns whether or not the object is encrypted with Bucket Key.
+     */
+//IBM unsupported
+//    public Boolean getBucketKeyEnabled() {
+//        return bucketKeyEnabled;
+//    }
+
+    /**
+     * Sets whether or not the object is encrypted with Bucket Key.
+     *
+     * @param bucketKeyEnabled
+     *            Whether or not bucket key is enabled
+     */
+//IBM unsupported
+//    public void setBucketKeyEnabled(Boolean bucketKeyEnabled) {
+//        this.bucketKeyEnabled = bucketKeyEnabled;
+//    }
+
 }

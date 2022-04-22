@@ -1,5 +1,5 @@
 /*
- * Copyright 2011-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2011-2022 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -68,7 +68,7 @@ public class MockedClientTests {
         HttpResponseProxy responseProxy = createHttpResponseProxySpy();
         doReturn(responseProxy).when(rawHttpClient).execute(any(HttpRequestBase.class), any(HttpContext.class));
 
-        httpClient = new AmazonHttpClient(config, rawHttpClient, null);
+        httpClient = new AmazonHttpClient(config, rawHttpClient, null, null);
 
         try {
             execute(httpClient, createMockGetRequest());
@@ -95,7 +95,7 @@ public class MockedClientTests {
         HttpResponseProxy responseProxy = createHttpResponseProxySpy();
         doReturn(responseProxy).when(rawHttpClient).execute(any(HttpRequestBase.class), any(HttpContext.class));
 
-        httpClient = new AmazonHttpClient(config, rawHttpClient, null);
+        httpClient = new AmazonHttpClient(config, rawHttpClient, null, null);
 
         try {
             execute(httpClient, createMockGetRequest());
@@ -115,7 +115,7 @@ public class MockedClientTests {
         HttpResponseProxy responseProxy = createHttpResponseProxySpy();
         doReturn(responseProxy).when(rawHttpClient).execute(any(HttpRequestBase.class), any(HttpContext.class));
 
-        httpClient = new AmazonHttpClient(config, rawHttpClient, null);
+        httpClient = new AmazonHttpClient(config, rawHttpClient, null, null);
 
         try {
             httpClient.requestExecutionBuilder().request(createMockGetRequest()).execute(new ErrorDuringUnmarshallingResponseHandler().leaveConnectionOpen());

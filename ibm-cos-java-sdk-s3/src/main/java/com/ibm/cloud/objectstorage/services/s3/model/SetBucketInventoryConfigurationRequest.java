@@ -1,5 +1,5 @@
 /*
- * Copyright 2011-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2011-2022 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,11 +22,17 @@ import java.io.Serializable;
 /**
  * Request object to set an inventory configuration to a bucket.
  */
-public class SetBucketInventoryConfigurationRequest extends AmazonWebServiceRequest implements Serializable {
+public class SetBucketInventoryConfigurationRequest extends AmazonWebServiceRequest implements Serializable
+//IBM unsupported
+//, ExpectedBucketOwnerRequest 
+{
 
     private String bucketName;
 
     private InventoryConfiguration inventoryConfiguration;
+
+    //IBM unsupported
+    //private String expectedBucketOwner;
 
     public SetBucketInventoryConfigurationRequest() {
     }
@@ -35,6 +41,20 @@ public class SetBucketInventoryConfigurationRequest extends AmazonWebServiceRequ
         this.bucketName = bucketName;
         this.inventoryConfiguration = inventoryConfiguration;
     }
+
+//IBM unsupported
+//    public String getExpectedBucketOwner() {
+//        return expectedBucketOwner;
+//    }
+//
+//    public SetBucketInventoryConfigurationRequest withExpectedBucketOwner(String expectedBucketOwner) {
+//        this.expectedBucketOwner = expectedBucketOwner;
+//        return this;
+//    }
+//
+//    public void setExpectedBucketOwner(String expectedBucketOwner) {
+//        withExpectedBucketOwner(expectedBucketOwner);
+//    }
 
     /**
      * Returns the name of the bucket where the inventory configuration will be stored.

@@ -1,5 +1,5 @@
 /*
- * Copyright 2011-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2011-2022 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -39,4 +39,11 @@ public interface MetricsPredicateVisitor {
      * {@link MetricsAndOperator} is visited.
      */
     public void visit(MetricsAndOperator metricsAndOperator);
+
+    /**
+     * Implement this method to add behaviour performed when
+     * {@link MetricsAccessPointArnPredicate} is visited.
+     */
+    //IBM does not support ARN
+    //public void visit(MetricsAccessPointArnPredicate metricsAccessPointArnPredicate);
 }

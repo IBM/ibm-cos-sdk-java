@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2015-2022 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -21,7 +21,10 @@ import com.ibm.cloud.objectstorage.AmazonWebServiceRequest;
  * Request object containing all the options for setting a object's Access
  * Control List (ACL).
  */
-public class SetObjectAclRequest extends AmazonWebServiceRequest implements Serializable {
+public class SetObjectAclRequest extends AmazonWebServiceRequest implements Serializable
+//IBM unsupported
+//,ExpectedBucketOwnerRequest 
+{
 
     /**
      * The name of the bucket containing the object whose ACL is being set.
@@ -32,10 +35,10 @@ public class SetObjectAclRequest extends AmazonWebServiceRequest implements Seri
      * <i>AccessPointName</i>-<i>AccountId</i>.s3-accesspoint.<i>Region</i>.amazonaws.com.
      * </p>
      * <p>
-     * When using this operation using an access point through the AWS SDKs, you provide
+     * When using this operation using an access point through the Amazon Web Services SDKs, you provide
      * the access point ARN in place of the bucket name. For more information about access point
      * ARNs, see <a href=\"https://docs.aws.amazon.com/AmazonS3/latest/dev/using-access-points.html\">
-     * Using Access Points</a> in the <i>Amazon Simple Storage Service Developer Guide</i>.
+     * Using access points</a> in the <i>Amazon Simple Storage Service Developer Guide</i>.
      * </p>
      */
     private final String bucketName;
@@ -58,6 +61,9 @@ public class SetObjectAclRequest extends AmazonWebServiceRequest implements Seri
      */
     private boolean isRequesterPays;
 
+    //IBM unsupported
+    //private String expectedBucketOwner;
+
     /**
      * Constructs a new SetObjectAclRequest object, ready to set the specified
      * ACL on the specified object when this request is executed.
@@ -68,10 +74,10 @@ public class SetObjectAclRequest extends AmazonWebServiceRequest implements Seri
      * <i>AccessPointName</i>-<i>AccountId</i>.s3-accesspoint.<i>Region</i>.amazonaws.com.
      * </p>
      * <p>
-     * When using this operation using an access point through the AWS SDKs, you provide
+     * When using this operation using an access point through the Amazon Web Services SDKs, you provide
      * the access point ARN in place of the bucket name. For more information about access point
      * ARNs, see <a href=\"https://docs.aws.amazon.com/AmazonS3/latest/dev/using-access-points.html\">
-     * Using Access Points</a> in the <i>Amazon Simple Storage Service Developer Guide</i>.
+     * Using access points</a> in the <i>Amazon Simple Storage Service Developer Guide</i>.
      * </p>
      *
      * @param bucketName
@@ -103,10 +109,10 @@ public class SetObjectAclRequest extends AmazonWebServiceRequest implements Seri
      * <i>AccessPointName</i>-<i>AccountId</i>.s3-accesspoint.<i>Region</i>.amazonaws.com.
      * </p>
      * <p>
-     * When using this operation using an access point through the AWS SDKs, you provide
+     * When using this operation using an access point through the Amazon Web Services SDKs, you provide
      * the access point ARN in place of the bucket name. For more information about access point
      * ARNs, see <a href=\"https://docs.aws.amazon.com/AmazonS3/latest/dev/using-access-points.html\">
-     * Using Access Points</a> in the <i>Amazon Simple Storage Service Developer Guide</i>.
+     * Using access points</a> in the <i>Amazon Simple Storage Service Developer Guide</i>.
      * </p>
      *
      * @param bucketName
@@ -138,10 +144,10 @@ public class SetObjectAclRequest extends AmazonWebServiceRequest implements Seri
      * <i>AccessPointName</i>-<i>AccountId</i>.s3-accesspoint.<i>Region</i>.amazonaws.com.
      * </p>
      * <p>
-     * When using this operation using an access point through the AWS SDKs, you provide
+     * When using this operation using an access point through the Amazon Web Services SDKs, you provide
      * the access point ARN in place of the bucket name. For more information about access point
      * ARNs, see <a href=\"https://docs.aws.amazon.com/AmazonS3/latest/dev/using-access-points.html\">
-     * Using Access Points</a> in the <i>Amazon Simple Storage Service Developer Guide</i>.
+     * Using access points</a> in the <i>Amazon Simple Storage Service Developer Guide</i>.
      * </p>
      *
      * @param bucketName
@@ -175,10 +181,10 @@ public class SetObjectAclRequest extends AmazonWebServiceRequest implements Seri
      * <i>AccessPointName</i>-<i>AccountId</i>.s3-accesspoint.<i>Region</i>.amazonaws.com.
      * </p>
      * <p>
-     * When using this operation using an access point through the AWS SDKs, you provide
+     * When using this operation using an access point through the Amazon Web Services SDKs, you provide
      * the access point ARN in place of the bucket name. For more information about access point
      * ARNs, see <a href=\"https://docs.aws.amazon.com/AmazonS3/latest/dev/using-access-points.html\">
-     * Using Access Points</a> in the <i>Amazon Simple Storage Service Developer Guide</i>.
+     * Using access points</a> in the <i>Amazon Simple Storage Service Developer Guide</i>.
      * </p>
      *
      * @param bucketName
@@ -202,21 +208,87 @@ public class SetObjectAclRequest extends AmazonWebServiceRequest implements Seri
         this.cannedAcl = acl;
     }
 
+//IBM unsupported
+//    public String getExpectedBucketOwner() {
+//        return expectedBucketOwner;
+//    }
+//
+//    public SetObjectAclRequest withExpectedBucketOwner(String expectedBucketOwner) {
+//        this.expectedBucketOwner = expectedBucketOwner;
+//        return this;
+//    }
+//
+//    public void setExpectedBucketOwner(String expectedBucketOwner) {
+//        withExpectedBucketOwner(expectedBucketOwner);
+//    }
+
     /**
-     * Returns the name of the bucket containing the object whose ACL is being
-     * set.
+     * <p>
+     * The bucket name that contains the object to which you want to attach the ACL.
+     * </p>
+     * <p>
+     * When using this action with an access point, you must direct requests to the access point hostname. The access
+     * point hostname takes the form <i>AccessPointName</i>-<i>AccountId</i>.s3-accesspoint.<i>Region</i>.amazonaws.com.
+     * When using this action with an access point through the Amazon Web Services SDKs, you provide the access point
+     * ARN in place of the bucket name. For more information about access point ARNs, see <a
+     * href="https://docs.aws.amazon.com/AmazonS3/latest/userguide/using-access-points.html">Using access points</a> in
+     * the <i>Amazon S3 User Guide</i>.
+     * </p>
      *
-     * @return The name of the bucket containing the object whose ACL is being
-     *         set.
+     * @return The bucket name that contains the object to which you want to attach the ACL. </p>
+     *         <p>
+     *         When using this action with an access point, you must direct requests to the access point hostname. The
+     *         access point hostname takes the form
+     *         <i>AccessPointName</i>-<i>AccountId</i>.s3-accesspoint.<i>Region</i>.amazonaws.com. When using this
+     *         action with an access point through the Amazon Web Services SDKs, you provide the access point ARN in
+     *         place of the bucket name. For more information about access point ARNs, see <a
+     *         href="https://docs.aws.amazon.com/AmazonS3/latest/userguide/using-access-points.html">Using access
+     *         points</a> in the <i>Amazon S3 User Guide</i>.
      */
     public String getBucketName() {
         return bucketName;
     }
 
     /**
-     * Returns the name of the object whose ACL is being set.
+     * <p>
+     * Key for which the PUT action was initiated.
+     * </p>
+     * <p>
+     * When using this action with an access point, you must direct requests to the access point hostname. The access
+     * point hostname takes the form <i>AccessPointName</i>-<i>AccountId</i>.s3-accesspoint.<i>Region</i>.amazonaws.com.
+     * When using this action with an access point through the Amazon Web Services SDKs, you provide the access point
+     * ARN in place of the bucket name. For more information about access point ARNs, see <a
+     * href="https://docs.aws.amazon.com/AmazonS3/latest/userguide/using-access-points.html">Using access points</a> in
+     * the <i>Amazon S3 User Guide</i>.
+     * </p>
+     * <p>
+     * When using this action with Amazon S3 on Outposts, you must direct requests to the S3 on Outposts hostname. The
+     * S3 on Outposts hostname takes the form
+     * <i>AccessPointName</i>-<i>AccountId</i>.<i>outpostID</i>.s3-outposts.<i>Region</i>.amazonaws.com. When using this
+     * action using S3 on Outposts through the Amazon Web Services SDKs, you provide the Outposts bucket ARN in place of
+     * the bucket name. For more information about S3 on Outposts ARNs, see <a
+     * href="https://docs.aws.amazon.com/AmazonS3/latest/userguide/S3onOutposts.html">Using S3 on Outposts</a> in the
+     * <i>Amazon S3 User Guide</i>.
+     * </p>
      *
-     * @return The name of the object whose ACL is being set.
+     * @return Key for which the PUT action was initiated.</p>
+     *         <p>
+     *         When using this action with an access point, you must direct requests to the access point hostname. The
+     *         access point hostname takes the form
+     *         <i>AccessPointName</i>-<i>AccountId</i>.s3-accesspoint.<i>Region</i>.amazonaws.com. When using this
+     *         action with an access point through the Amazon Web Services SDKs, you provide the access point ARN in
+     *         place of the bucket name. For more information about access point ARNs, see <a
+     *         href="https://docs.aws.amazon.com/AmazonS3/latest/userguide/using-access-points.html">Using access
+     *         points</a> in the <i>Amazon S3 User Guide</i>.
+     *         </p>
+     *         <p>
+     *         When using this action with Amazon S3 on Outposts, you must direct requests to the S3 on Outposts
+     *         hostname. The S3 on Outposts hostname takes the form
+     *         <i>AccessPointName</i>-<i>AccountId</i>.<i>outpostID</i>.s3-outposts.<i>Region</i>.amazonaws.com. When
+     *         using this action using S3 on Outposts through the Amazon Web Services SDKs, you provide the Outposts
+     *         bucket ARN in place of the bucket name. For more information about S3 on Outposts ARNs, see <a
+     *         href="https://docs.aws.amazon.com/AmazonS3/latest/userguide/S3onOutposts.html">Using S3 on Outposts</a>
+     *         in the <i>Amazon S3 User Guide</i>.
      */
     public String getKey() {
         return key;

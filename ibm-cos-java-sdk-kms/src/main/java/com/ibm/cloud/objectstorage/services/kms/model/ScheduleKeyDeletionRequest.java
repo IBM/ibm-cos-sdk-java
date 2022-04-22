@@ -1,11 +1,11 @@
 /*
- * Copyright 2014-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
- * 
+ * Copyright 2017-2022 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"). You may not use this file except in compliance with
  * the License. A copy of the License is located at
- * 
+ *
  * http://aws.amazon.com/apache2.0
- * 
+ *
  * or in the "license" file accompanying this file. This file is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
  * CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions
  * and limitations under the License.
@@ -18,7 +18,7 @@ import javax.annotation.Generated;
 import com.ibm.cloud.objectstorage.AmazonWebServiceRequest;
 
 /**
- * 
+ *
  * @see <a href="http://docs.aws.amazon.com/goto/WebAPI/kms-2014-11-01/ScheduleKeyDeletion" target="_top">AWS API
  *      Documentation</a>
  */
@@ -27,32 +27,38 @@ public class ScheduleKeyDeletionRequest extends com.ibm.cloud.objectstorage.Amaz
 
     /**
      * <p>
-     * The unique identifier for the customer master key (CMK) to delete.
+     * The unique identifier of the KMS key to delete.
      * </p>
      * <p>
-     * To specify this value, use the unique key ID or the Amazon Resource Name (ARN) of the CMK. Examples:
+     * Specify the key ID or key ARN of the KMS key.
+     * </p>
+     * <p>
+     * For example:
      * </p>
      * <ul>
      * <li>
      * <p>
-     * Unique key ID: 1234abcd-12ab-34cd-56ef-1234567890ab
+     * Key ID: <code>1234abcd-12ab-34cd-56ef-1234567890ab</code>
      * </p>
      * </li>
      * <li>
      * <p>
-     * Key ARN: arn:aws:kms:us-east-2:111122223333:key/1234abcd-12ab-34cd-56ef-1234567890ab
+     * Key ARN: <code>arn:aws:kms:us-east-2:111122223333:key/1234abcd-12ab-34cd-56ef-1234567890ab</code>
      * </p>
      * </li>
      * </ul>
      * <p>
-     * To obtain the unique key ID and key ARN for a given CMK, use <a>ListKeys</a> or <a>DescribeKey</a>.
+     * To get the key ID and key ARN for a KMS key, use <a>ListKeys</a> or <a>DescribeKey</a>.
      * </p>
      */
     private String keyId;
     /**
      * <p>
-     * The waiting period, specified in number of days. After the waiting period ends, AWS KMS deletes the customer
-     * master key (CMK).
+     * The waiting period, specified in number of days. After the waiting period ends, KMS deletes the KMS key.
+     * </p>
+     * <p>
+     * If the KMS key is a multi-Region primary key with replicas, the waiting period begins when the last of its
+     * replica keys is deleted. Otherwise, the waiting period begins immediately.
      * </p>
      * <p>
      * This value is optional. If you include a value, it must be between 7 and 30, inclusive. If you do not include a
@@ -63,46 +69,52 @@ public class ScheduleKeyDeletionRequest extends com.ibm.cloud.objectstorage.Amaz
 
     /**
      * <p>
-     * The unique identifier for the customer master key (CMK) to delete.
+     * The unique identifier of the KMS key to delete.
      * </p>
      * <p>
-     * To specify this value, use the unique key ID or the Amazon Resource Name (ARN) of the CMK. Examples:
+     * Specify the key ID or key ARN of the KMS key.
+     * </p>
+     * <p>
+     * For example:
      * </p>
      * <ul>
      * <li>
      * <p>
-     * Unique key ID: 1234abcd-12ab-34cd-56ef-1234567890ab
+     * Key ID: <code>1234abcd-12ab-34cd-56ef-1234567890ab</code>
      * </p>
      * </li>
      * <li>
      * <p>
-     * Key ARN: arn:aws:kms:us-east-2:111122223333:key/1234abcd-12ab-34cd-56ef-1234567890ab
+     * Key ARN: <code>arn:aws:kms:us-east-2:111122223333:key/1234abcd-12ab-34cd-56ef-1234567890ab</code>
      * </p>
      * </li>
      * </ul>
      * <p>
-     * To obtain the unique key ID and key ARN for a given CMK, use <a>ListKeys</a> or <a>DescribeKey</a>.
+     * To get the key ID and key ARN for a KMS key, use <a>ListKeys</a> or <a>DescribeKey</a>.
      * </p>
-     * 
+     *
      * @param keyId
-     *        The unique identifier for the customer master key (CMK) to delete.</p>
+     *        The unique identifier of the KMS key to delete.</p>
      *        <p>
-     *        To specify this value, use the unique key ID or the Amazon Resource Name (ARN) of the CMK. Examples:
+     *        Specify the key ID or key ARN of the KMS key.
+     *        </p>
+     *        <p>
+     *        For example:
      *        </p>
      *        <ul>
      *        <li>
      *        <p>
-     *        Unique key ID: 1234abcd-12ab-34cd-56ef-1234567890ab
+     *        Key ID: <code>1234abcd-12ab-34cd-56ef-1234567890ab</code>
      *        </p>
      *        </li>
      *        <li>
      *        <p>
-     *        Key ARN: arn:aws:kms:us-east-2:111122223333:key/1234abcd-12ab-34cd-56ef-1234567890ab
+     *        Key ARN: <code>arn:aws:kms:us-east-2:111122223333:key/1234abcd-12ab-34cd-56ef-1234567890ab</code>
      *        </p>
      *        </li>
      *        </ul>
      *        <p>
-     *        To obtain the unique key ID and key ARN for a given CMK, use <a>ListKeys</a> or <a>DescribeKey</a>.
+     *        To get the key ID and key ARN for a KMS key, use <a>ListKeys</a> or <a>DescribeKey</a>.
      */
 
     public void setKeyId(String keyId) {
@@ -111,45 +123,51 @@ public class ScheduleKeyDeletionRequest extends com.ibm.cloud.objectstorage.Amaz
 
     /**
      * <p>
-     * The unique identifier for the customer master key (CMK) to delete.
+     * The unique identifier of the KMS key to delete.
      * </p>
      * <p>
-     * To specify this value, use the unique key ID or the Amazon Resource Name (ARN) of the CMK. Examples:
+     * Specify the key ID or key ARN of the KMS key.
+     * </p>
+     * <p>
+     * For example:
      * </p>
      * <ul>
      * <li>
      * <p>
-     * Unique key ID: 1234abcd-12ab-34cd-56ef-1234567890ab
+     * Key ID: <code>1234abcd-12ab-34cd-56ef-1234567890ab</code>
      * </p>
      * </li>
      * <li>
      * <p>
-     * Key ARN: arn:aws:kms:us-east-2:111122223333:key/1234abcd-12ab-34cd-56ef-1234567890ab
+     * Key ARN: <code>arn:aws:kms:us-east-2:111122223333:key/1234abcd-12ab-34cd-56ef-1234567890ab</code>
      * </p>
      * </li>
      * </ul>
      * <p>
-     * To obtain the unique key ID and key ARN for a given CMK, use <a>ListKeys</a> or <a>DescribeKey</a>.
+     * To get the key ID and key ARN for a KMS key, use <a>ListKeys</a> or <a>DescribeKey</a>.
      * </p>
-     * 
-     * @return The unique identifier for the customer master key (CMK) to delete.</p>
+     *
+     * @return The unique identifier of the KMS key to delete.</p>
      *         <p>
-     *         To specify this value, use the unique key ID or the Amazon Resource Name (ARN) of the CMK. Examples:
+     *         Specify the key ID or key ARN of the KMS key.
+     *         </p>
+     *         <p>
+     *         For example:
      *         </p>
      *         <ul>
      *         <li>
      *         <p>
-     *         Unique key ID: 1234abcd-12ab-34cd-56ef-1234567890ab
+     *         Key ID: <code>1234abcd-12ab-34cd-56ef-1234567890ab</code>
      *         </p>
      *         </li>
      *         <li>
      *         <p>
-     *         Key ARN: arn:aws:kms:us-east-2:111122223333:key/1234abcd-12ab-34cd-56ef-1234567890ab
+     *         Key ARN: <code>arn:aws:kms:us-east-2:111122223333:key/1234abcd-12ab-34cd-56ef-1234567890ab</code>
      *         </p>
      *         </li>
      *         </ul>
      *         <p>
-     *         To obtain the unique key ID and key ARN for a given CMK, use <a>ListKeys</a> or <a>DescribeKey</a>.
+     *         To get the key ID and key ARN for a KMS key, use <a>ListKeys</a> or <a>DescribeKey</a>.
      */
 
     public String getKeyId() {
@@ -158,46 +176,52 @@ public class ScheduleKeyDeletionRequest extends com.ibm.cloud.objectstorage.Amaz
 
     /**
      * <p>
-     * The unique identifier for the customer master key (CMK) to delete.
+     * The unique identifier of the KMS key to delete.
      * </p>
      * <p>
-     * To specify this value, use the unique key ID or the Amazon Resource Name (ARN) of the CMK. Examples:
+     * Specify the key ID or key ARN of the KMS key.
+     * </p>
+     * <p>
+     * For example:
      * </p>
      * <ul>
      * <li>
      * <p>
-     * Unique key ID: 1234abcd-12ab-34cd-56ef-1234567890ab
+     * Key ID: <code>1234abcd-12ab-34cd-56ef-1234567890ab</code>
      * </p>
      * </li>
      * <li>
      * <p>
-     * Key ARN: arn:aws:kms:us-east-2:111122223333:key/1234abcd-12ab-34cd-56ef-1234567890ab
+     * Key ARN: <code>arn:aws:kms:us-east-2:111122223333:key/1234abcd-12ab-34cd-56ef-1234567890ab</code>
      * </p>
      * </li>
      * </ul>
      * <p>
-     * To obtain the unique key ID and key ARN for a given CMK, use <a>ListKeys</a> or <a>DescribeKey</a>.
+     * To get the key ID and key ARN for a KMS key, use <a>ListKeys</a> or <a>DescribeKey</a>.
      * </p>
-     * 
+     *
      * @param keyId
-     *        The unique identifier for the customer master key (CMK) to delete.</p>
+     *        The unique identifier of the KMS key to delete.</p>
      *        <p>
-     *        To specify this value, use the unique key ID or the Amazon Resource Name (ARN) of the CMK. Examples:
+     *        Specify the key ID or key ARN of the KMS key.
+     *        </p>
+     *        <p>
+     *        For example:
      *        </p>
      *        <ul>
      *        <li>
      *        <p>
-     *        Unique key ID: 1234abcd-12ab-34cd-56ef-1234567890ab
+     *        Key ID: <code>1234abcd-12ab-34cd-56ef-1234567890ab</code>
      *        </p>
      *        </li>
      *        <li>
      *        <p>
-     *        Key ARN: arn:aws:kms:us-east-2:111122223333:key/1234abcd-12ab-34cd-56ef-1234567890ab
+     *        Key ARN: <code>arn:aws:kms:us-east-2:111122223333:key/1234abcd-12ab-34cd-56ef-1234567890ab</code>
      *        </p>
      *        </li>
      *        </ul>
      *        <p>
-     *        To obtain the unique key ID and key ARN for a given CMK, use <a>ListKeys</a> or <a>DescribeKey</a>.
+     *        To get the key ID and key ARN for a KMS key, use <a>ListKeys</a> or <a>DescribeKey</a>.
      * @return Returns a reference to this object so that method calls can be chained together.
      */
 
@@ -208,17 +232,24 @@ public class ScheduleKeyDeletionRequest extends com.ibm.cloud.objectstorage.Amaz
 
     /**
      * <p>
-     * The waiting period, specified in number of days. After the waiting period ends, AWS KMS deletes the customer
-     * master key (CMK).
+     * The waiting period, specified in number of days. After the waiting period ends, KMS deletes the KMS key.
+     * </p>
+     * <p>
+     * If the KMS key is a multi-Region primary key with replicas, the waiting period begins when the last of its
+     * replica keys is deleted. Otherwise, the waiting period begins immediately.
      * </p>
      * <p>
      * This value is optional. If you include a value, it must be between 7 and 30, inclusive. If you do not include a
      * value, it defaults to 30.
      * </p>
-     * 
+     *
      * @param pendingWindowInDays
-     *        The waiting period, specified in number of days. After the waiting period ends, AWS KMS deletes the
-     *        customer master key (CMK).</p>
+     *        The waiting period, specified in number of days. After the waiting period ends, KMS deletes the KMS
+     *        key.</p>
+     *        <p>
+     *        If the KMS key is a multi-Region primary key with replicas, the waiting period begins when the last of its
+     *        replica keys is deleted. Otherwise, the waiting period begins immediately.
+     *        </p>
      *        <p>
      *        This value is optional. If you include a value, it must be between 7 and 30, inclusive. If you do not
      *        include a value, it defaults to 30.
@@ -230,16 +261,23 @@ public class ScheduleKeyDeletionRequest extends com.ibm.cloud.objectstorage.Amaz
 
     /**
      * <p>
-     * The waiting period, specified in number of days. After the waiting period ends, AWS KMS deletes the customer
-     * master key (CMK).
+     * The waiting period, specified in number of days. After the waiting period ends, KMS deletes the KMS key.
+     * </p>
+     * <p>
+     * If the KMS key is a multi-Region primary key with replicas, the waiting period begins when the last of its
+     * replica keys is deleted. Otherwise, the waiting period begins immediately.
      * </p>
      * <p>
      * This value is optional. If you include a value, it must be between 7 and 30, inclusive. If you do not include a
      * value, it defaults to 30.
      * </p>
-     * 
-     * @return The waiting period, specified in number of days. After the waiting period ends, AWS KMS deletes the
-     *         customer master key (CMK).</p>
+     *
+     * @return The waiting period, specified in number of days. After the waiting period ends, KMS deletes the KMS
+     *         key.</p>
+     *         <p>
+     *         If the KMS key is a multi-Region primary key with replicas, the waiting period begins when the last of
+     *         its replica keys is deleted. Otherwise, the waiting period begins immediately.
+     *         </p>
      *         <p>
      *         This value is optional. If you include a value, it must be between 7 and 30, inclusive. If you do not
      *         include a value, it defaults to 30.
@@ -251,17 +289,24 @@ public class ScheduleKeyDeletionRequest extends com.ibm.cloud.objectstorage.Amaz
 
     /**
      * <p>
-     * The waiting period, specified in number of days. After the waiting period ends, AWS KMS deletes the customer
-     * master key (CMK).
+     * The waiting period, specified in number of days. After the waiting period ends, KMS deletes the KMS key.
+     * </p>
+     * <p>
+     * If the KMS key is a multi-Region primary key with replicas, the waiting period begins when the last of its
+     * replica keys is deleted. Otherwise, the waiting period begins immediately.
      * </p>
      * <p>
      * This value is optional. If you include a value, it must be between 7 and 30, inclusive. If you do not include a
      * value, it defaults to 30.
      * </p>
-     * 
+     *
      * @param pendingWindowInDays
-     *        The waiting period, specified in number of days. After the waiting period ends, AWS KMS deletes the
-     *        customer master key (CMK).</p>
+     *        The waiting period, specified in number of days. After the waiting period ends, KMS deletes the KMS
+     *        key.</p>
+     *        <p>
+     *        If the KMS key is a multi-Region primary key with replicas, the waiting period begins when the last of its
+     *        replica keys is deleted. Otherwise, the waiting period begins immediately.
+     *        </p>
      *        <p>
      *        This value is optional. If you include a value, it must be between 7 and 30, inclusive. If you do not
      *        include a value, it defaults to 30.
@@ -274,7 +319,8 @@ public class ScheduleKeyDeletionRequest extends com.ibm.cloud.objectstorage.Amaz
     }
 
     /**
-     * Returns a string representation of this object; useful for testing and debugging.
+     * Returns a string representation of this object. This is useful for testing and debugging. Sensitive data will be
+     * redacted from this string using a placeholder value.
      *
      * @return A string representation of this object.
      *

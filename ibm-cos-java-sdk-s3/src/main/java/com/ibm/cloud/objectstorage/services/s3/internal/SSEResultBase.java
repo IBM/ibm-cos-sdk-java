@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2010-2022 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -22,6 +22,8 @@ public abstract class SSEResultBase implements ServerSideEncryptionResult {
     private String sseAlgorithm;
     private String sseCustomerAlgorithm;
     private String sseCustomerKeyMD5;
+    //IBM does not support SSE-KMS
+    //private Boolean bucketKeyEnabled;
 
     @Override
     public final String getSSEAlgorithm() {
@@ -52,6 +54,24 @@ public abstract class SSEResultBase implements ServerSideEncryptionResult {
     public final void setSSECustomerKeyMd5(String md5) {
         this.sseCustomerKeyMD5 = md5;
     }
+//IBM does not support SSE-KMS
+//    @Override
+//    public final Boolean getBucketKeyEnabled() {
+//        return bucketKeyEnabled;
+//    }
+//
+//    @Override
+//    public final void setBucketKeyEnabled(Boolean bucketKeyEnabled) {
+//
+//    @Override
+//    public final Boolean getBucketKeyEnabled() {
+//        return bucketKeyEnabled;
+//    }
+//
+//    @Override
+//    public final void setBucketKeyEnabled(Boolean bucketKeyEnabled) {
+//        this.bucketKeyEnabled = bucketKeyEnabled;
+//    }
 
     /**
      * @deprecated Replaced by {@link #getSSEAlgorithm()}

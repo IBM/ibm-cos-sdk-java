@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2012-2022 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -18,6 +18,7 @@ import com.ibm.cloud.objectstorage.AmazonClientException;
 import com.ibm.cloud.objectstorage.auth.AWSCredentials;
 import com.ibm.cloud.objectstorage.auth.AWSSessionCredentials;
 import com.ibm.cloud.objectstorage.auth.BasicAWSCredentials;
+import com.ibm.cloud.objectstorage.auth.profile.internal.BasicProfile;
 import com.ibm.cloud.objectstorage.auth.profile.internal.Profile;
 
 import org.junit.Test;
@@ -176,6 +177,20 @@ public class CredentialProfilesTest {
         assertEquals(profile.getCredentials(PROFILE_NAME_TEST).getAWSAccessKeyId(), "test");
 
         assertEquals(profile.getCredentials(PROFILE_NAME_TEST).getAWSSecretKey(), "test key");
+    }
+
+    @Test
+    public void prefixProfilesCanBeLoaded() {
+        ProfilesConfigFile profile = new ProfilesConfigFile(ProfileResourceLoader.profileWithProfilePrefix().asFile());
+
+        assertEquals("withPrefix", profile.getCredentials("test").getAWSAccessKeyId());
+    }
+
+    @Test
+    public void prefixProfilesAreLowerPriorityThanNonPrefixProfiles() {
+        ProfilesConfigFile profile =
+            new ProfilesConfigFile(ProfileResourceLoader.duplicateProfileWithAndWithoutProfilePrefix().asFile());
+        assertEquals("withoutPrefix", profile.getCredentials("test").getAWSAccessKeyId());
     }
 
     /**

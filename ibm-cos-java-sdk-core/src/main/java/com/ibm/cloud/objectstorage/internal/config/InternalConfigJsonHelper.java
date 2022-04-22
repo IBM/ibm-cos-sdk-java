@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2010-2022 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -37,6 +37,11 @@ public class InternalConfigJsonHelper {
     private HostRegexToRegionMappingJsonHelper[] hostRegexToRegionMappings;
 
     private String userAgentTemplate;
+
+    //IBM unsupported
+    //private boolean endpointDiscoveryEnabled;
+
+    private String defaultRetryMode;
 
     public SignerConfigJsonHelper getDefaultSigner() {
         return defaultSigner;
@@ -92,5 +97,22 @@ public class InternalConfigJsonHelper {
 
     public void setUserAgentTemplate(String userAgentTemplate) {
         this.userAgentTemplate = userAgentTemplate;
+    }
+
+    //IBM unsupported
+    // public boolean isEndpointDiscoveryEnabled() {
+    //     return endpointDiscoveryEnabled;
+    // }
+
+    // public void setEndpointDiscoveryEnabled(boolean endpointDiscoveryEnabled) {
+    //     this.endpointDiscoveryEnabled = endpointDiscoveryEnabled;
+    // }
+
+    public String getDefaultRetryMode() {
+        return defaultRetryMode;
+    }
+
+    public void setDefaultRetryMode(String defaultRetryMode) {
+        this.defaultRetryMode = defaultRetryMode;
     }
 }

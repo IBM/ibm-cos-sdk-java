@@ -1,5 +1,5 @@
 /*
- * Copyright 2011-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2011-2022 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -45,11 +45,16 @@ import com.ibm.cloud.objectstorage.services.s3.AmazonS3;
  *
  * @see AmazonS3#getBucketWebsiteConfiguration(GetBucketWebsiteConfigurationRequest)
  */
-public class GetBucketWebsiteConfigurationRequest extends AmazonWebServiceRequest implements Serializable {
+public class GetBucketWebsiteConfigurationRequest extends AmazonWebServiceRequest implements Serializable
+//IBM unsupported
+//, ExpectedBucketOwnerRequest 
+{
 
 	/** The name of the bucket whose website configuration is being retrieved. */
 	private String bucketName;
 
+	//IBM unsupported
+	//private String expectedBucketOwner;
 
 	/**
 	 * Creates a new request object, ready to be executed to retrieve the bucket
@@ -62,6 +67,20 @@ public class GetBucketWebsiteConfigurationRequest extends AmazonWebServiceReques
 	public GetBucketWebsiteConfigurationRequest(String bucketName) {
 		this.bucketName = bucketName;
 	}
+
+//IBM unsupported
+//	public String getExpectedBucketOwner() {
+//		return expectedBucketOwner;
+//	}
+//
+//	public GetBucketWebsiteConfigurationRequest withExpectedBucketOwner(String expectedBucketOwner) {
+//		this.expectedBucketOwner = expectedBucketOwner;
+//		return this;
+//	}
+//
+//	public void setExpectedBucketOwner(String expectedBucketOwner) {
+//		withExpectedBucketOwner(expectedBucketOwner);
+//	}
 
 	/**
 	 * Sets the name of the bucket whose website configuration is being

@@ -1,5 +1,5 @@
 /*
- * Copyright 2011-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2011-2022 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,6 +35,18 @@ public interface LifecyclePredicateVisitor {
      * {@link LifecycleTagPredicate} is visited.
      */
     public void visit(LifecycleTagPredicate lifecycleTagPredicate);
+
+    /**
+     * Implement this method to add behaviour performed when
+     * {@link LifecycleObjectSizeGreaterThanPredicate} is visited.
+     */
+    public void visit(LifecycleObjectSizeGreaterThanPredicate lifecycleObjectSizeGreaterThanPredicate);
+
+    /**
+     * Implement this method to add behaviour performed when
+     * {@link LifecycleObjectSizeLessThanPredicate} is visited.
+     */
+    public void visit(LifecycleObjectSizeLessThanPredicate lifecycleObjectSizeLessThanPredicate);
 
     /**
      * Implement this method to add behaviour performed when

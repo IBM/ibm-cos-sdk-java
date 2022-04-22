@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2010-2022 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -15,7 +15,7 @@
 package com.ibm.cloud.objectstorage.auth.policy;
 
 /**
- * A principal is an AWS account or AWS web serivce, which is being allowed or denied access to a
+ * A principal is an AWS account or AWS web service, which is being allowed or denied access to a
  * resource through an access control policy. The principal is a property of the
  * {@link Statement} object, not directly the {@link Policy} object.
  * <p>
@@ -149,11 +149,15 @@ public class Principal {
      * Secret Access Key, and a security token.
      */
     static public enum Services {
-        AWSDataPipeline("datapipeline.amazonaws.com"),
+
+        //IBM unsupported
+        //AmazonApiGateway("apigateway.amazonaws.com"),
+        //AWSDataPipeline("datapipeline.amazonaws.com"),
         AmazonElasticTranscoder("elastictranscoder.amazonaws.com"),
         AmazonEC2("ec2.amazonaws.com"),
-        AWSOpsWorks("opsworks.amazonaws.com"),
-        AWSCloudHSM("cloudhsm.amazonaws.com"),
+        //IBM unsupported
+        //AWSOpsWorks("opsworks.amazonaws.com"),
+        //AWSCloudHSM("cloudhsm.amazonaws.com"),
         AllServices("*");
         private String serviceId;
 

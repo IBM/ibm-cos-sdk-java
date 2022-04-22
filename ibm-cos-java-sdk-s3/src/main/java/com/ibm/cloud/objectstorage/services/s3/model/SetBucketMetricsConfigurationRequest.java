@@ -1,5 +1,5 @@
 /*
- * Copyright 2011-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2011-2022 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,10 +22,16 @@ import java.io.Serializable;
 /**
  * Request object to set metrics configuration to a bucket.
  */
-public class SetBucketMetricsConfigurationRequest extends AmazonWebServiceRequest implements Serializable {
+public class SetBucketMetricsConfigurationRequest extends AmazonWebServiceRequest implements Serializable
+//IBM unsupported
+//, ExpectedBucketOwnerRequest 
+{
 
     private String bucketName;
     private MetricsConfiguration metricsConfiguration;
+    //IBM unsupported
+    //private String expectedBucketOwner;
+
 
     public SetBucketMetricsConfigurationRequest() {
     }
@@ -34,6 +40,19 @@ public class SetBucketMetricsConfigurationRequest extends AmazonWebServiceReques
         this.bucketName = bucketName;
         this.metricsConfiguration = metricsConfiguration;
     }
+//IBM unsupported
+//    public String getExpectedBucketOwner() {
+//        return expectedBucketOwner;
+//    }
+//
+//    public SetBucketMetricsConfigurationRequest withExpectedBucketOwner(String expectedBucketOwner) {
+//        this.expectedBucketOwner = expectedBucketOwner;
+//        return this;
+//    }
+//
+//    public void setExpectedBucketOwner(String expectedBucketOwner) {
+//        withExpectedBucketOwner(expectedBucketOwner);
+//    }
 
     /**
      * Returns the name of the bucket for which the metrics configuration is set.

@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2019 Amazon Technologies, Inc.
+ * Copyright 2015-2022 Amazon Technologies, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,6 +16,7 @@ package com.ibm.cloud.objectstorage.services.s3.transfer;
 
 import com.ibm.cloud.objectstorage.services.s3.AmazonS3;
 import com.ibm.cloud.objectstorage.services.s3.AmazonS3Encryption;
+import com.ibm.cloud.objectstorage.services.s3.AmazonS3EncryptionV2;
 import com.ibm.cloud.objectstorage.services.s3.internal.ServiceUtils;
 import com.ibm.cloud.objectstorage.services.s3.internal.SkipMd5CheckStrategy;
 import com.ibm.cloud.objectstorage.services.s3.model.GetObjectRequest;
@@ -47,6 +48,7 @@ final class DownloadTaskImpl implements
     @Override
     public boolean needIntegrityCheck() {
         // Don't perform the integrity check if the checksum won't matchup.
-        return !(s3 instanceof AmazonS3Encryption) && !skipMd5CheckStrategy.skipClientSideValidationPerRequest(getObjectRequest);
+        return !(s3 instanceof AmazonS3Encryption) && !(s3 instanceof AmazonS3EncryptionV2)
+               && !skipMd5CheckStrategy.skipClientSideValidationPerRequest(getObjectRequest);
     }
 }

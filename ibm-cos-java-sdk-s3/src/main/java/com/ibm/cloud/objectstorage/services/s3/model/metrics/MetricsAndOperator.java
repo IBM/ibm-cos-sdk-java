@@ -1,5 +1,5 @@
 /*
- * Copyright 2011-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2011-2022 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,8 +17,9 @@ package com.ibm.cloud.objectstorage.services.s3.model.metrics;
 import java.util.List;
 
 /**
- * A logical AND of predicates, which is used in evaluating a metrics filter.
- * The operator must have at least two predicates.
+ *
+ * A conjunction (logical AND) of predicates, which is used in evaluating a metrics filter. The operator must have at
+ * least two predicates, and an object must match all of the predicates in order for the filter to apply.
  *
  * The {@link MetricsAndOperator} can contain at most one {@link MetricsPrefixPredicate} and
  * any number of {@link MetricsTagPredicate}s.

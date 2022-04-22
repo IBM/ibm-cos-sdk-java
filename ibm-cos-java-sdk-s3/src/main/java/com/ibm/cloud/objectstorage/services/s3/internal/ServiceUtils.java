@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2010-2022 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Portions copyright 2006-2009 James Murty. Please see LICENSE.txt
  * for applicable license terms and NOTICE.txt for applicable notices.
@@ -59,7 +59,7 @@ import static com.ibm.cloud.objectstorage.util.IOUtils.closeQuietly;
 import static com.ibm.cloud.objectstorage.util.StringUtils.UTF8;
 
 /**
- * General utility methods used throughout the AWS S3 Java client.
+ * General utility methods used throughout the Amazon Web Services S3 Java client.
  */
 public class ServiceUtils {
     private static final Log LOG = LogFactory.getLog(ServiceUtils.class);

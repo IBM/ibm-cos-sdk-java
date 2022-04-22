@@ -1,11 +1,11 @@
 /*
- * Copyright 2014-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
- * 
+ * Copyright 2017-2022 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"). You may not use this file except in compliance with
  * the License. A copy of the License is located at
- * 
+ *
  * http://aws.amazon.com/apache2.0
- * 
+ *
  * or in the "license" file accompanying this file. This file is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
  * CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions
  * and limitations under the License.
@@ -16,7 +16,7 @@ import java.io.Serializable;
 import javax.annotation.Generated;
 
 /**
- * 
+ *
  * @see <a href="http://docs.aws.amazon.com/goto/WebAPI/kms-2014-11-01/CreateKey" target="_top">AWS API
  *      Documentation</a>
  */
@@ -25,18 +25,18 @@ public class CreateKeyResult extends com.ibm.cloud.objectstorage.AmazonWebServic
 
     /**
      * <p>
-     * Metadata associated with the CMK.
+     * Metadata associated with the KMS key.
      * </p>
      */
     private KeyMetadata keyMetadata;
 
     /**
      * <p>
-     * Metadata associated with the CMK.
+     * Metadata associated with the KMS key.
      * </p>
-     * 
+     *
      * @param keyMetadata
-     *        Metadata associated with the CMK.
+     *        Metadata associated with the KMS key.
      */
 
     public void setKeyMetadata(KeyMetadata keyMetadata) {
@@ -45,10 +45,10 @@ public class CreateKeyResult extends com.ibm.cloud.objectstorage.AmazonWebServic
 
     /**
      * <p>
-     * Metadata associated with the CMK.
+     * Metadata associated with the KMS key.
      * </p>
-     * 
-     * @return Metadata associated with the CMK.
+     *
+     * @return Metadata associated with the KMS key.
      */
 
     public KeyMetadata getKeyMetadata() {
@@ -57,11 +57,11 @@ public class CreateKeyResult extends com.ibm.cloud.objectstorage.AmazonWebServic
 
     /**
      * <p>
-     * Metadata associated with the CMK.
+     * Metadata associated with the KMS key.
      * </p>
-     * 
+     *
      * @param keyMetadata
-     *        Metadata associated with the CMK.
+     *        Metadata associated with the KMS key.
      * @return Returns a reference to this object so that method calls can be chained together.
      */
 
@@ -71,7 +71,8 @@ public class CreateKeyResult extends com.ibm.cloud.objectstorage.AmazonWebServic
     }
 
     /**
-     * Returns a string representation of this object; useful for testing and debugging.
+     * Returns a string representation of this object. This is useful for testing and debugging. Sensitive data will be
+     * redacted from this string using a placeholder value.
      *
      * @return A string representation of this object.
      *

@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2010-2022 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -13,6 +13,8 @@
  * permissions and limitations under the License.
  */
 package com.ibm.cloud.objectstorage.services.s3.model;
+//IBM unsupported
+//import com.ibm.cloud.objectstorage.services.s3.model.ownership.ObjectOwnership;
 import java.io.Serializable;
 
 import com.ibm.cloud.objectstorage.AmazonWebServiceRequest;
@@ -51,6 +53,11 @@ public class CreateBucketRequest extends AmazonWebServiceRequest implements
      * cannedAcl will be ignored.
      */
     private AccessControlList accessControlList;
+   
+//IBM unsupported
+//    private boolean objectLockEnabled;
+//
+//    private String objectOwnership;
 
     /**
      * Constructs a new {@link CreateBucketRequest},
@@ -290,4 +297,47 @@ public class CreateBucketRequest extends AmazonWebServiceRequest implements
         return this;
     }
 
+    /**
+     * Returns the optional object ownership for the new bucket.
+     */
+//IBM unsupported
+//    public String getObjectOwnership() {
+//        return objectOwnership;
+//    }
+
+    /**
+     * Sets the optional object ownership for the new bucket. Returns this {@link CreateBucketRequest},
+     * enabling additional method calls to be chained together.
+     */
+//IBM unsupported
+//    public CreateBucketRequest withObjectOwnership(String objectOwnership) {
+//        setObjectOwnership(objectOwnership);
+//        return this;
+//    }
+
+    /**
+     * Sets the optional object ownership for the new bucket. Returns this {@link CreateBucketRequest},
+     * enabling additional method calls to be chained together.
+     */
+//IBM unsupported
+//    public CreateBucketRequest withObjectOwnership(ObjectOwnership objectOwnership) {
+//        setObjectOwnership(objectOwnership);
+//        return this;
+//    }
+
+    /**
+     * Sets the optional object ownership for the new bucket.
+     */
+//IBM unsupported
+//    public void setObjectOwnership(String objectOwnership) {
+//        this.objectOwnership = objectOwnership;
+//    }
+
+    /**
+     * Sets the optional object ownership for the new bucket.
+     */
+//IBM unsupported
+//    public void setObjectOwnership(ObjectOwnership objectOwnership) {
+//        setObjectOwnership(objectOwnership.toString());
+//    }
 }

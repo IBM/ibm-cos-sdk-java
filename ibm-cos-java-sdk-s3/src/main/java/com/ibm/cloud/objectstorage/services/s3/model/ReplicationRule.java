@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2015-2022 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -47,6 +47,49 @@ public class ReplicationRule implements Serializable {
 
 
     /**
+     * <p>
+     * The priority indicates which rule has precedence whenever two or more replication rules conflict. Amazon S3 will
+     * attempt to replicate objects according to all replication rules. However, if there are two or more rules with the
+     * same destination bucket, then objects will be replicated according to the rule with the highest priority. The
+     * higher the number, the higher the priority.
+     * </p>
+     * <p>
+     * For more information, see <a
+     * href="https://docs.aws.amazon.com/AmazonS3/latest/dev/replication.html">Replication</a> in the <i>Amazon Simple
+     * Storage Service Developer Guide</i>.
+     * </p>
+     *
+     * @return The priority indicates which rule has precedence whenever two or more replication rules conflict. Amazon
+     *         S3 will attempt to replicate objects according to all replication rules. However, if there are two or
+     *         more rules with the same destination bucket, then objects will be replicated according to the rule with
+     *         the highest priority. The higher the number, the higher the priority. </p>
+     *         <p>
+     *         For more information, see <a
+     *         href="https://docs.aws.amazon.com/AmazonS3/latest/dev/replication.html">Replication</a> in the <i>Amazon
+     *         Simple Storage Service Developer Guide</i>.
+     * <p>
+     * Priority must be unique in a configuration (you cannot have two different rules with the same priority).
+     * attempt to replicate objects according to all replication rules. However, if there are two or more rules with the
+     * same destination bucket, then objects will be replicated according to the rule with the highest priority. The
+     * higher the number, the higher the priority.
+     * </p>
+     *
+     * For more information, see <a
+     * href="https://docs.aws.amazon.com/AmazonS3/latest/dev/replication.html">Replication</a> in the <i>Amazon Simple
+     * Storage Service Developer Guide</i>.
+     * </p>
+     * Fluent method to set the priority of current rule.
+     * <p>
+     * Priority must be unique in a configuration (you cannot have two different rules with the same priority).
+     * attempt to replicate objects according to all replication rules. However, if there are two or more rules with the
+     * same destination bucket, then objects will be replicated according to the rule with the highest priority. The
+     * higher the number, the higher the priority.
+     * </p>
+     *
+     * For more information, see <a
+     * href="https://docs.aws.amazon.com/AmazonS3/latest/dev/replication.html">Replication</a> in the <i>Amazon Simple
+     * Storage Service Developer Guide</i>.
+     * </p>
      * Returns the prefix associated with the replication rule.
      */
     public String getPrefix() {

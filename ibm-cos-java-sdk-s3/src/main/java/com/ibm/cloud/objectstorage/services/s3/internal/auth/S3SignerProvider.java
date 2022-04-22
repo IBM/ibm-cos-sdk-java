@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2019 Amazon.com, Inc. or its affiliates. All Rights
+ * Copyright 2010-2022 Amazon.com, Inc. or its affiliates. All Rights
  * Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
@@ -17,9 +17,13 @@ package com.ibm.cloud.objectstorage.services.s3.internal.auth;
 
 import com.ibm.cloud.objectstorage.AmazonWebServiceClient;
 import com.ibm.cloud.objectstorage.auth.RegionAwareSigner;
+//IBM unsupported
+//import com.ibm.cloud.objectstorage.auth.ServiceAwareSigner;
 import com.ibm.cloud.objectstorage.auth.Signer;
 import com.ibm.cloud.objectstorage.internal.auth.SignerProviderContext;
 import com.ibm.cloud.objectstorage.internal.auth.SignerProvider;
+//IBM unsupported
+//import com.ibm.cloud.objectstorage.regions.EndpointToRegion;
 import com.ibm.cloud.objectstorage.services.s3.internal.ServiceUtils;
 import com.ibm.cloud.objectstorage.util.AwsHostNameUtils;
 import org.apache.commons.logging.Log;
@@ -56,24 +60,44 @@ public class S3SignerProvider extends SignerProvider {
             RegionAwareSigner regionSigner = (RegionAwareSigner) signer;
 
             try {
-                regionSigner.setRegionName(AwsHostNameUtils.parseRegionName(
-                        uri.getHost(), "s3"));
+                //IBM specific
+                //regionSigner.setRegionName(EndpointToRegion.guessRegionNameForEndpoint(uri.getHost(), "s3"));
+                regionSigner.setRegionName(AwsHostNameUtils.parseRegionName(uri.getHost(), "s3"));
 
             } catch (RuntimeException e) {
                 log.warn("Failed to parse the endpoint " + uri +
-                        ", and skip re-assigning the signer region", e);
+                         ", and skip re-assigning the signer region", e);
             }
         }
+
+//IBM unsupported
+//        Request<?> request = signerProviderContext.getRequest();
+//        if (!isSignerOverridden() &&
+//            request != null &&
+//            request.getHandlerContext(HandlerContextKey.SIGNING_NAME) != null) {
+//            // S3 signer is created per-request, so no need to create a new one
+//            String signingName = request.getHandlerContext(HandlerContextKey.SIGNING_NAME);
+//            if (signer instanceof ServiceAwareSigner) {
+//                ((ServiceAwareSigner)(signer)).setServiceName(signingName);
+//            }
+//        }
 
         return signer;
     }
 
     private boolean isAccessPointUri(URI uri) {
-        return uri.toASCIIString().contains(".s3-accesspoint.");
+        String str = uri.toASCIIString();
+        return str.contains(".s3-accesspoint.");
+        //IBM unsupported
+        //|| str.contains(".s3-outposts.") || str.contains(".s3-object-lambda.");
     }
 
     private boolean isSignerRegionOverrideSet() {
         return awsClient != null && awsClient.getSignerRegionOverride() != null;
+    }
+
+    private boolean isSignerOverridden() {
+        return awsClient.getSignerOverride() != null;
     }
 
     /**

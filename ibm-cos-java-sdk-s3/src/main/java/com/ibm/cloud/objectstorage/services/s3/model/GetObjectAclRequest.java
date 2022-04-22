@@ -1,5 +1,5 @@
 /*
- * Copyright 2016-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2016-2022 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -36,8 +36,11 @@ import com.ibm.cloud.objectstorage.AmazonWebServiceRequest;
  * @see AmazonS3#getObjectAcl(String, String, String)
  * @see AmazonS3#getObjectAcl(GetObjectAclRequest)
  */
-public class GetObjectAclRequest extends AmazonWebServiceRequest implements 
-        WormMirrorDestinationProvider, Serializable {
+public class GetObjectAclRequest extends AmazonWebServiceRequest implements
+        WormMirrorDestinationProvider, Serializable
+        //IBM unsupported
+        //, ExpectedBucketOwnerRequest
+        {
 
     /**
      * Builder of an S3 object identifier. This member field is never null.
@@ -50,26 +53,60 @@ public class GetObjectAclRequest extends AmazonWebServiceRequest implements
      */
     private boolean isRequesterPays;
 
-    // IBM-Specifc
+    // IBM-Specific
     /**
      * Optional parameter setting the mirror-destination on a WORM enabled bucket.
      */
     private String wormMirrorDestination;
 
+    //IBM unsupported
+    //private String expectedBucketOwner;
+
     public GetObjectAclRequest(String bucketName, String key) {
         this(bucketName, key, null);
     }
-
     public GetObjectAclRequest(String bucketName, String key, String versionId) {
         setBucketName(bucketName);
         setKey(key);
         setVersionId(versionId);
     }
 
+//IBM unsupported
+//    public String getExpectedBucketOwner() {
+//        return expectedBucketOwner;
+//    }
+//
+//    public GetObjectAclRequest withExpectedBucketOwner(String expectedBucketOwner) {
+//        this.expectedBucketOwner = expectedBucketOwner;
+//        return this;
+//    }
+//
+//    public void setExpectedBucketOwner(String expectedBucketOwner) {
+//        withExpectedBucketOwner(expectedBucketOwner);
+//    }
+
     /**
-     * Gets the name of the bucket containing the object whose ACL is to be retrieved.
+     * <p>
+     * The bucket name that contains the object for which to get the ACL information.
+     * </p>
+     * <p>
+     * When using this action with an access point, you must direct requests to the access point hostname. The access
+     * point hostname takes the form <i>AccessPointName</i>-<i>AccountId</i>.s3-accesspoint.<i>Region</i>.amazonaws.com.
+     * When using this action with an access point through the Amazon Web Services SDKs, you provide the access point
+     * ARN in place of the bucket name. For more information about access point ARNs, see <a
+     * href="https://docs.aws.amazon.com/AmazonS3/latest/userguide/using-access-points.html">Using access points</a> in
+     * the <i>Amazon S3 User Guide</i>.
+     * </p>
      *
-     * @return The name of the bucket containing the object whose ACL is to be retrieved.
+     * @return The bucket name that contains the object for which to get the ACL information. </p>
+     *         <p>
+     *         When using this action with an access point, you must direct requests to the access point hostname. The
+     *         access point hostname takes the form
+     *         <i>AccessPointName</i>-<i>AccountId</i>.s3-accesspoint.<i>Region</i>.amazonaws.com. When using this
+     *         action with an access point through the Amazon Web Services SDKs, you provide the access point ARN in
+     *         place of the bucket name. For more information about access point ARNs, see <a
+     *         href="https://docs.aws.amazon.com/AmazonS3/latest/userguide/using-access-points.html">Using access
+     *         points</a> in the <i>Amazon S3 User Guide</i>.
      *
      * @see GetObjectAclRequest#setBucketName(String)
      * @see GetObjectAclRequest#withBucket(String)
@@ -79,21 +116,29 @@ public class GetObjectAclRequest extends AmazonWebServiceRequest implements
     }
 
     /**
-     * Sets the name of the bucket containing the object whose ACL is to be retrieved.
+     * <p>
+     * The bucket name that contains the object for which to get the ACL information.
+     * </p>
+     * <p>
+     * When using this action with an access point, you must direct requests to the access point hostname. The
+     * access point hostname takes the form
+     * <i>AccessPointName</i>-<i>AccountId</i>.s3-accesspoint.<i>Region</i>.amazonaws.com. When using this action
+     * with an access point through the Amazon Web Services SDKs, you provide the access point ARN in place of the
+     * bucket name. For more information about access point ARNs, see <a
+     * href="https://docs.aws.amazon.com/AmazonS3/latest/userguide/using-access-points.html">Using access points</a>
+     * in the <i>Amazon S3 User Guide</i>.
+     * </p>
      *
-     * <p>
-     * When using this API with an access point, you must direct requests
-     * to the access point hostname. The access point hostname takes the form
-     * <i>AccessPointName</i>-<i>AccountId</i>.s3-accesspoint.<i>Region</i>.amazonaws.com.
-     * </p>
-     * <p>
-     * When using this operation using an access point through the AWS SDKs, you provide
-     * the access point ARN in place of the bucket name. For more information about access point
-     * ARNs, see <a href=\"https://docs.aws.amazon.com/AmazonS3/latest/dev/using-access-points.html\">
-     * Using Access Points</a> in the <i>Amazon Simple Storage Service Developer Guide</i>.
-     * </p>
      * @param bucketName
-     *            The name of the bucket, or access point ARN, containing the object whose ACL is to be retrieved.
+     *        The bucket name that contains the object for which to get the ACL information. </p>
+     *        <p>
+     *        When using this action with an access point, you must direct requests to the access point hostname.
+     *        The access point hostname takes the form
+     *        <i>AccessPointName</i>-<i>AccountId</i>.s3-accesspoint.<i>Region</i>.amazonaws.com. When using this
+     *        action with an access point through the Amazon Web Services SDKs, you provide the access point ARN in
+     *        place of the bucket name. For more information about access point ARNs, see <a
+     *        href="https://docs.aws.amazon.com/AmazonS3/latest/userguide/using-access-points.html">Using access
+     *        points</a> in the <i>Amazon S3 User Guide</i>.
      * @see GetObjectAclRequest#getBucketName()
      * @see GetObjectAclRequest#withBucket(String)
      */
@@ -101,23 +146,29 @@ public class GetObjectAclRequest extends AmazonWebServiceRequest implements
         s3ObjectIdBuilder.setBucket(bucketName);
     }
     /**
-     * Sets the name of the bucket containing the object whose ACL is to be retrieved.
-     * Returns this {@link GetObjectAclRequest}, enabling additional method
-     * calls to be chained together.
+     * <p>
+     * The bucket name that contains the object for which to get the ACL information.
+     * </p>
+     * <p>
+     * When using this action with an access point, you must direct requests to the access point hostname. The
+     * access point hostname takes the form
+     * <i>AccessPointName</i>-<i>AccountId</i>.s3-accesspoint.<i>Region</i>.amazonaws.com. When using this action
+     * with an access point through the Amazon Web Services SDKs, you provide the access point ARN in place of the
+     * bucket name. For more information about access point ARNs, see <a
+     * href="https://docs.aws.amazon.com/AmazonS3/latest/userguide/using-access-points.html">Using access points</a>
+     * in the <i>Amazon S3 User Guide</i>.
+     * </p>
      *
-     * <p>
-     * When using this API with an access point, you must direct requests
-     * to the access point hostname. The access point hostname takes the form
-     * <i>AccessPointName</i>-<i>AccountId</i>.s3-accesspoint.<i>Region</i>.amazonaws.com.
-     * </p>
-     * <p>
-     * When using this operation using an access point through the AWS SDKs, you provide
-     * the access point ARN in place of the bucket name. For more information about access point
-     * ARNs, see <a href=\"https://docs.aws.amazon.com/AmazonS3/latest/dev/using-access-points.html\">
-     * Using Access Points</a> in the <i>Amazon Simple Storage Service Developer Guide</i>.
-     * </p>
      * @param bucketName
-     *            The name of the bucket, or access point ARN, containing the object whose ACL is to be retrieved.
+     *        The bucket name that contains the object for which to get the ACL information. </p>
+     *        <p>
+     *        When using this action with an access point, you must direct requests to the access point hostname.
+     *        The access point hostname takes the form
+     *        <i>AccessPointName</i>-<i>AccountId</i>.s3-accesspoint.<i>Region</i>.amazonaws.com. When using this
+     *        action with an access point through the Amazon Web Services SDKs, you provide the access point ARN in
+     *        place of the bucket name. For more information about access point ARNs, see <a
+     *        href="https://docs.aws.amazon.com/AmazonS3/latest/userguide/using-access-points.html">Using access
+     *        points</a> in the <i>Amazon S3 User Guide</i>.
      * @return This {@link GetObjectAclRequest}, enabling additional method
      *         calls to be chained together.
      *
@@ -325,7 +376,7 @@ public class GetObjectAclRequest extends AmazonWebServiceRequest implements
         return this;
     }
 
-    // IBM-Specifc
+    // IBM-Specific
     /**
      * Returns the optional mirror-destination value for WORM mirroring
      *
@@ -338,7 +389,7 @@ public class GetObjectAclRequest extends AmazonWebServiceRequest implements
 
     /**
      * Sets the optional mirror-destination value for WORM mirroring
-     * 
+     *
      * @param wormMirrorDestination
      *            The optional mirror-destination value for WORM mirroring
      */
@@ -349,7 +400,7 @@ public class GetObjectAclRequest extends AmazonWebServiceRequest implements
 
     /**
      * Sets the optional mirror-destination value for WORM mirroring
-     * and returns the updated GetObjectAclRequest so that additional 
+     * and returns the updated GetObjectAclRequest so that additional
      * method calls may be chained together.
      *
      * @param wormMirrorDestination

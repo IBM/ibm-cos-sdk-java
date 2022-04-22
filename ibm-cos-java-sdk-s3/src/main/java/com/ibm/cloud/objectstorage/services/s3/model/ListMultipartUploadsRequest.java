@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2010-2022 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -25,8 +25,11 @@ import com.ibm.cloud.objectstorage.services.s3.AmazonS3;
  *
  * @see AmazonS3#listMultipartUploads(ListMultipartUploadsRequest)
  */
-public class ListMultipartUploadsRequest extends AmazonWebServiceRequest implements 
-        WormMirrorDestinationProvider, Serializable {
+public class ListMultipartUploadsRequest extends AmazonWebServiceRequest implements
+        WormMirrorDestinationProvider, Serializable
+        //IBM unsupported
+        //, ExpectedBucketOwnerRequest
+        {
 
     /**
      * The name of the bucket containing the uploads to list.
@@ -37,10 +40,10 @@ public class ListMultipartUploadsRequest extends AmazonWebServiceRequest impleme
      * <i>AccessPointName</i>-<i>AccountId</i>.s3-accesspoint.<i>Region</i>.amazonaws.com.
      * </p>
      * <p>
-     * When using this operation using an access point through the AWS SDKs, you provide
+     * When using this operation using an access point through the Amazon Web Services SDKs, you provide
      * the access point ARN in place of the bucket name. For more information about access point
      * ARNs, see <a href=\"https://docs.aws.amazon.com/AmazonS3/latest/dev/using-access-points.html\">
-     * Using Access Points</a> in the <i>Amazon Simple Storage Service Developer Guide</i>.
+     * Using access points</a> in the <i>Amazon Simple Storage Service Developer Guide</i>.
      * </p>
      */
     private String bucketName;
@@ -94,7 +97,7 @@ public class ListMultipartUploadsRequest extends AmazonWebServiceRequest impleme
      * lexicographically greater than the specified marker.
      */
     private String uploadIdMarker;
-    
+
     /**
      * Optional parameter indicating the encoding method to be applied on the
      * response. An object key can contain any Unicode character; however, XML
@@ -106,11 +109,14 @@ public class ListMultipartUploadsRequest extends AmazonWebServiceRequest impleme
     private String encodingType;
 
 
-    // IBM-Specifc
+    // IBM-Specific
     /**
      * Optional parameter setting the mirror-destination on a WORM enabled bucket.
      */
     private String wormMirrorDestination;
+
+    //IBM unsupported
+    //private String expectedBucketOwner;
 
 
     /**
@@ -123,10 +129,10 @@ public class ListMultipartUploadsRequest extends AmazonWebServiceRequest impleme
      * <i>AccessPointName</i>-<i>AccountId</i>.s3-accesspoint.<i>Region</i>.amazonaws.com.
      * </p>
      * <p>
-     * When using this operation using an access point through the AWS SDKs, you provide
+     * When using this operation using an access point through the Amazon Web Services SDKs, you provide
      * the access point ARN in place of the bucket name. For more information about access point
      * ARNs, see <a href=\"https://docs.aws.amazon.com/AmazonS3/latest/dev/using-access-points.html\">
-     * Using Access Points</a> in the <i>Amazon Simple Storage Service Developer Guide</i>.
+     * Using access points</a> in the <i>Amazon Simple Storage Service Developer Guide</i>.
      * </p>
      *
      * @param bucketName
@@ -136,47 +142,155 @@ public class ListMultipartUploadsRequest extends AmazonWebServiceRequest impleme
         this.bucketName = bucketName;
     }
 
+//IBM unsupported
+//    public String getExpectedBucketOwner() {
+//        return expectedBucketOwner;
+//    }
+//
+//    public ListMultipartUploadsRequest withExpectedBucketOwner(String expectedBucketOwner) {
+//        this.expectedBucketOwner = expectedBucketOwner;
+//        return this;
+//    }
+//
+//    public void setExpectedBucketOwner(String expectedBucketOwner) {
+//        withExpectedBucketOwner(expectedBucketOwner);
+//    }
 
     /**
-     * Returns the name of the bucket containing the uploads to list.
+     * <p>
+     * The name of the bucket to which the multipart upload was initiated.
+     * </p>
+     * <p>
+     * When using this action with an access point, you must direct requests to the access point hostname. The access
+     * point hostname takes the form <i>AccessPointName</i>-<i>AccountId</i>.s3-accesspoint.<i>Region</i>.amazonaws.com.
+     * When using this action with an access point through the Amazon Web Services SDKs, you provide the access point
+     * ARN in place of the bucket name. For more information about access point ARNs, see <a
+     * href="https://docs.aws.amazon.com/AmazonS3/latest/userguide/using-access-points.html">Using access points</a> in
+     * the <i>Amazon S3 User Guide</i>.
+     * </p>
+     * <p>
+     * When using this action with Amazon S3 on Outposts, you must direct requests to the S3 on Outposts hostname. The
+     * S3 on Outposts hostname takes the form
+     * <i>AccessPointName</i>-<i>AccountId</i>.<i>outpostID</i>.s3-outposts.<i>Region</i>.amazonaws.com. When using this
+     * action using S3 on Outposts through the Amazon Web Services SDKs, you provide the Outposts bucket ARN in place of
+     * the bucket name. For more information about S3 on Outposts ARNs, see <a
+     * href="https://docs.aws.amazon.com/AmazonS3/latest/userguide/S3onOutposts.html">Using S3 on Outposts</a> in the
+     * <i>Amazon S3 User Guide</i>.
+     * </p>
      *
-     * @return The name of the bucket containing the uploads to list.
+     * @return The name of the bucket to which the multipart upload was initiated. </p>
+     *         <p>
+     *         When using this action with an access point, you must direct requests to the access point hostname. The
+     *         access point hostname takes the form
+     *         <i>AccessPointName</i>-<i>AccountId</i>.s3-accesspoint.<i>Region</i>.amazonaws.com. When using this
+     *         action with an access point through the Amazon Web Services SDKs, you provide the access point ARN in
+     *         place of the bucket name. For more information about access point ARNs, see <a
+     *         href="https://docs.aws.amazon.com/AmazonS3/latest/userguide/using-access-points.html">Using access
+     *         points</a> in the <i>Amazon S3 User Guide</i>.
+     *         </p>
+     *         <p>
+     *         When using this action with Amazon S3 on Outposts, you must direct requests to the S3 on Outposts
+     *         hostname. The S3 on Outposts hostname takes the form
+     *         <i>AccessPointName</i>-<i>AccountId</i>.<i>outpostID</i>.s3-outposts.<i>Region</i>.amazonaws.com. When
+     *         using this action using S3 on Outposts through the Amazon Web Services SDKs, you provide the Outposts
+     *         bucket ARN in place of the bucket name. For more information about S3 on Outposts ARNs, see <a
+     *         href="https://docs.aws.amazon.com/AmazonS3/latest/userguide/S3onOutposts.html">Using S3 on Outposts</a>
+     *         in the <i>Amazon S3 User Guide</i>.
      */
     public String getBucketName() {
         return bucketName;
     }
 
     /**
-     * Sets the name of the bucket containing the multipart uploads to list.
-     *
      * <p>
-     * When using this API with an access point, you must direct requests
-     * to the access point hostname. The access point hostname takes the form
-     * <i>AccessPointName</i>-<i>AccountId</i>.s3-accesspoint.<i>Region</i>.amazonaws.com.
+     * The name of the bucket to which the multipart upload was initiated.
      * </p>
      * <p>
-     * When using this operation using an access point through the AWS SDKs, you provide
-     * the access point ARN in place of the bucket name. For more information about access point
-     * ARNs, see <a href=\"https://docs.aws.amazon.com/AmazonS3/latest/dev/using-access-points.html\">
-     * Using Access Points</a> in the <i>Amazon Simple Storage Service Developer Guide</i>.
+     * When using this action with an access point, you must direct requests to the access point hostname. The
+     * access point hostname takes the form
+     * <i>AccessPointName</i>-<i>AccountId</i>.s3-accesspoint.<i>Region</i>.amazonaws.com. When using this action
+     * with an access point through the Amazon Web Services SDKs, you provide the access point ARN in place of the
+     * bucket name. For more information about access point ARNs, see <a
+     * href="https://docs.aws.amazon.com/AmazonS3/latest/userguide/using-access-points.html">Using access points</a>
+     * in the <i>Amazon S3 User Guide</i>.
+     * </p>
+     * <p>
+     * When using this action with Amazon S3 on Outposts, you must direct requests to the S3 on Outposts hostname.
+     * The S3 on Outposts hostname takes the form
+     * <i>AccessPointName</i>-<i>AccountId</i>.<i>outpostID</i>.s3-outposts.<i>Region</i>.amazonaws.com. When using
+     * this action using S3 on Outposts through the Amazon Web Services SDKs, you provide the Outposts bucket ARN in
+     * place of the bucket name. For more information about S3 on Outposts ARNs, see <a
+     * href="https://docs.aws.amazon.com/AmazonS3/latest/userguide/S3onOutposts.html">Using S3 on Outposts</a> in
+     * the <i>Amazon S3 User Guide</i>.
      * </p>
      *
      * @param bucketName
-     *            The name of the bucket, or access point ARN, containing the uploads to list.
+     *        The name of the bucket to which the multipart upload was initiated. </p>
+     *        <p>
+     *        When using this action with an access point, you must direct requests to the access point hostname.
+     *        The access point hostname takes the form
+     *        <i>AccessPointName</i>-<i>AccountId</i>.s3-accesspoint.<i>Region</i>.amazonaws.com. When using this
+     *        action with an access point through the Amazon Web Services SDKs, you provide the access point ARN in
+     *        place of the bucket name. For more information about access point ARNs, see <a
+     *        href="https://docs.aws.amazon.com/AmazonS3/latest/userguide/using-access-points.html">Using access
+     *        points</a> in the <i>Amazon S3 User Guide</i>.
+     *        </p>
+     *        <p>
+     *        When using this action with Amazon S3 on Outposts, you must direct requests to the S3 on Outposts
+     *        hostname. The S3 on Outposts hostname takes the form
+     *        <i>AccessPointName</i>-<i>AccountId</i>.<i>outpostID</i>.s3-outposts.<i>Region</i>.amazonaws.com. When
+     *        using this action using S3 on Outposts through the Amazon Web Services SDKs, you provide the Outposts
+     *        bucket ARN in place of the bucket name. For more information about S3 on Outposts ARNs, see <a
+     *        href="https://docs.aws.amazon.com/AmazonS3/latest/userguide/S3onOutposts.html">Using S3 on
+     *        Outposts</a> in the <i>Amazon S3 User Guide</i>.
      */
     public void setBucketName(String bucketName) {
         this.bucketName = bucketName;
     }
 
     /**
-     * Sets The name of the bucket containing the uploads to list, and returns
-     * this updated ListMultipartUploadsRequest object so that additional method
-     * calls can be chained together.
+     * <p>
+     * The name of the bucket to which the multipart upload was initiated.
+     * </p>
+     * <p>
+     * When using this action with an access point, you must direct requests to the access point hostname. The
+     * access point hostname takes the form
+     * <i>AccessPointName</i>-<i>AccountId</i>.s3-accesspoint.<i>Region</i>.amazonaws.com. When using this action
+     * with an access point through the Amazon Web Services SDKs, you provide the access point ARN in place of the
+     * bucket name. For more information about access point ARNs, see <a
+     * href="https://docs.aws.amazon.com/AmazonS3/latest/userguide/using-access-points.html">Using access points</a>
+     * in the <i>Amazon S3 User Guide</i>.
+     * </p>
+     * <p>
+     * When using this action with Amazon S3 on Outposts, you must direct requests to the S3 on Outposts hostname.
+     * The S3 on Outposts hostname takes the form
+     * <i>AccessPointName</i>-<i>AccountId</i>.<i>outpostID</i>.s3-outposts.<i>Region</i>.amazonaws.com. When using
+     * this action using S3 on Outposts through the Amazon Web Services SDKs, you provide the Outposts bucket ARN in
+     * place of the bucket name. For more information about S3 on Outposts ARNs, see <a
+     * href="https://docs.aws.amazon.com/AmazonS3/latest/userguide/S3onOutposts.html">Using S3 on Outposts</a> in
+     * the <i>Amazon S3 User Guide</i>.
+     * </p>
      *
      * @param bucketName
-     *            The name of the bucket containing the uploads to list.
-     *
-     * @return This updated ListMultipartUploadsRequest object.
+     *        The name of the bucket to which the multipart upload was initiated. </p>
+     *        <p>
+     *        When using this action with an access point, you must direct requests to the access point hostname.
+     *        The access point hostname takes the form
+     *        <i>AccessPointName</i>-<i>AccountId</i>.s3-accesspoint.<i>Region</i>.amazonaws.com. When using this
+     *        action with an access point through the Amazon Web Services SDKs, you provide the access point ARN in
+     *        place of the bucket name. For more information about access point ARNs, see <a
+     *        href="https://docs.aws.amazon.com/AmazonS3/latest/userguide/using-access-points.html">Using access
+     *        points</a> in the <i>Amazon S3 User Guide</i>.
+     *        </p>
+     *        <p>
+     *        When using this action with Amazon S3 on Outposts, you must direct requests to the S3 on Outposts
+     *        hostname. The S3 on Outposts hostname takes the form
+     *        <i>AccessPointName</i>-<i>AccountId</i>.<i>outpostID</i>.s3-outposts.<i>Region</i>.amazonaws.com. When
+     *        using this action using S3 on Outposts through the Amazon Web Services SDKs, you provide the Outposts
+     *        bucket ARN in place of the bucket name. For more information about S3 on Outposts ARNs, see <a
+     *        href="https://docs.aws.amazon.com/AmazonS3/latest/userguide/S3onOutposts.html">Using S3 on
+     *        Outposts</a> in the <i>Amazon S3 User Guide</i>.
+     * @return Returns a reference to this object so that method calls can be chained together.
      */
     public ListMultipartUploadsRequest withBucketName(String bucketName) {
         this.bucketName = bucketName;
@@ -435,11 +549,11 @@ public class ListMultipartUploadsRequest extends AmazonWebServiceRequest impleme
         setPrefix(prefix);
         return this;
     }
-    
+
     /**
      * Gets the optional <code>encodingType</code> parameter indicating the
      * encoding method to be applied on the response.
-     * 
+     *
      * @return The encoding method to be applied on the response.
      */
     public String getEncodingType() {
@@ -453,7 +567,7 @@ public class ListMultipartUploadsRequest extends AmazonWebServiceRequest impleme
      * characters, such as characters with an ASCII value from 0 to 10. For
      * characters that are not supported in XML 1.0, you can add this parameter
      * to request that Amazon S3 encode the keys in the response.
-     * 
+     *
      * @param encodingType
      *            The encoding method to be applied on the response. Valid
      *            values: null (not encoded) or "url".
@@ -461,17 +575,17 @@ public class ListMultipartUploadsRequest extends AmazonWebServiceRequest impleme
     public void setEncodingType(String encodingType) {
         this.encodingType = encodingType;
     }
-    
+
     /**
      * Sets the optional <code>encodingType</code> parameter indicating the
      * encoding method to be applied on the response. An object key can contain
      * any Unicode character; however, XML 1.0 parser cannot parse some
      * characters, such as characters with an ASCII value from 0 to 10. For
      * characters that are not supported in XML 1.0, you can add this parameter
-     * to request that Amazon S3 encode the keys in the response. 
+     * to request that Amazon S3 encode the keys in the response.
      * Returns this {@link ListMultipartUploadsRequest}, enabling additional method calls
      * to be chained together.
-     * 
+     *
      * @param encodingType
      *            The encoding method to be applied on the response. Valid
      *            values: null (not encoded) or "url".
@@ -481,7 +595,7 @@ public class ListMultipartUploadsRequest extends AmazonWebServiceRequest impleme
         return this;
     }
 
-    // IBM-Specifc
+    // IBM-Specific
     /**
      * Returns the optional mirror-destination value for WORM mirroring
      *
@@ -492,10 +606,10 @@ public class ListMultipartUploadsRequest extends AmazonWebServiceRequest impleme
         return wormMirrorDestination;
     }
 
-    // IBM-Specifc
+    // IBM-Specific
     /**
      * Sets the optional mirror-destination value for WORM mirroring
-     * 
+     *
      * @param wormMirrorDestination
      *            The optional mirror-destination value for WORM mirroring
      */
@@ -504,10 +618,10 @@ public class ListMultipartUploadsRequest extends AmazonWebServiceRequest impleme
         this.wormMirrorDestination = wormMirrorDestination;
     }
 
-    // IBM-Specifc
+    // IBM-Specific
     /**
      * Sets the optional mirror-destination value for WORM mirroring
-     * and returns the updated ListMultipartUploadsRequest so that additional 
+     * and returns the updated ListMultipartUploadsRequest so that additional
      * method calls may be chained together.
      *
      * @param wormMirrorDestination

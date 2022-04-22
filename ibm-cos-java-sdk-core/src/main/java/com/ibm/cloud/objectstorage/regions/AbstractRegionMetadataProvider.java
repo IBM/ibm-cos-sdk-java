@@ -1,5 +1,5 @@
 /*
- * Copyright 2016-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2016-2022 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -30,7 +30,7 @@ public abstract class AbstractRegionMetadataProvider implements
 
         for (Region region : getRegions()) {
             for (String serviceEndpoint :
-                    region.getAvailableEndpoints()) {
+                region.getAvailableEndpoints()) {
 
                 if (host.equals(getHost(serviceEndpoint))) {
                     return region;
@@ -39,7 +39,7 @@ public abstract class AbstractRegionMetadataProvider implements
         }
 
         throw new IllegalArgumentException(
-                "No region found with any service for endpoint " + endpoint);
+            "No region found with any service for endpoint " + endpoint);
     }
 
     /**
@@ -49,11 +49,19 @@ public abstract class AbstractRegionMetadataProvider implements
      * @param endpoint the endpoint to parse
      * @return the host portion of the endpoint
      */
-    private static String getHost(final String endpoint) {
-        String host = URI.create(endpoint).getHost();
-        if (host == null) {
-            host = URI.create("http://" + endpoint).getHost();
+    protected static String getHost(final String endpoint) {
+        try {
+            String host = URI.create(endpoint).getHost();
+            if (host == null) {
+                host = URI.create("http://" + endpoint).getHost();
+            }
+            if (host == null) {
+                return "";
+            }
+            return host;
+        } catch (IllegalArgumentException e) {
+            // Couldn't parse this as an endpoint. Assume it's not a valid endpoint, and say that there's no hostname.
+            return "";
         }
-        return host;
     }
 }

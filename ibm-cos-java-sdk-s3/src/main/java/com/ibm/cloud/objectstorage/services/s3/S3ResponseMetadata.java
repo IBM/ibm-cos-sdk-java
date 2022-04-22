@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2010-2022 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -20,8 +20,8 @@ import com.ibm.cloud.objectstorage.ResponseMetadata;
 
 /**
  * Extension of {@link ResponseMetadata} with Amazon S3 specific data. In
- * addition to the standard AWS request ID contained in all services' response
- * metadata, Amazon S3 also includes a host ID that can be provided to AWS
+ * addition to the standard Amazon Web Services request ID contained in all services' response
+ * metadata, Amazon S3 also includes a host ID that can be provided to Amazon Web Services
  * support when debugging an issue with Amazon S3.
  */
 public class S3ResponseMetadata extends ResponseMetadata {
@@ -53,7 +53,7 @@ public class S3ResponseMetadata extends ResponseMetadata {
 
     /**
      * Returns the Amazon S3 host ID, providing additional debugging information
-     * about how a request was handled. You can provide AWS support with this ID
+     * about how a request was handled. You can provide Amazon Web Services support with this ID
      * to help troubleshoot issues where Amazon S3 isn't handling your request
      * as expected.
      *

@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2010-2022 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -18,7 +18,7 @@ import com.ibm.cloud.objectstorage.auth.policy.Resource;
 import com.ibm.cloud.objectstorage.auth.policy.actions.S3Actions;
 
 /**
- * Represents a bucket resource involved in an AWS access control policy. This
+ * Represents a bucket resource involved in an Amazon Web Services access control policy. This
  * resource <b>does not</b> include any of the objects stored in the bucket. It
  * represents <b>only the bucket itself</b>. This is the resource you want if
  * you're writing a policy that restricts access to listing the contents of a
@@ -55,7 +55,7 @@ public class S3BucketResource extends Resource {
      * but <b>not any of the contained objects</b>.
      *
      * @param bucketName
-     *            The name of the bucket represented by this AWS access control
+     *            The name of the bucket represented by this Amazon Web Services access control
      *            policy resource.
      */
     public S3BucketResource(String bucketName) {
@@ -69,7 +69,7 @@ public class S3BucketResource extends Resource {
      * @param partitionName
      *            The name of the partition in which the specified bucket is located.
      * @param bucketName
-     *            The name of the bucket represented by this AWS access control
+     *            The name of the bucket represented by this Amazon Web Services access control
      *            policy resource.
      */
     public S3BucketResource(String partitionName, String bucketName) {

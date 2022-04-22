@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2014-2022 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -36,6 +36,41 @@ public enum S3Event {
     ObjectRemovedDelete("s3:ObjectRemoved:Delete"),
 
     ObjectRemovedDeleteMarkerCreated("s3:ObjectRemoved:DeleteMarkerCreated"),
+    
+// IBM unsupported    
+//    ObjectRestorePost("s3:ObjectRestore:Post"),
+//
+//    ObjectRestoreCompleted("s3:ObjectRestore:Completed"),
+//
+//    Replication("s3:Replication:*"),
+//
+//    ReplicationOperationFailed("s3:Replication:OperationFailedReplication"),
+//
+//    ReplicationOperationNotTracked("s3:Replication:OperationNotTracked"),
+//
+//    ReplicationOperationMissedThreshold("s3:Replication:OperationMissedThreshold"),
+//
+//    ReplicationOperationReplicatedAfterThreshold("s3:Replication:OperationReplicatedAfterThreshold"),
+//
+//    ObjectRestoreDelete("s3:ObjectRestore:Delete"),
+//
+//    LifecycleTransition("s3:LifecycleTransition"),
+//
+//    IntelligentTiering("s3:IntelligentTiering"),
+//
+//    ObjectAclPut("s3:ObjectAcl:Put"),
+//
+//    LifecycleExpiration("s3:LifecycleExpiration:*"),
+//
+//    LifecycleExpirationDelete("s3:LifecycleExpiration:Delete"),
+//
+//    LifecycleExpirationDeleteMarkerCreated("s3:LifecycleExpiration:DeleteMarkerCreated"),
+//
+//    ObjectTagging("s3:ObjectTagging:*"),
+//
+//    ObjectTaggingPut("s3:ObjectTagging:Put"),
+//
+//    ObjectTaggingDelete("s3:ObjectTagging:Delete")
     ;
 
     private final String event;

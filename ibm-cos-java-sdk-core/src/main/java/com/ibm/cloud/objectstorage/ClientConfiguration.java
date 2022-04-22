@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2010-2022 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -19,7 +19,9 @@ import com.ibm.cloud.objectstorage.http.IdleConnectionReaper;
 import com.ibm.cloud.objectstorage.http.SystemPropertyTlsKeyManagersProvider;
 import com.ibm.cloud.objectstorage.http.TlsKeyManagersProvider;
 import com.ibm.cloud.objectstorage.retry.PredefinedRetryPolicies;
+import com.ibm.cloud.objectstorage.retry.RetryMode;
 import com.ibm.cloud.objectstorage.retry.RetryPolicy;
+import com.ibm.cloud.objectstorage.util.StringUtils;
 import com.ibm.cloud.objectstorage.util.ValidationUtils;
 import com.ibm.cloud.objectstorage.util.VersionInfoUtils;
 import java.net.InetAddress;
@@ -94,7 +96,7 @@ public class ClientConfiguration {
     public static final boolean DEFAULT_USE_REAPER = true;
 
     /**
-     * The default on whether to use gzip compression.
+     * The default on whether to use gzip decompression.
      */
     public static final boolean DEFAULT_USE_GZIP = false;
 
@@ -134,7 +136,6 @@ public class ClientConfiguration {
     public static final int DEFAULT_RESPONSE_METADATA_CACHE_SIZE = 50;
 
     public static final int DEFAULT_MAX_CONSECUTIVE_RETRIES_BEFORE_THROTTLING = 100;
-
 
     /** A prefix to the HTTP user agent header passed with all HTTP requests.  */
     private String userAgentPrefix = DEFAULT_USER_AGENT;
@@ -259,7 +260,7 @@ public class ClientConfiguration {
     private boolean useReaper = DEFAULT_USE_REAPER;
 
     /**
-     * Optional whether to use gzip compression when making HTTP requests.
+     * Optional whether to use gzip decompression when receiving HTTP responses.
      */
     private boolean useGzip = DEFAULT_USE_GZIP;
 
@@ -367,6 +368,7 @@ public class ClientConfiguration {
     private final AtomicReference<URLHolder> httpsProxyHolder = new AtomicReference<URLHolder>();
 
     private TlsKeyManagersProvider tlsKeyManagersProvider;
+    private RetryMode retryMode;
 
     public ClientConfiguration() {
         apacheHttpClientConfig = new ApacheHttpClientConfig();
@@ -418,6 +420,7 @@ public class ClientConfiguration {
         this.httpProxyHolder.set(other.httpProxyHolder.get());
         this.httpsProxyHolder.set(other.httpsProxyHolder.get());
         this.tlsKeyManagersProvider = other.tlsKeyManagersProvider;
+        this.retryMode = other.retryMode;
     }
 
     /**
@@ -637,7 +640,8 @@ public class ClientConfiguration {
      * Returns the value for the given environment variable.
      */
     private String getEnvironmentVariable(String environmentVariable) {
-        return System.getenv(environmentVariable);
+        String value = StringUtils.trim(System.getenv(environmentVariable));
+        return StringUtils.hasValue(value) ? value : null;
     }
 
     /**
@@ -645,9 +649,8 @@ public class ClientConfiguration {
      * the lowercase version of variable.
      */
     private String getEnvironmentVariableCaseInsensitive(String environmentVariable) {
-        return getEnvironmentVariable(environmentVariable) != null
-                ? getEnvironmentVariable(environmentVariable)
-                : getEnvironmentVariable(environmentVariable.toLowerCase());
+        String result = getEnvironmentVariable(environmentVariable);
+        return result != null ? result : getEnvironmentVariable(environmentVariable.toLowerCase());
     }
 
     /**
@@ -1260,7 +1263,7 @@ public class ClientConfiguration {
      */
     public void setMaxErrorRetry(int maxErrorRetry) {
         if (maxErrorRetry < 0) {
-            throw new IllegalArgumentException("maxErrorRetry shoud be non-negative");
+            throw new IllegalArgumentException("maxErrorRetry should be non-negative");
         }
         this.maxErrorRetry = maxErrorRetry;
     }
@@ -1277,6 +1280,33 @@ public class ClientConfiguration {
     public ClientConfiguration withMaxErrorRetry(int maxErrorRetry) {
         setMaxErrorRetry(maxErrorRetry);
         return this;
+    }
+
+    /**
+     * Sets the RetryMode to use
+     *
+     * @param retryMode the retryMode
+     * @return The updated ClientConfiguration object.
+     */
+    public ClientConfiguration withRetryMode(RetryMode retryMode) {
+        setRetryMode(retryMode);
+        return this;
+    }
+
+    /**
+     * Sets the RetryMode to use
+     *
+     * @param retryMode the retryMode
+     */
+    public void setRetryMode(RetryMode retryMode) {
+        this.retryMode = retryMode;
+    }
+
+    /**
+     * @return the retryMode
+     */
+    public RetryMode getRetryMode() {
+        return retryMode;
     }
 
     /**
@@ -1702,29 +1732,37 @@ public class ClientConfiguration {
     }
 
     /**
-     * Checks if gzip compression is used
+     * Checks if gzip decompression is used when receiving HTTP responses.
      *
-     * @return if gzip compression is used
+     * @return if gzip decompression is used
      */
     public boolean useGzip() {
         return useGzip;
     }
 
     /**
-     * Sets whether gzip compression should be used
+     * Sets whether gzip decompression should be used when receiving HTTP responses.
+     *
+     * <p>
+     * <b>Note</b>
+     * useGzip should only be enabled if the HTTP response is gzipped
      *
      * @param use
-     *            whether gzip compression should be used
+     *            whether gzip decompression should be used
      */
     public void setUseGzip(boolean use) {
         this.useGzip = use;
     }
 
     /**
-     * Sets whether gzip compression should be used
+     * Sets whether gzip decompression should be used when receiving HTTP responses.
+     *
+     * <p>
+     * <b>Note</b>
+     * useGzip should only be enabled if the HTTP response is gzipped
      *
      * @param use
-     *            whether gzip compression should be used
+     *            whether gzip decompression should be used
      * @return The updated ClientConfiguration object.
      */
     public ClientConfiguration withGzip(boolean use) {

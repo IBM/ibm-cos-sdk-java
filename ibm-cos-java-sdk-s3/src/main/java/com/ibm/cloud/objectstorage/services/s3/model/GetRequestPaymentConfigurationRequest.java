@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2010-2022 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -28,7 +28,7 @@ public class GetRequestPaymentConfigurationRequest extends
     /** The name of the Amazon S3 bucket. */
     private String bucketName;
 
-    // IBM-Specifc
+    // IBM-Specific
     /**
      * The optional destination-mirror value to use for WORM mirroring
      */
@@ -46,7 +46,7 @@ public class GetRequestPaymentConfigurationRequest extends
         this.bucketName = bucketName;
     }
 
-    // IBM-Specifc
+    // IBM-Specific
     /**
      * Returns the optional mirror-destination value for WORM mirroring
      *
@@ -57,10 +57,10 @@ public class GetRequestPaymentConfigurationRequest extends
         return wormMirrorDestination;
     }
 
-    // IBM-Specifc
+    // IBM-Specific
     /**
      * Sets the optional mirror-destination value for WORM mirroring
-     * 
+     *
      * @param wormMirrorDestination
      *            The optional mirror-destination value for WORM mirroring
      */
@@ -69,10 +69,10 @@ public class GetRequestPaymentConfigurationRequest extends
         this.wormMirrorDestination = wormMirrorDestination;
     }
 
-    // IBM-Specifc
+    // IBM-Specific
     /**
      * Sets the optional mirror-destination value for WORM mirroring
-     * and returns the updated GetRequestPaymentConfigurationRequest so that additional 
+     * and returns the updated GetRequestPaymentConfigurationRequest so that additional
      * method calls may be chained together.
      *
      * @param wormMirrorDestination

@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2019 Amazon Technologies, Inc.
+ * Copyright 2015-2022 Amazon Technologies, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,9 +22,14 @@ import com.ibm.cloud.objectstorage.services.s3.AmazonS3;
  *
  * @see AmazonS3#getBucketCrossOriginConfiguration(GetBucketCrossOriginConfigurationRequest)
  */
-public class GetBucketCrossOriginConfigurationRequest extends GenericBucketRequest implements 
-        WormMirrorDestinationProvider, Serializable {
+public class GetBucketCrossOriginConfigurationRequest extends GenericBucketRequest implements
+        WormMirrorDestinationProvider, Serializable
+        //IBM unsupported
+        //, ExpectedBucketOwnerRequest
+        {
 
+    //IBM unsupported
+    //private String expectedBucketOwner;
     /**
      * Creates a request object, ready to be executed to fetch the cross origin
      * configuration of the specified bucket.
@@ -37,13 +42,13 @@ public class GetBucketCrossOriginConfigurationRequest extends GenericBucketReque
         super(bucketName);
     }
 
-    // IBM-Specifc
+    // IBM-Specific
     /**
      * Optional parameter setting the mirror-destination on a WORM enabled bucket.
      */
     private String wormMirrorDestination;
 
-    // IBM-Specifc
+    // IBM-Specific
     /**
      * Returns the optional mirror-destination value for WORM mirroring
      *
@@ -54,10 +59,10 @@ public class GetBucketCrossOriginConfigurationRequest extends GenericBucketReque
         return wormMirrorDestination;
     }
 
-    // IBM-Specifc
+    // IBM-Specific
     /**
      * Sets the optional mirror-destination value for WORM mirroring
-     * 
+     *
      * @param wormMirrorDestination
      *            The optional mirror-destination value for WORM mirroring
      */
@@ -66,10 +71,10 @@ public class GetBucketCrossOriginConfigurationRequest extends GenericBucketReque
         this.wormMirrorDestination = wormMirrorDestination;
     }
 
-    // IBM-Specifc
+    // IBM-Specific
     /**
      * Sets the optional mirror-destination value for WORM mirroring
-     * and returns the updated GetBucketCrossOriginConfigurationRequest so that additional 
+     * and returns the updated GetBucketCrossOriginConfigurationRequest so that additional
      * method calls may be chained together.
      *
      * @param wormMirrorDestination
@@ -83,4 +88,17 @@ public class GetBucketCrossOriginConfigurationRequest extends GenericBucketReque
         return this;
     }
 
+//IBM unsupported
+//    public String getExpectedBucketOwner() {
+//        return expectedBucketOwner;
+//    }
+//
+//    public GetBucketCrossOriginConfigurationRequest withExpectedBucketOwner(String expectedBucketOwner) {
+//        this.expectedBucketOwner = expectedBucketOwner;
+//        return this;
+//    }
+//
+//    public void setExpectedBucketOwner(String expectedBucketOwner) {
+//        withExpectedBucketOwner(expectedBucketOwner);
+//    }
 }

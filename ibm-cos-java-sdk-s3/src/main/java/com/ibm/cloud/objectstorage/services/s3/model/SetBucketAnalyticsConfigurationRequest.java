@@ -1,5 +1,5 @@
 /*
- * Copyright 2011-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2011-2022 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,10 +22,15 @@ import java.io.Serializable;
 /**
  * Request object to set analytics configuration to a bucket.
  */
-public class SetBucketAnalyticsConfigurationRequest extends AmazonWebServiceRequest implements Serializable {
+public class SetBucketAnalyticsConfigurationRequest extends AmazonWebServiceRequest implements Serializable
+//IBM unsupported
+//, ExpectedBucketOwnerRequest 
+{
 
     private String bucketName;
     private AnalyticsConfiguration analyticsConfiguration;
+    //IBM unsupported
+    //private String expectedBucketOwner;
 
     public SetBucketAnalyticsConfigurationRequest() { }
 
@@ -33,6 +38,20 @@ public class SetBucketAnalyticsConfigurationRequest extends AmazonWebServiceRequ
         this.bucketName = bucketName;
         this.analyticsConfiguration = analyticsConfiguration;
     }
+
+//IBM unsupported
+//    public String getExpectedBucketOwner() {
+//        return expectedBucketOwner;
+//    }
+//
+//    public SetBucketAnalyticsConfigurationRequest withExpectedBucketOwner(String expectedBucketOwner) {
+//        this.expectedBucketOwner = expectedBucketOwner;
+//        return this;
+//    }
+//
+//    public void setExpectedBucketOwner(String expectedBucketOwner) {
+//        withExpectedBucketOwner(expectedBucketOwner);
+//    }
 
     /**
      * Returns the name of the bucket to which an analytics configuration is stored.

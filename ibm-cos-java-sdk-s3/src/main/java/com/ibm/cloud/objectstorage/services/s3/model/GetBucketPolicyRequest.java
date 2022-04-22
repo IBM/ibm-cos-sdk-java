@@ -1,5 +1,5 @@
 /*
- * Copyright 2011-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2011-2022 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -31,15 +31,21 @@ import com.ibm.cloud.objectstorage.services.s3.AmazonS3;
  * </p>
  * <p>
  * See the <a href="http://docs.amazonwebservices.com/AmazonS3/latest/dev/">
- * Amazon S3 developer guide</a> for more information on forming bucket polices.
+ * Amazon S3 User Guide</a> for more information on forming bucket polices.
  * </p>
  *
  * @see AmazonS3#getBucketPolicy(GetBucketPolicyRequest)
  */
-public class GetBucketPolicyRequest extends AmazonWebServiceRequest implements Serializable {
+public class GetBucketPolicyRequest extends AmazonWebServiceRequest implements Serializable
+//IBM unsupported
+//, ExpectedBucketOwnerRequest 
+{
 
     /** The name of the Amazon S3 bucket whose policy is being retrieved. */
     private String bucketName;
+
+    //IBM unsupported
+    //private String expectedBucketOwner;
 
 
     /**
@@ -53,6 +59,20 @@ public class GetBucketPolicyRequest extends AmazonWebServiceRequest implements S
     public GetBucketPolicyRequest(String bucketName) {
         this.bucketName = bucketName;
     }
+
+//IBM unsupported
+//    public String getExpectedBucketOwner() {
+//        return expectedBucketOwner;
+//    }
+//
+//    public GetBucketPolicyRequest withExpectedBucketOwner(String expectedBucketOwner) {
+//        this.expectedBucketOwner = expectedBucketOwner;
+//        return this;
+//    }
+//
+//    public void setExpectedBucketOwner(String expectedBucketOwner) {
+//        withExpectedBucketOwner(expectedBucketOwner);
+//    }
 
     /**
      * Returns the name of the Amazon S3 bucket whose policy is being retrieved.

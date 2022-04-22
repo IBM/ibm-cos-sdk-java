@@ -1,11 +1,11 @@
 /*
- * Copyright 2014-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
- * 
+ * Copyright 2017-2022 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"). You may not use this file except in compliance with
  * the License. A copy of the License is located at
- * 
+ *
  * http://aws.amazon.com/apache2.0
- * 
+ *
  * or in the "license" file accompanying this file. This file is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
  * CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions
  * and limitations under the License.
@@ -16,7 +16,7 @@ import java.io.Serializable;
 import javax.annotation.Generated;
 
 /**
- * 
+ *
  * @see <a href="http://docs.aws.amazon.com/goto/WebAPI/kms-2014-11-01/GenerateDataKey" target="_top">AWS API
  *      Documentation</a>
  */
@@ -25,27 +25,32 @@ public class GenerateDataKeyResult extends com.ibm.cloud.objectstorage.AmazonWeb
 
     /**
      * <p>
-     * The encrypted data encryption key.
+     * The encrypted copy of the data key. When you use the HTTP API or the Amazon Web Services CLI, the value is
+     * Base64-encoded. Otherwise, it is not Base64-encoded.
      * </p>
      */
     private java.nio.ByteBuffer ciphertextBlob;
     /**
      * <p>
-     * The data encryption key. Use this data key for local encryption and decryption, then remove it from memory as
-     * soon as possible.
+     * The plaintext data key. When you use the HTTP API or the Amazon Web Services CLI, the value is Base64-encoded.
+     * Otherwise, it is not Base64-encoded. Use this data key to encrypt your data outside of KMS. Then, remove it from
+     * memory as soon as possible.
      * </p>
      */
     private java.nio.ByteBuffer plaintext;
     /**
      * <p>
-     * The identifier of the CMK under which the data encryption key was generated and encrypted.
+     * The Amazon Resource Name (<a
+     * href="https://docs.aws.amazon.com/kms/latest/developerguide/concepts.html#key-id-key-ARN">key ARN</a>) of the KMS
+     * key that encrypted the data key.
      * </p>
      */
     private String keyId;
 
     /**
      * <p>
-     * The encrypted data encryption key.
+     * The encrypted copy of the data key. When you use the HTTP API or the Amazon Web Services CLI, the value is
+     * Base64-encoded. Otherwise, it is not Base64-encoded.
      * </p>
      * <p>
      * The AWS SDK for Java performs a Base64 encoding on this field before sending this request to the AWS service.
@@ -57,9 +62,10 @@ public class GenerateDataKeyResult extends com.ibm.cloud.objectstorage.AmazonWeb
      * ByteBuffer.asReadOnlyBuffer() before using or reading from the buffer. This behavior will be changed in a future
      * major version of the SDK.
      * </p>
-     * 
+     *
      * @param ciphertextBlob
-     *        The encrypted data encryption key.
+     *        The encrypted copy of the data key. When you use the HTTP API or the Amazon Web Services CLI, the value is
+     *        Base64-encoded. Otherwise, it is not Base64-encoded.
      */
 
     public void setCiphertextBlob(java.nio.ByteBuffer ciphertextBlob) {
@@ -68,7 +74,8 @@ public class GenerateDataKeyResult extends com.ibm.cloud.objectstorage.AmazonWeb
 
     /**
      * <p>
-     * The encrypted data encryption key.
+     * The encrypted copy of the data key. When you use the HTTP API or the Amazon Web Services CLI, the value is
+     * Base64-encoded. Otherwise, it is not Base64-encoded.
      * </p>
      * <p>
      * {@code ByteBuffer}s are stateful. Calling their {@code get} methods changes their {@code position}. We recommend
@@ -77,8 +84,9 @@ public class GenerateDataKeyResult extends com.ibm.cloud.objectstorage.AmazonWeb
      * Doing so will ensure that anyone else using the {@code ByteBuffer} will not be affected by changes to the
      * {@code position}.
      * </p>
-     * 
-     * @return The encrypted data encryption key.
+     *
+     * @return The encrypted copy of the data key. When you use the HTTP API or the Amazon Web Services CLI, the value
+     *         is Base64-encoded. Otherwise, it is not Base64-encoded.
      */
 
     public java.nio.ByteBuffer getCiphertextBlob() {
@@ -87,7 +95,8 @@ public class GenerateDataKeyResult extends com.ibm.cloud.objectstorage.AmazonWeb
 
     /**
      * <p>
-     * The encrypted data encryption key.
+     * The encrypted copy of the data key. When you use the HTTP API or the Amazon Web Services CLI, the value is
+     * Base64-encoded. Otherwise, it is not Base64-encoded.
      * </p>
      * <p>
      * The AWS SDK for Java performs a Base64 encoding on this field before sending this request to the AWS service.
@@ -99,9 +108,10 @@ public class GenerateDataKeyResult extends com.ibm.cloud.objectstorage.AmazonWeb
      * ByteBuffer.asReadOnlyBuffer() before using or reading from the buffer. This behavior will be changed in a future
      * major version of the SDK.
      * </p>
-     * 
+     *
      * @param ciphertextBlob
-     *        The encrypted data encryption key.
+     *        The encrypted copy of the data key. When you use the HTTP API or the Amazon Web Services CLI, the value is
+     *        Base64-encoded. Otherwise, it is not Base64-encoded.
      * @return Returns a reference to this object so that method calls can be chained together.
      */
 
@@ -112,8 +122,9 @@ public class GenerateDataKeyResult extends com.ibm.cloud.objectstorage.AmazonWeb
 
     /**
      * <p>
-     * The data encryption key. Use this data key for local encryption and decryption, then remove it from memory as
-     * soon as possible.
+     * The plaintext data key. When you use the HTTP API or the Amazon Web Services CLI, the value is Base64-encoded.
+     * Otherwise, it is not Base64-encoded. Use this data key to encrypt your data outside of KMS. Then, remove it from
+     * memory as soon as possible.
      * </p>
      * <p>
      * The AWS SDK for Java performs a Base64 encoding on this field before sending this request to the AWS service.
@@ -125,10 +136,11 @@ public class GenerateDataKeyResult extends com.ibm.cloud.objectstorage.AmazonWeb
      * ByteBuffer.asReadOnlyBuffer() before using or reading from the buffer. This behavior will be changed in a future
      * major version of the SDK.
      * </p>
-     * 
+     *
      * @param plaintext
-     *        The data encryption key. Use this data key for local encryption and decryption, then remove it from memory
-     *        as soon as possible.
+     *        The plaintext data key. When you use the HTTP API or the Amazon Web Services CLI, the value is
+     *        Base64-encoded. Otherwise, it is not Base64-encoded. Use this data key to encrypt your data outside of
+     *        KMS. Then, remove it from memory as soon as possible.
      */
 
     public void setPlaintext(java.nio.ByteBuffer plaintext) {
@@ -137,8 +149,9 @@ public class GenerateDataKeyResult extends com.ibm.cloud.objectstorage.AmazonWeb
 
     /**
      * <p>
-     * The data encryption key. Use this data key for local encryption and decryption, then remove it from memory as
-     * soon as possible.
+     * The plaintext data key. When you use the HTTP API or the Amazon Web Services CLI, the value is Base64-encoded.
+     * Otherwise, it is not Base64-encoded. Use this data key to encrypt your data outside of KMS. Then, remove it from
+     * memory as soon as possible.
      * </p>
      * <p>
      * {@code ByteBuffer}s are stateful. Calling their {@code get} methods changes their {@code position}. We recommend
@@ -147,9 +160,10 @@ public class GenerateDataKeyResult extends com.ibm.cloud.objectstorage.AmazonWeb
      * Doing so will ensure that anyone else using the {@code ByteBuffer} will not be affected by changes to the
      * {@code position}.
      * </p>
-     * 
-     * @return The data encryption key. Use this data key for local encryption and decryption, then remove it from
-     *         memory as soon as possible.
+     *
+     * @return The plaintext data key. When you use the HTTP API or the Amazon Web Services CLI, the value is
+     *         Base64-encoded. Otherwise, it is not Base64-encoded. Use this data key to encrypt your data outside of
+     *         KMS. Then, remove it from memory as soon as possible.
      */
 
     public java.nio.ByteBuffer getPlaintext() {
@@ -158,8 +172,9 @@ public class GenerateDataKeyResult extends com.ibm.cloud.objectstorage.AmazonWeb
 
     /**
      * <p>
-     * The data encryption key. Use this data key for local encryption and decryption, then remove it from memory as
-     * soon as possible.
+     * The plaintext data key. When you use the HTTP API or the Amazon Web Services CLI, the value is Base64-encoded.
+     * Otherwise, it is not Base64-encoded. Use this data key to encrypt your data outside of KMS. Then, remove it from
+     * memory as soon as possible.
      * </p>
      * <p>
      * The AWS SDK for Java performs a Base64 encoding on this field before sending this request to the AWS service.
@@ -171,10 +186,11 @@ public class GenerateDataKeyResult extends com.ibm.cloud.objectstorage.AmazonWeb
      * ByteBuffer.asReadOnlyBuffer() before using or reading from the buffer. This behavior will be changed in a future
      * major version of the SDK.
      * </p>
-     * 
+     *
      * @param plaintext
-     *        The data encryption key. Use this data key for local encryption and decryption, then remove it from memory
-     *        as soon as possible.
+     *        The plaintext data key. When you use the HTTP API or the Amazon Web Services CLI, the value is
+     *        Base64-encoded. Otherwise, it is not Base64-encoded. Use this data key to encrypt your data outside of
+     *        KMS. Then, remove it from memory as soon as possible.
      * @return Returns a reference to this object so that method calls can be chained together.
      */
 
@@ -185,11 +201,15 @@ public class GenerateDataKeyResult extends com.ibm.cloud.objectstorage.AmazonWeb
 
     /**
      * <p>
-     * The identifier of the CMK under which the data encryption key was generated and encrypted.
+     * The Amazon Resource Name (<a
+     * href="https://docs.aws.amazon.com/kms/latest/developerguide/concepts.html#key-id-key-ARN">key ARN</a>) of the KMS
+     * key that encrypted the data key.
      * </p>
-     * 
+     *
      * @param keyId
-     *        The identifier of the CMK under which the data encryption key was generated and encrypted.
+     *        The Amazon Resource Name (<a
+     *        href="https://docs.aws.amazon.com/kms/latest/developerguide/concepts.html#key-id-key-ARN">key ARN</a>) of
+     *        the KMS key that encrypted the data key.
      */
 
     public void setKeyId(String keyId) {
@@ -198,10 +218,14 @@ public class GenerateDataKeyResult extends com.ibm.cloud.objectstorage.AmazonWeb
 
     /**
      * <p>
-     * The identifier of the CMK under which the data encryption key was generated and encrypted.
+     * The Amazon Resource Name (<a
+     * href="https://docs.aws.amazon.com/kms/latest/developerguide/concepts.html#key-id-key-ARN">key ARN</a>) of the KMS
+     * key that encrypted the data key.
      * </p>
-     * 
-     * @return The identifier of the CMK under which the data encryption key was generated and encrypted.
+     *
+     * @return The Amazon Resource Name (<a
+     *         href="https://docs.aws.amazon.com/kms/latest/developerguide/concepts.html#key-id-key-ARN">key ARN</a>) of
+     *         the KMS key that encrypted the data key.
      */
 
     public String getKeyId() {
@@ -210,11 +234,15 @@ public class GenerateDataKeyResult extends com.ibm.cloud.objectstorage.AmazonWeb
 
     /**
      * <p>
-     * The identifier of the CMK under which the data encryption key was generated and encrypted.
+     * The Amazon Resource Name (<a
+     * href="https://docs.aws.amazon.com/kms/latest/developerguide/concepts.html#key-id-key-ARN">key ARN</a>) of the KMS
+     * key that encrypted the data key.
      * </p>
-     * 
+     *
      * @param keyId
-     *        The identifier of the CMK under which the data encryption key was generated and encrypted.
+     *        The Amazon Resource Name (<a
+     *        href="https://docs.aws.amazon.com/kms/latest/developerguide/concepts.html#key-id-key-ARN">key ARN</a>) of
+     *        the KMS key that encrypted the data key.
      * @return Returns a reference to this object so that method calls can be chained together.
      */
 
@@ -224,7 +252,8 @@ public class GenerateDataKeyResult extends com.ibm.cloud.objectstorage.AmazonWeb
     }
 
     /**
-     * Returns a string representation of this object; useful for testing and debugging.
+     * Returns a string representation of this object. This is useful for testing and debugging. Sensitive data will be
+     * redacted from this string using a placeholder value.
      *
      * @return A string representation of this object.
      *
@@ -237,7 +266,7 @@ public class GenerateDataKeyResult extends com.ibm.cloud.objectstorage.AmazonWeb
         if (getCiphertextBlob() != null)
             sb.append("CiphertextBlob: ").append(getCiphertextBlob()).append(",");
         if (getPlaintext() != null)
-            sb.append("Plaintext: ").append(getPlaintext()).append(",");
+            sb.append("Plaintext: ").append("***Sensitive Data Redacted***").append(",");
         if (getKeyId() != null)
             sb.append("KeyId: ").append(getKeyId());
         sb.append("}");

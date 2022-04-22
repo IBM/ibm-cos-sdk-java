@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2010-2022 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -18,6 +18,7 @@ import static com.ibm.cloud.objectstorage.services.s3.internal.Constants.MAXIMUM
 
 import com.ibm.cloud.objectstorage.services.s3.AmazonS3;
 import com.ibm.cloud.objectstorage.services.s3.AmazonS3Encryption;
+import com.ibm.cloud.objectstorage.services.s3.AmazonS3EncryptionV2;
 import com.ibm.cloud.objectstorage.services.s3.Headers;
 import com.ibm.cloud.objectstorage.services.s3.model.CopyObjectRequest;
 import com.ibm.cloud.objectstorage.services.s3.model.GetObjectRequest;
@@ -210,8 +211,8 @@ public class TransferManagerUtils {
         ValidationUtils.assertNotNull(s3, "S3 client");
         ValidationUtils.assertNotNull(getObjectRequest, "GetObjectRequest");
 
-        if (s3 instanceof AmazonS3Encryption || getObjectRequest.getRange() != null
-                || getObjectRequest.getPartNumber() != null || partCount == null) {
+        if (s3 instanceof AmazonS3Encryption || s3 instanceof AmazonS3EncryptionV2 || getObjectRequest.getRange() != null
+            || getObjectRequest.getPartNumber() != null || partCount == null) {
             return false;
         }
         return true;

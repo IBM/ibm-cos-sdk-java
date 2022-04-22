@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2013-2022 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -44,8 +44,7 @@ public enum Base64 {
         } catch (Exception e) {
             available = false;
         }
-        isJaxbAvailable = available;
-        if (isJaxbAvailable) {
+        if (available) {
             Map<String, String> inconsistentJaxbImpls = new HashMap<String, String>();
             inconsistentJaxbImpls.put("org.apache.ws.jaxme.impl.JAXBContextImpl", "Apache JaxMe");
 
@@ -57,6 +56,8 @@ public enum Base64 {
                              "results of the encodeAsString() method may be incorrect. Implementation: " +
                              inconsistentJaxbImpls.get(className));
                 }
+            } catch (UnsupportedOperationException ignored) {
+                available = false;
             } catch (Exception ignored) {
                 // ignore
             } catch (NoClassDefFoundError error){
@@ -66,6 +67,8 @@ public enum Base64 {
             LOG.warn("JAXB is unavailable. Will fallback to SDK implementation which may be less performant." +
                      "If you are using Java 9+, you will need to include javax.xml.bind:jaxb-api as a dependency.");
         }
+
+        isJaxbAvailable = available;
     }
 
     /**

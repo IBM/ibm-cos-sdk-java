@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2017-2022 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -50,5 +50,15 @@ public class HttpResponseTest {
         Assert.assertEquals(response.getHeader(FOO_HEADER_LOWER_CASE), upperContent);
         response.addHeader(FOO_HEADER_MIXED_CASE, mixedContent);
         Assert.assertEquals(response.getHeader(FOO_HEADER_LOWER_CASE), mixedContent);
+    }
+
+    @Test
+    public void testPutHeader_multipleValues_allReturnedInGetAllHeaders() {
+        HttpResponse response = new HttpResponse(null, null);
+        response.addHeader("foo", "a");
+        response.addHeader("foo", "b");
+        response.addHeader("foo", "c");
+
+        Assert.assertArrayEquals(response.getAllHeaders().get("foo").toArray(), new String[] {"a", "b", "c"});
     }
 }

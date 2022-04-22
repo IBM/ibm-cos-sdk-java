@@ -1,5 +1,5 @@
 /*
- * Copyright 2019-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2019-2022 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -16,16 +16,17 @@
 package com.ibm.cloud.objectstorage.services.s3.transfer.internal;
 
 import com.ibm.cloud.objectstorage.annotation.SdkInternalApi;
+import java.io.File;
 import java.util.concurrent.Callable;
 import java.util.concurrent.CountDownLatch;
 
 @SdkInternalApi
 public final class PreparedDownloadContext {
     private final DownloadImpl transfer;
-    private final Callable<?> callable;
+    private final Callable<File> callable;
     private final CountDownLatch latch;
 
-    public PreparedDownloadContext(DownloadImpl transfer, Callable<?> callable, CountDownLatch latch) {
+    public PreparedDownloadContext(DownloadImpl transfer, Callable<File> callable, CountDownLatch latch) {
         this.transfer = transfer;
         this.callable = callable;
         this.latch = latch;
@@ -35,7 +36,7 @@ public final class PreparedDownloadContext {
         return transfer;
     }
 
-    public Callable<?> getCallable() {
+    public Callable<File> getCallable() {
         return callable;
     }
 

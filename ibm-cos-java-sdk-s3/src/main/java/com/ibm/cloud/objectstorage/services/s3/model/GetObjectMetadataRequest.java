@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2010-2022 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -20,29 +20,93 @@ import com.ibm.cloud.objectstorage.AmazonWebServiceRequest;
 import com.ibm.cloud.objectstorage.services.s3.AmazonS3Client;
 
 /**
- * <p>
- * Provides options for obtaining the metadata for the specified Amazon S3
- * object without actually fetching the object contents. This is useful if
- * obtaining only object metadata, and avoids wasting bandwidth from retrieving
- * the object data.
- * </p>
- * <p>
- * The object metadata contains information such as content type, content
- * disposition, etc., as well as custom user metadata that can be associated
- * with an object in Amazon S3.
- * </p>
- * <p>
- * For more information about enabling versioning for a bucket, see
- * {@link AmazonS3Client#setBucketVersioningConfiguration(SetBucketVersioningConfigurationRequest)}
- * .
- * </p>
+ * <p>The HEAD action retrieves metadata from an object without returning the object itself. This action is useful if
+ * you're only interested in an object's metadata. To use HEAD, you must have READ access to the object.</p>
+ *
+ * <p>A <code>HEAD</code> request has the same options as a <code>GET</code> action on an object. The response is identical
+ * to the <code>GET</code> response except that there is no response body. Because of this, if the <code>HEAD</code> request
+ * generates an error, it returns a generic <code>404 Not Found</code> or <code>403 Forbidden</code> code. It is not possible
+ * to retrieve the exact exception beyond these error codes.</p>
+ *
+ * <p>If you encrypt an object by using server-side encryption with customer-provided encryption keys (SSE-C) when you store
+ * the object in Amazon S3, then when you retrieve the metadata from the object, you must use the following headers:</p>
+ *
+ * <ul>
+ *     <li> <p>x-amz-server-side-encryption-customer-algorithm</p> </li>
+ *     <li> <p>x-amz-server-side-encryption-customer-key</p> </li> <li>
+ *         <p>x-amz-server-side-encryption-customer-key-MD5</p>
+ *     </li>
+ * </ul>
+ *
+ * <p>For more information about SSE-C, see
+ * <a href=\"https://docs.aws.amazon.com/AmazonS3/latest/dev/ServerSideEncryptionCustomerKeys.html\">Server-Side Encryption
+ * (Using Customer-Provided Encryption Keys)</a>.</p>
+ *
+ * <note>
+ *     <ul>
+ *         <li> <p>Encryption request headers, like <code>x-amz-server-side-encryption</code>, should not be sent for GET
+ *         requests if your object uses server-side encryption  with CMKs stored in Amazon Web Services KMS (SSE-KMS) or
+ *         server-side encryption with Amazon S3–managed encryption keys (SSE-S3). If your object does use these types of
+ *         keys, you’ll get an HTTP 400 BadRequest error.</p> </li>
+ *         <li> <p> The last modified property in this case is the creation date of the object.</p> </li>
+ *     </ul>
+ * </note>
+ *
+ * <p>Request headers are limited to 8 KB in size. For more information, see
+ * <a href=\"https://docs.aws.amazon.com/AmazonS3/latest/API/RESTCommonRequestHeaders.html\">Common Request Headers</a>.</p>
+ *
+ * <p>Consider the following when using request headers:</p>
+ *
+ * <ul>
+ *     <li> <p> Consideration 1 – If both of the <code>If-Match</code> and <code>If-Unmodified-Since</code> headers are
+ *     present in the request as follows:</p>
+ *     <ul>
+ *         <li> <p> <code>If-Match</code> condition evaluates to <code>true</code>, and;</p> </li>
+ *         <li> <p> <code>If-Unmodified-Since</code> condition evaluates to <code>false</code>;</p> </li>
+ *     </ul>
+ *
+ *         <p>Then Amazon S3 returns <code>200 OK</code> and the data requested.</p></li>
+ *     <li> <p> Consideration 2 – If both of the <code>If-None-Match</code> and <code>If-Modified-Since</code> headers are
+ *     present in the request as follows:</p>
+ *     <ul>
+ *         <li> <p> <code>If-None-Match</code> condition evaluates to <code>false</code>, and;</p> </li>
+ *         <li> <p> <code>If-Modified-Since</code> condition evaluates to <code>true</code>;</p> </li>
+ *     </ul>
+ *
+ *     <p>Then Amazon S3 returns the <code>304 Not Modified</code> response code.</p> </li>
+ * </ul>
+ *
+ * <p>For more information about conditional requests, see <a href=\"https://tools.ietf.org/html/rfc7232\">RFC 7232</a>.</p>
+ *
+ * <p> <b>Permissions</b> </p> <
+ *
+ * p>You need the relevant read object (or version) permission for this operation. For more information, see
+ * <a href=\"https://docs.aws.amazon.com/AmazonS3/latest/dev/using-with-s3-actions.html\">Specifying
+ * Permissions in a Policy</a>. If the object you request does not exist, the error Amazon S3 returns depends on whether
+ * you also have the s3:ListBucket permission.</p>
+ *
+ * <ul>
+ *     <li> <p>If you have the <code>s3:ListBucket</code> permission on the bucket, Amazon S3 returns an HTTP status code
+ *     404 (\"no such key\") error.</p> </li>
+ *     <li> <p>If you don’t have the <code>s3:ListBucket</code> permission, Amazon S3 returns an HTTP status code 403
+ *     (\"access denied\") error.</p> </li>
+ * </ul>
+ *
+ * <p>The following action is related to <code>HeadObject</code>:</p>
+ *
+ * <ul>
+ *     <li> <p> <a href=\"https://docs.aws.amazon.com/AmazonS3/latest/API/API_GetObject.html\">GetObject</a> </p> </li>
+ * </ul>
  *
  * @see GetObjectMetadataRequest#GetObjectMetadataRequest(String, String)
  * @see GetObjectMetadataRequest#GetObjectMetadataRequest(String, String, String)
  * @see GetObjectRequest
  */
 public class GetObjectMetadataRequest extends AmazonWebServiceRequest implements
-        SSECustomerKeyProvider, WormMirrorDestinationProvider, Serializable {
+        SSECustomerKeyProvider, WormMirrorDestinationProvider, Serializable
+        //IBM unsupported
+        //, ExpectedBucketOwnerRequest
+        {
     /**
      * The name of the bucket containing the object's whose metadata is being
      * retrieved.
@@ -53,10 +117,10 @@ public class GetObjectMetadataRequest extends AmazonWebServiceRequest implements
      * <i>AccessPointName</i>-<i>AccountId</i>.s3-accesspoint.<i>Region</i>.amazonaws.com.
      * </p>
      * <p>
-     * When using this operation using an access point through the AWS SDKs, you provide
+     * When using this operation using an access point through the Amazon Web Services SDKs, you provide
      * the access point ARN in place of the bucket name. For more information about access point
      * ARNs, see <a href=\"https://docs.aws.amazon.com/AmazonS3/latest/dev/using-access-points.html\">
-     * Using Access Points</a> in the <i>Amazon Simple Storage Service Developer Guide</i>.
+     * Using access points</a> in the <i>Amazon Simple Storage Service Developer Guide</i>.
      * </p>
      */
     private String bucketName;
@@ -89,7 +153,10 @@ public class GetObjectMetadataRequest extends AmazonWebServiceRequest implements
      */
     private Integer partNumber;
 
-    // IBM-Specifc
+    //IBM unsupported
+    //private String expectedBucketOwner;
+
+    // IBM-Specific
     /**
      * The optional destination-mirror value to use for WORM mirroring
      */
@@ -135,12 +202,60 @@ public class GetObjectMetadataRequest extends AmazonWebServiceRequest implements
         setVersionId(versionId);
     }
 
+//IBM unsupported
+//    public String getExpectedBucketOwner() {
+//        return expectedBucketOwner;
+//    }
+//
+//    public GetObjectMetadataRequest withExpectedBucketOwner(String expectedBucketOwner) {
+//        this.expectedBucketOwner = expectedBucketOwner;
+//        return this;
+//    }
+//
+//    public void setExpectedBucketOwner(String expectedBucketOwner) {
+//        withExpectedBucketOwner(expectedBucketOwner);
+//    }
+
     /**
-     * Gets the name of the bucket containing the object whose metadata is
-     * being retrieved.
+     * <p>
+     * The name of the bucket containing the object.
+     * </p>
+     * <p>
+     * When using this action with an access point, you must direct requests to the access point hostname. The access
+     * point hostname takes the form <i>AccessPointName</i>-<i>AccountId</i>.s3-accesspoint.<i>Region</i>.amazonaws.com.
+     * When using this action with an access point through the Amazon Web Services SDKs, you provide the access point
+     * ARN in place of the bucket name. For more information about access point ARNs, see <a
+     * href="https://docs.aws.amazon.com/AmazonS3/latest/userguide/using-access-points.html">Using access points</a> in
+     * the <i>Amazon S3 User Guide</i>.
+     * </p>
+     * <p>
+     * When using this action with Amazon S3 on Outposts, you must direct requests to the S3 on Outposts hostname. The
+     * S3 on Outposts hostname takes the form
+     * <i>AccessPointName</i>-<i>AccountId</i>.<i>outpostID</i>.s3-outposts.<i>Region</i>.amazonaws.com. When using this
+     * action using S3 on Outposts through the Amazon Web Services SDKs, you provide the Outposts bucket ARN in place of
+     * the bucket name. For more information about S3 on Outposts ARNs, see <a
+     * href="https://docs.aws.amazon.com/AmazonS3/latest/userguide/S3onOutposts.html">Using S3 on Outposts</a> in the
+     * <i>Amazon S3 User Guide</i>.
+     * </p>
      *
-     * @return The name of the bucket containing the object whose metadata is
-     *         being retrieved.
+     * @return The name of the bucket containing the object.</p>
+     *         <p>
+     *         When using this action with an access point, you must direct requests to the access point hostname. The
+     *         access point hostname takes the form
+     *         <i>AccessPointName</i>-<i>AccountId</i>.s3-accesspoint.<i>Region</i>.amazonaws.com. When using this
+     *         action with an access point through the Amazon Web Services SDKs, you provide the access point ARN in
+     *         place of the bucket name. For more information about access point ARNs, see <a
+     *         href="https://docs.aws.amazon.com/AmazonS3/latest/userguide/using-access-points.html">Using access
+     *         points</a> in the <i>Amazon S3 User Guide</i>.
+     *         </p>
+     *         <p>
+     *         When using this action with Amazon S3 on Outposts, you must direct requests to the S3 on Outposts
+     *         hostname. The S3 on Outposts hostname takes the form
+     *         <i>AccessPointName</i>-<i>AccountId</i>.<i>outpostID</i>.s3-outposts.<i>Region</i>.amazonaws.com. When
+     *         using this action using S3 on Outposts through the Amazon Web Services SDKs, you provide the Outposts
+     *         bucket ARN in place of the bucket name. For more information about S3 on Outposts ARNs, see <a
+     *         href="https://docs.aws.amazon.com/AmazonS3/latest/userguide/S3onOutposts.html">Using S3 on Outposts</a>
+     *         in the <i>Amazon S3 User Guide</i>.
      *
      * @see GetObjectMetadataRequest#setBucketName(String bucketName)
      * @see GetObjectMetadataRequest#withBucketName(String)
@@ -159,10 +274,10 @@ public class GetObjectMetadataRequest extends AmazonWebServiceRequest implements
      * <i>AccessPointName</i>-<i>AccountId</i>.s3-accesspoint.<i>Region</i>.amazonaws.com.
      * </p>
      * <p>
-     * When using this operation using an access point through the AWS SDKs, you provide
+     * When using this operation using an access point through the Amazon Web Services SDKs, you provide
      * the access point ARN in place of the bucket name. For more information about access point
      * ARNs, see <a href=\"https://docs.aws.amazon.com/AmazonS3/latest/dev/using-access-points.html\">
-     * Using Access Points</a> in the <i>Amazon Simple Storage Service Developer Guide</i>.
+     * Using access points</a> in the <i>Amazon Simple Storage Service Developer Guide</i>.
      * </p>
      *
      * @param bucketName
@@ -177,26 +292,47 @@ public class GetObjectMetadataRequest extends AmazonWebServiceRequest implements
     }
 
     /**
-     * Sets the name of the bucket containing the object whose metadata is
-     * being retrieved.
-     * Returns this {@link GetObjectMetadataRequest}, enabling additional method
-     * calls to be chained together.
-     *
      * <p>
-     * When using this API with an access point, you must direct requests
-     * to the access point hostname. The access point hostname takes the form
-     * <i>AccessPointName</i>-<i>AccountId</i>.s3-accesspoint.<i>Region</i>.amazonaws.com.
+     * The name of the bucket containing the object.
      * </p>
      * <p>
-     * When using this operation using an access point through the AWS SDKs, you provide
-     * the access point ARN in place of the bucket name. For more information about access point
-     * ARNs, see <a href=\"https://docs.aws.amazon.com/AmazonS3/latest/dev/using-access-points.html\">
-     * Using Access Points</a> in the <i>Amazon Simple Storage Service Developer Guide</i>.
+     * When using this action with an access point, you must direct requests to the access point hostname. The
+     * access point hostname takes the form
+     * <i>AccessPointName</i>-<i>AccountId</i>.s3-accesspoint.<i>Region</i>.amazonaws.com. When using this action
+     * with an access point through the Amazon Web Services SDKs, you provide the access point ARN in place of the
+     * bucket name. For more information about access point ARNs, see <a
+     * href="https://docs.aws.amazon.com/AmazonS3/latest/userguide/using-access-points.html">Using access points</a>
+     * in the <i>Amazon S3 User Guide</i>.
+     * </p>
+     * <p>
+     * When using this action with Amazon S3 on Outposts, you must direct requests to the S3 on Outposts hostname.
+     * The S3 on Outposts hostname takes the form
+     * <i>AccessPointName</i>-<i>AccountId</i>.<i>outpostID</i>.s3-outposts.<i>Region</i>.amazonaws.com. When using
+     * this action using S3 on Outposts through the Amazon Web Services SDKs, you provide the Outposts bucket ARN in
+     * place of the bucket name. For more information about S3 on Outposts ARNs, see <a
+     * href="https://docs.aws.amazon.com/AmazonS3/latest/userguide/S3onOutposts.html">Using S3 on Outposts</a> in
+     * the <i>Amazon S3 User Guide</i>.
      * </p>
      *
      * @param bucketName
-     *            The name of the bucket, or access point ARN, containing the object's whose metadata
-     *            is being retrieved.
+     *        The name of the bucket containing the object.</p>
+     *        <p>
+     *        When using this action with an access point, you must direct requests to the access point hostname.
+     *        The access point hostname takes the form
+     *        <i>AccessPointName</i>-<i>AccountId</i>.s3-accesspoint.<i>Region</i>.amazonaws.com. When using this
+     *        action with an access point through the Amazon Web Services SDKs, you provide the access point ARN in
+     *        place of the bucket name. For more information about access point ARNs, see <a
+     *        href="https://docs.aws.amazon.com/AmazonS3/latest/userguide/using-access-points.html">Using access
+     *        points</a> in the <i>Amazon S3 User Guide</i>.
+     *        </p>
+     *        <p>
+     *        When using this action with Amazon S3 on Outposts, you must direct requests to the S3 on Outposts
+     *        hostname. The S3 on Outposts hostname takes the form
+     *        <i>AccessPointName</i>-<i>AccountId</i>.<i>outpostID</i>.s3-outposts.<i>Region</i>.amazonaws.com. When
+     *        using this action using S3 on Outposts through the Amazon Web Services SDKs, you provide the Outposts
+     *        bucket ARN in place of the bucket name. For more information about S3 on Outposts ARNs, see <a
+     *        href="https://docs.aws.amazon.com/AmazonS3/latest/userguide/S3onOutposts.html">Using S3 on
+     *        Outposts</a> in the <i>Amazon S3 User Guide</i>.
      *
      * @return This {@link GetObjectMetadataRequest}, enabling additional method
      *         calls to be chained together.
@@ -477,7 +613,7 @@ public class GetObjectMetadataRequest extends AmazonWebServiceRequest implements
         return this;
     }
 
-    // IBM-Specifc
+    // IBM-Specific
     /**
      * Returns the optional mirror-destination value for WORM mirroring
      *
@@ -488,10 +624,10 @@ public class GetObjectMetadataRequest extends AmazonWebServiceRequest implements
         return wormMirrorDestination;
     }
 
-    // IBM-Specifc
+    // IBM-Specific
     /**
      * Sets the optional mirror-destination value for WORM mirroring
-     * 
+     *
      * @param wormMirrorDestination
      *            The optional mirror-destination value for WORM mirroring
      */
@@ -500,10 +636,10 @@ public class GetObjectMetadataRequest extends AmazonWebServiceRequest implements
         this.wormMirrorDestination = wormMirrorDestination;
     }
 
-    // IBM-Specifc
+    // IBM-Specific
     /**
      * Sets the optional mirror-destination value for WORM mirroring
-     * and returns the updated GetObjectRequest so that additional 
+     * and returns the updated GetObjectRequest so that additional
      * method calls may be chained together.
      *
      * @param wormMirrorDestination

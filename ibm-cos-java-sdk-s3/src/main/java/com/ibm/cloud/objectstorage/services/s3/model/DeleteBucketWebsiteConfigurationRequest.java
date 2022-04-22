@@ -1,5 +1,5 @@
 /*
- * Copyright 2011-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2011-2022 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -43,12 +43,18 @@ import com.ibm.cloud.objectstorage.services.s3.AmazonS3;
  *
  * @see AmazonS3#deleteBucketWebsiteConfiguration(DeleteBucketWebsiteConfigurationRequest)
  */
-public class DeleteBucketWebsiteConfigurationRequest extends GenericBucketRequest implements Serializable {
+public class DeleteBucketWebsiteConfigurationRequest extends GenericBucketRequest implements Serializable
+//IBM unsupported
+//, ExpectedBucketOwnerRequest 
+{
+
+    //IBM unsupported
+    //private String expectedBucketOwner;
 
     /**
      * Creates a new request object, ready to be executed to delete the website
      * configuration for the specified bucket.
-     * 
+     *
      * @param bucketName
      *            The name of the bucket whose website configuration is being
      *            deleted.
@@ -56,4 +62,17 @@ public class DeleteBucketWebsiteConfigurationRequest extends GenericBucketReques
     public DeleteBucketWebsiteConfigurationRequest(String bucketName) {
         super(bucketName);
     }
+
+//    public String getExpectedBucketOwner() {
+//        return expectedBucketOwner;
+//    }
+//
+//    public DeleteBucketWebsiteConfigurationRequest withExpectedBucketOwner(String expectedBucketOwner) {
+//        this.expectedBucketOwner = expectedBucketOwner;
+//        return this;
+//    }
+//
+//    public void setExpectedBucketOwner(String expectedBucketOwner) {
+//        withExpectedBucketOwner(expectedBucketOwner);
+//    }
 }

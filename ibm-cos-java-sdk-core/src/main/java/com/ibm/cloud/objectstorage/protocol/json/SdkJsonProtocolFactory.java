@@ -26,6 +26,7 @@ import com.ibm.cloud.objectstorage.http.HttpResponseHandler;
 import com.ibm.cloud.objectstorage.protocol.OperationInfo;
 import com.ibm.cloud.objectstorage.protocol.Protocol;
 import com.ibm.cloud.objectstorage.protocol.ProtocolRequestMarshaller;
+import com.ibm.cloud.objectstorage.protocol.json.internal.EmptyBodyJsonMarshaller;
 import com.ibm.cloud.objectstorage.transform.JsonErrorUnmarshaller;
 import com.ibm.cloud.objectstorage.transform.JsonUnmarshallerContext;
 import com.ibm.cloud.objectstorage.transform.Unmarshaller;
@@ -65,7 +66,7 @@ public class SdkJsonProtocolFactory implements SdkJsonMarshallerFactory {
                 .contentType(getContentType())
                 .operationInfo(operationInfo)
                 .originalRequest(origRequest)
-                .sendExplicitNullForPayload(false)
+                .emptyBodyMarshaller(createEmptyBodyMarshaller(operationInfo))
                 .build();
     }
 
@@ -74,6 +75,24 @@ public class SdkJsonProtocolFactory implements SdkJsonMarshallerFactory {
             return createGenerator();
         } else {
             return StructuredJsonGenerator.NO_OP;
+        }
+    }
+
+    /**
+     * For requests with payloads, if it has an explicit payload member and that member is null,
+     * the body should be rendered as empty JSON.
+     *
+     * The API Gateway protocol has it's own factory and should not appear here.
+     */
+    private EmptyBodyJsonMarshaller createEmptyBodyMarshaller(OperationInfo operationInfo) {
+        if (operationInfo.protocol() == Protocol.API_GATEWAY) {
+            throw new IllegalStateException("Detected the API_GATEWAY protocol which should not be used with this "
+                                            + "protocol factory.");
+        }
+        if (!operationInfo.hasPayloadMembers() || operationInfo.protocol() == Protocol.API_GATEWAY) {
+            return EmptyBodyJsonMarshaller.NULL;
+        } else {
+            return EmptyBodyJsonMarshaller.EMPTY;
         }
     }
 

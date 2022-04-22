@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2010-2022 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -13,6 +13,8 @@
  * permissions and limitations under the License.
  */
 package com.ibm.cloud.objectstorage;
+
+import com.ibm.cloud.objectstorage.retry.RetryMode;
 
 /**
  * SDKGlobalConfiguration is to configure any global settings
@@ -70,6 +72,20 @@ public class SDKGlobalConfiguration {
      */
     public static final String EC2_METADATA_SERVICE_OVERRIDE_SYSTEM_PROPERTY =
         "com.amazonaws.sdk.ec2MetadataServiceEndpointOverride";
+
+    /**
+     * Environment variable for overriding the Amazon EC2 Instance Metadata Service
+     * endpoint.
+     */
+    public static final String EC2_METADATA_SERVICE_OVERRIDE_ENV_VAR =
+        "AWS_EC2_METADATA_SERVICE_ENDPOINT";
+
+    /**
+     * The number of seconds (either as an integer or double) before a connection to the instance
+     * metadata service should time out. This is used for both the socket connect and read timeouts.
+     */
+    public static final String AWS_METADATA_SERVICE_TIMEOUT_ENV_VAR =
+        "AWS_METADATA_SERVICE_TIMEOUT";
 
     /**
      * System property for enabling retry throttling.
@@ -208,6 +224,50 @@ public class SDKGlobalConfiguration {
     public static final String PROFILING_SYSTEM_PROPERTY =
         "com.amazonaws.sdk.enableRuntimeProfiling";
 
+    /**
+     * The default host used by client side monitoring.
+     */
+    ///IBM unsupported
+    //public static final String DEFAULT_AWS_CSM_HOST = "127.0.0.1";
+
+    /**
+     * The default port used by client side monitoring.
+     */
+    //IBM unsupported
+    //public static final int DEFAULT_AWS_CSM_PORT = 31000;
+
+    /**
+     * The default client Id used by client side monitoring.
+     */
+    //IBM unsupported
+    //public static final String DEFAULT_AWS_CSM_CLIENT_ID = "";
+
+    /**
+     * System property to enable/disable client side monitoring.
+     */
+    //IBM unsupported
+    //public static final String AWS_CSM_ENABLED_SYSTEM_PROPERTY = "com.ibm.cloud.objectstorage.sdk.csm.enabled";
+
+    /**
+     * System property to set the host that will receive the client side monitoring events.
+     */
+    //IBM unsupported
+    //public static final String AWS_CSM_HOST_SYSTEM_PROPERTY = "com.ibm.cloud.objectstorage.sdk.csm.host";
+
+    /**
+     * System property to set the port of the out of process client side
+     * monitoring agent.
+     */
+    //IBM unsupported
+    //public static final String AWS_CSM_PORT_SYSTEM_PROPERTY = "com.ibm.cloud.objectstorage.sdk.csm.port";
+
+    /**
+     * System property to set the client ID to use for client side monitoring
+     * events.
+     */
+    //IBM unsupported
+    //public static final String AWS_CSM_CLIENT_ID_SYSTEM_PROPERTY = "com.ibm.cloud.objectstorage.sdk.csm.clientId";
+
     /////////////////////// IBM Variables ///////////////////////
     /** Global System Property variable name for ibm api key */
     public static final String IBM_API_KEY_SYSTEM_PROPERTY = "ibm.apiKeyId";
@@ -299,6 +359,52 @@ public class SDKGlobalConfiguration {
      * System property to disable loading credentials or regions from EC2 Metadata instance service.
      */
     public static final String AWS_EC2_METADATA_DISABLED_SYSTEM_PROPERTY = "com.amazonaws.sdk.disableEc2Metadata";
+
+    /**
+     * Environment variable to enable/disable client side monitoring.
+     */
+    //IBM unsupported
+    //public static final String AWS_CSM_ENABLED_ENV_VAR = "AWS_CSM_ENABLED";
+
+    /**
+     * Environment variable to set the host to send client side monitor events to.
+     */
+    //IBM unsupported
+    //public static final String AWS_CSM_HOST_ENV_VAR = "AWS_CSM_HOST";
+
+    /**
+     * Environment varaible to set the port of the out of process client side
+     * monitoring agent.
+     */
+    //IBM unsupported
+    //public static final String AWS_CSM_PORT_ENV_VAR = "AWS_CSM_PORT";
+
+    /**
+     * Environment variable to set the client ID to use for client side
+     * monitoring events.
+     */
+    //IBM unsupported
+    //public static final String AWS_CSM_CLIENT_ID_ENV_VAR = "AWS_CSM_CLIENT_ID";
+
+    /**
+     * System properties to set the retry mode to use. See {@link RetryMode} for available values
+     */
+    public static final String AWS_RETRY_MODE_SYSTEM_PROPERTY = "com.amazonaws.sdk.retryMode";
+
+    /**
+     * Environment variable to set the retry mode to use. See {@link RetryMode} for available values
+     */
+    public static final String AWS_RETRY_MODE_ENV_VAR = "AWS_RETRY_MODE";
+
+    /**
+     * System properties to set the retry max attempts
+     */
+    public static final String AWS_MAX_ATTEMPTS_SYSTEM_PROPERTY = "com.amazonaws.sdk.maxAttempts";
+
+    /**
+     * Environment variable to set the retry max attempts
+     */
+    public static final String AWS_MAX_ATTEMPTS_ENV_VAR= "AWS_MAX_ATTEMPTS";
 
     /**
      * @deprecated by {@link SDKGlobalTime#setGlobalTimeOffset(int)}

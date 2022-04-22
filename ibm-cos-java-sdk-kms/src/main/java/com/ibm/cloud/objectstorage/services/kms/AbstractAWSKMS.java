@@ -1,11 +1,11 @@
 /*
- * Copyright 2014-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
- * 
+ * Copyright 2017-2022 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"). You may not use this file except in compliance with
  * the License. A copy of the License is located at
- * 
+ *
  * http://aws.amazon.com/apache2.0
- * 
+ *
  * or in the "license" file accompanying this file. This file is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
  * CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions
  * and limitations under the License.
@@ -42,10 +42,22 @@ public class AbstractAWSKMS implements AWSKMS {
         throw new java.lang.UnsupportedOperationException();
     }
 
+    //IBM unsupported
+    // @Override
+    // public ConnectCustomKeyStoreResult connectCustomKeyStore(ConnectCustomKeyStoreRequest request) {
+    //     throw new java.lang.UnsupportedOperationException();
+    // }
+
     @Override
     public CreateAliasResult createAlias(CreateAliasRequest request) {
         throw new java.lang.UnsupportedOperationException();
     }
+
+    //IBM unsupported
+    // @Override
+    // public CreateCustomKeyStoreResult createCustomKeyStore(CreateCustomKeyStoreRequest request) {
+    //     throw new java.lang.UnsupportedOperationException();
+    // }
 
     @Override
     public CreateGrantResult createGrant(CreateGrantRequest request) {
@@ -72,10 +84,22 @@ public class AbstractAWSKMS implements AWSKMS {
         throw new java.lang.UnsupportedOperationException();
     }
 
+    //IBM unsupported
+    // @Override
+    // public DeleteCustomKeyStoreResult deleteCustomKeyStore(DeleteCustomKeyStoreRequest request) {
+    //     throw new java.lang.UnsupportedOperationException();
+    // }
+
     @Override
     public DeleteImportedKeyMaterialResult deleteImportedKeyMaterial(DeleteImportedKeyMaterialRequest request) {
         throw new java.lang.UnsupportedOperationException();
     }
+
+    //IBM unsupported
+    // @Override
+    // public DescribeCustomKeyStoresResult describeCustomKeyStores(DescribeCustomKeyStoresRequest request) {
+    //     throw new java.lang.UnsupportedOperationException();
+    // }
 
     @Override
     public DescribeKeyResult describeKey(DescribeKeyRequest request) {
@@ -91,6 +115,12 @@ public class AbstractAWSKMS implements AWSKMS {
     public DisableKeyRotationResult disableKeyRotation(DisableKeyRotationRequest request) {
         throw new java.lang.UnsupportedOperationException();
     }
+
+    //IBM unsupported
+    // @Override
+    // public DisconnectCustomKeyStoreResult disconnectCustomKeyStore(DisconnectCustomKeyStoreRequest request) {
+    //     throw new java.lang.UnsupportedOperationException();
+    // }
 
     @Override
     public EnableKeyResult enableKey(EnableKeyRequest request) {
@@ -111,6 +141,17 @@ public class AbstractAWSKMS implements AWSKMS {
     public GenerateDataKeyResult generateDataKey(GenerateDataKeyRequest request) {
         throw new java.lang.UnsupportedOperationException();
     }
+
+    //IBM unsupported
+    // @Override
+    // public GenerateDataKeyPairResult generateDataKeyPair(GenerateDataKeyPairRequest request) {
+    //     throw new java.lang.UnsupportedOperationException();
+    // }
+
+    // @Override
+    // public GenerateDataKeyPairWithoutPlaintextResult generateDataKeyPairWithoutPlaintext(GenerateDataKeyPairWithoutPlaintextRequest request) {
+    //     throw new java.lang.UnsupportedOperationException();
+    // }
 
     @Override
     public GenerateDataKeyWithoutPlaintextResult generateDataKeyWithoutPlaintext(GenerateDataKeyWithoutPlaintextRequest request) {
@@ -141,6 +182,12 @@ public class AbstractAWSKMS implements AWSKMS {
     public GetParametersForImportResult getParametersForImport(GetParametersForImportRequest request) {
         throw new java.lang.UnsupportedOperationException();
     }
+
+    //IBM unsupported
+    // @Override
+    // public GetPublicKeyResult getPublicKey(GetPublicKeyRequest request) {
+    //     throw new java.lang.UnsupportedOperationException();
+    // }
 
     @Override
     public ImportKeyMaterialResult importKeyMaterial(ImportKeyMaterialRequest request) {
@@ -197,6 +244,12 @@ public class AbstractAWSKMS implements AWSKMS {
         throw new java.lang.UnsupportedOperationException();
     }
 
+    //IBM unsupported
+    // @Override
+    // public ReplicateKeyResult replicateKey(ReplicateKeyRequest request) {
+    //     throw new java.lang.UnsupportedOperationException();
+    // }
+
     @Override
     public RetireGrantResult retireGrant(RetireGrantRequest request) {
         throw new java.lang.UnsupportedOperationException();
@@ -217,6 +270,12 @@ public class AbstractAWSKMS implements AWSKMS {
         throw new java.lang.UnsupportedOperationException();
     }
 
+    //IBM unsupported
+    // @Override
+    // public SignResult sign(SignRequest request) {
+    //     throw new java.lang.UnsupportedOperationException();
+    // }
+
     @Override
     public TagResourceResult tagResource(TagResourceRequest request) {
         throw new java.lang.UnsupportedOperationException();
@@ -232,10 +291,27 @@ public class AbstractAWSKMS implements AWSKMS {
         throw new java.lang.UnsupportedOperationException();
     }
 
+    //IBM unsupported
+    // @Override
+    // public UpdateCustomKeyStoreResult updateCustomKeyStore(UpdateCustomKeyStoreRequest request) {
+    //     throw new java.lang.UnsupportedOperationException();
+    // }
+
     @Override
     public UpdateKeyDescriptionResult updateKeyDescription(UpdateKeyDescriptionRequest request) {
         throw new java.lang.UnsupportedOperationException();
     }
+
+    //IBM unsupported
+    // @Override
+    // public UpdatePrimaryRegionResult updatePrimaryRegion(UpdatePrimaryRegionRequest request) {
+    //     throw new java.lang.UnsupportedOperationException();
+    // }
+
+    // @Override
+    // public VerifyResult verify(VerifyRequest request) {
+    //     throw new java.lang.UnsupportedOperationException();
+    // }
 
     @Override
     public void shutdown() {

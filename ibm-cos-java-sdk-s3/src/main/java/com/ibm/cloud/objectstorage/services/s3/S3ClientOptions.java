@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2010-2022 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -33,6 +33,12 @@ public class S3ClientOptions {
     public static final boolean DEFAULT_DUALSTACK_ENABLED = false;
     /** By default, clients should be created with a region. */
     public static final boolean DEFAULT_FORCE_GLOBAL_BUCKET_ACCESS_ENABLED = false;
+    /** By default, clients will not allow a call to a different region that has been specified in an ARN */
+    //IBM unsupported
+    //public static final boolean DEFAULT_USE_ARN_REGION = false;
+    /** By default, region us-east-1 translates to the global endpoint */
+    //IBM unsupported
+    //public static final boolean DEFAULT_US_EAST_1_REGION_ENDPOINT_ENABLED = false;
 
     /*
      * TODO: make it final after we remove the deprecated setters.
@@ -43,6 +49,9 @@ public class S3ClientOptions {
     private final boolean payloadSigningEnabled;
     private final boolean dualstackEnabled;
     private final boolean forceGlobalBucketAccessEnabled;
+//IBM unsupported
+//    private final boolean useArnRegion;
+//    private final boolean regionalUsEast1EndpointEnabled;
 
     /**
      * @return a new S3ClientOptions builder.
@@ -60,6 +69,9 @@ public class S3ClientOptions {
         private boolean payloadSigningEnabled = DEFAULT_PAYLOAD_SIGNING_ENABLED;
         private boolean dualstackEnabled = DEFAULT_DUALSTACK_ENABLED;
         private boolean forceGlobalBucketAccessEnabled = DEFAULT_FORCE_GLOBAL_BUCKET_ACCESS_ENABLED;
+//IBM unsupported
+//        private Boolean useArnRegion = null;
+//        private boolean regionalUsEast1EndpointEnabled = DEFAULT_US_EAST_1_REGION_ENDPOINT_ENABLED;
 
         private Builder() {}
 
@@ -192,6 +204,37 @@ public class S3ClientOptions {
             this.forceGlobalBucketAccessEnabled = true;
             return this;
         }
+
+        /**
+         * <p>
+         * If global bucket access is not enabled, this setting will enable the client to make calls to a region
+         * specified in an ARN that represents an S3 resource even if that region is different to the region the client
+         * was initialized with. This setting is disabled by default.
+         * </p>
+         *
+         * @return this Builder instance that can be used for method chaining
+         */
+//IBM unsupported
+//        public Builder enableUseArnRegion() {
+//            this.useArnRegion = true;
+//            return this;
+//        }
+
+        /**
+         * <p>
+         * Enable resolving region us-east-1 as a regional endpoint instead of defaulting to the global endpoint.
+         * </p>
+         *
+         * @see AmazonS3ClientBuilder#setRegionalUsEast1EndpointEnabled(Boolean)
+         * @return this Builder instance that can be used for method chaining
+         */
+//IBM unsupported
+//        public Builder enableRegionalUsEast1Endpoint()
+//        {
+//            this.regionalUsEast1EndpointEnabled = true;
+//            return this;
+//        }
+
     }
 
     /**
@@ -206,6 +249,9 @@ public class S3ClientOptions {
         this.payloadSigningEnabled = DEFAULT_PAYLOAD_SIGNING_ENABLED;
         this.dualstackEnabled = DEFAULT_DUALSTACK_ENABLED;
         this.forceGlobalBucketAccessEnabled = DEFAULT_FORCE_GLOBAL_BUCKET_ACCESS_ENABLED;
+//IBM unsupported
+//        this.useArnRegion = DEFAULT_USE_ARN_REGION;
+//        this.regionalUsEast1EndpointEnabled = DEFAULT_US_EAST_1_REGION_ENDPOINT_ENABLED;
     }
 
     /**
@@ -220,6 +266,9 @@ public class S3ClientOptions {
         this.payloadSigningEnabled = other.payloadSigningEnabled;
         this.dualstackEnabled = other.dualstackEnabled;
         this.forceGlobalBucketAccessEnabled = other.forceGlobalBucketAccessEnabled;
+//IBM unsupported
+//        this.useArnRegion = other.useArnRegion;
+//        this.regionalUsEast1EndpointEnabled = other.regionalUsEast1EndpointEnabled;
     }
 
     private S3ClientOptions(Builder b) {
@@ -229,6 +278,9 @@ public class S3ClientOptions {
         this.payloadSigningEnabled = b.payloadSigningEnabled;
         this.dualstackEnabled = b.dualstackEnabled;
         this.forceGlobalBucketAccessEnabled = b.forceGlobalBucketAccessEnabled;
+//IBM unsupported
+//        this.useArnRegion = Boolean.TRUE.equals(b.useArnRegion);
+//        this.regionalUsEast1EndpointEnabled = b.regionalUsEast1EndpointEnabled;
     }
 
     /**
@@ -334,6 +386,29 @@ public class S3ClientOptions {
     public boolean isForceGlobalBucketAccessEnabled() {
         return this.forceGlobalBucketAccessEnabled;
     }
+
+    /**
+     * <p>
+     * Returns whether the client should be configured to allow calls to different regions specified in an ARN.
+     * </p>
+     * @see Builder#enableUseArnRegion()
+     */
+//IBM unsupported
+//    public boolean isUseArnRegion() {
+//        return this.useArnRegion;
+//    }
+
+    /**
+     * <p>
+     * Returns whether the client has enabled resolving us-east-1 to a regional endpoint.
+     * </p>
+     *
+     * @return True if regional endpoint translation is enabled
+     */
+//IBM unsupported
+//    public boolean isRegionalUsEast1EndpointEnabled() {
+//        return this.regionalUsEast1EndpointEnabled;
+//    }
 
     /**
      * @deprecated Use {@link S3ClientOptions#builder()} to build new

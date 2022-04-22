@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2010-2022 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -18,12 +18,12 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 
-import org.junit.Assert;
-import org.junit.Test;
-
 import com.ibm.cloud.objectstorage.auth.AWS4Signer;
 import com.ibm.cloud.objectstorage.auth.QueryStringSigner;
 import com.ibm.cloud.objectstorage.http.IdleConnectionReaper;
+import java.net.URI;
+import org.junit.Assert;
+import org.junit.Test;
 
 public class AmazonWebServiceClientTest {
 
@@ -82,6 +82,11 @@ public class AmazonWebServiceClientTest {
         AmazonTestClient client = new AmazonTestClient();
         assertNotNull(client.getMonitoringListeners());
         assertEquals(0, client.getMonitoringListeners().size());
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void badUriThrowsIllegalArgumentException() {
+        new AmazonTestClient().getSignerByURI(URI.create("https://s3.US_WEST_2.amazonaws.com"));
     }
 
     /**

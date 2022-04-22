@@ -1,11 +1,11 @@
 /*
- * Copyright 2014-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
- * 
+ * Copyright 2017-2022 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"). You may not use this file except in compliance with
  * the License. A copy of the License is located at
- * 
+ *
  * http://aws.amazon.com/apache2.0
- * 
+ *
  * or in the "license" file accompanying this file. This file is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
  * CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions
  * and limitations under the License.
@@ -19,9 +19,9 @@ import com.ibm.cloud.objectstorage.protocol.ProtocolMarshaller;
 
 /**
  * <p>
- * Contains information about an entry in a list of grants.
+ * Contains information about a grant.
  * </p>
- * 
+ *
  * @see <a href="http://docs.aws.amazon.com/goto/WebAPI/kms-2014-11-01/GrantListEntry" target="_top">AWS API
  *      Documentation</a>
  */
@@ -30,7 +30,7 @@ public class GrantListEntry implements Serializable, Cloneable, StructuredPojo {
 
     /**
      * <p>
-     * The unique identifier for the customer master key (CMK) to which the grant applies.
+     * The unique identifier for the KMS key to which the grant applies.
      * </p>
      */
     private String keyId;
@@ -55,7 +55,14 @@ public class GrantListEntry implements Serializable, Cloneable, StructuredPojo {
     private java.util.Date creationDate;
     /**
      * <p>
-     * The principal that receives the grant's permissions.
+     * The identity that gets the permissions in the grant.
+     * </p>
+     * <p>
+     * The <code>GranteePrincipal</code> field in the <code>ListGrants</code> response usually contains the user or role
+     * designated as the grantee principal in the grant. However, when the grantee principal in the grant is an Amazon
+     * Web Services service, the <code>GranteePrincipal</code> field contains the <a href=
+     * "https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_elements_principal.html#principal-services"
+     * >service principal</a>, which might represent several different grantee principals.
      * </p>
      */
     private String granteePrincipal;
@@ -67,7 +74,7 @@ public class GrantListEntry implements Serializable, Cloneable, StructuredPojo {
     private String retiringPrincipal;
     /**
      * <p>
-     * The AWS account under which the grant was issued.
+     * The Amazon Web Services account under which the grant was issued.
      * </p>
      */
     private String issuingAccount;
@@ -87,11 +94,11 @@ public class GrantListEntry implements Serializable, Cloneable, StructuredPojo {
 
     /**
      * <p>
-     * The unique identifier for the customer master key (CMK) to which the grant applies.
+     * The unique identifier for the KMS key to which the grant applies.
      * </p>
-     * 
+     *
      * @param keyId
-     *        The unique identifier for the customer master key (CMK) to which the grant applies.
+     *        The unique identifier for the KMS key to which the grant applies.
      */
 
     public void setKeyId(String keyId) {
@@ -100,10 +107,10 @@ public class GrantListEntry implements Serializable, Cloneable, StructuredPojo {
 
     /**
      * <p>
-     * The unique identifier for the customer master key (CMK) to which the grant applies.
+     * The unique identifier for the KMS key to which the grant applies.
      * </p>
-     * 
-     * @return The unique identifier for the customer master key (CMK) to which the grant applies.
+     *
+     * @return The unique identifier for the KMS key to which the grant applies.
      */
 
     public String getKeyId() {
@@ -112,11 +119,11 @@ public class GrantListEntry implements Serializable, Cloneable, StructuredPojo {
 
     /**
      * <p>
-     * The unique identifier for the customer master key (CMK) to which the grant applies.
+     * The unique identifier for the KMS key to which the grant applies.
      * </p>
-     * 
+     *
      * @param keyId
-     *        The unique identifier for the customer master key (CMK) to which the grant applies.
+     *        The unique identifier for the KMS key to which the grant applies.
      * @return Returns a reference to this object so that method calls can be chained together.
      */
 
@@ -129,7 +136,7 @@ public class GrantListEntry implements Serializable, Cloneable, StructuredPojo {
      * <p>
      * The unique identifier for the grant.
      * </p>
-     * 
+     *
      * @param grantId
      *        The unique identifier for the grant.
      */
@@ -142,7 +149,7 @@ public class GrantListEntry implements Serializable, Cloneable, StructuredPojo {
      * <p>
      * The unique identifier for the grant.
      * </p>
-     * 
+     *
      * @return The unique identifier for the grant.
      */
 
@@ -154,7 +161,7 @@ public class GrantListEntry implements Serializable, Cloneable, StructuredPojo {
      * <p>
      * The unique identifier for the grant.
      * </p>
-     * 
+     *
      * @param grantId
      *        The unique identifier for the grant.
      * @return Returns a reference to this object so that method calls can be chained together.
@@ -170,7 +177,7 @@ public class GrantListEntry implements Serializable, Cloneable, StructuredPojo {
      * The friendly name that identifies the grant. If a name was provided in the <a>CreateGrant</a> request, that name
      * is returned. Otherwise this value is null.
      * </p>
-     * 
+     *
      * @param name
      *        The friendly name that identifies the grant. If a name was provided in the <a>CreateGrant</a> request,
      *        that name is returned. Otherwise this value is null.
@@ -185,7 +192,7 @@ public class GrantListEntry implements Serializable, Cloneable, StructuredPojo {
      * The friendly name that identifies the grant. If a name was provided in the <a>CreateGrant</a> request, that name
      * is returned. Otherwise this value is null.
      * </p>
-     * 
+     *
      * @return The friendly name that identifies the grant. If a name was provided in the <a>CreateGrant</a> request,
      *         that name is returned. Otherwise this value is null.
      */
@@ -199,7 +206,7 @@ public class GrantListEntry implements Serializable, Cloneable, StructuredPojo {
      * The friendly name that identifies the grant. If a name was provided in the <a>CreateGrant</a> request, that name
      * is returned. Otherwise this value is null.
      * </p>
-     * 
+     *
      * @param name
      *        The friendly name that identifies the grant. If a name was provided in the <a>CreateGrant</a> request,
      *        that name is returned. Otherwise this value is null.
@@ -215,7 +222,7 @@ public class GrantListEntry implements Serializable, Cloneable, StructuredPojo {
      * <p>
      * The date and time when the grant was created.
      * </p>
-     * 
+     *
      * @param creationDate
      *        The date and time when the grant was created.
      */
@@ -228,7 +235,7 @@ public class GrantListEntry implements Serializable, Cloneable, StructuredPojo {
      * <p>
      * The date and time when the grant was created.
      * </p>
-     * 
+     *
      * @return The date and time when the grant was created.
      */
 
@@ -240,7 +247,7 @@ public class GrantListEntry implements Serializable, Cloneable, StructuredPojo {
      * <p>
      * The date and time when the grant was created.
      * </p>
-     * 
+     *
      * @param creationDate
      *        The date and time when the grant was created.
      * @return Returns a reference to this object so that method calls can be chained together.
@@ -253,11 +260,24 @@ public class GrantListEntry implements Serializable, Cloneable, StructuredPojo {
 
     /**
      * <p>
-     * The principal that receives the grant's permissions.
+     * The identity that gets the permissions in the grant.
      * </p>
-     * 
+     * <p>
+     * The <code>GranteePrincipal</code> field in the <code>ListGrants</code> response usually contains the user or role
+     * designated as the grantee principal in the grant. However, when the grantee principal in the grant is an Amazon
+     * Web Services service, the <code>GranteePrincipal</code> field contains the <a href=
+     * "https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_elements_principal.html#principal-services"
+     * >service principal</a>, which might represent several different grantee principals.
+     * </p>
+     *
      * @param granteePrincipal
-     *        The principal that receives the grant's permissions.
+     *        The identity that gets the permissions in the grant.</p>
+     *        <p>
+     *        The <code>GranteePrincipal</code> field in the <code>ListGrants</code> response usually contains the user
+     *        or role designated as the grantee principal in the grant. However, when the grantee principal in the grant
+     *        is an Amazon Web Services service, the <code>GranteePrincipal</code> field contains the <a href=
+     *        "https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_elements_principal.html#principal-services"
+     *        >service principal</a>, which might represent several different grantee principals.
      */
 
     public void setGranteePrincipal(String granteePrincipal) {
@@ -266,10 +286,23 @@ public class GrantListEntry implements Serializable, Cloneable, StructuredPojo {
 
     /**
      * <p>
-     * The principal that receives the grant's permissions.
+     * The identity that gets the permissions in the grant.
      * </p>
-     * 
-     * @return The principal that receives the grant's permissions.
+     * <p>
+     * The <code>GranteePrincipal</code> field in the <code>ListGrants</code> response usually contains the user or role
+     * designated as the grantee principal in the grant. However, when the grantee principal in the grant is an Amazon
+     * Web Services service, the <code>GranteePrincipal</code> field contains the <a href=
+     * "https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_elements_principal.html#principal-services"
+     * >service principal</a>, which might represent several different grantee principals.
+     * </p>
+     *
+     * @return The identity that gets the permissions in the grant.</p>
+     *         <p>
+     *         The <code>GranteePrincipal</code> field in the <code>ListGrants</code> response usually contains the user
+     *         or role designated as the grantee principal in the grant. However, when the grantee principal in the
+     *         grant is an Amazon Web Services service, the <code>GranteePrincipal</code> field contains the <a href=
+     *         "https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_elements_principal.html#principal-services"
+     *         >service principal</a>, which might represent several different grantee principals.
      */
 
     public String getGranteePrincipal() {
@@ -278,11 +311,24 @@ public class GrantListEntry implements Serializable, Cloneable, StructuredPojo {
 
     /**
      * <p>
-     * The principal that receives the grant's permissions.
+     * The identity that gets the permissions in the grant.
      * </p>
-     * 
+     * <p>
+     * The <code>GranteePrincipal</code> field in the <code>ListGrants</code> response usually contains the user or role
+     * designated as the grantee principal in the grant. However, when the grantee principal in the grant is an Amazon
+     * Web Services service, the <code>GranteePrincipal</code> field contains the <a href=
+     * "https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_elements_principal.html#principal-services"
+     * >service principal</a>, which might represent several different grantee principals.
+     * </p>
+     *
      * @param granteePrincipal
-     *        The principal that receives the grant's permissions.
+     *        The identity that gets the permissions in the grant.</p>
+     *        <p>
+     *        The <code>GranteePrincipal</code> field in the <code>ListGrants</code> response usually contains the user
+     *        or role designated as the grantee principal in the grant. However, when the grantee principal in the grant
+     *        is an Amazon Web Services service, the <code>GranteePrincipal</code> field contains the <a href=
+     *        "https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_elements_principal.html#principal-services"
+     *        >service principal</a>, which might represent several different grantee principals.
      * @return Returns a reference to this object so that method calls can be chained together.
      */
 
@@ -295,7 +341,7 @@ public class GrantListEntry implements Serializable, Cloneable, StructuredPojo {
      * <p>
      * The principal that can retire the grant.
      * </p>
-     * 
+     *
      * @param retiringPrincipal
      *        The principal that can retire the grant.
      */
@@ -308,7 +354,7 @@ public class GrantListEntry implements Serializable, Cloneable, StructuredPojo {
      * <p>
      * The principal that can retire the grant.
      * </p>
-     * 
+     *
      * @return The principal that can retire the grant.
      */
 
@@ -320,7 +366,7 @@ public class GrantListEntry implements Serializable, Cloneable, StructuredPojo {
      * <p>
      * The principal that can retire the grant.
      * </p>
-     * 
+     *
      * @param retiringPrincipal
      *        The principal that can retire the grant.
      * @return Returns a reference to this object so that method calls can be chained together.
@@ -333,11 +379,11 @@ public class GrantListEntry implements Serializable, Cloneable, StructuredPojo {
 
     /**
      * <p>
-     * The AWS account under which the grant was issued.
+     * The Amazon Web Services account under which the grant was issued.
      * </p>
-     * 
+     *
      * @param issuingAccount
-     *        The AWS account under which the grant was issued.
+     *        The Amazon Web Services account under which the grant was issued.
      */
 
     public void setIssuingAccount(String issuingAccount) {
@@ -346,10 +392,10 @@ public class GrantListEntry implements Serializable, Cloneable, StructuredPojo {
 
     /**
      * <p>
-     * The AWS account under which the grant was issued.
+     * The Amazon Web Services account under which the grant was issued.
      * </p>
-     * 
-     * @return The AWS account under which the grant was issued.
+     *
+     * @return The Amazon Web Services account under which the grant was issued.
      */
 
     public String getIssuingAccount() {
@@ -358,11 +404,11 @@ public class GrantListEntry implements Serializable, Cloneable, StructuredPojo {
 
     /**
      * <p>
-     * The AWS account under which the grant was issued.
+     * The Amazon Web Services account under which the grant was issued.
      * </p>
-     * 
+     *
      * @param issuingAccount
-     *        The AWS account under which the grant was issued.
+     *        The Amazon Web Services account under which the grant was issued.
      * @return Returns a reference to this object so that method calls can be chained together.
      */
 
@@ -375,7 +421,7 @@ public class GrantListEntry implements Serializable, Cloneable, StructuredPojo {
      * <p>
      * The list of operations permitted by the grant.
      * </p>
-     * 
+     *
      * @return The list of operations permitted by the grant.
      * @see GrantOperation
      */
@@ -391,7 +437,7 @@ public class GrantListEntry implements Serializable, Cloneable, StructuredPojo {
      * <p>
      * The list of operations permitted by the grant.
      * </p>
-     * 
+     *
      * @param operations
      *        The list of operations permitted by the grant.
      * @see GrantOperation
@@ -415,7 +461,7 @@ public class GrantListEntry implements Serializable, Cloneable, StructuredPojo {
      * {@link #setOperations(java.util.Collection)} or {@link #withOperations(java.util.Collection)} if you want to
      * override the existing values.
      * </p>
-     * 
+     *
      * @param operations
      *        The list of operations permitted by the grant.
      * @return Returns a reference to this object so that method calls can be chained together.
@@ -436,7 +482,7 @@ public class GrantListEntry implements Serializable, Cloneable, StructuredPojo {
      * <p>
      * The list of operations permitted by the grant.
      * </p>
-     * 
+     *
      * @param operations
      *        The list of operations permitted by the grant.
      * @return Returns a reference to this object so that method calls can be chained together.
@@ -452,7 +498,7 @@ public class GrantListEntry implements Serializable, Cloneable, StructuredPojo {
      * <p>
      * The list of operations permitted by the grant.
      * </p>
-     * 
+     *
      * @param operations
      *        The list of operations permitted by the grant.
      * @return Returns a reference to this object so that method calls can be chained together.
@@ -477,7 +523,7 @@ public class GrantListEntry implements Serializable, Cloneable, StructuredPojo {
      * A list of key-value pairs that must be present in the encryption context of certain subsequent operations that
      * the grant allows.
      * </p>
-     * 
+     *
      * @param constraints
      *        A list of key-value pairs that must be present in the encryption context of certain subsequent operations
      *        that the grant allows.
@@ -492,7 +538,7 @@ public class GrantListEntry implements Serializable, Cloneable, StructuredPojo {
      * A list of key-value pairs that must be present in the encryption context of certain subsequent operations that
      * the grant allows.
      * </p>
-     * 
+     *
      * @return A list of key-value pairs that must be present in the encryption context of certain subsequent operations
      *         that the grant allows.
      */
@@ -506,7 +552,7 @@ public class GrantListEntry implements Serializable, Cloneable, StructuredPojo {
      * A list of key-value pairs that must be present in the encryption context of certain subsequent operations that
      * the grant allows.
      * </p>
-     * 
+     *
      * @param constraints
      *        A list of key-value pairs that must be present in the encryption context of certain subsequent operations
      *        that the grant allows.
@@ -519,7 +565,8 @@ public class GrantListEntry implements Serializable, Cloneable, StructuredPojo {
     }
 
     /**
-     * Returns a string representation of this object; useful for testing and debugging.
+     * Returns a string representation of this object. This is useful for testing and debugging. Sensitive data will be
+     * redacted from this string using a placeholder value.
      *
      * @return A string representation of this object.
      *

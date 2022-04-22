@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2010-2022 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -20,6 +20,7 @@ import java.security.SecureRandom;
 
 import com.ibm.cloud.objectstorage.regions.Region;
 import com.ibm.cloud.objectstorage.regions.Regions;
+//import com.ibm.cloud.objectstorage.services.s3.AmazonS3EncryptionV2; # unused import
 import com.ibm.cloud.objectstorage.services.s3.internal.crypto.CryptoRuntime;
 
 /**
@@ -28,7 +29,11 @@ import com.ibm.cloud.objectstorage.services.s3.internal.crypto.CryptoRuntime;
  * the encryption client to use Instruction Files or Object Metadata for storing
  * encryption information. You can also specify your own crypto provider to be
  * used during encryption and decryption.
+ *
+ * @deprecated This feature is in maintenance mode, no new updates will be released.
+ * Please see https://docs.aws.amazon.com/general/latest/gr/aws_sdk_cryptography.html for more information.
  */
+@Deprecated
 public class CryptoConfiguration implements Cloneable,Serializable {
 
     private static final long serialVersionUID = -8646831898339939580L;
@@ -50,7 +55,7 @@ public class CryptoConfiguration implements Cloneable,Serializable {
     private boolean ignoreMissingInstructionFile = true;
     /**
      * @exclude
-     * Used to specify the KMS region for the AWS KMS client when such client
+     * Used to specify the KMS region for the Amazon Web Services KMS client when such client
      * is internally instantiated instead of externally passed in by users; or
      * null if no explicit KMS region is specified.
      */
@@ -399,9 +404,9 @@ public class CryptoConfiguration implements Cloneable,Serializable {
 
     /**
      * @exclude
-     * Returns the the KMS region explicitly specified for the AWS KMS client
+     * Returns the the KMS region explicitly specified for the Amazon Web Services KMS client
      * when such client is internally instantiated; or null if no explicit KMS
-     * region is specified. This KMS region parameter is ignored when the AWS
+     * region is specified. This KMS region parameter is ignored when the Amazon Web Services
      * KMS client of the S3 encryption client is explicitly passed in by the
      * users, instead of being implicitly created.
      *
@@ -418,10 +423,10 @@ public class CryptoConfiguration implements Cloneable,Serializable {
 
     /**
      * @exclude
-     * Sets the KMS region for the AWS KMS client when such client is internally
+     * Sets the KMS region for the Amazon Web Services KMS client when such client is internally
      * instantiated instead of externally passed in by users; or null if no
      * explicit KMS region is explicitly configured.This KMS region parameter is
-     * ignored when the AWS KMS client of the S3 encryption client is explicitly
+     * ignored when the Amazon Web Services KMS client of the S3 encryption client is explicitly
      * passed in by the users, instead of being implicitly created.
      *
      * @Deprecated This method is not forward compatible. Doesn't handle new
@@ -440,10 +445,10 @@ public class CryptoConfiguration implements Cloneable,Serializable {
 
     /**
      * @exclude
-     * Fluent API for setting the KMS region for the AWS KMS client when such
+     * Fluent API for setting the KMS region for the Amazon Web Services KMS client when such
      * client is internally instantiated instead of externally passed in by
      * users; or null if no explicit KMS region is explicitly configured.This
-     * KMS region parameter is ignored when the AWS KMS client of the S3
+     * KMS region parameter is ignored when the Amazon Web Services KMS client of the S3
      * encryption client is explicitly passed in by the users, instead of being
      * implicitly created.
      *
@@ -461,9 +466,9 @@ public class CryptoConfiguration implements Cloneable,Serializable {
 
     /**
      * @exclude
-     *  Returns the the KMS region explicitly specified for the AWS KMS client
+     * Returns the the KMS region explicitly specified for the AWS KMS client
      * when such client is internally instantiated; or null if no explicit KMS
-     * region is specified. This KMS region parameter is ignored when the AWS
+     * region is specified. This KMS region parameter is ignored when the Amazon Web Services
      * KMS client of the S3 encryption client is explicitly passed in by the
      * users, instead of being implicitly created.
      */
@@ -473,10 +478,10 @@ public class CryptoConfiguration implements Cloneable,Serializable {
 
     /**
      * @exclude
-     * Sets the KMS region for the AWS KMS client when such client is internally
+     * Sets the KMS region for the Amazon Web Services KMS client when such client is internally
      * instantiated instead of externally passed in by users; or null if no
      * explicit KMS region is explicitly configured.This KMS region parameter is
-     * ignored when the AWS KMS client of the S3 encryption client is explicitly
+     * ignored when the Amazon Web Services KMS client of the S3 encryption client is explicitly
      * passed in by the users, instead of being implicitly created.
      */
     public void setAwsKmsRegion(Region awsKmsRegion) {
@@ -485,10 +490,10 @@ public class CryptoConfiguration implements Cloneable,Serializable {
 
     /**
      * @exclude
-     * Fluent API for setting the KMS region for the AWS KMS client when such
+     * Fluent API for setting the KMS region for the Amazon Web Services KMS client when such
      * client is internally instantiated instead of externally passed in by
      * users; or null if no explicit KMS region is explicitly configured.This
-     * KMS region parameter is ignored when the AWS KMS client of the S3
+     * KMS region parameter is ignored when the Amazon Web Services KMS client of the S3
      * encryption client is explicitly passed in by the users, instead of being
      * implicitly created.
      */

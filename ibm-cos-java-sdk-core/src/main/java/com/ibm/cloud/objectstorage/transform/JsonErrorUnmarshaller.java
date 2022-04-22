@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2015-2022 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -20,7 +20,9 @@ import com.ibm.cloud.objectstorage.annotation.ThreadSafe;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.PropertyNamingStrategy.PascalCaseStrategy;
+import com.fasterxml.jackson.databind.PropertyNamingStrategies;
+import com.fasterxml.jackson.databind.PropertyNamingStrategy;
+import com.fasterxml.jackson.databind.node.NullNode;
 
 /**
  * Unmarshaller for JSON error responses from AWS services.
@@ -32,11 +34,21 @@ public class JsonErrorUnmarshaller extends AbstractErrorUnmarshaller<JsonNode> {
     public static final JsonErrorUnmarshaller DEFAULT_UNMARSHALLER = new JsonErrorUnmarshaller(
             AmazonServiceException.class, null);
 
-    private static final ObjectMapper MAPPER = new ObjectMapper().configure(
-            DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false).setPropertyNamingStrategy(
-            new PascalCaseStrategy());
+    private static final ObjectMapper MAPPER;
 
     private final String handledErrorCode;
+
+    static {
+        MAPPER = new ObjectMapper();
+        MAPPER.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        try {
+            MAPPER.setPropertyNamingStrategy(PropertyNamingStrategies.UPPER_CAMEL_CASE);
+        } catch (LinkageError e) {
+            // If a customer is using an older Jackson version than 2.12.x, fall back to the old (deprecated)
+            // name for the same property that might cause deadlocks.
+            MAPPER.setPropertyNamingStrategy(PropertyNamingStrategy.PASCAL_CASE_TO_CAMEL_CASE);
+        }
+    }
 
     /**
      * @param exceptionClass   Exception class this unmarshaller will attempt to deserialize error response into
@@ -47,8 +59,16 @@ public class JsonErrorUnmarshaller extends AbstractErrorUnmarshaller<JsonNode> {
         this.handledErrorCode = handledErrorCode;
     }
 
+    /**
+     * @param jsonContent The {@link JsonNode} for the error to un-marshall. Can be null.
+     * @return The {@link AmazonServiceException} created from the jsonContent or null if one couldn't be found.
+     * @throws Exception If there are issues processing the jsonContent.
+     */
     @Override
     public AmazonServiceException unmarshall(JsonNode jsonContent) throws Exception {
+        if (jsonContent == null || NullNode.instance.equals(jsonContent)) {
+            return null;
+        }
         return MAPPER.treeToValue(jsonContent, exceptionClass);
     }
 

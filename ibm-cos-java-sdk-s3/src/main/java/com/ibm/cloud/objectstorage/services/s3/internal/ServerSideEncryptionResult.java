@@ -1,5 +1,5 @@
 /*
- * Copyright 2011-2019 Amazon Technologies, Inc.
+ * Copyright 2011-2022 Amazon Technologies, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,7 +28,7 @@ public interface ServerSideEncryptionResult {
 
     /**
      * Returns the server-side encryption algorithm if the object is encrypted
-     * using AWS-managed keys. Otherwise returns null.
+     * using Amazon Web Services-managed keys. Otherwise returns null.
      */
     public String getSSEAlgorithm();
 
@@ -72,4 +72,18 @@ public interface ServerSideEncryptionResult {
      *            server-side encryption.
      */
     public void setSSECustomerKeyMd5(String md5Digest);
+
+    /**
+     * Indicates whether the object uses an S3 Bucket Key for server-side encryption with Amazon Web Services KMS (SSE-KMS).
+     */
+//IBM does not support SSE-KMS
+//    public Boolean getBucketKeyEnabled();
+//
+//    /**
+//     * Sets whether or not the object is encrypted with Bucket Key.
+//     *
+//     * @param bucketKeyEnabled
+//     *            Whether or not bucket key is enabled
+//     */
+//    public void setBucketKeyEnabled(Boolean bucketKeyEnabled);
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2010-2022 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -80,6 +80,7 @@ public class PropertiesCredentials implements IBMOAuthCredentials {
                     + "and 'secretKey'."
                 );
             }
+
             accessKey = accountProperties.getProperty("accessKey");
             secretAccessKey = accountProperties.getProperty("secretKey");
             ibmApiKey = accountProperties.getProperty(SDKGlobalConfiguration.IBM_API_KEY_SYSTEM_PROPERTY);

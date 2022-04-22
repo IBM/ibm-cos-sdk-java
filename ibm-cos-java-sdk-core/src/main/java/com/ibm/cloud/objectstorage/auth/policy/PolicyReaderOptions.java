@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2010-2022 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -22,7 +22,7 @@ public class PolicyReaderOptions {
     private boolean stripAwsPrincipalIdHyphensEnabled = true;
 
     /**
-     * Whether AWS account IDs should have hyphens removed in their name.
+     * Whether AWS principal IDs should have hyphens removed in their name.
      */
     public boolean isStripAwsPrincipalIdHyphensEnabled() {
         return stripAwsPrincipalIdHyphensEnabled;

@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2010-2022 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.ibm.cloud.objectstorage.auth.policy.Principal.Services;
@@ -326,6 +327,7 @@ public class PolicyReaderTest {
         assertEquals("Federated", statements.get(0).getPrincipals().get(0).getProvider());
     }
 
+    @Ignore("Not supported by IBM COS")
     @Test
     public void testCloudHSMServicePrincipal() {
         String jsonString =
@@ -347,7 +349,8 @@ public class PolicyReaderTest {
         assertEquals("sts:AssumeRole", statements.get(0).getActions().get(0).getActionName());
         assertEquals(0, statements.get(0).getConditions().size());
         assertEquals(1, statements.get(0).getPrincipals().size());
-        assertEquals(Services.AWSCloudHSM.getServiceId(), statements.get(0).getPrincipals().get(0).getId());
+        //IBM unsupported
+        //assertEquals(Services.AWSCloudHSM.getServiceId(), statements.get(0).getPrincipals().get(0).getId());
         assertEquals("Service", statements.get(0).getPrincipals().get(0).getProvider());
     }
 

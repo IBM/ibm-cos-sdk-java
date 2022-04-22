@@ -1,5 +1,5 @@
 /*
- * Copyright 2011-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2011-2022 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -60,6 +60,8 @@ public final class TransferManagerBuilder {
     private Long multipartCopyPartSize;
 
     private Boolean disableParallelDownloads;
+
+    private Boolean alwaysCalculateMultipartMd5;
 
     /**
      * @return Create new instance of builder with all defaults set.
@@ -338,11 +340,6 @@ public final class TransferManagerBuilder {
      * in parallel. Setting this option to true will disable parallel downloads.
      * </p>
      * <p>
-     * During parallel downloads, each part is downloaded to a temporary file, gets merged
-     * into the final destination file and will be deleted. These temporary files uses disk space temporarily.
-     * Disable parallel downloads if your system do not have enough space to store these files during download.
-     * </p>
-     * <p>
      * Disabling parallel downloads might reduce performance for large files.
      * </p>
      *
@@ -360,11 +357,6 @@ public final class TransferManagerBuilder {
      * in parallel. Setting this option to true will disable parallel downloads.
      * </p>
      * <p>
-     * During parallel downloads, each part is downloaded to a temporary file, gets merged
-     * into the final destination file and will be deleted. These temporary files uses disk space temporarily.
-     * Disable parallel downloads if your system do not have enough space to store these files during download.
-     * </p>
-     * <p>
      * Disabling parallel downloads might reduce performance for large files.
      * </p>
      *
@@ -380,11 +372,6 @@ public final class TransferManagerBuilder {
      * <p>
      * TransferManager automatically detects and downloads a multipart object
      * in parallel. Setting this option to true will disable parallel downloads.
-     * </p>
-     * <p>
-     * During parallel downloads, each part is downloaded to a temporary file, gets merged
-     * into the final destination file and will be deleted. These temporary files uses disk space temporarily.
-     * Disable parallel downloads if your system do not have enough space to store these files during download.
      * </p>
      * <p>
      * Disabling parallel downloads might reduce performance for large files.
@@ -410,6 +397,59 @@ public final class TransferManagerBuilder {
         return withDisableParallelDownloads(Boolean.TRUE);
     }
 
+
+    /**
+     * Returns true if Transfer Manager should calculate MD5 for multipart uploads.
+     * <p>
+     * For instance, if a bucket is enabled for Object Locking, put requests for
+     * objects and object parts must contain an MD5 digest. Since Transfer Manager
+     * operates on a whole object, the user cannot supply the MD5
+     * digest directly if multipart uploads are in effect.
+     *
+     * <p>
+     * Supplying any object locking parameter also instructs Transfer Manager
+     * to calculate MD5 for parts. This flag should be used in instances where
+     * they are not present.
+     */
+    public boolean getAlwaysCalculateMultipartMd5() {
+        return alwaysCalculateMultipartMd5;
+    }
+
+    /**
+     * Set to true if Transfer Manager should calculate MD5 for multipart uploads.
+     * <p>
+     * For instance, if a bucket is enabled for Object Locking, put requests for
+     * objects and object parts must contain an MD5 digest. Since Transfer Manager
+     * operates on a whole object, the user cannot supply the MD5
+     * digest directly if multipart uploads are in effect.
+     *
+     * <p>
+     * Supplying any object locking parameter also instructs Transfer Manager
+     * to calculate MD5 for parts. This flag should be used in instances where
+     * they are not present.
+     */
+    public void setAlwaysCalculateMultipartMd5(boolean alwaysCalculateMultipartMd5) {
+        this.alwaysCalculateMultipartMd5 = alwaysCalculateMultipartMd5;
+    }
+
+    /**
+     * Set to true if Transfer Manager should calculate MD5 for multipart uploads.
+     * <p>
+     * For instance, if a bucket is enabled for Object Locking, put requests for
+     * objects and object parts must contain an MD5 digest. Since Transfer Manager
+     * operates on a whole object, the user cannot supply the MD5
+     * digest directly if multipart uploads are in effect.
+     *
+     * <p>
+     * Supplying any object locking parameter also instructs Transfer Manager
+     * to calculate MD5 for parts. This flag should be used in instances where
+     * they are not present.
+     */
+    public TransferManagerBuilder withAlwaysCalculateMultipartMd5(boolean alwaysCalculateMultipartMd5) {
+        setAlwaysCalculateMultipartMd5(alwaysCalculateMultipartMd5);
+        return this;
+    }
+
     private TransferManagerConfiguration resolveConfiguration() {
         TransferManagerConfiguration configuration = new TransferManagerConfiguration();
         if (this.minimumUploadPartSize != null) {
@@ -424,9 +464,11 @@ public final class TransferManagerBuilder {
         if (this.multipartUploadThreshold != null) {
             configuration.setMultipartUploadThreshold(multipartUploadThreshold);
         }
-
         if (this.disableParallelDownloads != null) {
             configuration.setDisableParallelDownloads(disableParallelDownloads);
+        }
+        if (this.alwaysCalculateMultipartMd5 != null) {
+            configuration.setAlwaysCalculateMultipartMd5(alwaysCalculateMultipartMd5);
         }
         return configuration;
     }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2011-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2011-2022 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -20,7 +20,10 @@ import com.ibm.cloud.objectstorage.AmazonWebServiceRequest;
 /**
  * Request object containing all the options for setting a bucket's Access Control List (ACL).
  */
-public class SetBucketAclRequest extends AmazonWebServiceRequest implements Serializable {
+public class SetBucketAclRequest extends AmazonWebServiceRequest implements Serializable
+//IBM unsupported
+//, ExpectedBucketOwnerRequest 
+{
 	/**
 	 * The name of the bucket whose ACL is being set.
 	 *
@@ -30,10 +33,10 @@ public class SetBucketAclRequest extends AmazonWebServiceRequest implements Seri
      * <i>AccessPointName</i>-<i>AccountId</i>.s3-accesspoint.<i>Region</i>.amazonaws.com.
      * </p>
      * <p>
-     * When using this operation using an access point through the AWS SDKs, you provide
+     * When using this operation using an access point through the Amazon Web Services SDKs, you provide
      * the access point ARN in place of the bucket name. For more information about access point
      * ARNs, see <a href=\"https://docs.aws.amazon.com/AmazonS3/latest/dev/using-access-points.html\">
-     * Using Access Points</a> in the <i>Amazon Simple Storage Service Developer Guide</i>.
+     * Using access points</a> in the <i>Amazon Simple Storage Service Developer Guide</i>.
      * </p>
      */
 	private String bucketName;
@@ -43,6 +46,9 @@ public class SetBucketAclRequest extends AmazonWebServiceRequest implements Seri
 
 	/** The canned ACL to apply to the specified bucket. */
 	private CannedAccessControlList cannedAcl;
+
+	//IBM unsupported
+	//private String expectedBucketOwner;
 
 	/**
 	 * Constructs a new SetBucketAclRequest object, ready to set the specified
@@ -54,10 +60,10 @@ public class SetBucketAclRequest extends AmazonWebServiceRequest implements Seri
      * <i>AccessPointName</i>-<i>AccountId</i>.s3-accesspoint.<i>Region</i>.amazonaws.com.
      * </p>
      * <p>
-     * When using this operation using an access point through the AWS SDKs, you provide
+     * When using this operation using an access point through the Amazon Web Services SDKs, you provide
      * the access point ARN in place of the bucket name. For more information about access point
      * ARNs, see <a href=\"https://docs.aws.amazon.com/AmazonS3/latest/dev/using-access-points.html\">
-     * Using Access Points</a> in the <i>Amazon Simple Storage Service Developer Guide</i>.
+     * Using access points</a> in the <i>Amazon Simple Storage Service Developer Guide</i>.
      * </p>
      *
 	 * @param bucketName
@@ -82,10 +88,10 @@ public class SetBucketAclRequest extends AmazonWebServiceRequest implements Seri
      * <i>AccessPointName</i>-<i>AccountId</i>.s3-accesspoint.<i>Region</i>.amazonaws.com.
      * </p>
      * <p>
-     * When using this operation using an access point through the AWS SDKs, you provide
+     * When using this operation using an access point through the Amazon Web Services SDKs, you provide
      * the access point ARN in place of the bucket name. For more information about access point
      * ARNs, see <a href=\"https://docs.aws.amazon.com/AmazonS3/latest/dev/using-access-points.html\">
-     * Using Access Points</a> in the <i>Amazon Simple Storage Service Developer Guide</i>.
+     * Using access points</a> in the <i>Amazon Simple Storage Service Developer Guide</i>.
      * </p>
      *
 	 * @param bucketName
@@ -134,4 +140,18 @@ public class SetBucketAclRequest extends AmazonWebServiceRequest implements Seri
 	public CannedAccessControlList getCannedAcl() {
 		return cannedAcl;
 	}
+
+//IBM unsupported
+//	public String getExpectedBucketOwner() {
+//		return expectedBucketOwner;
+//	}
+//
+//	public SetBucketAclRequest withExpectedBucketOwner(String expectedBucketOwner) {
+//		this.expectedBucketOwner = expectedBucketOwner;
+//		return this;
+//	}
+//
+//	public void setExpectedBucketOwner(String expectedBucketOwner) {
+//		withExpectedBucketOwner(expectedBucketOwner);
+//	}
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2013-2022 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -61,6 +61,8 @@ import static com.ibm.cloud.objectstorage.auth.internal.SignerConstants.X_AMZ_SI
  */
 public class AWS4Signer extends AbstractAWSSigner implements
         ServiceAwareSigner, RegionAwareSigner, Presigner {
+        // IBM unsupported
+        //, EndpointPrefixAwareSigner, RegionFromEndpointResolverAwareSigner
 
     protected static final InternalLogApi log = InternalLogFactory.getLog(AWS4Signer.class);
     private static final int SIGNER_CACHE_MAX_SIZE = 300;
@@ -74,6 +76,15 @@ public class AWS4Signer extends AbstractAWSSigner implements
      * determine the service name.
      */
     protected String serviceName;
+
+    /**
+     * Endpoint prefix to compute the region name for signing
+     * when the {@link #regionName} is null.
+     */
+    //IBM unsupported
+    //private String endpointPrefix;
+
+    //private RegionFromEndpointResolver regionFromEndpointResolver;
 
     /**
      * Region name override for use when the endpoint can't be used to determine
@@ -154,6 +165,21 @@ public class AWS4Signer extends AbstractAWSSigner implements
     }
 
     /**
+     * Sets the endpoint prefix which is used to compute the region that is
+     * used for signing the request.
+     *
+     * This value is passed to {@link AWS4SignerRequestParams} class which
+     * has the logic to compute region.
+     *
+     * @param endpointPrefix The endpoint prefix of the service
+     */
+    //IBM unsupported
+    // @Override
+    // public void setEndpointPrefix(String endpointPrefix) {
+    //     this.endpointPrefix = endpointPrefix;
+    // }
+
+    /**
      * Sets the date that overrides the signing date in the request. This method
      * is internal and should be used only for testing purposes.
      */
@@ -165,6 +191,12 @@ public class AWS4Signer extends AbstractAWSSigner implements
             this.overriddenDate = null;
         }
     }
+
+    //IBM unsupported
+    // @Override
+    // public void setRegionFromEndpointResolver(RegionFromEndpointResolver resolver) {
+    //     this.regionFromEndpointResolver = resolver;
+    // }
 
     /**
      * Returns the region name that is used when calculating the signature.
@@ -515,8 +547,12 @@ public class AWS4Signer extends AbstractAWSSigner implements
         // have to have it in the request by the time we sign.
 
         final URI endpoint = request.getEndpoint();
-        final StringBuilder hostHeaderBuilder = new StringBuilder(
-                endpoint.getHost());
+
+        if (endpoint.getHost() == null) {
+            throw new IllegalArgumentException("Request endpoint must have a valid hostname, but it did not: " + endpoint);
+        }
+
+        final StringBuilder hostHeaderBuilder = new StringBuilder(endpoint.getHost());
         if (SdkHttpUtils.isUsingNonDefaultPort(endpoint)) {
             hostHeaderBuilder.append(":").append(endpoint.getPort());
         }

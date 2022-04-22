@@ -1,5 +1,5 @@
 /*
- * Copyright 2011-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2011-2022 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -14,6 +14,12 @@
  */
 package com.ibm.cloud.objectstorage.regions;
 
+import static java.util.Collections.singletonMap;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.when;
+
 import com.ibm.cloud.objectstorage.auth.profile.ProfileResourceLoader;
 import com.ibm.cloud.objectstorage.auth.profile.internal.AllProfiles;
 import com.ibm.cloud.objectstorage.auth.profile.internal.BasicProfile;
@@ -21,19 +27,12 @@ import com.ibm.cloud.objectstorage.auth.profile.internal.BasicProfileConfigLoade
 import com.ibm.cloud.objectstorage.auth.profile.internal.ProfileKeyConstants;
 import com.ibm.cloud.objectstorage.profile.path.AwsProfileFileLocationProvider;
 import com.ibm.cloud.objectstorage.util.ImmutableMapParameter;
-
+import java.io.File;
+import java.util.HashMap;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-
-import java.io.File;
-import java.util.HashMap;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.when;
 
 public class AwsProfileRegionProviderTest {
 
@@ -110,6 +109,30 @@ public class AwsProfileRegionProviderTest {
         final AllProfiles profiles = new AllProfiles(ImmutableMapParameter.of(PROFILE, profile));
         stubLoadProfile(profiles);
         assertEquals(expectedRegion, regionProvider.getRegion());
+    }
+
+    @Test
+    public void prefixProfilesCanBeLoaded() {
+        AllProfiles profiles = new AllProfiles(ImmutableMapParameter.of("profile " + PROFILE,
+                                                                        new BasicProfile("profile " + PROFILE,
+                                                                                         singletonMap("region",
+                                                                                                      "withPrefix"))));
+        stubLoadProfile(profiles);
+        assertEquals("withPrefix", regionProvider.getRegion());
+    }
+
+    @Test
+    public void prefixProfilesAreLowerPriorityThanNonPrefixProfiles() {
+        AllProfiles profiles = new AllProfiles(ImmutableMapParameter.of(PROFILE,
+                                                                        new BasicProfile(PROFILE,
+                                                                                         singletonMap("region",
+                                                                                                      "withoutPrefix")),
+                                                                        "profile " + PROFILE,
+                                                                        new BasicProfile("profile " + PROFILE,
+                                                                                         singletonMap("region",
+                                                                                                      "withPrefix"))));
+        stubLoadProfile(profiles);
+        assertEquals("withoutPrefix", regionProvider.getRegion());
     }
 
     private void stubLoadProfile(AllProfiles toReturn) {

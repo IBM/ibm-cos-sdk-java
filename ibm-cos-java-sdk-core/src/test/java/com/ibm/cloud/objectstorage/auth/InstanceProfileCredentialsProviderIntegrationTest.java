@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2019 Amazon.com, Inc. or its affiliates. All Rights
+ * Copyright 2010-2022 Amazon.com, Inc. or its affiliates. All Rights
  * Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
@@ -24,13 +24,15 @@ import static org.hamcrest.collection.IsEmptyCollection.empty;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNotSame;
+import static org.junit.Assert.assertSame;
 import static org.junit.Assert.fail;
 
 import com.ibm.cloud.objectstorage.AmazonClientException;
 import com.ibm.cloud.objectstorage.util.LogCaptor;
+import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
+import org.joda.time.DateTime;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -43,6 +45,16 @@ import org.junit.runners.Parameterized;
  */
 @RunWith(Parameterized.class)
 public class InstanceProfileCredentialsProviderIntegrationTest extends LogCaptor.LogCaptorTestBase {
+
+    private static final String RESPONSE = "{\n"
+                                           + "  \"Code\" : \"Success\",\n"
+                                           + "  \"LastUpdated\" : \"2012-05-02T22:55:54Z\",\n"
+                                           + "  \"Type\" : \"AWS-HMAC\",\n"
+                                           + "  \"AccessKeyId\" : \"ACCESS_KEY_ID\",\n"
+                                           + "  \"SecretAccessKey\" : \"SECRET_ACCESS_KEY\",\n"
+                                           + "  \"Token\" : \"TOKEN_TOKEN_TOKEN\",\n"
+                                           + "  \"Expiration\" : \"%s\"\n"
+                                           + "}";
 
     private EC2MetadataServiceMock mockServer;
     private boolean tokenEnabled;
@@ -82,7 +94,7 @@ public class InstanceProfileCredentialsProviderIntegrationTest extends LogCaptor
     /** Tests that we correctly handle the metadata service returning credentials. */
     @Test
     public void testSessionCredentials() throws Exception {
-        mockServer.setResponseFileName("sessionResponse");
+        mockServer.setResponseContent(nonExpiredResponse());
         mockServer.setAvailableSecurityCredentials("aws-dr-tools-test");
 
         InstanceProfileCredentialsProvider credentialsProvider = new InstanceProfileCredentialsProvider();
@@ -99,7 +111,7 @@ public class InstanceProfileCredentialsProviderIntegrationTest extends LogCaptor
      */
     @Test
     public void testSessionCredentials_MultipleInstanceProfiles() throws Exception {
-        mockServer.setResponseFileName("sessionResponse");
+        mockServer.setResponseContent(nonExpiredResponse());
         mockServer.setAvailableSecurityCredentials("test-credentials");
 
         InstanceProfileCredentialsProvider credentialsProvider = new InstanceProfileCredentialsProvider();
@@ -116,7 +128,7 @@ public class InstanceProfileCredentialsProviderIntegrationTest extends LogCaptor
      */
     @Test
     public void testNoInstanceProfiles() throws Exception {
-        mockServer.setResponseFileName("sessionResponse");
+        mockServer.setResponseContent(nonExpiredResponse());
         mockServer.setAvailableSecurityCredentials("");
 
         InstanceProfileCredentialsProvider credentialsProvider = new InstanceProfileCredentialsProvider();
@@ -143,7 +155,7 @@ public class InstanceProfileCredentialsProviderIntegrationTest extends LogCaptor
         } finally {
             System.clearProperty("com.ibm.cloud.objectstorage.sdk.disableEc2Metadata");
         }
-        mockServer.setResponseFileName("sessionResponse");
+        mockServer.setResponseContent(nonExpiredResponse());
         mockServer.setAvailableSecurityCredentials("test-credentials");
         assertNotNull(credentialsProvider.getCredentials());
     }
@@ -154,7 +166,7 @@ public class InstanceProfileCredentialsProviderIntegrationTest extends LogCaptor
      */
     @Test
     public void testSessionCredentials_Expired() throws Exception {
-        mockServer.setResponseFileName("sessionResponseExpired");
+        mockServer.setResponseContent(expiredResponse());
         mockServer.setAvailableSecurityCredentials("test-credentials");
 
         InstanceProfileCredentialsProvider credentialsProvider = new InstanceProfileCredentialsProvider();
@@ -174,7 +186,7 @@ public class InstanceProfileCredentialsProviderIntegrationTest extends LogCaptor
     @Test
     public void testMultipleThreadsLoadingAndRefreshingCredentials()
             throws Exception {
-        mockServer.setResponseFileName("sessionResponse");
+        mockServer.setResponseContent(nonExpiredResponse());
         mockServer.setAvailableSecurityCredentials("test-credentials");
 
         InstanceProfileCredentialsProvider credentialsProvider = new InstanceProfileCredentialsProvider();
@@ -196,7 +208,7 @@ public class InstanceProfileCredentialsProviderIntegrationTest extends LogCaptor
     @Ignore("IBM: Backend logger is no longer supported; no exception thrown cannot be verified")
     @Test(expected = AmazonClientException.class)
     public void canBeConfiguredToOnlyRefreshCredentialsAfterFirstCallToGetCredentials() throws InterruptedException {
-        mockServer.setResponseFileName("sessionResponseExpired");
+        mockServer.setResponseContent(expiredResponse());
         mockServer.setAvailableSecurityCredentials("test-credentials");
 
         InstanceProfileCredentialsProvider credentialsProvider = InstanceProfileCredentialsProvider.createAsyncRefreshingProvider(false);
@@ -207,6 +219,36 @@ public class InstanceProfileCredentialsProviderIntegrationTest extends LogCaptor
         assertThat(loggedEvents(), is(empty()));
 
         credentialsProvider.getCredentials();
+    }
+
+    @Test
+    public void refreshCredentialFailureUsesCachedCredentials() throws IOException {
+        mockServer.setResponseContent(responseWithExpiration(DateTime.now().plusMinutes(5)));
+        mockServer.setAvailableSecurityCredentials("test-credentials");
+
+        InstanceProfileCredentialsProvider credentialsProvider = InstanceProfileCredentialsProvider.createAsyncRefreshingProvider(false);
+        AWSCredentials firstCredentials = credentialsProvider.getCredentials();
+
+        mockServer.stop();
+
+        AWSCredentials secondCredentials = credentialsProvider.getCredentials();
+
+        assertSame(firstCredentials, secondCredentials);
+    }
+
+    @Test
+    public void refreshWithAsyncCredentialFailureUsesCachedCredentials() throws IOException {
+        mockServer.setResponseContent(responseWithExpiration(DateTime.now().plusMinutes(5)));
+        mockServer.setAvailableSecurityCredentials("test-credentials");
+
+        InstanceProfileCredentialsProvider credentialsProvider = InstanceProfileCredentialsProvider.createAsyncRefreshingProvider(true);
+        AWSCredentials firstCredentials = credentialsProvider.getCredentials();
+
+        mockServer.stop();
+
+        AWSCredentials secondCredentials = credentialsProvider.getCredentials();
+
+        assertSame(firstCredentials, secondCredentials);
     }
 
     private class RefreshThread extends Thread{
@@ -222,6 +264,18 @@ public class InstanceProfileCredentialsProviderIntegrationTest extends LogCaptor
         public void run() {
             this.provider.refresh();
         }
+    }
+
+    private String expiredResponse() {
+        return responseWithExpiration(DateTime.now().minusMinutes(1));
+    }
+
+    private String nonExpiredResponse() {
+        return responseWithExpiration(DateTime.now().plusDays(1));
+    }
+
+    private String responseWithExpiration(DateTime expiration) {
+        return String.format(RESPONSE, expiration.toString());
     }
 
 }

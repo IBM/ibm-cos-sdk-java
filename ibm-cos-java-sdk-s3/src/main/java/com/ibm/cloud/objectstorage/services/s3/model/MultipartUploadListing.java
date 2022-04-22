@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2010-2022 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -25,8 +25,8 @@ import java.util.List;
 public class MultipartUploadListing implements Serializable {
 
     /**
-     * The name of the bucket containing the listed multipart uploads, as
-     * specified in the original request.
+     * The name of the bucket to which the multipart upload was initiated.
+     * Does not return the access point ARN or access point alias if used.
      */
     private String bucketName;
 
@@ -97,23 +97,23 @@ public class MultipartUploadListing implements Serializable {
 
 
     /**
-     * Returns the name of the bucket containing the listed multipart uploads,
-     * as specified in the original request.
+     * Returns the name of the bucket to which the multipart upload was initiated. Does not return the access point ARN or
+     * access point alias if used.
      *
-     * @return The name of the bucket containing the listed multipart uploads,
-     *         as specified in the original request.
+     * @return The name of the bucket to which the multipart upload was initiated. Does not return the access point ARN or
+     *         access point alias if used.
      */
     public String getBucketName() {
         return bucketName;
     }
 
     /**
-     * Sets the name of the bucket containing the listed multipart uploads, as
-     * specified in the original request.
+     * Sets the name of the bucket to which the multipart upload was initiated. Does not return the access point ARN or
+     * access point alias if used.
      *
      * @param bucketName
-     *            The name of the bucket containing the listed multipart
-     *            uploads, as specified in the original request.
+     *            The name of the bucket to which the multipart upload was initiated. Does not return the access point 
+     *            ARN or access point alias if used.
      */
     public void setBucketName(String bucketName) {
         this.bucketName = bucketName;

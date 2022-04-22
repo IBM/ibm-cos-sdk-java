@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2010-2022 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -24,7 +24,7 @@ public enum GroupGrantee implements Grantee {
 
     /**
      * Grants anonymous access to any Amazon S3 object or bucket. Any user will
-     * be able to access the object by omitting the AWS Key ID and Signature
+     * be able to access the object by omitting the Amazon Web Services Key ID and Signature
      * from a request.
      * <p>
      * Amazon highly recommends that users do not grant the 
@@ -36,8 +36,8 @@ public enum GroupGrantee implements Grantee {
     AllUsers("http://acs.amazonaws.com/groups/global/AllUsers"),
 
     /**
-     * Grants access to buckets or objects to anyone with an Amazon AWS account.
-     * Although this is inherently insecure as any AWS user who is aware of the
+     * Grants access to buckets or objects to anyone with an Amazon Web Services account.
+     * Although this is inherently insecure as any Amazon Web Services user who is aware of the
      * bucket or object will be able to access it, users may find this authentication
      * method useful.
      */

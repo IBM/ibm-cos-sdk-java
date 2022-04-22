@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2019 Amazon Technologies, Inc.
+ * Copyright 2015-2022 Amazon Technologies, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,7 +22,13 @@ import com.ibm.cloud.objectstorage.services.s3.AmazonS3;
  *
  * @see AmazonS3#getBucketVersioningConfiguration(GetBucketVersioningConfigurationRequest)
  */
-public class GetBucketVersioningConfigurationRequest extends GenericBucketRequest implements Serializable {
+public class GetBucketVersioningConfigurationRequest extends GenericBucketRequest implements Serializable
+//IBM unsupported
+//, ExpectedBucketOwnerRequest 
+{
+
+    //IBM unsupported
+    //private String expectedBucketOwner;
 
     /**
      * Creates a request object, ready to be executed to fetch the versioning
@@ -35,5 +41,18 @@ public class GetBucketVersioningConfigurationRequest extends GenericBucketReques
     public GetBucketVersioningConfigurationRequest(String bucketName) {
         super(bucketName);
     }
+//IBM unsupported
+//    public String getExpectedBucketOwner() {
+//        return expectedBucketOwner;
+//    }
+//
+//    public GetBucketVersioningConfigurationRequest withExpectedBucketOwner(String expectedBucketOwner) {
+//        this.expectedBucketOwner = expectedBucketOwner;
+//        return this;
+//    }
+//
+//    public void setExpectedBucketOwner(String expectedBucketOwner) {
+//        withExpectedBucketOwner(expectedBucketOwner);
+//    }
 
 }

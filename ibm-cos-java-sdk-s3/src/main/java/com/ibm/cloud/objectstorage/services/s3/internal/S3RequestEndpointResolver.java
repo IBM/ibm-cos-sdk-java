@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2010-2022 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -111,6 +111,9 @@ public class S3RequestEndpointResolver {
             endpointBuilder.withRegion(r);
         }
         final URI endpoint = endpointBuilder.getServiceEndpoint();
+        if (endpoint.getHost() == null) {
+            throw new IllegalArgumentException("Endpoint does not contain a valid host name: " + request.getEndpoint());
+        }
         if (shouldUseVirtualAddressing(endpoint)) {
             request.setEndpoint(convertToVirtualHostEndpoint(endpoint, bucketName));
             request.setResourcePath(SdkHttpUtils.urlEncode(getHostStyleResourcePath(), true));

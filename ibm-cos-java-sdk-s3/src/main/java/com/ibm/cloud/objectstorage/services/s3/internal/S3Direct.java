@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2014-2022 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -21,6 +21,7 @@ import com.ibm.cloud.objectstorage.services.s3.model.CompleteMultipartUploadRequ
 import com.ibm.cloud.objectstorage.services.s3.model.CompleteMultipartUploadResult;
 import com.ibm.cloud.objectstorage.services.s3.model.CopyPartRequest;
 import com.ibm.cloud.objectstorage.services.s3.model.CopyPartResult;
+import com.ibm.cloud.objectstorage.services.s3.model.GetObjectMetadataRequest;
 import com.ibm.cloud.objectstorage.services.s3.model.GetObjectRequest;
 import com.ibm.cloud.objectstorage.services.s3.model.InitiateMultipartUploadRequest;
 import com.ibm.cloud.objectstorage.services.s3.model.InitiateMultipartUploadResult;
@@ -41,6 +42,8 @@ public abstract class S3Direct implements S3DirectSpi {
     public abstract S3Object getObject(GetObjectRequest req);
 
     public abstract ObjectMetadata getObject(GetObjectRequest req, File dest);
+
+    public abstract ObjectMetadata getObjectMetadata(GetObjectMetadataRequest req);
 
     public abstract CompleteMultipartUploadResult completeMultipartUpload(
             CompleteMultipartUploadRequest req);

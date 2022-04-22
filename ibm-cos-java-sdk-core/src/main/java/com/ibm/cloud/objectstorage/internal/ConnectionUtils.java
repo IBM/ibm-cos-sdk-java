@@ -1,5 +1,5 @@
 /*
- * Copyright 2011-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2011-2022 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,22 +14,65 @@
  */
 package com.ibm.cloud.objectstorage.internal;
 
+import com.ibm.cloud.objectstorage.SDKGlobalConfiguration;
+import com.ibm.cloud.objectstorage.annotation.SdkInternalApi;
+import com.ibm.cloud.objectstorage.annotation.SdkTestInternalApi;
+import com.ibm.cloud.objectstorage.util.StringUtils;
+import com.ibm.cloud.objectstorage.util.ValidationUtils;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.Proxy;
 import java.net.URI;
 import java.util.Map;
 
-import com.ibm.cloud.objectstorage.annotation.SdkInternalApi;
-
 @SdkInternalApi
 public class ConnectionUtils {
+    private static final int DEFAULT_TIMEOUT_MILLIS = 1000;
+    private final int timeoutMillis;
 
-    private ConnectionUtils() {
+    @SdkTestInternalApi
+    ConnectionUtils() {
+        this.timeoutMillis = ValidationUtils.assertIsPositive(readTimeoutMillisConfiguration(),
+                                                              SDKGlobalConfiguration.AWS_METADATA_SERVICE_TIMEOUT_ENV_VAR);
     }
 
     public static ConnectionUtils getInstance() {
         return ConnectionUtilsSingletonHolder.INSTANCE;
+    }
+
+    private static int readTimeoutMillisConfiguration() {
+        String stringTimeout = System.getenv(SDKGlobalConfiguration.AWS_METADATA_SERVICE_TIMEOUT_ENV_VAR);
+
+        if (StringUtils.isNullOrEmpty(stringTimeout)) {
+            return DEFAULT_TIMEOUT_MILLIS;
+        }
+
+        // To match the CLI behavior, we need to support both integers and doubles. We try int first so that we can get exact
+        // values, and fall back to double if it doesn't seem to be an int.
+        try {
+            int timeoutSeconds = Integer.parseInt(stringTimeout);
+            return timeoutSeconds * 1000;
+        } catch (NumberFormatException e) {
+            try {
+                double timeoutSeconds = Double.parseDouble(stringTimeout);
+                return toIntExact(Math.round(timeoutSeconds * 1000));
+            } catch (NumberFormatException ignored) {
+                throw new IllegalStateException(SDKGlobalConfiguration.AWS_METADATA_SERVICE_TIMEOUT_ENV_VAR + " environment "
+                                                + "variable value does not appear to be an integer or a double: " +
+                                                stringTimeout);
+            }
+        }
+    }
+
+    private static int toIntExact(long value) {
+        if ((int) value != value) {
+            throw new ArithmeticException("integer overflow");
+        }
+        return (int) value;
+    }
+
+    public int getTimeoutMillis() {
+        return timeoutMillis;
     }
 
     public HttpURLConnection connectToEndpoint(URI endpoint, Map<String, String> headers) throws IOException {
@@ -38,8 +81,8 @@ public class ConnectionUtils {
 
     public HttpURLConnection connectToEndpoint(URI endpoint, Map<String, String> headers, String method) throws IOException {
         HttpURLConnection connection = (HttpURLConnection) endpoint.toURL().openConnection(Proxy.NO_PROXY);
-        connection.setConnectTimeout(1000 * 2);
-        connection.setReadTimeout(1000 * 5);
+        connection.setConnectTimeout(timeoutMillis);
+        connection.setReadTimeout(timeoutMillis);
         connection.setRequestMethod(method);
         connection.setDoOutput(true);
 

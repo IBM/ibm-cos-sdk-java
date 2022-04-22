@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2019 Amazon.com, Inc. or its affiliates. All Rights
+ * Copyright 2010-2022 Amazon.com, Inc. or its affiliates. All Rights
  * Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
@@ -18,12 +18,13 @@ package com.ibm.cloud.objectstorage.internal.auth;
 import com.ibm.cloud.objectstorage.AmazonWebServiceClient;
 import com.ibm.cloud.objectstorage.AmazonWebServiceRequest;
 import com.ibm.cloud.objectstorage.Request;
-import com.ibm.cloud.objectstorage.auth.SignerFactory;
-import com.ibm.cloud.objectstorage.auth.SignerTypeAware;
+import com.ibm.cloud.objectstorage.auth.ServiceAwareSigner;
 import com.ibm.cloud.objectstorage.auth.Signer;
+import com.ibm.cloud.objectstorage.auth.SignerFactory;
 import com.ibm.cloud.objectstorage.auth.SignerParams;
 import com.ibm.cloud.objectstorage.util.AwsHostNameUtils;
-
+import com.ibm.cloud.objectstorage.auth.SignerTypeAware;
+import com.ibm.cloud.objectstorage.handlers.HandlerContextKey;
 import java.net.URI;
 
 public class DefaultSignerProvider extends SignerProvider {
@@ -39,11 +40,23 @@ public class DefaultSignerProvider extends SignerProvider {
 
     @Override
     public Signer getSigner(SignerProviderContext context) {
-    Request<?> request = context.getRequest();
+        Request<?> request = context.getRequest();
+
         if (request == null || shouldUseDefaultSigner(request.getOriginalRequest())) {
             if (context.isRedirect()) {
                 return awsClient.getSignerByURI(context.getUri());
             }
+
+            // A new signer should be created if the signing name is overridden
+            if (request != null && request.getHandlerContext(HandlerContextKey.SIGNING_NAME) != null) {
+                String signingName = request.getHandlerContext(HandlerContextKey.SIGNING_NAME);
+                Signer newSigner = awsClient.getSignerByURI(context.getUri());
+                if (newSigner instanceof ServiceAwareSigner && !isSignerOverridden()) {
+                    ((ServiceAwareSigner) (newSigner)).setServiceName(signingName);
+                    return newSigner;
+                }
+            }
+
             return defaultSigner;
         }
 

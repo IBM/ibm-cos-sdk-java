@@ -1,5 +1,5 @@
 /*
- * Copyright 2011-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2011-2022 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -73,12 +73,17 @@ public abstract class AwsClientBuilder<Subclass extends AwsClientBuilder, TypeTo
      */
     private final AwsRegionProvider regionProvider;
 
+    //IBM unsupported
+    //private final AdvancedConfig.Builder advancedConfig = AdvancedConfig.builder();
+
     private AWSCredentialsProvider credentials;
     private ClientConfiguration clientConfig;
     private RequestMetricCollector metricsCollector;
     private Region region;
     private List<RequestHandler2> requestHandlers;
     private EndpointConfiguration endpointConfiguration;
+    //IBM unsupported
+    // private CsmConfigurationProvider csmConfig;
     private MonitoringListener monitoringListener;
     private String iamEndpoint;
     private double iamTokenRefreshOffset;
@@ -149,7 +154,7 @@ public abstract class AwsClientBuilder<Subclass extends AwsClientBuilder, TypeTo
 
     /**
      * Sets the IAM endpoint to use for token retrieval by the DefaultTokenManager
-     * and the DefaultTokenProvider. This should only be over written 
+     * and the DefaultTokenProvider. This should only be over written
      * for a dev or staging environment
      *
      * @param iamEndpoint, http endpoint for token retrieval
@@ -419,6 +424,34 @@ public abstract class AwsClientBuilder<Subclass extends AwsClientBuilder, TypeTo
         return getSubclass();
     }
 
+    //IBM unsupported
+    /**
+     * Gets the {@link MonitoringListener} in use by the builder.
+     */
+    // public final MonitoringListener getMonitoringListener() {
+    //     return this.monitoringListener;
+    // }
+
+    /**
+     * Sets a custom MonitoringListener to use for the client.
+     *
+     * @param monitoringListener Custom Monitoring Listener to use.
+     */
+    // public final void setMonitoringListener(MonitoringListener monitoringListener) {
+    //     this.monitoringListener = monitoringListener;
+    // }
+
+    /**
+     * Sets a custom MonitoringListener to use for the client.
+     *
+     * @param monitoringListener Custom MonitoringListener to use.
+     * @return This object for method chaining.
+     */
+    // public final Subclass withMonitoringListener(MonitoringListener monitoringListener) {
+    //     setMonitoringListener(monitoringListener);
+    //     return getSubclass();
+    // }
+
     /**
      * Request handlers are copied to a new list to avoid mutation, if no request handlers are
      * provided to the builder we supply an empty list.
@@ -427,6 +460,47 @@ public abstract class AwsClientBuilder<Subclass extends AwsClientBuilder, TypeTo
         return (requestHandlers == null) ? new ArrayList<RequestHandler2>() :
                 new ArrayList<RequestHandler2>(requestHandlers);
     }
+
+    //IBM unsupported
+    // public CsmConfigurationProvider getClientSideMonitoringConfigurationProvider() {
+    //     return csmConfig;
+    // }
+
+    // public void setClientSideMonitoringConfigurationProvider(CsmConfigurationProvider csmConfig) {
+    //     this.csmConfig = csmConfig;
+    // }
+
+    // public Subclass withClientSideMonitoringConfigurationProvider(
+    //         CsmConfigurationProvider csmConfig) {
+    //     setClientSideMonitoringConfigurationProvider(csmConfig);
+    //     return getSubclass();
+    // }
+
+    // private CsmConfigurationProvider resolveClientSideMonitoringConfig() {
+    //     return csmConfig == null ? DefaultCsmConfigurationProviderChain.getInstance() : csmConfig;
+    // }
+
+    /**
+     * Get the current value of an advanced config option.
+     * @param key Key of value to get.
+     * @param <T> Type of value to get.
+     * @return Value if set, otherwise null.
+     */
+    //IBM unsupported
+    // protected final <T> T getAdvancedConfig(AdvancedConfig.Key<T> key) {
+    //     return advancedConfig.get(key);
+    // }
+
+    /**
+     * Sets the value of an advanced config option.
+     * @param key Key of value to set.
+     * @param value The new value.
+     * @param <T> Type of value.
+     */
+    //IBM unsupported
+    // protected final <T> void putAdvancedConfig(AdvancedConfig.Key<T> key, T value) {
+    //     advancedConfig.put(key, value);
+    // }
 
     /**
      * Region and endpoint logic is tightly coupled to the client class right now so it's easier to
@@ -457,6 +531,11 @@ public abstract class AwsClientBuilder<Subclass extends AwsClientBuilder, TypeTo
     protected final AwsSyncClientParams getSyncClientParams() {
         return new SyncBuilderParams();
     }
+
+    //IBM unsupported
+    // protected final AdvancedConfig getAdvancedConfig() {
+    //     return advancedConfig.build();
+    // }
 
     private void setRegion(AmazonWebServiceClient client) {
         if (region != null && endpointConfiguration != null) {
@@ -510,14 +589,22 @@ public abstract class AwsClientBuilder<Subclass extends AwsClientBuilder, TypeTo
         private final AWSCredentialsProvider _credentials;
         private final RequestMetricCollector _metricsCollector;
         private final List<RequestHandler2> _requestHandlers;
+        //IBM unsupported
+        //private final CsmConfigurationProvider _csmConfig;
         private final MonitoringListener _monitoringListener;
+        //IBM unsupported
+        //private final AdvancedConfig _advancedConfig;
 
         protected SyncBuilderParams() {
             this._clientConfig = resolveClientConfiguration();
             this._credentials = resolveCredentials();
             this._metricsCollector = metricsCollector;
             this._requestHandlers = resolveRequestHandlers();
+            //IBM unsupported
+            //this._csmConfig = resolveClientSideMonitoringConfig();
             this._monitoringListener = monitoringListener;
+            //IBM unsupported
+            //this._advancedConfig = advancedConfig.build();
         }
 
         @Override
@@ -540,10 +627,22 @@ public abstract class AwsClientBuilder<Subclass extends AwsClientBuilder, TypeTo
             return this._requestHandlers;
         }
 
+        //IBM unsupported
+        // @Override
+        // public CsmConfigurationProvider getClientSideMonitoringConfigurationProvider() {
+        //     return this._csmConfig;
+        // }
+
         @Override
         public MonitoringListener getMonitoringListener() {
             return this._monitoringListener;
         }
+
+        //IBM unsupported
+        // @Override
+        // public AdvancedConfig getAdvancedConfig() {
+        //     return _advancedConfig;
+        // }
 
         @Override
         public ExecutorService getExecutor() {

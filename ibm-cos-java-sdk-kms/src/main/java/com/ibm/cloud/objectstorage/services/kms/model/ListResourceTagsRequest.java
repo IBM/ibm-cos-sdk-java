@@ -1,11 +1,11 @@
 /*
- * Copyright 2014-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
- * 
+ * Copyright 2017-2022 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"). You may not use this file except in compliance with
  * the License. A copy of the License is located at
- * 
+ *
  * http://aws.amazon.com/apache2.0
- * 
+ *
  * or in the "license" file accompanying this file. This file is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
  * CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions
  * and limitations under the License.
@@ -18,7 +18,7 @@ import javax.annotation.Generated;
 import com.ibm.cloud.objectstorage.AmazonWebServiceRequest;
 
 /**
- * 
+ *
  * @see <a href="http://docs.aws.amazon.com/goto/WebAPI/kms-2014-11-01/ListResourceTags" target="_top">AWS API
  *      Documentation</a>
  */
@@ -27,13 +27,18 @@ public class ListResourceTagsRequest extends com.ibm.cloud.objectstorage.AmazonW
 
     /**
      * <p>
-     * A unique identifier for the CMK whose tags you are listing. You can use the unique key ID or the Amazon Resource
-     * Name (ARN) of the CMK. Examples:
+     * Gets tags on the specified KMS key.
+     * </p>
+     * <p>
+     * Specify the key ID or key ARN of the KMS key.
+     * </p>
+     * <p>
+     * For example:
      * </p>
      * <ul>
      * <li>
      * <p>
-     * Unique key ID: <code>1234abcd-12ab-34cd-56ef-1234567890ab</code>
+     * Key ID: <code>1234abcd-12ab-34cd-56ef-1234567890ab</code>
      * </p>
      * </li>
      * <li>
@@ -42,11 +47,14 @@ public class ListResourceTagsRequest extends com.ibm.cloud.objectstorage.AmazonW
      * </p>
      * </li>
      * </ul>
+     * <p>
+     * To get the key ID and key ARN for a KMS key, use <a>ListKeys</a> or <a>DescribeKey</a>.
+     * </p>
      */
     private String keyId;
     /**
      * <p>
-     * Use this parameter to specify the maximum number of items to return. When this value is present, AWS KMS does not
+     * Use this parameter to specify the maximum number of items to return. When this value is present, KMS does not
      * return more than the specified number of items, but it might return fewer.
      * </p>
      * <p>
@@ -69,13 +77,18 @@ public class ListResourceTagsRequest extends com.ibm.cloud.objectstorage.AmazonW
 
     /**
      * <p>
-     * A unique identifier for the CMK whose tags you are listing. You can use the unique key ID or the Amazon Resource
-     * Name (ARN) of the CMK. Examples:
+     * Gets tags on the specified KMS key.
+     * </p>
+     * <p>
+     * Specify the key ID or key ARN of the KMS key.
+     * </p>
+     * <p>
+     * For example:
      * </p>
      * <ul>
      * <li>
      * <p>
-     * Unique key ID: <code>1234abcd-12ab-34cd-56ef-1234567890ab</code>
+     * Key ID: <code>1234abcd-12ab-34cd-56ef-1234567890ab</code>
      * </p>
      * </li>
      * <li>
@@ -84,14 +97,22 @@ public class ListResourceTagsRequest extends com.ibm.cloud.objectstorage.AmazonW
      * </p>
      * </li>
      * </ul>
-     * 
+     * <p>
+     * To get the key ID and key ARN for a KMS key, use <a>ListKeys</a> or <a>DescribeKey</a>.
+     * </p>
+     *
      * @param keyId
-     *        A unique identifier for the CMK whose tags you are listing. You can use the unique key ID or the Amazon
-     *        Resource Name (ARN) of the CMK. Examples:</p>
+     *        Gets tags on the specified KMS key.</p>
+     *        <p>
+     *        Specify the key ID or key ARN of the KMS key.
+     *        </p>
+     *        <p>
+     *        For example:
+     *        </p>
      *        <ul>
      *        <li>
      *        <p>
-     *        Unique key ID: <code>1234abcd-12ab-34cd-56ef-1234567890ab</code>
+     *        Key ID: <code>1234abcd-12ab-34cd-56ef-1234567890ab</code>
      *        </p>
      *        </li>
      *        <li>
@@ -99,6 +120,9 @@ public class ListResourceTagsRequest extends com.ibm.cloud.objectstorage.AmazonW
      *        Key ARN: <code>arn:aws:kms:us-east-2:111122223333:key/1234abcd-12ab-34cd-56ef-1234567890ab</code>
      *        </p>
      *        </li>
+     *        </ul>
+     *        <p>
+     *        To get the key ID and key ARN for a KMS key, use <a>ListKeys</a> or <a>DescribeKey</a>.
      */
 
     public void setKeyId(String keyId) {
@@ -107,13 +131,18 @@ public class ListResourceTagsRequest extends com.ibm.cloud.objectstorage.AmazonW
 
     /**
      * <p>
-     * A unique identifier for the CMK whose tags you are listing. You can use the unique key ID or the Amazon Resource
-     * Name (ARN) of the CMK. Examples:
+     * Gets tags on the specified KMS key.
+     * </p>
+     * <p>
+     * Specify the key ID or key ARN of the KMS key.
+     * </p>
+     * <p>
+     * For example:
      * </p>
      * <ul>
      * <li>
      * <p>
-     * Unique key ID: <code>1234abcd-12ab-34cd-56ef-1234567890ab</code>
+     * Key ID: <code>1234abcd-12ab-34cd-56ef-1234567890ab</code>
      * </p>
      * </li>
      * <li>
@@ -122,13 +151,21 @@ public class ListResourceTagsRequest extends com.ibm.cloud.objectstorage.AmazonW
      * </p>
      * </li>
      * </ul>
-     * 
-     * @return A unique identifier for the CMK whose tags you are listing. You can use the unique key ID or the Amazon
-     *         Resource Name (ARN) of the CMK. Examples:</p>
+     * <p>
+     * To get the key ID and key ARN for a KMS key, use <a>ListKeys</a> or <a>DescribeKey</a>.
+     * </p>
+     *
+     * @return Gets tags on the specified KMS key.</p>
+     *         <p>
+     *         Specify the key ID or key ARN of the KMS key.
+     *         </p>
+     *         <p>
+     *         For example:
+     *         </p>
      *         <ul>
      *         <li>
      *         <p>
-     *         Unique key ID: <code>1234abcd-12ab-34cd-56ef-1234567890ab</code>
+     *         Key ID: <code>1234abcd-12ab-34cd-56ef-1234567890ab</code>
      *         </p>
      *         </li>
      *         <li>
@@ -136,6 +173,9 @@ public class ListResourceTagsRequest extends com.ibm.cloud.objectstorage.AmazonW
      *         Key ARN: <code>arn:aws:kms:us-east-2:111122223333:key/1234abcd-12ab-34cd-56ef-1234567890ab</code>
      *         </p>
      *         </li>
+     *         </ul>
+     *         <p>
+     *         To get the key ID and key ARN for a KMS key, use <a>ListKeys</a> or <a>DescribeKey</a>.
      */
 
     public String getKeyId() {
@@ -144,13 +184,18 @@ public class ListResourceTagsRequest extends com.ibm.cloud.objectstorage.AmazonW
 
     /**
      * <p>
-     * A unique identifier for the CMK whose tags you are listing. You can use the unique key ID or the Amazon Resource
-     * Name (ARN) of the CMK. Examples:
+     * Gets tags on the specified KMS key.
+     * </p>
+     * <p>
+     * Specify the key ID or key ARN of the KMS key.
+     * </p>
+     * <p>
+     * For example:
      * </p>
      * <ul>
      * <li>
      * <p>
-     * Unique key ID: <code>1234abcd-12ab-34cd-56ef-1234567890ab</code>
+     * Key ID: <code>1234abcd-12ab-34cd-56ef-1234567890ab</code>
      * </p>
      * </li>
      * <li>
@@ -159,14 +204,22 @@ public class ListResourceTagsRequest extends com.ibm.cloud.objectstorage.AmazonW
      * </p>
      * </li>
      * </ul>
-     * 
+     * <p>
+     * To get the key ID and key ARN for a KMS key, use <a>ListKeys</a> or <a>DescribeKey</a>.
+     * </p>
+     *
      * @param keyId
-     *        A unique identifier for the CMK whose tags you are listing. You can use the unique key ID or the Amazon
-     *        Resource Name (ARN) of the CMK. Examples:</p>
+     *        Gets tags on the specified KMS key.</p>
+     *        <p>
+     *        Specify the key ID or key ARN of the KMS key.
+     *        </p>
+     *        <p>
+     *        For example:
+     *        </p>
      *        <ul>
      *        <li>
      *        <p>
-     *        Unique key ID: <code>1234abcd-12ab-34cd-56ef-1234567890ab</code>
+     *        Key ID: <code>1234abcd-12ab-34cd-56ef-1234567890ab</code>
      *        </p>
      *        </li>
      *        <li>
@@ -174,6 +227,9 @@ public class ListResourceTagsRequest extends com.ibm.cloud.objectstorage.AmazonW
      *        Key ARN: <code>arn:aws:kms:us-east-2:111122223333:key/1234abcd-12ab-34cd-56ef-1234567890ab</code>
      *        </p>
      *        </li>
+     *        </ul>
+     *        <p>
+     *        To get the key ID and key ARN for a KMS key, use <a>ListKeys</a> or <a>DescribeKey</a>.
      * @return Returns a reference to this object so that method calls can be chained together.
      */
 
@@ -184,17 +240,17 @@ public class ListResourceTagsRequest extends com.ibm.cloud.objectstorage.AmazonW
 
     /**
      * <p>
-     * Use this parameter to specify the maximum number of items to return. When this value is present, AWS KMS does not
+     * Use this parameter to specify the maximum number of items to return. When this value is present, KMS does not
      * return more than the specified number of items, but it might return fewer.
      * </p>
      * <p>
      * This value is optional. If you include a value, it must be between 1 and 50, inclusive. If you do not include a
      * value, it defaults to 50.
      * </p>
-     * 
+     *
      * @param limit
-     *        Use this parameter to specify the maximum number of items to return. When this value is present, AWS KMS
-     *        does not return more than the specified number of items, but it might return fewer.</p>
+     *        Use this parameter to specify the maximum number of items to return. When this value is present, KMS does
+     *        not return more than the specified number of items, but it might return fewer.</p>
      *        <p>
      *        This value is optional. If you include a value, it must be between 1 and 50, inclusive. If you do not
      *        include a value, it defaults to 50.
@@ -206,16 +262,16 @@ public class ListResourceTagsRequest extends com.ibm.cloud.objectstorage.AmazonW
 
     /**
      * <p>
-     * Use this parameter to specify the maximum number of items to return. When this value is present, AWS KMS does not
+     * Use this parameter to specify the maximum number of items to return. When this value is present, KMS does not
      * return more than the specified number of items, but it might return fewer.
      * </p>
      * <p>
      * This value is optional. If you include a value, it must be between 1 and 50, inclusive. If you do not include a
      * value, it defaults to 50.
      * </p>
-     * 
-     * @return Use this parameter to specify the maximum number of items to return. When this value is present, AWS KMS
-     *         does not return more than the specified number of items, but it might return fewer.</p>
+     *
+     * @return Use this parameter to specify the maximum number of items to return. When this value is present, KMS does
+     *         not return more than the specified number of items, but it might return fewer.</p>
      *         <p>
      *         This value is optional. If you include a value, it must be between 1 and 50, inclusive. If you do not
      *         include a value, it defaults to 50.
@@ -227,17 +283,17 @@ public class ListResourceTagsRequest extends com.ibm.cloud.objectstorage.AmazonW
 
     /**
      * <p>
-     * Use this parameter to specify the maximum number of items to return. When this value is present, AWS KMS does not
+     * Use this parameter to specify the maximum number of items to return. When this value is present, KMS does not
      * return more than the specified number of items, but it might return fewer.
      * </p>
      * <p>
      * This value is optional. If you include a value, it must be between 1 and 50, inclusive. If you do not include a
      * value, it defaults to 50.
      * </p>
-     * 
+     *
      * @param limit
-     *        Use this parameter to specify the maximum number of items to return. When this value is present, AWS KMS
-     *        does not return more than the specified number of items, but it might return fewer.</p>
+     *        Use this parameter to specify the maximum number of items to return. When this value is present, KMS does
+     *        not return more than the specified number of items, but it might return fewer.</p>
      *        <p>
      *        This value is optional. If you include a value, it must be between 1 and 50, inclusive. If you do not
      *        include a value, it defaults to 50.
@@ -258,7 +314,7 @@ public class ListResourceTagsRequest extends com.ibm.cloud.objectstorage.AmazonW
      * Do not attempt to construct this value. Use only the value of <code>NextMarker</code> from the truncated response
      * you just received.
      * </p>
-     * 
+     *
      * @param marker
      *        Use this parameter in a subsequent request after you receive a response with truncated results. Set it to
      *        the value of <code>NextMarker</code> from the truncated response you just received.</p>
@@ -280,7 +336,7 @@ public class ListResourceTagsRequest extends com.ibm.cloud.objectstorage.AmazonW
      * Do not attempt to construct this value. Use only the value of <code>NextMarker</code> from the truncated response
      * you just received.
      * </p>
-     * 
+     *
      * @return Use this parameter in a subsequent request after you receive a response with truncated results. Set it to
      *         the value of <code>NextMarker</code> from the truncated response you just received.</p>
      *         <p>
@@ -301,7 +357,7 @@ public class ListResourceTagsRequest extends com.ibm.cloud.objectstorage.AmazonW
      * Do not attempt to construct this value. Use only the value of <code>NextMarker</code> from the truncated response
      * you just received.
      * </p>
-     * 
+     *
      * @param marker
      *        Use this parameter in a subsequent request after you receive a response with truncated results. Set it to
      *        the value of <code>NextMarker</code> from the truncated response you just received.</p>
@@ -317,7 +373,8 @@ public class ListResourceTagsRequest extends com.ibm.cloud.objectstorage.AmazonW
     }
 
     /**
-     * Returns a string representation of this object; useful for testing and debugging.
+     * Returns a string representation of this object. This is useful for testing and debugging. Sensitive data will be
+     * redacted from this string using a placeholder value.
      *
      * @return A string representation of this object.
      *

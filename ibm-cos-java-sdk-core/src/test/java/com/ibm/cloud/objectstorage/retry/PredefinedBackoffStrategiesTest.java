@@ -1,5 +1,5 @@
 /*
- * Copyright 2011-2019 Amazon.com, Inc. or its affiliates. All Rights
+ * Copyright 2011-2022 Amazon.com, Inc. or its affiliates. All Rights
  * Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
@@ -18,11 +18,12 @@
  */
 package com.ibm.cloud.objectstorage.retry;
 
-import org.junit.Assert;
-import org.junit.Test;
+import static org.junit.Assert.assertEquals;
 
 import java.util.ArrayList;
 import java.util.List;
+import org.junit.Assert;
+import org.junit.Test;
 
 public class PredefinedBackoffStrategiesTest {
 
@@ -111,7 +112,7 @@ public class PredefinedBackoffStrategiesTest {
     public void test_MaxValue_Returned_InExponentialBackoffDelay_IsEqualTo_IntegerMax() {
         int maxInt = Integer.MAX_VALUE;
         RetryPolicy.BackoffStrategy exponential = new PredefinedBackoffStrategies.ExponentialBackoffStrategy(maxInt, maxInt);
-        Assert.assertEquals(maxInt, exponential.delayBeforeNextRetry(null, null, 40));
+        assertEquals(maxInt, exponential.delayBeforeNextRetry(null, null, 40));
     }
 
     private void expectInRange(RetryPolicy.BackoffStrategy strategy, int[] expectedLowerBound, int[] expectedUpperBound) {

@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2014-2022 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -71,7 +71,7 @@ import java.io.Serializable;
  * <p>
  * If you are uploading or accessing <a
  * href="http://aws.amazon.com/kms/">KMS</a>-encrypted objects, you need to
- * specify the correct region of the bucket on your client and configure AWS
+ * specify the correct region of the bucket on your client and configure Amazon Web Services
  * Signature Version 4 for added security. For more information on how to do
  * this, see
  * http://docs.aws.amazon.com/AmazonS3/latest/dev/UsingAWSSDK.html#specify
@@ -82,13 +82,19 @@ import java.io.Serializable;
  * @see PutObjectRequest#PutObjectRequest(String, String, InputStream,
  *      ObjectMetadata)
  */
-public class PutObjectRequest extends AbstractPutObjectRequest implements Serializable {
+public class PutObjectRequest extends AbstractPutObjectRequest implements Serializable
+//IBM unsupported
+//, ExpectedBucketOwnerRequest 
+{
 
     /**
      * If enabled, the requester is charged for conducting this operation from
      * Requester Pays Buckets.
      */
     private boolean isRequesterPays;
+
+    //IBM unsupported
+    //private String expectedBucketOwner;
 
     /**
      * Constructs a new
@@ -102,10 +108,10 @@ public class PutObjectRequest extends AbstractPutObjectRequest implements Serial
      * <i>AccessPointName</i>-<i>AccountId</i>.s3-accesspoint.<i>Region</i>.amazonaws.com.
      * </p>
      * <p>
-     * When using this operation using an access point through the AWS SDKs, you provide
+     * When using this operation using an access point through the Amazon Web Services SDKs, you provide
      * the access point ARN in place of the bucket name. For more information about access point
      * ARNs, see <a href=\"https://docs.aws.amazon.com/AmazonS3/latest/dev/using-access-points.html\">
-     * Using Access Points</a> in the <i>Amazon Simple Storage Service Developer Guide</i>.
+     * Using access points</a> in the <i>Amazon Simple Storage Service Developer Guide</i>.
      * </p>
      *
      * @param bucketName
@@ -136,10 +142,10 @@ public class PutObjectRequest extends AbstractPutObjectRequest implements Serial
      * <i>AccessPointName</i>-<i>AccountId</i>.s3-accesspoint.<i>Region</i>.amazonaws.com.
      * </p>
      * <p>
-     * When using this operation using an access point through the AWS SDKs, you provide
+     * When using this operation using an access point through the Amazon Web Services SDKs, you provide
      * the access point ARN in place of the bucket name. For more information about access point
      * ARNs, see <a href=\"https://docs.aws.amazon.com/AmazonS3/latest/dev/using-access-points.html\">
-     * Using Access Points</a> in the <i>Amazon Simple Storage Service Developer Guide</i>.
+     * Using access points</a> in the <i>Amazon Simple Storage Service Developer Guide</i>.
      * </p>
      *
      * @param bucketName
@@ -175,10 +181,10 @@ public class PutObjectRequest extends AbstractPutObjectRequest implements Serial
      * <i>AccessPointName</i>-<i>AccountId</i>.s3-accesspoint.<i>Region</i>.amazonaws.com.
      * </p>
      * <p>
-     * When using this operation using an access point through the AWS SDKs, you provide
+     * When using this operation using an access point through the Amazon Web Services SDKs, you provide
      * the access point ARN in place of the bucket name. For more information about access point
      * ARNs, see <a href=\"https://docs.aws.amazon.com/AmazonS3/latest/dev/using-access-points.html\">
-     * Using Access Points</a> in the <i>Amazon Simple Storage Service Developer Guide</i>.
+     * Using access points</a> in the <i>Amazon Simple Storage Service Developer Guide</i>.
      * </p>
      *
      * @param bucketName
@@ -196,6 +202,20 @@ public class PutObjectRequest extends AbstractPutObjectRequest implements Serial
             ObjectMetadata metadata) {
         super(bucketName, key, input, metadata);
     }
+
+//IBM unsupported
+//    public String getExpectedBucketOwner() {
+//        return expectedBucketOwner;
+//    }
+//
+//    public PutObjectRequest withExpectedBucketOwner(String expectedBucketOwner) {
+//        this.expectedBucketOwner = expectedBucketOwner;
+//        return this;
+//    }
+//
+//    public void setExpectedBucketOwner(String expectedBucketOwner) {
+//        withExpectedBucketOwner(expectedBucketOwner);
+//    }
 
     /**
      * Returns a clone (as deep as possible) of this request object.

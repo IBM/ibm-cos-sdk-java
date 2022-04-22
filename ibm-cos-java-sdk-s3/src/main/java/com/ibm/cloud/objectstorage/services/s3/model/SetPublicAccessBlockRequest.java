@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2010-2022 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -18,10 +18,29 @@ package com.ibm.cloud.objectstorage.services.s3.model;
 import com.ibm.cloud.objectstorage.AmazonWebServiceRequest;
 import java.io.Serializable;
 
-public class SetPublicAccessBlockRequest extends AmazonWebServiceRequest implements Serializable, Cloneable {
+public class SetPublicAccessBlockRequest extends AmazonWebServiceRequest implements Serializable, Cloneable
+//IBM unsupported
+//, ExpectedBucketOwnerRequest 
+{
 
     private String bucketName;
     private PublicAccessBlockConfiguration publicAccessBlockConfiguration;
+  
+    //IBM unsupported
+    //private String expectedBucketOwner;
+
+//    public String getExpectedBucketOwner() {
+//        return expectedBucketOwner;
+//    }
+//
+//    public SetPublicAccessBlockRequest withExpectedBucketOwner(String expectedBucketOwner) {
+//        this.expectedBucketOwner = expectedBucketOwner;
+//        return this;
+//    }
+//
+//    public void setExpectedBucketOwner(String expectedBucketOwner) {
+//        withExpectedBucketOwner(expectedBucketOwner);
+//    }
 
     /**
      * The name of the Amazon S3 bucket whose Public Access Block configuration you want to set.
@@ -39,10 +58,10 @@ public class SetPublicAccessBlockRequest extends AmazonWebServiceRequest impleme
      * <i>AccessPointName</i>-<i>AccountId</i>.s3-accesspoint.<i>Region</i>.amazonaws.com.
      * </p>
      * <p>
-     * When using this operation using an access point through the AWS SDKs, you provide
+     * When using this operation using an access point through the Amazon Web Services SDKs, you provide
      * the access point ARN in place of the bucket name. For more information about access point
      * ARNs, see <a href=\"https://docs.aws.amazon.com/AmazonS3/latest/dev/using-access-points.html\">
-     * Using Access Points</a> in the <i>Amazon Simple Storage Service Developer Guide</i>.
+     * Using access points</a> in the <i>Amazon Simple Storage Service Developer Guide</i>.
      * </p>
      *
      * @param bucketName Name of bucket or access point ARN.
@@ -60,10 +79,10 @@ public class SetPublicAccessBlockRequest extends AmazonWebServiceRequest impleme
      * <i>AccessPointName</i>-<i>AccountId</i>.s3-accesspoint.<i>Region</i>.amazonaws.com.
      * </p>
      * <p>
-     * When using this operation using an access point through the AWS SDKs, you provide
+     * When using this operation using an access point through the Amazon Web Services SDKs, you provide
      * the access point ARN in place of the bucket name. For more information about access point
      * ARNs, see <a href=\"https://docs.aws.amazon.com/AmazonS3/latest/dev/using-access-points.html\">
-     * Using Access Points</a> in the <i>Amazon Simple Storage Service Developer Guide</i>.
+     * Using access points</a> in the <i>Amazon Simple Storage Service Developer Guide</i>.
      * </p>
      *
      * @param bucketName Name of bucket or access point ARN.

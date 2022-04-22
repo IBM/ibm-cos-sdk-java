@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2010-2022 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -15,6 +15,7 @@
 package com.ibm.cloud.objectstorage.services.s3.internal;
 
 import com.ibm.cloud.objectstorage.AmazonServiceException;
+import com.ibm.cloud.objectstorage.ClientConfiguration;
 import com.ibm.cloud.objectstorage.http.HttpMethodName;
 import com.ibm.cloud.objectstorage.http.HttpResponse;
 import com.ibm.cloud.objectstorage.http.HttpResponseHandler;
@@ -40,7 +41,7 @@ import static com.ibm.cloud.objectstorage.util.StringUtils.UTF8;
 
 /**
  * Response handler for S3 error responses. S3 error responses are different
- * from other AWS error responses in a few ways. Most error responses will
+ * from other Amazon Web Services error responses in a few ways. Most error responses will
  * contain an XML body, but not all (ex: error responses to HEAD requests will
  * not), so this error handler has to account for that. The actual XML error
  * response body is slightly different than other services like SimpleDB or EC2
@@ -57,6 +58,12 @@ public class S3ErrorResponseHandler implements
     private enum S3ErrorTags {
         Error, Message, Code, RequestId, HostId
     };
+
+    private final ClientConfiguration clientConfiguration;
+
+    public S3ErrorResponseHandler(ClientConfiguration clientConfiguration) {
+        this.clientConfiguration = clientConfiguration;
+    }
 
     @Override
     public AmazonServiceException handle(HttpResponse httpResponse)
@@ -153,6 +160,7 @@ public class S3ErrorResponseHandler implements
                     }
                     continue;
                 case XMLStreamConstants.END_DOCUMENT:
+                    exceptionBuilder.setProxyHost(clientConfiguration.getProxyHost());
                     return exceptionBuilder.build();
                 }
             }
@@ -180,6 +188,7 @@ public class S3ErrorResponseHandler implements
                 .setErrorCode(statusCode + " " + errorResponse.getStatusText());
         exceptionBuilder.addAdditionalDetail(Headers.S3_BUCKET_REGION,
                 errorResponse.getHeaders().get(Headers.S3_BUCKET_REGION));
+        exceptionBuilder.setProxyHost(clientConfiguration.getProxyHost());
         return exceptionBuilder.build();
     }
 

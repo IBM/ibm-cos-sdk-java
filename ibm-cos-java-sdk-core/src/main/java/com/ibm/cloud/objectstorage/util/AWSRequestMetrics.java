@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2010-2022 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -72,7 +72,9 @@ public class AWSRequestMetrics {
          */
         ThrottleException,
         /**
-         * Number of milliseconds taken for a request/response round trip to AWS.
+         * Number of milliseconds taken to acquire a connection from the connection pool (or create a new connection), send the
+         * request (including reading the user's input stream for streaming uploads), and receive the response status and
+         * headers. This does not include the time needed to download the response payload from the AWS service.
          */
         HttpRequestTime,
         RedirectLocation,
@@ -107,18 +109,21 @@ public class AWSRequestMetrics {
          */
         HttpClientRetryCount,
         /**
-         * Time taken to send a request to AWS by the http client library,
-         * excluding any retry.
+         * Number of milliseconds taken to write the request headers and payload to the underlying socket that is connected to
+         * AWS. This does not include any time spent acquiring a connection from the connection pool (or creating a new
+         * connection).
          */
         HttpClientSendRequestTime,
         /**
-         * Time taken to receive a response from AWS by the http client library,
-         * excluding any retry.
+         * Number of milliseconds taken to receive the response status and headers from the underlying socket that is connected
+         * to AWS. This does not include any time spent reading the response payload.
          */
         HttpClientReceiveResponseTime,
 
         /**
-         * Time taken for socket to read.
+         * Number of milliseconds taken to read response payload data off of the underlying socket that is connected to AWS. This
+         * does not include any time spent processing the response payload data, or time spent reading the response
+         * status/headers.
          */
         HttpSocketReadTime,
 

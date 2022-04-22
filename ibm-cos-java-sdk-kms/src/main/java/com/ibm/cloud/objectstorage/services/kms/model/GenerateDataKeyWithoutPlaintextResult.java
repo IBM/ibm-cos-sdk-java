@@ -1,11 +1,11 @@
 /*
- * Copyright 2014-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
- * 
+ * Copyright 2017-2022 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"). You may not use this file except in compliance with
  * the License. A copy of the License is located at
- * 
+ *
  * http://aws.amazon.com/apache2.0
- * 
+ *
  * or in the "license" file accompanying this file. This file is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
  * CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions
  * and limitations under the License.
@@ -16,7 +16,7 @@ import java.io.Serializable;
 import javax.annotation.Generated;
 
 /**
- * 
+ *
  * @see <a href="http://docs.aws.amazon.com/goto/WebAPI/kms-2014-11-01/GenerateDataKeyWithoutPlaintext"
  *      target="_top">AWS API Documentation</a>
  */
@@ -26,20 +26,24 @@ public class GenerateDataKeyWithoutPlaintextResult extends com.ibm.cloud.objects
 
     /**
      * <p>
-     * The encrypted data encryption key.
+     * The encrypted data key. When you use the HTTP API or the Amazon Web Services CLI, the value is Base64-encoded.
+     * Otherwise, it is not Base64-encoded.
      * </p>
      */
     private java.nio.ByteBuffer ciphertextBlob;
     /**
      * <p>
-     * The identifier of the CMK under which the data encryption key was generated and encrypted.
+     * The Amazon Resource Name (<a
+     * href="https://docs.aws.amazon.com/kms/latest/developerguide/concepts.html#key-id-key-ARN">key ARN</a>) of the KMS
+     * key that encrypted the data key.
      * </p>
      */
     private String keyId;
 
     /**
      * <p>
-     * The encrypted data encryption key.
+     * The encrypted data key. When you use the HTTP API or the Amazon Web Services CLI, the value is Base64-encoded.
+     * Otherwise, it is not Base64-encoded.
      * </p>
      * <p>
      * The AWS SDK for Java performs a Base64 encoding on this field before sending this request to the AWS service.
@@ -51,9 +55,10 @@ public class GenerateDataKeyWithoutPlaintextResult extends com.ibm.cloud.objects
      * ByteBuffer.asReadOnlyBuffer() before using or reading from the buffer. This behavior will be changed in a future
      * major version of the SDK.
      * </p>
-     * 
+     *
      * @param ciphertextBlob
-     *        The encrypted data encryption key.
+     *        The encrypted data key. When you use the HTTP API or the Amazon Web Services CLI, the value is
+     *        Base64-encoded. Otherwise, it is not Base64-encoded.
      */
 
     public void setCiphertextBlob(java.nio.ByteBuffer ciphertextBlob) {
@@ -62,7 +67,8 @@ public class GenerateDataKeyWithoutPlaintextResult extends com.ibm.cloud.objects
 
     /**
      * <p>
-     * The encrypted data encryption key.
+     * The encrypted data key. When you use the HTTP API or the Amazon Web Services CLI, the value is Base64-encoded.
+     * Otherwise, it is not Base64-encoded.
      * </p>
      * <p>
      * {@code ByteBuffer}s are stateful. Calling their {@code get} methods changes their {@code position}. We recommend
@@ -71,8 +77,9 @@ public class GenerateDataKeyWithoutPlaintextResult extends com.ibm.cloud.objects
      * Doing so will ensure that anyone else using the {@code ByteBuffer} will not be affected by changes to the
      * {@code position}.
      * </p>
-     * 
-     * @return The encrypted data encryption key.
+     *
+     * @return The encrypted data key. When you use the HTTP API or the Amazon Web Services CLI, the value is
+     *         Base64-encoded. Otherwise, it is not Base64-encoded.
      */
 
     public java.nio.ByteBuffer getCiphertextBlob() {
@@ -81,7 +88,8 @@ public class GenerateDataKeyWithoutPlaintextResult extends com.ibm.cloud.objects
 
     /**
      * <p>
-     * The encrypted data encryption key.
+     * The encrypted data key. When you use the HTTP API or the Amazon Web Services CLI, the value is Base64-encoded.
+     * Otherwise, it is not Base64-encoded.
      * </p>
      * <p>
      * The AWS SDK for Java performs a Base64 encoding on this field before sending this request to the AWS service.
@@ -93,9 +101,10 @@ public class GenerateDataKeyWithoutPlaintextResult extends com.ibm.cloud.objects
      * ByteBuffer.asReadOnlyBuffer() before using or reading from the buffer. This behavior will be changed in a future
      * major version of the SDK.
      * </p>
-     * 
+     *
      * @param ciphertextBlob
-     *        The encrypted data encryption key.
+     *        The encrypted data key. When you use the HTTP API or the Amazon Web Services CLI, the value is
+     *        Base64-encoded. Otherwise, it is not Base64-encoded.
      * @return Returns a reference to this object so that method calls can be chained together.
      */
 
@@ -106,11 +115,15 @@ public class GenerateDataKeyWithoutPlaintextResult extends com.ibm.cloud.objects
 
     /**
      * <p>
-     * The identifier of the CMK under which the data encryption key was generated and encrypted.
+     * The Amazon Resource Name (<a
+     * href="https://docs.aws.amazon.com/kms/latest/developerguide/concepts.html#key-id-key-ARN">key ARN</a>) of the KMS
+     * key that encrypted the data key.
      * </p>
-     * 
+     *
      * @param keyId
-     *        The identifier of the CMK under which the data encryption key was generated and encrypted.
+     *        The Amazon Resource Name (<a
+     *        href="https://docs.aws.amazon.com/kms/latest/developerguide/concepts.html#key-id-key-ARN">key ARN</a>) of
+     *        the KMS key that encrypted the data key.
      */
 
     public void setKeyId(String keyId) {
@@ -119,10 +132,14 @@ public class GenerateDataKeyWithoutPlaintextResult extends com.ibm.cloud.objects
 
     /**
      * <p>
-     * The identifier of the CMK under which the data encryption key was generated and encrypted.
+     * The Amazon Resource Name (<a
+     * href="https://docs.aws.amazon.com/kms/latest/developerguide/concepts.html#key-id-key-ARN">key ARN</a>) of the KMS
+     * key that encrypted the data key.
      * </p>
-     * 
-     * @return The identifier of the CMK under which the data encryption key was generated and encrypted.
+     *
+     * @return The Amazon Resource Name (<a
+     *         href="https://docs.aws.amazon.com/kms/latest/developerguide/concepts.html#key-id-key-ARN">key ARN</a>) of
+     *         the KMS key that encrypted the data key.
      */
 
     public String getKeyId() {
@@ -131,11 +148,15 @@ public class GenerateDataKeyWithoutPlaintextResult extends com.ibm.cloud.objects
 
     /**
      * <p>
-     * The identifier of the CMK under which the data encryption key was generated and encrypted.
+     * The Amazon Resource Name (<a
+     * href="https://docs.aws.amazon.com/kms/latest/developerguide/concepts.html#key-id-key-ARN">key ARN</a>) of the KMS
+     * key that encrypted the data key.
      * </p>
-     * 
+     *
      * @param keyId
-     *        The identifier of the CMK under which the data encryption key was generated and encrypted.
+     *        The Amazon Resource Name (<a
+     *        href="https://docs.aws.amazon.com/kms/latest/developerguide/concepts.html#key-id-key-ARN">key ARN</a>) of
+     *        the KMS key that encrypted the data key.
      * @return Returns a reference to this object so that method calls can be chained together.
      */
 
@@ -145,7 +166,8 @@ public class GenerateDataKeyWithoutPlaintextResult extends com.ibm.cloud.objects
     }
 
     /**
-     * Returns a string representation of this object; useful for testing and debugging.
+     * Returns a string representation of this object. This is useful for testing and debugging. Sensitive data will be
+     * redacted from this string using a placeholder value.
      *
      * @return A string representation of this object.
      *

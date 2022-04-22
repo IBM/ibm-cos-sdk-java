@@ -1,11 +1,11 @@
 /*
- * Copyright 2014-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
- * 
+ * Copyright 2017-2022 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"). You may not use this file except in compliance with
  * the License. A copy of the License is located at
- * 
+ *
  * http://aws.amazon.com/apache2.0
- * 
+ *
  * or in the "license" file accompanying this file. This file is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
  * CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions
  * and limitations under the License.
@@ -21,7 +21,7 @@ import com.ibm.cloud.objectstorage.protocol.ProtocolMarshaller;
  * <p>
  * Contains information about an alias.
  * </p>
- * 
+ *
  * @see <a href="http://docs.aws.amazon.com/goto/WebAPI/kms-2014-11-01/AliasListEntry" target="_top">AWS API
  *      Documentation</a>
  */
@@ -30,7 +30,7 @@ public class AliasListEntry implements Serializable, Cloneable, StructuredPojo {
 
     /**
      * <p>
-     * String that contains the alias.
+     * String that contains the alias. This value begins with <code>alias/</code>.
      * </p>
      */
     private String aliasName;
@@ -42,18 +42,31 @@ public class AliasListEntry implements Serializable, Cloneable, StructuredPojo {
     private String aliasArn;
     /**
      * <p>
-     * String that contains the key identifier referred to by the alias.
+     * String that contains the key identifier of the KMS key associated with the alias.
      * </p>
      */
     private String targetKeyId;
+    /**
+     * <p>
+     * Date and time that the alias was most recently created in the account and Region. Formatted as Unix time.
+     * </p>
+     */
+    private java.util.Date creationDate;
+    /**
+     * <p>
+     * Date and time that the alias was most recently associated with a KMS key in the account and Region. Formatted as
+     * Unix time.
+     * </p>
+     */
+    private java.util.Date lastUpdatedDate;
 
     /**
      * <p>
-     * String that contains the alias.
+     * String that contains the alias. This value begins with <code>alias/</code>.
      * </p>
-     * 
+     *
      * @param aliasName
-     *        String that contains the alias.
+     *        String that contains the alias. This value begins with <code>alias/</code>.
      */
 
     public void setAliasName(String aliasName) {
@@ -62,10 +75,10 @@ public class AliasListEntry implements Serializable, Cloneable, StructuredPojo {
 
     /**
      * <p>
-     * String that contains the alias.
+     * String that contains the alias. This value begins with <code>alias/</code>.
      * </p>
-     * 
-     * @return String that contains the alias.
+     *
+     * @return String that contains the alias. This value begins with <code>alias/</code>.
      */
 
     public String getAliasName() {
@@ -74,11 +87,11 @@ public class AliasListEntry implements Serializable, Cloneable, StructuredPojo {
 
     /**
      * <p>
-     * String that contains the alias.
+     * String that contains the alias. This value begins with <code>alias/</code>.
      * </p>
-     * 
+     *
      * @param aliasName
-     *        String that contains the alias.
+     *        String that contains the alias. This value begins with <code>alias/</code>.
      * @return Returns a reference to this object so that method calls can be chained together.
      */
 
@@ -91,7 +104,7 @@ public class AliasListEntry implements Serializable, Cloneable, StructuredPojo {
      * <p>
      * String that contains the key ARN.
      * </p>
-     * 
+     *
      * @param aliasArn
      *        String that contains the key ARN.
      */
@@ -104,7 +117,7 @@ public class AliasListEntry implements Serializable, Cloneable, StructuredPojo {
      * <p>
      * String that contains the key ARN.
      * </p>
-     * 
+     *
      * @return String that contains the key ARN.
      */
 
@@ -116,7 +129,7 @@ public class AliasListEntry implements Serializable, Cloneable, StructuredPojo {
      * <p>
      * String that contains the key ARN.
      * </p>
-     * 
+     *
      * @param aliasArn
      *        String that contains the key ARN.
      * @return Returns a reference to this object so that method calls can be chained together.
@@ -129,11 +142,11 @@ public class AliasListEntry implements Serializable, Cloneable, StructuredPojo {
 
     /**
      * <p>
-     * String that contains the key identifier referred to by the alias.
+     * String that contains the key identifier of the KMS key associated with the alias.
      * </p>
-     * 
+     *
      * @param targetKeyId
-     *        String that contains the key identifier referred to by the alias.
+     *        String that contains the key identifier of the KMS key associated with the alias.
      */
 
     public void setTargetKeyId(String targetKeyId) {
@@ -142,10 +155,10 @@ public class AliasListEntry implements Serializable, Cloneable, StructuredPojo {
 
     /**
      * <p>
-     * String that contains the key identifier referred to by the alias.
+     * String that contains the key identifier of the KMS key associated with the alias.
      * </p>
-     * 
-     * @return String that contains the key identifier referred to by the alias.
+     *
+     * @return String that contains the key identifier of the KMS key associated with the alias.
      */
 
     public String getTargetKeyId() {
@@ -154,11 +167,11 @@ public class AliasListEntry implements Serializable, Cloneable, StructuredPojo {
 
     /**
      * <p>
-     * String that contains the key identifier referred to by the alias.
+     * String that contains the key identifier of the KMS key associated with the alias.
      * </p>
-     * 
+     *
      * @param targetKeyId
-     *        String that contains the key identifier referred to by the alias.
+     *        String that contains the key identifier of the KMS key associated with the alias.
      * @return Returns a reference to this object so that method calls can be chained together.
      */
 
@@ -168,7 +181,94 @@ public class AliasListEntry implements Serializable, Cloneable, StructuredPojo {
     }
 
     /**
-     * Returns a string representation of this object; useful for testing and debugging.
+     * <p>
+     * Date and time that the alias was most recently created in the account and Region. Formatted as Unix time.
+     * </p>
+     *
+     * @param creationDate
+     *        Date and time that the alias was most recently created in the account and Region. Formatted as Unix time.
+     */
+
+    public void setCreationDate(java.util.Date creationDate) {
+        this.creationDate = creationDate;
+    }
+
+    /**
+     * <p>
+     * Date and time that the alias was most recently created in the account and Region. Formatted as Unix time.
+     * </p>
+     *
+     * @return Date and time that the alias was most recently created in the account and Region. Formatted as Unix time.
+     */
+
+    public java.util.Date getCreationDate() {
+        return this.creationDate;
+    }
+
+    /**
+     * <p>
+     * Date and time that the alias was most recently created in the account and Region. Formatted as Unix time.
+     * </p>
+     *
+     * @param creationDate
+     *        Date and time that the alias was most recently created in the account and Region. Formatted as Unix time.
+     * @return Returns a reference to this object so that method calls can be chained together.
+     */
+
+    public AliasListEntry withCreationDate(java.util.Date creationDate) {
+        setCreationDate(creationDate);
+        return this;
+    }
+
+    /**
+     * <p>
+     * Date and time that the alias was most recently associated with a KMS key in the account and Region. Formatted as
+     * Unix time.
+     * </p>
+     *
+     * @param lastUpdatedDate
+     *        Date and time that the alias was most recently associated with a KMS key in the account and Region.
+     *        Formatted as Unix time.
+     */
+
+    public void setLastUpdatedDate(java.util.Date lastUpdatedDate) {
+        this.lastUpdatedDate = lastUpdatedDate;
+    }
+
+    /**
+     * <p>
+     * Date and time that the alias was most recently associated with a KMS key in the account and Region. Formatted as
+     * Unix time.
+     * </p>
+     *
+     * @return Date and time that the alias was most recently associated with a KMS key in the account and Region.
+     *         Formatted as Unix time.
+     */
+
+    public java.util.Date getLastUpdatedDate() {
+        return this.lastUpdatedDate;
+    }
+
+    /**
+     * <p>
+     * Date and time that the alias was most recently associated with a KMS key in the account and Region. Formatted as
+     * Unix time.
+     * </p>
+     *
+     * @param lastUpdatedDate
+     *        Date and time that the alias was most recently associated with a KMS key in the account and Region.
+     *        Formatted as Unix time.
+     * @return Returns a reference to this object so that method calls can be chained together.
+     */
+
+    public AliasListEntry withLastUpdatedDate(java.util.Date lastUpdatedDate) {
+        setLastUpdatedDate(lastUpdatedDate);
+        return this;
+    }
+
+    /**
+     * Returns a string representation of this object. This is useful for testing and debugging. Sensitive data will be
+     * redacted from this string using a placeholder value.
      *
      * @return A string representation of this object.
      *
@@ -183,7 +283,11 @@ public class AliasListEntry implements Serializable, Cloneable, StructuredPojo {
         if (getAliasArn() != null)
             sb.append("AliasArn: ").append(getAliasArn()).append(",");
         if (getTargetKeyId() != null)
-            sb.append("TargetKeyId: ").append(getTargetKeyId());
+            sb.append("TargetKeyId: ").append(getTargetKeyId()).append(",");
+        if (getCreationDate() != null)
+            sb.append("CreationDate: ").append(getCreationDate()).append(",");
+        if (getLastUpdatedDate() != null)
+            sb.append("LastUpdatedDate: ").append(getLastUpdatedDate());
         sb.append("}");
         return sb.toString();
     }
@@ -210,6 +314,14 @@ public class AliasListEntry implements Serializable, Cloneable, StructuredPojo {
             return false;
         if (other.getTargetKeyId() != null && other.getTargetKeyId().equals(this.getTargetKeyId()) == false)
             return false;
+        if (other.getCreationDate() == null ^ this.getCreationDate() == null)
+            return false;
+        if (other.getCreationDate() != null && other.getCreationDate().equals(this.getCreationDate()) == false)
+            return false;
+        if (other.getLastUpdatedDate() == null ^ this.getLastUpdatedDate() == null)
+            return false;
+        if (other.getLastUpdatedDate() != null && other.getLastUpdatedDate().equals(this.getLastUpdatedDate()) == false)
+            return false;
         return true;
     }
 
@@ -221,6 +333,8 @@ public class AliasListEntry implements Serializable, Cloneable, StructuredPojo {
         hashCode = prime * hashCode + ((getAliasName() == null) ? 0 : getAliasName().hashCode());
         hashCode = prime * hashCode + ((getAliasArn() == null) ? 0 : getAliasArn().hashCode());
         hashCode = prime * hashCode + ((getTargetKeyId() == null) ? 0 : getTargetKeyId().hashCode());
+        hashCode = prime * hashCode + ((getCreationDate() == null) ? 0 : getCreationDate().hashCode());
+        hashCode = prime * hashCode + ((getLastUpdatedDate() == null) ? 0 : getLastUpdatedDate().hashCode());
         return hashCode;
     }
 

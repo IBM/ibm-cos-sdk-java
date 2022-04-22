@@ -1,5 +1,5 @@
 /*
- * Copyright 2019-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2019-2022 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,6 +22,7 @@ import com.ibm.cloud.objectstorage.annotation.NotThreadSafe;
 import com.ibm.cloud.objectstorage.annotation.SdkInternalApi;
 import com.ibm.cloud.objectstorage.annotation.SdkTestInternalApi;
 import com.ibm.cloud.objectstorage.annotation.ThreadSafe;
+import com.ibm.cloud.objectstorage.auth.internal.AWS4SignerUtils;
 import com.ibm.cloud.objectstorage.util.DateUtils;
 import com.ibm.cloud.objectstorage.util.ValidationUtils;
 import java.util.Collections;
@@ -55,11 +56,34 @@ public final class ClockSkewAdjuster {
      */
     private static final int CLOCK_SKEW_ADJUST_THRESHOLD_IN_SECONDS = 4 * 60;
 
+    private volatile Integer estimatedSkew;
+
     static {
         Set<Integer> statusCodes = new HashSet<Integer>();
         statusCodes.add(401);
         statusCodes.add(403);
         AUTHENTICATION_ERROR_STATUS_CODES = Collections.unmodifiableSet(statusCodes);
+    }
+
+    /**
+     * The estimated skew is the difference between the local time at which the client received the response and the Date
+     * header from the service's response. This time represents both the time difference between the client and server due to
+     * clock differences as well as the network latency for sending a response from the service to the client.
+     */
+    public Integer getEstimatedSkew() {
+        return estimatedSkew;
+    }
+
+    public void updateEstimatedSkew(AdjustmentRequest adjustmentRequest) {
+        try {
+            Date serverDate = getServerDate(adjustmentRequest);
+
+            if (serverDate != null) {
+                estimatedSkew = timeSkewInSeconds(getCurrentDate(adjustmentRequest), serverDate);
+            }
+        } catch(RuntimeException exception) {
+            log.debug("Unable to update estimated skew.", exception);
+        }
     }
 
     /**
@@ -154,6 +178,10 @@ public final class ClockSkewAdjuster {
                 serverDateStr = responseDateHeader[0].getValue();
                 log.debug("Reported server date (from 'Date' header): " + serverDateStr);
                 return DateUtils.parseRFC822Date(serverDateStr);
+            }
+
+            if (adjustmentRequest.exception == null) {
+                return null;
             }
 
             // SQS doesn't return Date header

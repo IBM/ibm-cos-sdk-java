@@ -1,5 +1,14 @@
 # CHANGELOG
 
+## 2.11.2
+
+### Content
+
+#### Defect Fixes
+
+* COSSDK-88569: <https://github.com/IBM/ibm-cos-sdk-java/issues/52>
+* AWS Patches aligned to version 1.12.137 of the AWS Java SDK
+
 ## 2.11.1
 
 ### Content

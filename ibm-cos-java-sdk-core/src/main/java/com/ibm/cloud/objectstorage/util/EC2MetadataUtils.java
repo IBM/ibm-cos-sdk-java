@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2013-2022 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -15,17 +15,21 @@
 package com.ibm.cloud.objectstorage.util;
 
 import static com.ibm.cloud.objectstorage.SDKGlobalConfiguration.EC2_METADATA_SERVICE_OVERRIDE_SYSTEM_PROPERTY;
+import static com.ibm.cloud.objectstorage.SDKGlobalConfiguration.EC2_METADATA_SERVICE_OVERRIDE_ENV_VAR;
 
 import com.ibm.cloud.objectstorage.AmazonClientException;
 import com.ibm.cloud.objectstorage.SDKGlobalConfiguration;
 import com.ibm.cloud.objectstorage.SdkClientException;
 import com.ibm.cloud.objectstorage.internal.InstanceMetadataServiceResourceFetcher;
+import com.ibm.cloud.objectstorage.retry.internal.CredentialsEndpointRetryParameters;
+import com.ibm.cloud.objectstorage.retry.internal.CredentialsEndpointRetryPolicy;
 import com.ibm.cloud.objectstorage.util.json.Jackson;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import java.net.URI;
 import java.util.Arrays;
@@ -79,11 +83,14 @@ public class EC2MetadataUtils {
 
     private static final ObjectMapper mapper = new ObjectMapper();
     static {
-        mapper.configure(
-                DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-
-        mapper
-                .setPropertyNamingStrategy(PropertyNamingStrategy.PASCAL_CASE_TO_CAMEL_CASE);
+        mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        try {
+            mapper.setPropertyNamingStrategy(PropertyNamingStrategies.UPPER_CAMEL_CASE);
+        } catch (LinkageError e) {
+            // If a customer is using an older Jackson version than 2.12.x, fall back to the old (deprecated)
+            // name for the same property that might cause deadlocks.
+            mapper.setPropertyNamingStrategy(PropertyNamingStrategy.PASCAL_CASE_TO_CAMEL_CASE);
+        }
     }
 
     private static final Log log = LogFactory.getLog(EC2MetadataUtils.class);
@@ -397,25 +404,15 @@ public class EC2MetadataUtils {
         List<String> items;
         try {
             String hostAddress = getHostAddressForEC2MetadataService();
-            String response = InstanceMetadataServiceResourceFetcher.getInstance().readResource(new URI(hostAddress + path));
+            String response = InstanceMetadataServiceResourceFetcher.getInstance().readResource(new URI(hostAddress + path), EC2MetadataUtilsRetryPolicy.INSTANCE);
             if (slurp)
                 items = Collections.singletonList(response);
             else
                 items = Arrays.asList(response.split("\n"));
             return items;
-        } catch (AmazonClientException ace) {
+        } catch (Exception ace) {
             log.warn("Unable to retrieve the requested metadata (" + path + "). " + ace.getMessage(), ace);
             return null;
-        } catch (Exception e) {
-            // Retry on any other exceptions
-            int pause = (int) (Math.pow(2, DEFAULT_QUERY_RETRIES - tries) * MINIMUM_RETRY_WAIT_TIME_MILLISECONDS);
-            try {
-                Thread.sleep(pause < MINIMUM_RETRY_WAIT_TIME_MILLISECONDS ? MINIMUM_RETRY_WAIT_TIME_MILLISECONDS
-                        : pause);
-            } catch (InterruptedException e1) {
-                Thread.currentThread().interrupt();
-            }
-            return getItems(path, tries - 1, slurp);
         }
     }
 
@@ -438,6 +435,9 @@ public class EC2MetadataUtils {
      */
     public static String getHostAddressForEC2MetadataService() {
         String host = System.getProperty(EC2_METADATA_SERVICE_OVERRIDE_SYSTEM_PROPERTY);
+        if (host == null) {
+            host = System.getenv(EC2_METADATA_SERVICE_OVERRIDE_ENV_VAR);
+        }
         return host != null ? host : EC2_METADATA_SERVICE_URL;
     }
 
@@ -750,6 +750,32 @@ public class EC2MetadataUtils {
             } else {
                 return new LinkedList<String>();
             }
+        }
+    }
+
+    private static final class EC2MetadataUtilsRetryPolicy implements CredentialsEndpointRetryPolicy {
+
+        private static final EC2MetadataUtilsRetryPolicy INSTANCE = new EC2MetadataUtilsRetryPolicy();
+
+        @Override
+        public boolean shouldRetry(int retriesAttempted, CredentialsEndpointRetryParameters retryParams) {
+            if (retriesAttempted >= DEFAULT_QUERY_RETRIES) {
+                return false;
+            }
+
+            if (retryParams.getException() instanceof AmazonClientException) {
+                return false;
+            }
+
+            // Retry on any other exceptions
+            int pause = (int) (Math.pow(2, DEFAULT_QUERY_RETRIES - retriesAttempted) * MINIMUM_RETRY_WAIT_TIME_MILLISECONDS);
+            try {
+                Thread.sleep(Math.max(pause, MINIMUM_RETRY_WAIT_TIME_MILLISECONDS));
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
+
+            return true;
         }
     }
 }

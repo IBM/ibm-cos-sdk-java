@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2010-2022 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -38,6 +38,8 @@ public class RetryUtils {
         THROTTLING_ERROR_CODES.add("BandwidthLimitExceeded");
         THROTTLING_ERROR_CODES.add("RequestThrottled");
         THROTTLING_ERROR_CODES.add("RequestThrottledException");
+        THROTTLING_ERROR_CODES.add("EC2ThrottledException");
+        THROTTLING_ERROR_CODES.add("PriorRequestNotComplete");
 
         CLOCK_SKEW_ERROR_CODES.add("RequestTimeTooSkewed");
         CLOCK_SKEW_ERROR_CODES.add("RequestExpired");
@@ -46,8 +48,10 @@ public class RetryUtils {
         CLOCK_SKEW_ERROR_CODES.add("AuthFailure");
         CLOCK_SKEW_ERROR_CODES.add("RequestInTheFuture");
 
-        RETRYABLE_ERROR_CODES.add("PriorRequestNotComplete");
         RETRYABLE_ERROR_CODES.add("TransactionInProgressException");
+        RETRYABLE_ERROR_CODES.add("RequestTimeout");
+        RETRYABLE_ERROR_CODES.add("RequestTimeoutException");
+        RETRYABLE_ERROR_CODES.add("IDPCommunicationError");
 
         RETRYABLE_STATUS_CODES.add(HttpStatus.SC_INTERNAL_SERVER_ERROR);
         RETRYABLE_STATUS_CODES.add(HttpStatus.SC_BAD_GATEWAY);

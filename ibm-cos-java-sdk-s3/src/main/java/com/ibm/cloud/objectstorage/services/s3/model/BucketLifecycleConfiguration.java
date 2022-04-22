@@ -1,5 +1,5 @@
 /*
- * Copyright 2011-2019 Amazon Technologies, Inc.
+ * Copyright 2011-2022 Amazon Technologies, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -106,13 +106,6 @@ public class BucketLifecycleConfiguration implements Serializable {
         private boolean expiredObjectDeleteMarker = false;
 
         /**
-         * The time, in days, between when a new version of the object is
-         * uploaded to the bucket and when older versions of the object
-         * expire.
-         */
-        private int noncurrentVersionExpirationInDays = -1;
-
-        /**
          * The expiration date of the object and should not coexist with expirationInDays within
          * one lifecycle rule.
          */
@@ -127,6 +120,11 @@ public class BucketLifecycleConfiguration implements Serializable {
          * Transition rules for the non current objects in the bucket.
          */
         private List<NoncurrentVersionTransition> noncurrentVersionTransitions;
+
+        /**
+         * Expiration rules for the non current objects in the bucket.
+         */
+        private NoncurrentVersionExpiration noncurrentVersionExpiration;
 
         /**
          * Specifies the days since the initiation of an Incomplete Multipart Upload that Lifecycle will wait before permanently removing all parts of the upload.
@@ -163,9 +161,18 @@ public class BucketLifecycleConfiguration implements Serializable {
         /**
          * Sets the time, in days, between when a new version of the object is
          * uploaded to the bucket and when older versions of the object expire.
+         *
+         * @deprecated Deprecated but functional. Please use
+         * {@link #setNoncurrentVersionExpiration(NoncurrentVersionExpiration)} instead.
          */
+        @Deprecated
         public void setNoncurrentVersionExpirationInDays(int value) {
-            this.noncurrentVersionExpirationInDays = value;
+            NoncurrentVersionExpiration ncve = this.noncurrentVersionExpiration;
+            if (ncve != null) {
+                ncve.setDays(value);
+            } else {
+                this.noncurrentVersionExpiration = new NoncurrentVersionExpiration().withDays(value);
+            }
         }
 
         /**
@@ -233,19 +240,45 @@ public class BucketLifecycleConfiguration implements Serializable {
         }
 
         /**
-         * Returns the time, in days, between when a new version of the object
-         * is uploaded to the bucket and when older versions of the object
-         * expire.
+         * <p>
+         * Specifies the number of days an object is noncurrent before Amazon S3 can perform the associated action. For
+         * information about the noncurrent days calculations, see <a
+         * href="https://docs.aws.amazon.com/AmazonS3/latest/dev/intro-lifecycle-rules.html#non-current-days-calculations"
+         * >How Amazon S3 Calculates When an Object Became Noncurrent</a> in the <i>Amazon S3 User Guide</i>.
+         * </p>
+         *
+         * @return Specifies the number of days an object is noncurrent before Amazon S3 can perform the associated action.
+         *         For information about the noncurrent days calculations, see <a href=
+         *         "https://docs.aws.amazon.com/AmazonS3/latest/dev/intro-lifecycle-rules.html#non-current-days-calculations"
+         *         >How Amazon S3 Calculates When an Object Became Noncurrent</a> in the <i>Amazon S3 User Guide</i>.
+         *         
+         * @deprecated Deprecated but functional. Please use {@link #getNoncurrentVersionExpiration} instead.
          */
+        @Deprecated
         public int getNoncurrentVersionExpirationInDays() {
-            return noncurrentVersionExpirationInDays;
+            NoncurrentVersionExpiration ncve = this.noncurrentVersionExpiration;
+            return ncve != null ? ncve.getDays() : -1;
         }
 
         /**
-         * Sets the time, in days, between when a new version of the object is
-         * uploaded to the bucket and when older versions of the object expire,
-         * and returns a reference to this object for method chaining.
+         * <p>
+         * Specifies the number of days an object is noncurrent before Amazon S3 can perform the associated action. For
+         * information about the noncurrent days calculations, see <a href=
+         * "https://docs.aws.amazon.com/AmazonS3/latest/dev/intro-lifecycle-rules.html#non-current-days-calculations"
+         * >How Amazon S3 Calculates When an Object Became Noncurrent</a> in the <i>Amazon S3 User Guide</i>.
+         * </p>
+         *
+         * @param value
+         *        Specifies the number of days an object is noncurrent before Amazon S3 can perform the associated
+         *        action. For information about the noncurrent days calculations, see <a href=
+         *        "https://docs.aws.amazon.com/AmazonS3/latest/dev/intro-lifecycle-rules.html#non-current-days-calculations"
+         *        >How Amazon S3 Calculates When an Object Became Noncurrent</a> in the <i>Amazon S3 User Guide</i>.
+         * @return Returns a reference to this object so that method calls can be chained together.
+         *
+         * @deprecated Deprecated but functional. Please use
+         * {@link #withNoncurrentVersionExpiration(NoncurrentVersionExpiration)} instead.
          */
+        @Deprecated
         public Rule withNoncurrentVersionExpirationInDays(int value) {
             setNoncurrentVersionExpirationInDays(value);
             return this;
@@ -473,6 +506,30 @@ public class BucketLifecycleConfiguration implements Serializable {
                 noncurrentVersionTransitions = new ArrayList<BucketLifecycleConfiguration.NoncurrentVersionTransition>();
             }
             noncurrentVersionTransitions.add(noncurrentVersionTransition);
+            return this;
+        }
+
+        /**
+         * Returns the Amazon S3 non current object expiration rules associated
+         * with the given rule.
+         */
+        public NoncurrentVersionExpiration getNoncurrentVersionExpiration() {
+            return noncurrentVersionExpiration;
+        }
+
+        /**
+         * Sets the Amazon S3 non current object expiration rules for the given bucket.
+         */
+        public void setNoncurrentVersionExpiration(NoncurrentVersionExpiration noncurrentVersionExpiration) {
+            this.noncurrentVersionExpiration = noncurrentVersionExpiration;
+        }
+
+        /**
+         * Sets the Amazon S3 non current object expiration rules for the given bucket.
+         * Returns an updated version of this object.
+         */
+        public Rule withNoncurrentVersionExpiration(NoncurrentVersionExpiration noncurrentVersionExpiration) {
+            setNoncurrentVersionExpiration(noncurrentVersionExpiration);
             return this;
         }
 
@@ -711,6 +768,8 @@ public class BucketLifecycleConfiguration implements Serializable {
 
         private String storageClass;
 
+        private int newerNoncurrentVersions = -1;
+
         /**
          * Sets the time, in days, between when a new version of the object
          * is uploaded to the bucket and when older versions are archived.
@@ -792,6 +851,111 @@ public class BucketLifecycleConfiguration implements Serializable {
          */
         public NoncurrentVersionTransition withStorageClass(String storageClass) {
             setStorageClass(storageClass);
+            return this;
+        }
+
+        /**
+         * Specifies how many noncurrent versions Amazon S3 will retain. If there are this many more recent noncurrent
+         * versions, Amazon S3 will take the associated action. For more information about noncurrent versions, see <a
+         * href="https://docs.aws.amazon.com/AmazonS3/latest/userguide/intro-lifecycle-rules.html">Lifecycle configuration
+         * elements</a> in the <i>Amazon S3 User Guide</i>.
+         */
+        public void setNewerNoncurrentVersions(int newerNoncurrentVersions) {
+            this.newerNoncurrentVersions = newerNoncurrentVersions;
+        }
+
+        /**
+         * Specifies how many noncurrent versions Amazon S3 will retain. If there are this many more recent noncurrent
+         * versions, Amazon S3 will take the associated action. For more information about noncurrent versions, see <a
+         * href="https://docs.aws.amazon.com/AmazonS3/latest/userguide/intro-lifecycle-rules.html">Lifecycle configuration
+         * elements</a> in the <i>Amazon S3 User Guide</i>.
+         */
+        public int getNewerNoncurrentVersions() {
+            return newerNoncurrentVersions;
+        }
+
+        /**
+         * Specifies how many noncurrent versions Amazon S3 will retain. If there are this many more recent noncurrent
+         * versions, Amazon S3 will take the associated action. For more information about noncurrent versions, see <a
+         * href="https://docs.aws.amazon.com/AmazonS3/latest/userguide/intro-lifecycle-rules.html">Lifecycle configuration
+         * elements</a> in the <i>Amazon S3 User Guide</i>.
+         */
+        public NoncurrentVersionTransition withNewerNoncurrentVersions(int newerNoncurrentVersions) {
+            this.newerNoncurrentVersions = newerNoncurrentVersions;
+            return this;
+        }
+    }
+
+    /**
+     * Specifies when noncurrent object versions expire. Upon expiration, Amazon S3 permanently deletes the noncurrent
+     * object versions. You set this lifecycle configuration action on a bucket that has versioning enabled (or suspended)
+     * to request that Amazon S3 delete noncurrent object versions at a specific period in the object's lifetime.
+     */
+    public static class NoncurrentVersionExpiration implements Serializable {
+
+        private int days = -1;
+
+        private int newerNoncurrentVersions = -1;
+
+        /**
+         * Specifies the number of days an object is noncurrent before Amazon S3 can perform the associated action. For
+         * information about the noncurrent days calculations, see <a
+         * href="https://docs.aws.amazon.com/AmazonS3/latest/dev/intro-lifecycle-rules.html#non-current-days-calculations"
+         * >How Amazon S3 Calculates When an Object Became Noncurrent</a> in the <i>Amazon S3 User Guide</i>.
+         */
+        public void setDays(int days) {
+            this.days = days;
+        }
+
+        /**
+         * Specifies the number of days an object is noncurrent before Amazon S3 can perform the associated action. For
+         * information about the noncurrent days calculations, see <a
+         * href="https://docs.aws.amazon.com/AmazonS3/latest/dev/intro-lifecycle-rules.html#non-current-days-calculations"
+         * >How Amazon S3 Calculates When an Object Became Noncurrent</a> in the <i>Amazon S3 User Guide</i>.
+         */
+        public int getDays() {
+            return days;
+        }
+
+        /**
+         * Specifies the number of days an object is noncurrent before Amazon S3 can perform the associated action. For
+         * information about the noncurrent days calculations, see <a
+         * href="https://docs.aws.amazon.com/AmazonS3/latest/dev/intro-lifecycle-rules.html#non-current-days-calculations"
+         * >How Amazon S3 Calculates When an Object Became Noncurrent</a> in the <i>Amazon S3 User Guide</i>.
+         */
+        public NoncurrentVersionExpiration withDays(int noncurrentDays) {
+            this.days = noncurrentDays;
+            return this;
+        }
+
+        /**
+         * Specifies how many noncurrent versions Amazon S3 will retain. If there are this many more recent noncurrent
+         * versions, Amazon S3 will take the associated action. For more information about noncurrent versions, see <a
+         * href="https://docs.aws.amazon.com/AmazonS3/latest/userguide/intro-lifecycle-rules.html">Lifecycle configuration
+         * elements</a> in the <i>Amazon S3 User Guide</i>.
+         */
+        public void setNewerNoncurrentVersions(int newerNoncurrentVersions) {
+            this.newerNoncurrentVersions = newerNoncurrentVersions;
+        }
+
+        /**
+         * Specifies how many noncurrent versions Amazon S3 will retain. If there are this many more recent noncurrent
+         * versions, Amazon S3 will take the associated action. For more information about noncurrent versions, see <a
+         * href="https://docs.aws.amazon.com/AmazonS3/latest/userguide/intro-lifecycle-rules.html">Lifecycle configuration
+         * elements</a> in the <i>Amazon S3 User Guide</i>.
+         */
+        public int getNewerNoncurrentVersions() {
+            return newerNoncurrentVersions;
+        }
+
+        /**
+         * Specifies how many noncurrent versions Amazon S3 will retain. If there are this many more recent noncurrent
+         * versions, Amazon S3 will take the associated action. For more information about noncurrent versions, see <a
+         * href="https://docs.aws.amazon.com/AmazonS3/latest/userguide/intro-lifecycle-rules.html">Lifecycle configuration
+         * elements</a> in the <i>Amazon S3 User Guide</i>.
+         */
+        public NoncurrentVersionExpiration withNewerNoncurrentVersions(int newerNoncurrentVersions) {
+            this.newerNoncurrentVersions = newerNoncurrentVersions;
             return this;
         }
     }

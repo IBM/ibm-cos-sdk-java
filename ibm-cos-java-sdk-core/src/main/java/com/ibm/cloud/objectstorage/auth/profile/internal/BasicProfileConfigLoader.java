@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2014-2022 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -37,9 +37,6 @@ import java.util.Scanner;
  */
 @SdkInternalApi
 public class BasicProfileConfigLoader {
-
-    private static final Log LOG = LogFactory.getLog(BasicProfileConfigLoader.class);
-
     public static final BasicProfileConfigLoader INSTANCE = new BasicProfileConfigLoader();
 
     private BasicProfileConfigLoader() {
@@ -91,14 +88,6 @@ public class BasicProfileConfigLoader {
         for (Entry<String, Map<String, String>> entry : allProfileProperties.entrySet()) {
             String profileName = entry.getKey();
             Map<String, String> properties = entry.getValue();
-
-            if (profileName.startsWith("profile ")) {
-                LOG.warn(
-                        "Your profile name includes a 'profile ' prefix. This is considered part of the profile name in the " +
-                        "Java SDK, so you will need to include this prefix in your profile name when you reference this " +
-                        "profile from your Java code.");
-            }
-
             assertParameterNotEmpty(profileName,
                                     "Unable to load properties from profile: Profile name is empty.");
             profilesByName.put(profileName, new BasicProfile(profileName, properties));

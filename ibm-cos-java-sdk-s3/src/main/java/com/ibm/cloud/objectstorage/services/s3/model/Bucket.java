@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2010-2022 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Portions copyright 2006-2009 James Murty. Please see LICENSE.txt
  * for applicable license terms and NOTICE.txt for applicable notices.
@@ -119,7 +119,7 @@ public class Bucket implements Serializable {
     /**
      * For internal use only.
      * Sets the bucket's owner in Amazon S3. This should only be used internally by
-     * the AWS Java client methods that retrieve information directly from Amazon S3.
+     * the Amazon Web Services Java client methods that retrieve information directly from Amazon S3.
      *
      * @param owner
      *          The bucket's owner.
@@ -144,7 +144,7 @@ public class Bucket implements Serializable {
     /**
      * For internal use only.
      * Sets the bucket's creation date in S3. This should only be used
-     * internally by AWS Java client methods that retrieve information directly
+     * internally by Amazon Web Services Java client methods that retrieve information directly
      * from Amazon S3.
      *
      * @param creationDate

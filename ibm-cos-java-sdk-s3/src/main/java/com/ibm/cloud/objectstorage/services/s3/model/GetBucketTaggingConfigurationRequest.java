@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2019 Amazon Technologies, Inc.
+ * Copyright 2015-2022 Amazon Technologies, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,8 +22,14 @@ import com.ibm.cloud.objectstorage.services.s3.AmazonS3;
  *
  * @see AmazonS3#getBucketTaggingConfiguration(GetBucketTaggingConfigurationRequest)
  */
-public class GetBucketTaggingConfigurationRequest extends GenericBucketRequest implements 
-        WormMirrorDestinationProvider, Serializable {
+public class GetBucketTaggingConfigurationRequest extends GenericBucketRequest implements
+        WormMirrorDestinationProvider, Serializable
+        //IBM unsupported
+        //, ExpectedBucketOwnerRequest
+        {
+
+    //IBM unsupported
+    //private String expectedBucketOwner;
 
     /**
      * Creates request object, ready to be executed to fetch the tagging
@@ -37,13 +43,13 @@ public class GetBucketTaggingConfigurationRequest extends GenericBucketRequest i
         super(bucketName);
     }
 
-    // IBM-Specifc
+    // IBM-Specific
     /**
      * The optional destination-mirror value to use for WORM mirroring
      */
     private String wormMirrorDestination;
 
-    // IBM-Specifc
+    // IBM-Specific
     /**
      * Returns the optional mirror-destination value for WORM mirroring
      *
@@ -54,10 +60,10 @@ public class GetBucketTaggingConfigurationRequest extends GenericBucketRequest i
         return wormMirrorDestination;
     }
 
-    // IBM-Specifc
+    // IBM-Specific
     /**
      * Sets the optional mirror-destination value for WORM mirroring
-     * 
+     *
      * @param wormMirrorDestination
      *            The optional mirror-destination value for WORM mirroring
      */
@@ -66,10 +72,10 @@ public class GetBucketTaggingConfigurationRequest extends GenericBucketRequest i
         this.wormMirrorDestination = wormMirrorDestination;
     }
 
-    // IBM-Specifc
+    // IBM-Specific
     /**
      * Sets the optional mirror-destination value for WORM mirroring
-     * and returns the updated GetBucketTaggingConfigurationRequest so that additional 
+     * and returns the updated GetBucketTaggingConfigurationRequest so that additional
      * method calls may be chained together.
      *
      * @param wormMirrorDestination
@@ -82,4 +88,13 @@ public class GetBucketTaggingConfigurationRequest extends GenericBucketRequest i
         setWormMirrorDestination(wormMirrorDestination);
         return this;
     }
+
+//IBM unsupported
+//    public String getExpectedBucketOwner() {
+//        return expectedBucketOwner;
+//    }
+//
+//    public void setExpectedBucketOwner(String expectedBucketOwner) {
+//        withExpectedBucketOwner(expectedBucketOwner);
+//    }
 }

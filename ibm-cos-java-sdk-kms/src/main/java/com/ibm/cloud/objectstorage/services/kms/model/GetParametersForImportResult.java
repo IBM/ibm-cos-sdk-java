@@ -1,11 +1,11 @@
 /*
- * Copyright 2014-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
- * 
+ * Copyright 2017-2022 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"). You may not use this file except in compliance with
  * the License. A copy of the License is located at
- * 
+ *
  * http://aws.amazon.com/apache2.0
- * 
+ *
  * or in the "license" file accompanying this file. This file is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
  * CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions
  * and limitations under the License.
@@ -16,7 +16,7 @@ import java.io.Serializable;
 import javax.annotation.Generated;
 
 /**
- * 
+ *
  * @see <a href="http://docs.aws.amazon.com/goto/WebAPI/kms-2014-11-01/GetParametersForImport" target="_top">AWS API
  *      Documentation</a>
  */
@@ -25,8 +25,10 @@ public class GetParametersForImportResult extends com.ibm.cloud.objectstorage.Am
 
     /**
      * <p>
-     * The identifier of the CMK to use in a subsequent <a>ImportKeyMaterial</a> request. This is the same CMK specified
-     * in the <code>GetParametersForImport</code> request.
+     * The Amazon Resource Name (<a
+     * href="https://docs.aws.amazon.com/kms/latest/developerguide/concepts.html#key-id-key-ARN">key ARN</a>) of the KMS
+     * key to use in a subsequent <a>ImportKeyMaterial</a> request. This is the same KMS key specified in the
+     * <code>GetParametersForImport</code> request.
      * </p>
      */
     private String keyId;
@@ -46,20 +48,24 @@ public class GetParametersForImportResult extends com.ibm.cloud.objectstorage.Am
      * <p>
      * The time at which the import token and public key are no longer valid. After this time, you cannot use them to
      * make an <a>ImportKeyMaterial</a> request and you must send another <code>GetParametersForImport</code> request to
-     * retrieve new ones.
+     * get new ones.
      * </p>
      */
     private java.util.Date parametersValidTo;
 
     /**
      * <p>
-     * The identifier of the CMK to use in a subsequent <a>ImportKeyMaterial</a> request. This is the same CMK specified
-     * in the <code>GetParametersForImport</code> request.
+     * The Amazon Resource Name (<a
+     * href="https://docs.aws.amazon.com/kms/latest/developerguide/concepts.html#key-id-key-ARN">key ARN</a>) of the KMS
+     * key to use in a subsequent <a>ImportKeyMaterial</a> request. This is the same KMS key specified in the
+     * <code>GetParametersForImport</code> request.
      * </p>
-     * 
+     *
      * @param keyId
-     *        The identifier of the CMK to use in a subsequent <a>ImportKeyMaterial</a> request. This is the same CMK
-     *        specified in the <code>GetParametersForImport</code> request.
+     *        The Amazon Resource Name (<a
+     *        href="https://docs.aws.amazon.com/kms/latest/developerguide/concepts.html#key-id-key-ARN">key ARN</a>) of
+     *        the KMS key to use in a subsequent <a>ImportKeyMaterial</a> request. This is the same KMS key specified in
+     *        the <code>GetParametersForImport</code> request.
      */
 
     public void setKeyId(String keyId) {
@@ -68,12 +74,16 @@ public class GetParametersForImportResult extends com.ibm.cloud.objectstorage.Am
 
     /**
      * <p>
-     * The identifier of the CMK to use in a subsequent <a>ImportKeyMaterial</a> request. This is the same CMK specified
-     * in the <code>GetParametersForImport</code> request.
+     * The Amazon Resource Name (<a
+     * href="https://docs.aws.amazon.com/kms/latest/developerguide/concepts.html#key-id-key-ARN">key ARN</a>) of the KMS
+     * key to use in a subsequent <a>ImportKeyMaterial</a> request. This is the same KMS key specified in the
+     * <code>GetParametersForImport</code> request.
      * </p>
-     * 
-     * @return The identifier of the CMK to use in a subsequent <a>ImportKeyMaterial</a> request. This is the same CMK
-     *         specified in the <code>GetParametersForImport</code> request.
+     *
+     * @return The Amazon Resource Name (<a
+     *         href="https://docs.aws.amazon.com/kms/latest/developerguide/concepts.html#key-id-key-ARN">key ARN</a>) of
+     *         the KMS key to use in a subsequent <a>ImportKeyMaterial</a> request. This is the same KMS key specified
+     *         in the <code>GetParametersForImport</code> request.
      */
 
     public String getKeyId() {
@@ -82,13 +92,17 @@ public class GetParametersForImportResult extends com.ibm.cloud.objectstorage.Am
 
     /**
      * <p>
-     * The identifier of the CMK to use in a subsequent <a>ImportKeyMaterial</a> request. This is the same CMK specified
-     * in the <code>GetParametersForImport</code> request.
+     * The Amazon Resource Name (<a
+     * href="https://docs.aws.amazon.com/kms/latest/developerguide/concepts.html#key-id-key-ARN">key ARN</a>) of the KMS
+     * key to use in a subsequent <a>ImportKeyMaterial</a> request. This is the same KMS key specified in the
+     * <code>GetParametersForImport</code> request.
      * </p>
-     * 
+     *
      * @param keyId
-     *        The identifier of the CMK to use in a subsequent <a>ImportKeyMaterial</a> request. This is the same CMK
-     *        specified in the <code>GetParametersForImport</code> request.
+     *        The Amazon Resource Name (<a
+     *        href="https://docs.aws.amazon.com/kms/latest/developerguide/concepts.html#key-id-key-ARN">key ARN</a>) of
+     *        the KMS key to use in a subsequent <a>ImportKeyMaterial</a> request. This is the same KMS key specified in
+     *        the <code>GetParametersForImport</code> request.
      * @return Returns a reference to this object so that method calls can be chained together.
      */
 
@@ -111,7 +125,7 @@ public class GetParametersForImportResult extends com.ibm.cloud.objectstorage.Am
      * ByteBuffer.asReadOnlyBuffer() before using or reading from the buffer. This behavior will be changed in a future
      * major version of the SDK.
      * </p>
-     * 
+     *
      * @param importToken
      *        The import token to send in a subsequent <a>ImportKeyMaterial</a> request.
      */
@@ -131,7 +145,7 @@ public class GetParametersForImportResult extends com.ibm.cloud.objectstorage.Am
      * Doing so will ensure that anyone else using the {@code ByteBuffer} will not be affected by changes to the
      * {@code position}.
      * </p>
-     * 
+     *
      * @return The import token to send in a subsequent <a>ImportKeyMaterial</a> request.
      */
 
@@ -153,7 +167,7 @@ public class GetParametersForImportResult extends com.ibm.cloud.objectstorage.Am
      * ByteBuffer.asReadOnlyBuffer() before using or reading from the buffer. This behavior will be changed in a future
      * major version of the SDK.
      * </p>
-     * 
+     *
      * @param importToken
      *        The import token to send in a subsequent <a>ImportKeyMaterial</a> request.
      * @return Returns a reference to this object so that method calls can be chained together.
@@ -178,7 +192,7 @@ public class GetParametersForImportResult extends com.ibm.cloud.objectstorage.Am
      * ByteBuffer.asReadOnlyBuffer() before using or reading from the buffer. This behavior will be changed in a future
      * major version of the SDK.
      * </p>
-     * 
+     *
      * @param publicKey
      *        The public key to use to encrypt the key material before importing it with <a>ImportKeyMaterial</a>.
      */
@@ -198,7 +212,7 @@ public class GetParametersForImportResult extends com.ibm.cloud.objectstorage.Am
      * Doing so will ensure that anyone else using the {@code ByteBuffer} will not be affected by changes to the
      * {@code position}.
      * </p>
-     * 
+     *
      * @return The public key to use to encrypt the key material before importing it with <a>ImportKeyMaterial</a>.
      */
 
@@ -220,7 +234,7 @@ public class GetParametersForImportResult extends com.ibm.cloud.objectstorage.Am
      * ByteBuffer.asReadOnlyBuffer() before using or reading from the buffer. This behavior will be changed in a future
      * major version of the SDK.
      * </p>
-     * 
+     *
      * @param publicKey
      *        The public key to use to encrypt the key material before importing it with <a>ImportKeyMaterial</a>.
      * @return Returns a reference to this object so that method calls can be chained together.
@@ -235,13 +249,13 @@ public class GetParametersForImportResult extends com.ibm.cloud.objectstorage.Am
      * <p>
      * The time at which the import token and public key are no longer valid. After this time, you cannot use them to
      * make an <a>ImportKeyMaterial</a> request and you must send another <code>GetParametersForImport</code> request to
-     * retrieve new ones.
+     * get new ones.
      * </p>
-     * 
+     *
      * @param parametersValidTo
      *        The time at which the import token and public key are no longer valid. After this time, you cannot use
      *        them to make an <a>ImportKeyMaterial</a> request and you must send another
-     *        <code>GetParametersForImport</code> request to retrieve new ones.
+     *        <code>GetParametersForImport</code> request to get new ones.
      */
 
     public void setParametersValidTo(java.util.Date parametersValidTo) {
@@ -252,12 +266,12 @@ public class GetParametersForImportResult extends com.ibm.cloud.objectstorage.Am
      * <p>
      * The time at which the import token and public key are no longer valid. After this time, you cannot use them to
      * make an <a>ImportKeyMaterial</a> request and you must send another <code>GetParametersForImport</code> request to
-     * retrieve new ones.
+     * get new ones.
      * </p>
-     * 
+     *
      * @return The time at which the import token and public key are no longer valid. After this time, you cannot use
      *         them to make an <a>ImportKeyMaterial</a> request and you must send another
-     *         <code>GetParametersForImport</code> request to retrieve new ones.
+     *         <code>GetParametersForImport</code> request to get new ones.
      */
 
     public java.util.Date getParametersValidTo() {
@@ -268,13 +282,13 @@ public class GetParametersForImportResult extends com.ibm.cloud.objectstorage.Am
      * <p>
      * The time at which the import token and public key are no longer valid. After this time, you cannot use them to
      * make an <a>ImportKeyMaterial</a> request and you must send another <code>GetParametersForImport</code> request to
-     * retrieve new ones.
+     * get new ones.
      * </p>
-     * 
+     *
      * @param parametersValidTo
      *        The time at which the import token and public key are no longer valid. After this time, you cannot use
      *        them to make an <a>ImportKeyMaterial</a> request and you must send another
-     *        <code>GetParametersForImport</code> request to retrieve new ones.
+     *        <code>GetParametersForImport</code> request to get new ones.
      * @return Returns a reference to this object so that method calls can be chained together.
      */
 
@@ -284,7 +298,8 @@ public class GetParametersForImportResult extends com.ibm.cloud.objectstorage.Am
     }
 
     /**
-     * Returns a string representation of this object; useful for testing and debugging.
+     * Returns a string representation of this object. This is useful for testing and debugging. Sensitive data will be
+     * redacted from this string using a placeholder value.
      *
      * @return A string representation of this object.
      *
@@ -299,7 +314,7 @@ public class GetParametersForImportResult extends com.ibm.cloud.objectstorage.Am
         if (getImportToken() != null)
             sb.append("ImportToken: ").append(getImportToken()).append(",");
         if (getPublicKey() != null)
-            sb.append("PublicKey: ").append(getPublicKey()).append(",");
+            sb.append("PublicKey: ").append("***Sensitive Data Redacted***").append(",");
         if (getParametersValidTo() != null)
             sb.append("ParametersValidTo: ").append(getParametersValidTo());
         sb.append("}");

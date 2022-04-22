@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2015-2022 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -22,6 +22,8 @@ import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.events.XMLEvent;
 
 import com.ibm.cloud.objectstorage.services.s3.model.BucketNotificationConfiguration;
+//IBM unsupported
+//import com.ibm.cloud.objectstorage.services.s3.model.EventBridgeConfiguration;
 import com.ibm.cloud.objectstorage.services.s3.model.NotificationConfiguration;
 import com.ibm.cloud.objectstorage.transform.StaxUnmarshallerContext;
 import com.ibm.cloud.objectstorage.transform.Unmarshaller;
@@ -70,6 +72,12 @@ public class BucketNotificationConfigurationStaxUnmarshaller implements
                             .unmarshall(context);
                     config.addConfiguration(entry.getKey(), entry.getValue());
                 }
+//IBM unsupported
+//                else if (context.testExpression("EventBridgeConfiguration", targetDepth)) {
+//                    EventBridgeConfiguration eventBridgeConfig = EventBridgeConfigurationStaxUnmarshaller.getInstance()
+//                            .unmarshall(context);
+//                    config.setEventBridgeConfiguration(eventBridgeConfig);
+//                }
             } else if (xmlEvent.isEndElement()) {
                 if (context.getCurrentDepth() < originalDepth) {
                     return config;

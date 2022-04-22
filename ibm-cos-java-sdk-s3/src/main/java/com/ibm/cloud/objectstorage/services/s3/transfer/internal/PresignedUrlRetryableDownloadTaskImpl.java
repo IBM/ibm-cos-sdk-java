@@ -1,5 +1,5 @@
 /*
- * Copyright 2019-2019 Amazon Technologies, Inc.
+ * Copyright 2019-2022 Amazon Technologies, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,6 +18,7 @@ package com.ibm.cloud.objectstorage.services.s3.transfer.internal;
 import com.ibm.cloud.objectstorage.annotation.SdkInternalApi;
 import com.ibm.cloud.objectstorage.services.s3.AmazonS3;
 import com.ibm.cloud.objectstorage.services.s3.AmazonS3Encryption;
+import com.ibm.cloud.objectstorage.services.s3.AmazonS3EncryptionV2;
 import com.ibm.cloud.objectstorage.services.s3.internal.ServiceUtils;
 import com.ibm.cloud.objectstorage.services.s3.internal.SkipMd5CheckStrategy;
 import com.ibm.cloud.objectstorage.services.s3.model.PresignedUrlDownloadRequest;
@@ -47,7 +48,7 @@ public class PresignedUrlRetryableDownloadTaskImpl implements ServiceUtils.Retry
 
     @Override
     public boolean needIntegrityCheck() {
-        return !(s3 instanceof AmazonS3Encryption) &&
+        return !(s3 instanceof AmazonS3Encryption) && !(s3 instanceof AmazonS3EncryptionV2) &&
                !skipMd5CheckStrategy.skipClientSideValidationPerRequest(request);
     }
 }

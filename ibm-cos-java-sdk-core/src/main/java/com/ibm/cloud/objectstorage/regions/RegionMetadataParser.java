@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2013-2022 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -19,9 +19,12 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.xml.XMLConstants;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -34,6 +37,7 @@ import org.w3c.dom.NodeList;
  * in each region.
  */
 public class RegionMetadataParser {
+    private static final Log log = LogFactory.getLog(RegionMetadataParser.class);
 
     private static final String REGION_TAG = "Region";
     private static final String REGION_ID_TAG = "Name";
@@ -113,6 +117,13 @@ public class RegionMetadataParser {
 
             DocumentBuilderFactory factory =
                 DocumentBuilderFactory.newInstance();
+
+            factory.setXIncludeAware(false);
+            factory.setExpandEntityReferences(false);
+
+            factory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
+
+            configureDocumentBuilderFactory(factory);
 
             DocumentBuilder documentBuilder = factory.newDocumentBuilder();
             document = documentBuilder.parse(input);
@@ -207,5 +218,39 @@ public class RegionMetadataParser {
      */
     private static boolean verifyLegacyEndpoint(String endpoint) {
         return endpoint.endsWith(".amazonaws.com");
+    }
+
+    /**
+     * Check if an instance of DocumentBuilderFactory is provided
+     * by Apache Xerces.
+     *
+     * @param factory The instance of DocumentBuilderFactory.
+     * @return True if the instance of DocumentBuilderFactory is provided
+     *         by Apache Xerces, false otherwise.
+     */
+    private static boolean isXerces(DocumentBuilderFactory factory) {
+        // The included implementation in the JDK is also Xerces, but a fork and under a different package:
+        // https://github.com/openjdk/jdk/blob/3f77a6002ea7c150308409600abd4f1140bfb36a/src/java.xml/share/classes/com/sun/org/apache/xerces/internal/jaxp/DocumentBuilderFactoryImpl.java#L21
+        String canonicalName = factory.getClass().getCanonicalName();
+        return canonicalName.startsWith("org.apache.xerces.") || canonicalName.startsWith("com.sun.org.apache.xerces.");
+    }
+
+    private static void configureDocumentBuilderFactory(DocumentBuilderFactory factory) {
+        try {
+            if (isXerces(factory)) {
+                // https://cheatsheetseries.owasp.org/cheatsheets/XML_External_Entity_Prevention_Cheat_Sheet.html
+                factory.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
+                factory.setFeature("http://xml.org/sax/features/external-general-entities", false);
+                factory.setFeature("http://xml.org/sax/features/external-parameter-entities", false);
+                factory.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false);
+            } else {
+                // https://cheatsheetseries.owasp.org/cheatsheets/XML_External_Entity_Prevention_Cheat_Sheet.html
+                // https://rules.sonarsource.com/java/tag/owasp/RSPEC-2755
+                factory.setAttribute("http://javax.xml.XMLConstants/property/accessExternalDTD", "");
+                factory.setAttribute("http://javax.xml.XMLConstants/property/accessExternalSchema", "");
+            }
+        } catch (Throwable t) {
+            log.warn("Unable to configure DocumentBuilderFactory to protect against XXE attacks", t);
+        }
     }
 }

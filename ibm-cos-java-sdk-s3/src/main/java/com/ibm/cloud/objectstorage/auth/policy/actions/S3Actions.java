@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2010-2022 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -21,7 +21,7 @@ import com.ibm.cloud.objectstorage.auth.policy.resources.S3ObjectResource;
 import com.ibm.cloud.objectstorage.services.s3.AmazonS3;
 
 /**
- * The available AWS access control policy actions for Amazon S3.
+ * The available Amazon Web Services access control policy actions for Amazon S3.
  *
  * @see Statement#setActions(java.util.Collection)
  */

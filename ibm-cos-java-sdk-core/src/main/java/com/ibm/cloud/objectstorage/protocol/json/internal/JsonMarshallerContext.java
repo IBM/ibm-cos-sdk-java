@@ -1,5 +1,5 @@
 /*
- * Copyright 2011-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2011-2022 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -23,7 +23,7 @@ import com.ibm.cloud.objectstorage.protocol.MarshallLocation;
 import com.ibm.cloud.objectstorage.protocol.ProtocolMarshaller;
 
 /**
- * Dependencies needed by implemenatations of {@link JsonMarshaller}.
+ * Dependencies needed by implementations of {@link JsonMarshaller}.
  */
 @SdkInternalApi
 public class JsonMarshallerContext {
@@ -32,12 +32,15 @@ public class JsonMarshallerContext {
     private final JsonProtocolMarshaller protocolHandler;
     private final MarshallerRegistry marshallerRegistry;
     private final Request<?> request;
+    private final EmptyBodyJsonMarshaller emptyBodyMarshaller;
 
     private JsonMarshallerContext(Builder builder) {
         this.jsonGenerator = builder.jsonGenerator;
         this.protocolHandler = builder.protocolHandler;
         this.marshallerRegistry = builder.marshallerRegistry;
         this.request = builder.request;
+        this.emptyBodyMarshaller = builder.emptyBodyMarshaller != null ? builder.emptyBodyMarshaller :
+                                   EmptyBodyJsonMarshaller.EMPTY;
     }
 
     /**
@@ -68,6 +71,10 @@ public class JsonMarshallerContext {
      */
     public Request<?> request() {
         return request;
+    }
+
+    public EmptyBodyJsonMarshaller emptyBodyJsonMarshaller() {
+        return emptyBodyMarshaller;
     }
 
     /**
@@ -118,6 +125,7 @@ public class JsonMarshallerContext {
         private JsonProtocolMarshaller protocolHandler;
         private MarshallerRegistry marshallerRegistry;
         private Request<?> request;
+        private EmptyBodyJsonMarshaller emptyBodyMarshaller;
 
         private Builder() {
         }
@@ -139,6 +147,11 @@ public class JsonMarshallerContext {
 
         public Builder request(Request<?> request) {
             this.request = request;
+            return this;
+        }
+
+        public Builder emptyBodyJsonMarshaller(EmptyBodyJsonMarshaller emptyBodyJsonMarshaller) {
+            this.emptyBodyMarshaller = emptyBodyJsonMarshaller;
             return this;
         }
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2010-2022 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -119,7 +119,7 @@ public enum Region {
      * The EU (Frankfurt) Amazon S3 Region. This region uses Amazon S3 servers
      * located in Frankfurt.
      * <p>
-     * The EU (Frankfurt) Region requires AWS V4 authentication, therefore when
+     * The EU (Frankfurt) Region requires Amazon Web Services V4 authentication, therefore when
      * accessing buckets inside this region, you need to explicitly configure
      * the "eu-central-1" endpoint for the AmazonS3Client in order to enable V4
      * signing:
@@ -140,7 +140,7 @@ public enum Region {
      * The EU (Stockholm) Amazon S3 Region. This region uses Amazon S3 servers
      * located in Stockholm.
      * <p>
-     * The EU (Stockholm) Region requires AWS V4 authentication, therefore when
+     * The EU (Stockholm) Region requires Amazon Web Services V4 authentication, therefore when
      * accessing buckets inside this region, you need to explicitly configure
      * the "eu-north-1" endpoint for the AmazonS3Client in order to enable V4
      * signing:
@@ -156,6 +156,27 @@ public enum Region {
      * @see AmazonS3Client#setRegion(com.ibm.cloud.objectstorage.regions.Region)
      */
     EU_North_1("eu-north-1"),
+
+    /**
+     * The EU (Milan) Amazon S3 Region. This region uses Amazon S3 servers
+     * located in Milan.
+     * <p>
+     * The EU (Milan) Region requires Amazon Web Services V4 authentication, therefore when
+     * accessing buckets inside this region, you need to explicitly configure
+     * the "eu-south-1" endpoint for the AmazonS3Client in order to enable V4
+     * signing:
+     *
+     * <pre>
+     * AmazonS3Client s3 = new AmazonS3Client();
+     * s3.setRegion(RegionUtils.getRegion("eu-south-1"));
+     * </pre>
+     *
+     * </p>
+     *
+     * @see AmazonS3Client#setEndpoint(String)
+     * @see AmazonS3Client#setRegion(com.ibm.cloud.objectstorage.regions.Region)
+     */
+    EU_South_1("eu-south-1"),
 
     /**
      * The Asia Pacific (Hong Kong) Region. This region uses Amazon S3 servers located
@@ -194,6 +215,18 @@ public enum Region {
     AP_Sydney("ap-southeast-2"),
 
     /**
+     * The Asia Pacific (Jakarta) Region. This region uses Amazon S3 servers
+     * located in Jakarta, Indonesia.
+     * <p>
+     * When using buckets in this region, set the client endpoint to
+     * <code>s3-ap-southeast-3.amazonaws.com</code> on all requests to these buckets
+     * to reduce any latency experienced after the first hour of creating a
+     * bucket in this region.
+     * </p>
+     */
+    AP_Jakarta("ap-southeast-3"),
+
+    /**
      * The Asia Pacific (Tokyo) Region. This region uses Amazon S3 servers
      * located in Tokyo.
      * <p>
@@ -216,6 +249,12 @@ public enum Region {
      * </p>
      */
     AP_Seoul("ap-northeast-2"),
+
+    /**
+     * The Asia Pacific (Osaka) Region. This region uses Amazon S3 servers
+     * located in Osaka.
+     */
+    AP_Osaka("ap-northeast-3"),
 
     /**
      * The Asia Pacific (Mumbai) Region. This region uses Amazon S3 servers
@@ -281,7 +320,47 @@ public enum Region {
      * <code>s3.me-south-1.amazonaws.com</code>.
      * </p>
      */
-    ME_Bahrain("me-south-1")
+    ME_Bahrain("me-south-1"),
+
+    /**
+     * The Africa South (Cape Town) Region. This region uses Amazon S3 servers
+     * located in Cape Town.
+     * <p>
+     * When using buckets in this region, you must set the client endpoint to
+     * <code>s3.af-south-1.amazonaws.com</code>.
+     * </p>
+     */
+    AF_CapeTown("af-south-1"),
+
+    /**
+     * The US ISO East Region. This region uses Amazon S3 servers
+     * located in Virginia.
+     * <p>
+     * When using buckets in this region, you must set the client endpoint to
+     * <code>s3.us-iso-east-1.c2c.ic.gov</code>.
+     * </p>
+     */
+    US_ISO_EAST_1("us-iso-east-1"),
+
+    /**
+     * The US ISOB East (Ohio) Region. This region uses Amazon S3 servers
+     * located in Ohio.
+     * <p>
+     * When using buckets in this region, you must set the client endpoint to
+     * <code>s3.us-isob-east-1.sc2s.sgov.gov</code>.
+     * </p>
+     */
+    US_ISOB_EAST_1("us-isob-east-1"),
+
+    /**
+     * The US ISO West Region. This region uses Amazon S3 servers
+     * located in Colorado.
+     * <p>
+     * When using buckets in this region, you must set the client endpoint to
+     * <code>s3.us-iso-west-1.c2c.ic.gov</code>.
+     * </p>
+     */
+    US_ISO_WEST_1("us-iso-west-1")
     ;
 
    /**
@@ -362,7 +441,7 @@ public enum Region {
     }
 
     /**
-     * Returns the respective AWS region.
+     * Returns the respective Amazon Web Services region.
      */
     public com.ibm.cloud.objectstorage.regions.Region toAWSRegion() {
         String s3regionId = getFirstRegionId();

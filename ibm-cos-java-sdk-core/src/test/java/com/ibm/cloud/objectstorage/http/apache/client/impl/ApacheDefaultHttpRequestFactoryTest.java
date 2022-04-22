@@ -84,7 +84,6 @@ public class ApacheDefaultHttpRequestFactoryTest {
 
     @Test
     public void uri_resourcepath_escapes_double_slash() throws IOException, URISyntaxException {
-
         final Request<Object> request = newDefaultRequest(HttpMethodName.GET);
         request.setResourcePath("//foo");
         request.setEndpoint(new URI(ENDPOINT));
@@ -94,26 +93,22 @@ public class ApacheDefaultHttpRequestFactoryTest {
     }
 
     @Test
-    public void query_parameters_moved_to_payload_for_post_request_with_no_payload
-            () throws IOException, URISyntaxException {
+    public void query_parameters_moved_to_payload_for_post_request_with_no_payload() throws IOException, URISyntaxException {
         final Request<Object> request = newDefaultRequest(HttpMethodName.POST);
-        request.withParameter("foo", "bar")
-                .withParameter("alpha", "beta");
+        request.withParameter("foo", "bar").withParameter("alpha", "beta");
         HttpRequestBase requestBase = requestFactory.create(request, settings);
-        Assert.assertThat(requestBase, Matchers.instanceOf(HttpPost
-                .class));
-        HttpPost post = (HttpPost) requestBase;
-        HttpEntity entity = post.getEntity();
-        byte[] actualContents = drainInputStream(entity.getContent());
-        Assert.assertTrue(actualContents.length > 0);
+        Assert.assertThat(requestBase, Matchers.instanceOf(HttpPost.class));
+        Assert.assertEquals("foo=bar&alpha=beta", getContents(requestBase));
+        assertContentTypeContains("application/x-www-form-urlencoded", requestBase.getHeaders(CONTENT_TYPE));
     }
 
     @Test
-    public void query_parameters_in_uri_for_all_non_post_requests() throws IOException, URISyntaxException {
+    public void query_parameters_in_uri_for_non_post_requests() throws IOException, URISyntaxException {
         final Request<Object> request = newDefaultRequest(HttpMethodName.GET);
         request.withParameter("foo", "bar");
         HttpRequestBase requestBase = requestFactory.create(request, settings);
         Assert.assertEquals("foo=bar", requestBase.getURI().getQuery());
+        Assert.assertEquals(0, requestBase.getHeaders(CONTENT_TYPE).length);
     }
 
     @Test
@@ -123,12 +118,11 @@ public class ApacheDefaultHttpRequestFactoryTest {
         final String payload = "dummy string stream";
         request.setContent(new StringInputStream(payload));
         HttpRequestBase requestBase = requestFactory.create(request, settings);
-        Assert.assertThat(requestBase, Matchers.instanceOf(HttpPost
-                .class));
+        Assert.assertThat(requestBase, Matchers.instanceOf(HttpPost.class));
         Assert.assertEquals("foo=bar", requestBase.getURI().getQuery());
-        Assert.assertThat(requestBase, Matchers.instanceOf(HttpPost
-                .class));
-        Assert.assertEquals(payload, IOUtils.toString(((HttpPost)requestBase).getEntity().getContent()));
+        Assert.assertThat(requestBase, Matchers.instanceOf(HttpPost.class));
+        Assert.assertEquals(payload, getContents(requestBase));
+        Assert.assertEquals(0, requestBase.getHeaders(CONTENT_TYPE).length);
     }
 
     @Test
@@ -140,45 +134,41 @@ public class ApacheDefaultHttpRequestFactoryTest {
     @Test
     public void patch_request_returns_correct_apache_requests() throws IOException, URISyntaxException {
         final Request<Object> request = newDefaultRequest(HttpMethodName.PATCH);
-        Assert.assertThat(requestFactory.create(request, settings), Matchers.instanceOf(HttpPatch
-                .class));
+        Assert.assertThat(requestFactory.create(request, settings), Matchers.instanceOf(HttpPatch.class));
     }
 
     @Test
     public void delete_request_returns_correct_apache_requests() throws IOException, URISyntaxException {
         final Request<Object> request = newDefaultRequest(HttpMethodName.DELETE);
-        Assert.assertThat(requestFactory.create(request, settings), Matchers.instanceOf(HttpDelete
-                .class));
+        Assert.assertThat(requestFactory.create(request, settings), Matchers.instanceOf(HttpDelete.class));
     }
     @Test
     public void head_request_returns_correct_apache_requests() throws IOException, URISyntaxException {
         final Request<Object> request = newDefaultRequest(HttpMethodName.HEAD);
-        Assert.assertThat(requestFactory.create(request, settings), Matchers.instanceOf(HttpHead
-                .class));
+        Assert.assertThat(requestFactory.create(request, settings), Matchers.instanceOf(HttpHead.class));
     }
 
     @Test
-    public void request_has_default_content_type_set_when_not_explicitly_set() throws IOException,
-            URISyntaxException {
+    public void standard_request_propagates_explicitly_set_content_type() throws IOException, URISyntaxException {
         final Request<Object> request = newDefaultRequest(HttpMethodName.POST);
-        request.setContent(new StringInputStream("dummy string stream"));
-        HttpRequestBase requestBase = requestFactory.create(request, settings);
-        assertContentTypeContains("application/x-www-form-urlencoded",
-                requestBase.getHeaders(CONTENT_TYPE));
-    }
-
-    @Test
-    public void apache_request_has_content_type_set_when_not_explicitly_set() throws IOException,
-            URISyntaxException {
-
-        final Request<Object> request = newDefaultRequest(HttpMethodName.POST);
+        request.withParameter("foo", "bar");
         final String testContentype = "testContentType";
         request.addHeader(HttpHeaders.CONTENT_TYPE, testContentype);
         request.setContent(new StringInputStream("dummy string stream"));
-        HttpRequestBase requestBase = requestFactory.create(request, settings);
-        assertContentTypeContains(testContentype,
-                requestBase.getHeaders(CONTENT_TYPE));
 
+        HttpRequestBase requestBase = requestFactory.create(request, settings);
+        assertContentTypeContains(testContentype, requestBase.getHeaders(CONTENT_TYPE));
+    }
+
+    @Test
+    public void request_with_params_in_body_propagates_explicitly_set_content_type() throws IOException, URISyntaxException {
+        final Request<Object> request = newDefaultRequest(HttpMethodName.POST);
+        request.withParameter("foo", "bar");
+        final String testContentype = "testContentType";
+        request.addHeader(HttpHeaders.CONTENT_TYPE, testContentype);
+
+        HttpRequestBase requestBase = requestFactory.create(request, settings);
+        assertContentTypeContains(testContentype, requestBase.getHeaders(CONTENT_TYPE));
     }
 
     @Test
@@ -289,7 +279,6 @@ public class ApacheDefaultHttpRequestFactoryTest {
         request.addHandlerContext(HandlerContextKey.REQUIRES_LENGTH, Boolean.TRUE);
         request.addHandlerContext(HandlerContextKey.HAS_STREAMING_INPUT, Boolean.FALSE);
 
-
         HttpRequestBase requestBase = requestFactory.create(request, settings);
 
         assertThat(requestBase, CoreMatchers.instanceOf(HttpEntityEnclosingRequestBase.class));
@@ -297,23 +286,20 @@ public class ApacheDefaultHttpRequestFactoryTest {
         assertThat(entity, CoreMatchers.instanceOf(BufferedHttpEntity.class));
     }
 
-
-
-    private void assertContentTypeContains(String expected, Header[]
-            contentTypes) {
+    private void assertContentTypeContains(String expected, Header[] contentTypes) {
         Assert.assertTrue(contentTypes.length == 1);
         Header contentTypeHeader = contentTypes[0];
-        Assert.assertThat(contentTypeHeader.getValue(), StringContains
-                .containsString(expected));
+        Assert.assertThat(contentTypeHeader.getValue(), StringContains.containsString(expected));
     }
 
-    private DefaultRequest<Object> newDefaultRequest(HttpMethodName httpMethod) throws
-            URISyntaxException {
-
-        final DefaultRequest<Object> request = new DefaultRequest<Object>
-                (null, SERVICE_NAME);
+    private DefaultRequest<Object> newDefaultRequest(HttpMethodName httpMethod) throws URISyntaxException {
+        final DefaultRequest<Object> request = new DefaultRequest<Object>(null, SERVICE_NAME);
         request.setEndpoint(new URI(ENDPOINT));
         request.setHttpMethod(httpMethod);
         return request;
+    }
+
+    private String getContents(HttpRequestBase requestBase) throws IOException {
+        return IOUtils.toString(( (HttpPost) requestBase).getEntity().getContent());
     }
 }

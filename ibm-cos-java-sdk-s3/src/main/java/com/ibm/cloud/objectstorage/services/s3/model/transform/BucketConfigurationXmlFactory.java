@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2010-2022 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -14,6 +14,8 @@
  */
 package com.ibm.cloud.objectstorage.services.s3.model.transform;
 
+import static com.ibm.cloud.objectstorage.services.s3.model.transform.BucketConfigurationXmlFactoryFunctions.writeObjectSizeGreaterThan;
+import static com.ibm.cloud.objectstorage.services.s3.model.transform.BucketConfigurationXmlFactoryFunctions.writeObjectSizeLessThan;
 import com.ibm.cloud.objectstorage.SdkClientException;
 import com.ibm.cloud.objectstorage.services.s3.internal.Constants;
 import com.ibm.cloud.objectstorage.services.s3.internal.ServiceUtils;
@@ -21,6 +23,7 @@ import com.ibm.cloud.objectstorage.services.s3.internal.XmlWriter;
 import com.ibm.cloud.objectstorage.services.s3.model.BucketAccelerateConfiguration;
 import com.ibm.cloud.objectstorage.services.s3.model.BucketCrossOriginConfiguration;
 import com.ibm.cloud.objectstorage.services.s3.model.BucketLifecycleConfiguration;
+import com.ibm.cloud.objectstorage.services.s3.model.BucketLifecycleConfiguration.NoncurrentVersionExpiration;
 import com.ibm.cloud.objectstorage.services.s3.model.BucketLifecycleConfiguration.NoncurrentVersionTransition;
 import com.ibm.cloud.objectstorage.services.s3.model.BucketLifecycleConfiguration.Rule;
 import com.ibm.cloud.objectstorage.services.s3.model.BucketLifecycleConfiguration.Transition;
@@ -71,6 +74,8 @@ import com.ibm.cloud.objectstorage.services.s3.model.inventory.InventorySchedule
 import com.ibm.cloud.objectstorage.services.s3.model.lifecycle.LifecycleAndOperator;
 import com.ibm.cloud.objectstorage.services.s3.model.lifecycle.LifecycleFilter;
 import com.ibm.cloud.objectstorage.services.s3.model.lifecycle.LifecycleFilterPredicate;
+import com.ibm.cloud.objectstorage.services.s3.model.lifecycle.LifecycleObjectSizeGreaterThanPredicate;
+import com.ibm.cloud.objectstorage.services.s3.model.lifecycle.LifecycleObjectSizeLessThanPredicate;
 import com.ibm.cloud.objectstorage.services.s3.model.lifecycle.LifecyclePredicateVisitor;
 import com.ibm.cloud.objectstorage.services.s3.model.lifecycle.LifecyclePrefixPredicate;
 import com.ibm.cloud.objectstorage.services.s3.model.lifecycle.LifecycleTagPredicate;
@@ -216,6 +221,14 @@ public class BucketConfigurationXmlFactory {
                 xml.end();
             }
         }
+//IBM unsupported
+//        EventBridgeConfiguration eventBridgeConfiguration =
+//                notificationConfiguration.getEventBridgeConfiguration();
+//        if (eventBridgeConfiguration != null) {
+//            xml.start("EventBridgeConfiguration");
+//            xml.end();
+//        }
+
         xml.end();
         return xml.getBytes();
     }
@@ -258,6 +271,16 @@ public class BucketConfigurationXmlFactory {
             throw new SdkClientException("Cannot have an S3KeyFilter without any filter rules");
         }
     }
+//IBM unsupported
+//    private void writeReplicationPrefix(final XmlWriter xml, final ReplicationRule rule) {
+//        // If no filter is set stick with the legacy behavior where we treat a null prefix as empty prefix.
+//        if (rule.getFilter() == null) {
+//            xml.start("Prefix").value(rule.getPrefix() == null ? "" : rule.getPrefix()).end();
+//        } else if (rule.getPrefix() != null) {
+//            throw new IllegalArgumentException(
+//                    "Prefix cannot be used with Filter. Use ReplicationPrefixPredicate to create a ReplicationFilter");
+//        }
+//    }
 
     public byte[] convertToXmlByteArray(BucketReplicationConfiguration replicationConfiguration) {
         XmlWriter xml = new XmlWriter();
@@ -274,19 +297,98 @@ public class BucketConfigurationXmlFactory {
 
             xml.start("Rule");
             xml.start("ID").value(ruleId).end();
+//IBM unsupported            
+//            Integer priority = rule.getPriority();
+//            if (priority != null) {
+//                xml.start("Priority").value(Integer.toString(priority)).end();
+//            }
             xml.start("Prefix").value(rule.getPrefix()).end();
             xml.start("Status").value(rule.getStatus()).end();
             ExistingObjectReplication existingObjectReplication = rule.getExistingObjectReplication();
             if (existingObjectReplication != null) {
                 xml.start("ExistingObjectReplication").start("Status").value(existingObjectReplication.getStatus()).end().end();
             }
+//IBM unsupported 
+//            DeleteMarkerReplication deleteMarkerReplication = rule.getDeleteMarkerReplication();
+//            if (deleteMarkerReplication != null) {
+//                xml.start("DeleteMarkerReplication").start("Status").value(deleteMarkerReplication.getStatus()).end().end();
+//            }
+//            writeReplicationPrefix(xml, rule);
+//            writeReplicationFilter(xml, rule.getFilter());
+//
+//            SourceSelectionCriteria sourceSelectionCriteria = rule.getSourceSelectionCriteria();
+//            if (sourceSelectionCriteria != null) {
+//                xml.start("SourceSelectionCriteria");
+//                SseKmsEncryptedObjects sseKmsEncryptedObjects = sourceSelectionCriteria.getSseKmsEncryptedObjects();
+//                if (sseKmsEncryptedObjects != null) {
+//                    xml.start("SseKmsEncryptedObjects");
+//                    addParameterIfNotNull(xml, "Status", sseKmsEncryptedObjects.getStatus());
+//                    xml.end();
+//                }
+//                ReplicaModifications replicaModifications = sourceSelectionCriteria.getReplicaModifications();
+//                if (replicaModifications != null) {
+//                    xml.start("ReplicaModifications");
+//                    addParameterIfNotNull(xml, "Status", replicaModifications.getStatus());
+//                    xml.end();
+//                }
+//                xml.end();
+//            }
 
             final ReplicationDestinationConfig config = rule.getDestinationConfig();
             xml.start("Destination");
             xml.start("Bucket").value(config.getBucketARN()).end();
+//IBM unsupported
+//            addParameterIfNotNull(xml, "Account", config.getAccount());
+
             if (config.getStorageClass() != null) {
                 xml.start("StorageClass").value(config.getStorageClass()).end();
             }
+//IBM unsupported
+//            final AccessControlTranslation accessControlTranslation = config.getAccessControlTranslation();
+//            if (accessControlTranslation != null) {
+//                xml.start("AccessControlTranslation");
+//                addParameterIfNotNull(xml, "Owner", accessControlTranslation.getOwner());
+//                xml.end();
+//            }
+//            if (config.getEncryptionConfiguration() != null) {
+//                xml.start("EncryptionConfiguration");
+//                addParameterIfNotNull(xml, "ReplicaKmsKeyID",
+//                                      config.getEncryptionConfiguration().getReplicaKmsKeyID());
+//                xml.end();
+//            }
+//
+//            ReplicationTime replicationTime = config.getReplicationTime();
+//            if (replicationTime != null) {
+//                xml.start("ReplicationTime");
+//                addParameterIfNotNull(xml, "Status", replicationTime.getStatus());
+//
+//                if (replicationTime.getTime() != null) {
+//                    xml.start("Time");
+//                    ReplicationTimeValue time = replicationTime.getTime();
+//                    if (time.getMinutes() != null) {
+//                        xml.start("Minutes").value(time.getMinutes().toString()).end();
+//                    }
+//                    xml.end();
+//                }
+//                xml.end();
+//            }
+//
+//            Metrics metrics = config.getMetrics();
+//            if (metrics != null) {
+//                xml.start("Metrics");
+//                addParameterIfNotNull(xml, "Status", metrics.getStatus());
+//
+//                if (metrics.getEventThreshold() != null) {
+//                    xml.start("EventThreshold");
+//                    ReplicationTimeValue eventThreshold = metrics.getEventThreshold();
+//                    if (eventThreshold.getMinutes() != null) {
+//                        xml.start("Minutes").value(eventThreshold.getMinutes().toString()).end();
+//                    }
+//                    xml.end();
+//                }
+//                xml.end();
+//            }
+
             xml.end();
 
             xml.end();
@@ -472,6 +574,17 @@ public class BucketConfigurationXmlFactory {
         return xml.getBytes();
     }
 
+//IBM unsupported
+//    private void writeLifecyclePrefix(final XmlWriter xml, final Rule rule) {
+//        // If no filter is set stick with the legacy behavior where we treat a null prefix as empty prefix.
+//        if (rule.getFilter() == null) {
+//            xml.start("Prefix").value(rule.getPrefix() == null ? "" : rule.getPrefix()).end();
+//        } else if (rule.getPrefix() != null) {
+//            throw new IllegalArgumentException(
+//                    "Prefix cannot be used with Filter. Use LifecyclePrefixPredicate to create a LifecycleFilter");
+//        }
+//    }
+
     /**
      * Converts the specified {@link BucketProtectionConfiguration} object to an XML fragment that
      * can be sent to Amazon S3.
@@ -548,6 +661,7 @@ public class BucketConfigurationXmlFactory {
 
         addTransitions(xml, rule.getTransitions());
         addNoncurrentTransitions(xml, rule.getNoncurrentVersionTransitions());
+        addNoncurrentExpiration(xml, rule.getNoncurrentVersionExpiration());
 
         if (hasCurrentExpirationPolicy(rule)) {
             // The rule attributes below are mutually exclusive, the service will throw an error if
@@ -563,15 +677,6 @@ public class BucketConfigurationXmlFactory {
                 xml.start("ExpiredObjectDeleteMarker").value("true").end();
             }
             xml.end(); // </Expiration>
-        }
-
-        if (rule.getNoncurrentVersionExpirationInDays() != -1) {
-            xml.start("NoncurrentVersionExpiration");
-            xml.start("NoncurrentDays")
-                .value(Integer.toString(
-                    rule.getNoncurrentVersionExpirationInDays()))
-                .end();
-            xml.end(); // </NoncurrentVersionExpiration>
         }
 
         if (rule.getAbortIncompleteMultipartUpload() != null) {
@@ -627,6 +732,11 @@ public class BucketConfigurationXmlFactory {
                     xml.value(Integer.toString(t.getDays()));
                     xml.end();
                 }
+                if (t.getNewerNoncurrentVersions() != -1) {
+                    xml.start("NewerNoncurrentVersions");
+                    xml.value(Integer.toString(t.getNewerNoncurrentVersions()));
+                    xml.end();
+                }
 
                 xml.start("StorageClass");
                 xml.value(t.getStorageClassAsString());
@@ -634,6 +744,25 @@ public class BucketConfigurationXmlFactory {
                 xml.end(); // </NoncurrentVersionTransition>
             }
         }
+    }
+
+    private void addNoncurrentExpiration(XmlWriter xml, NoncurrentVersionExpiration expiration) {
+        if (expiration == null) {
+            return;
+        }
+
+        xml.start("NoncurrentVersionExpiration");
+        if (expiration.getDays() != -1) {
+            xml.start("NoncurrentDays");
+            xml.value(Integer.toString(expiration.getDays()));
+            xml.end();
+        }
+        if (expiration.getNewerNoncurrentVersions() != -1) {
+            xml.start("NewerNoncurrentVersions");
+            xml.value(Integer.toString(expiration.getNewerNoncurrentVersions()));
+            xml.end();
+        }
+        xml.end(); // </NoncurrentVersionExpiration>
     }
 
     private void writeLifecycleFilter(XmlWriter xml, LifecycleFilter filter) {
@@ -652,6 +781,47 @@ public class BucketConfigurationXmlFactory {
         }
         predicate.accept(new LifecyclePredicateVisitorImpl(xml));
     }
+
+//IBM unsupported    
+//    private void writeReplicationFilter(XmlWriter xml, ReplicationFilter filter) {
+//        if (filter == null) {
+//            return;
+//        }
+//
+//        xml.start("Filter");
+//        writeReplicationPredicate(xml, filter.getPredicate());
+//        xml.end();
+//    }
+//
+//    private void writeReplicationPredicate(XmlWriter xml, ReplicationFilterPredicate predicate) {
+//        if (predicate == null) {
+//            return;
+//        }
+//        predicate.accept(new ReplicationPredicateVisitorImpl(xml));
+//    }
+//
+//    public byte[] convertToXmlByteArray(ServerSideEncryptionConfiguration sseConfig) {
+//        XmlWriter xml = new XmlWriter();
+//        xml.start("ServerSideEncryptionConfiguration", "xmlns", Constants.XML_NAMESPACE);
+//        for (ServerSideEncryptionRule rule : sseConfig.getRules()) {
+//            xml.start("Rule");
+//            addBooleanParameterIfNotNull(xml, "BucketKeyEnabled", rule.getBucketKeyEnabled());
+//            writeServerSideEncryptionByDefault(xml, rule.getApplyServerSideEncryptionByDefault());
+//            xml.end();
+//        }
+//        xml.end();
+//        return xml.getBytes();
+//    }
+//
+//    private void writeServerSideEncryptionByDefault(XmlWriter xml, ServerSideEncryptionByDefault sseByDefault) {
+//        if (sseByDefault == null) {
+//            return;
+//        }
+//        xml.start("ApplyServerSideEncryptionByDefault");
+//        addParameterIfNotNull(xml, "SSEAlgorithm", sseByDefault.getSSEAlgorithm());
+//        addParameterIfNotNull(xml, "KMSMasterKeyID", sseByDefault.getKMSMasterKeyID());
+//        xml.end();
+//    }
 
     public byte[] convertToXmlByteArray(PublicAccessBlockConfiguration config) {
         XmlWriter xml = new XmlWriter();
@@ -681,6 +851,16 @@ public class BucketConfigurationXmlFactory {
         @Override
         public void visit(LifecycleTagPredicate lifecycleTagPredicate) {
             writeTag(xml, lifecycleTagPredicate.getTag());
+        }
+
+        @Override
+        public void visit(LifecycleObjectSizeGreaterThanPredicate lifecycleObjectSizeGreaterThanPredicate) {
+            writeObjectSizeGreaterThan(xml, lifecycleObjectSizeGreaterThanPredicate.getObjectSizeGreaterThan());
+        }
+
+        @Override
+        public void visit(LifecycleObjectSizeLessThanPredicate lifecycleObjectSizeLessThanPredicate) {
+            writeObjectSizeLessThan(xml, lifecycleObjectSizeLessThanPredicate.getObjectSizeLessThan());
         }
 
         @Override
@@ -881,10 +1061,28 @@ public class BucketConfigurationXmlFactory {
             addParameterIfNotNull(xml, "Bucket", s3BucketDestination.getBucketArn());
             addParameterIfNotNull(xml, "Prefix", s3BucketDestination.getPrefix());
             addParameterIfNotNull(xml, "Format", s3BucketDestination.getFormat());
+//IBM unsupported            
+//            writeInventoryEncryption(xml, s3BucketDestination.getEncryption());
             xml.end(); // </S3BucketDestination>
         }
         xml.end(); // </Destination>
     }
+
+//IBM unsupported      
+//    private void writeInventoryEncryption(XmlWriter xml, InventoryEncryption encryption) {
+//        if (encryption == null) {
+//            return;
+//        }
+//        xml.start("Encryption");
+//        if (encryption instanceof ServerSideEncryptionS3) {
+//            xml.start("SSE-S3").end();
+//        } else if (encryption instanceof ServerSideEncryptionKMS) {
+//            xml.start("SSE-KMS");
+//            addParameterIfNotNull(xml, "KeyId", ((ServerSideEncryptionKMS) encryption).getKeyId());
+//            xml.end();
+//        }
+//        xml.end();
+//    }
 
     private void writeInventoryFilter(XmlWriter xml, InventoryFilter inventoryFilter) {
         if (inventoryFilter == null) {
@@ -1075,6 +1273,61 @@ public class BucketConfigurationXmlFactory {
     }
 
     /**
+     * Converts the specified {@link com.ibm.cloud.objectstorage.services.s3.model.intelligenttiering.IntelligentTieringConfiguration}
+     * object to an XML fragment that can be sent to Amazon S3.
+     *
+     * @param config
+     *            The {@link com.ibm.cloud.objectstorage.services.s3.model.intelligenttiering.IntelligentTieringConfiguration}
+     */
+//IBM unsupported    
+//    public byte[] convertToXmlByteArray(IntelligentTieringConfiguration config) throws SdkClientException {
+//        XmlWriter xml = new XmlWriter();
+//
+//        xml.start("IntelligentTieringConfiguration", "xmlns", Constants.XML_NAMESPACE);
+//
+//        addParameterIfNotNull(xml, "Id", config.getId());
+//        writeIntelligentTieringFilter(xml, config.getFilter());
+//        addParameterIfNotNull(xml, "Status", config.getStatus().name());
+//        writeIntelligentTierings(xml, config.getTierings());
+//
+//        xml.end();
+//
+//        return xml.getBytes();
+//    }
+//
+//    private void writeIntelligentTieringFilter(XmlWriter xml, IntelligentTieringFilter filter) {
+//        if (filter == null) {
+//            return;
+//        }
+//
+//        xml.start("Filter");
+//        writeIntelligentTieringFilterPredicate(xml, filter.getPredicate());
+//        xml.end();
+//    }
+//
+//    private void writeIntelligentTieringFilterPredicate(XmlWriter xml, IntelligentTieringFilterPredicate predicate) {
+//        if (predicate == null) {
+//            return;
+//        }
+//
+//        predicate.accept(new XmlIntelligentTieringPredicateVisitor(xml));
+//    }
+//
+//    private void writeIntelligentTierings(XmlWriter xml, List<Tiering> tierings) {
+//        if (tierings == null) {
+//            return;
+//        }
+//
+//        for (Tiering tiering : tierings) {
+//            xml.start("Tiering");
+//            addParameterIfNotNull(xml, "AccessTier", tiering.getAccessTier().name());
+//            addParameterIfNotNull(xml, "Days", Integer.toString(tiering.getDays()));
+//            xml.end();
+//        }
+//
+//    }
+
+    /**
      * Converts the specified {@link com.ibm.cloud.objectstorage.services.s3.model.metrics.MetricsConfiguration}
      * object to an XML fragment that can be sent to Amazon S3.
      *
@@ -1132,6 +1385,42 @@ public class BucketConfigurationXmlFactory {
         predicate.accept(new MetricsPredicateVisitorImpl(xml));
     }
 
+    /**
+     * Converts the specified {@link com.ibm.cloud.objectstorage.services.s3.model.ownership.OwnershipControls}
+     * object to an XML fragment that can be sent to Amazon S3.
+     *
+     * @param controls
+     *            The {@link com.ibm.cloud.objectstorage.services.s3.model.ownership.OwnershipControls}.
+     */
+//IBM unsupported    
+//    public byte[] convertToXmlByteArray(OwnershipControls controls) throws SdkClientException {
+//        XmlWriter xml = new XmlWriter();
+//
+//        xml.start("OwnershipControls", "xmlns", Constants.XML_NAMESPACE);
+//        writeOwnershipControlsRule(xml, controls.getRules());
+//        xml.end();
+//
+//        return xml.getBytes();
+//    }
+//
+//    private void writeOwnershipControlsRule(XmlWriter xml, List<OwnershipControlsRule> rules) {
+//        if (rules == null) {
+//            return;
+//        }
+//
+//        for (OwnershipControlsRule rule : rules) {
+//            if (rule == null) {
+//                throw new IllegalArgumentException("Ownership control rules must not be null.");
+//            }
+//
+//            xml.start("Rule");
+//            if (rule.getOwnership() != null) {
+//                xml.start("ObjectOwnership").value(rule.getOwnership()).end();
+//            }
+//            xml.end();
+//        }
+//    }
+
     private class MetricsPredicateVisitorImpl implements MetricsPredicateVisitor {
         private final XmlWriter xml;
 
@@ -1157,6 +1446,11 @@ public class BucketConfigurationXmlFactory {
             }
             xml.end();
         }
+//IBM unsupported 
+//        @Override
+//        public void visit(MetricsAccessPointArnPredicate metricsAccessPointArnPredicate) {
+//            writeAccessPointArn(xml, metricsAccessPointArnPredicate.getAccessPointArn());
+//        }
     }
 
     private void addParameterIfNotNull(XmlWriter xml, String xmlTagName, String value) {
@@ -1194,4 +1488,8 @@ public class BucketConfigurationXmlFactory {
         xml.end();
     }
 
+//IBM unsupported 
+//    static void writeAccessPointArn(final XmlWriter xml, final String accessPointArn) {
+//        addParameterIfNotNull(xml, "AccessPointArn", accessPointArn);
+//    }
 }

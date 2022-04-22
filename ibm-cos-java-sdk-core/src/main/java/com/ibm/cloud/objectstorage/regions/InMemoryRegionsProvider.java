@@ -1,5 +1,5 @@
 /*
- * Copyright 2016-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2016-2022 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -64,6 +64,18 @@ public class InMemoryRegionsProvider extends AbstractRegionMetadataProvider {
         }
 
         return results;
+    }
+
+    @Override
+    public Region tryGetRegionByExplicitEndpoint(String endpoint) {
+        // This operation is not currently supported on this provider.
+        return null;
+    }
+
+    @Override
+    public Region tryGetRegionByEndpointDnsSuffix(String endpoint) {
+        // This operation is not currently supported on this provider.
+        return null;
     }
 
     @Override

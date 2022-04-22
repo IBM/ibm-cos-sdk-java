@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2010-2022 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -14,18 +14,9 @@
  */
 package com.ibm.cloud.objectstorage.services.s3.internal;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
-import com.ibm.cloud.objectstorage.SdkClientException;
 import com.ibm.cloud.objectstorage.AmazonWebServiceResponse;
 import com.ibm.cloud.objectstorage.ResponseMetadata;
+import com.ibm.cloud.objectstorage.SdkClientException;
 import com.ibm.cloud.objectstorage.http.HttpResponse;
 import com.ibm.cloud.objectstorage.http.HttpResponseHandler;
 import com.ibm.cloud.objectstorage.services.s3.Headers;
@@ -33,6 +24,14 @@ import com.ibm.cloud.objectstorage.services.s3.S3ResponseMetadata;
 import com.ibm.cloud.objectstorage.services.s3.model.ObjectMetadata;
 import com.ibm.cloud.objectstorage.util.DateUtils;
 import com.ibm.cloud.objectstorage.util.StringUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 
 /**
  * Abstract HTTP response handler for Amazon S3 responses. Provides common
@@ -73,7 +72,7 @@ public abstract class AbstractS3ResponseHandler<T>
     }
 
     /**
-     * Parses the S3 response metadata (ex: AWS request ID) from the specified
+     * Parses the S3 response metadata (ex: Amazon Web Services request ID) from the specified
      * response, and returns a AmazonWebServiceResponse<T> object ready for the
      * result to be plugged in.
      *
@@ -149,7 +148,12 @@ public abstract class AbstractS3ResponseHandler<T>
                 metadata.setHeader(key, header.getValue());
             } else if (key.equalsIgnoreCase(Headers.REQUESTER_CHARGED_HEADER)) {
                 new S3RequesterChargedHeaderHandler<S3RequesterChargedResult>().handle(metadata, response);
-            } else if (key.equalsIgnoreCase(Headers.S3_PARTS_COUNT)) {
+            } 
+//IBM does not support SSE-KMS            
+//            else if (key.equalsIgnoreCase(Headers.SERVER_SIDE_ENCRYPTION_BUCKET_KEY_ENABLED)) {
+//                    metadata.setBucketKeyEnabled("true".equals(header.getValue()));
+//                } 
+            else if (key.equalsIgnoreCase(Headers.S3_PARTS_COUNT)) {
                 try {
                     metadata.setHeader(key, Integer.parseInt(header.getValue()));
                 } catch (NumberFormatException nfe) {

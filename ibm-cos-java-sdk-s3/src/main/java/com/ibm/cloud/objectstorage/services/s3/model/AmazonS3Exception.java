@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2010-2022 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -175,7 +175,9 @@ public class AmazonS3Exception extends AmazonServiceException implements Seriali
                + "; Status Code: " + getStatusCode()
                + "; Error Code: " + getErrorCode()
                + "; Request ID: " + getRequestId()
-               + "; S3 Extended Request ID: " + getExtendedRequestId() + ")";
+               + "; S3 Extended Request ID: " + getExtendedRequestId()
+               + "; Proxy: " + getProxyHost()
+               + ")";
     }
 
     /**

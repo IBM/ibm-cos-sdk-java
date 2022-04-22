@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2010-2022 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -67,4 +67,22 @@ abstract class AbstractSSEHandler extends AbstractHandler implements ServerSideE
             result.setSSECustomerKeyMd5(md5Digest);
         }
     }
+
+//IBM does not support SSE-KMS
+//    @Override
+//    public final Boolean getBucketKeyEnabled() {
+//        ServerSideEncryptionResult result = sseResult();
+//        if (result == null) {
+//            return false;
+//        }
+//        return result.getBucketKeyEnabled();
+//    }
+//
+//    @Override
+//    public final void setBucketKeyEnabled(Boolean bucketKeyEnabled) {
+//        ServerSideEncryptionResult result = sseResult();
+//        if (result != null) {
+//            result.setBucketKeyEnabled(bucketKeyEnabled);
+//        }
+//    }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2010-2022 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -25,6 +25,10 @@ public class WebIdentityTokenCredentialsProvider implements AWSCredentialsProvid
 
     private final AWSCredentialsProvider credentialsProvider;
     private final RuntimeException loadException;
+
+    public WebIdentityTokenCredentialsProvider() {
+        this(new BuilderImpl());
+    }
 
     private WebIdentityTokenCredentialsProvider(BuilderImpl builder) {
         AWSCredentialsProvider credentialsProvider = null;

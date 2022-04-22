@@ -1,5 +1,5 @@
 /*
- * Copyright 2011-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2011-2022 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -14,18 +14,16 @@
  */
 package com.ibm.cloud.objectstorage.auth.profile;
 
+import static org.hamcrest.Matchers.isEmptyString;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
+
 import com.ibm.cloud.objectstorage.AmazonClientException;
 import com.ibm.cloud.objectstorage.auth.profile.internal.AllProfiles;
 import com.ibm.cloud.objectstorage.auth.profile.internal.BasicProfile;
 import com.ibm.cloud.objectstorage.auth.profile.internal.BasicProfileConfigLoader;
-
-import org.junit.Test;
-
 import java.io.File;
-
-import static org.hamcrest.Matchers.isEmptyString;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
+import org.junit.Test;
 
 
 public class BasicProfileConfigLoaderTest {
@@ -88,6 +86,20 @@ public class BasicProfileConfigLoaderTest {
         File file = ProfileResourceLoader.profileWithEmptyAccessKey().asFile();
         BasicProfile profile = loadProfiles(file).getProfile("test");
         assertThat(profile.getAwsAccessIdKey(), isEmptyString());
+    }
+
+    @Test
+    public void prefixProfilesCanBeLoaded() {
+        File file = ProfileResourceLoader.profileWithProfilePrefix().asFile();
+        BasicProfile profile = loadProfiles(file).getProfile("test");
+        assertEquals("withPrefix", profile.getAwsAccessIdKey());
+    }
+
+    @Test
+    public void prefixProfilesAreLowerPriorityThanNonPrefixProfiles() {
+        File file = ProfileResourceLoader.duplicateProfileWithAndWithoutProfilePrefix().asFile();
+        BasicProfile profile = loadProfiles(file).getProfile("test");
+        assertEquals("withoutPrefix", profile.getAwsAccessIdKey());
     }
 
     public AllProfiles loadProfiles(File file) {

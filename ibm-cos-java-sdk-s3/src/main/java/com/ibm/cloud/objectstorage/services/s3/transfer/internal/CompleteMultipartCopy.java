@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2010-2022 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -37,87 +37,88 @@ import com.ibm.cloud.objectstorage.services.s3.transfer.model.CopyResult;
  */
 public class CompleteMultipartCopy implements Callable<CopyResult> {
 
-	/** The upload id associated with the multi-part copy. */
-	private final String uploadId;
+    /** The upload id associated with the multi-part copy. */
+    private final String uploadId;
 
-	/**
-	 * The reference to underlying Amazon S3 client to be used for initiating
-	 * requests to Amazon S3.
-	 */
-	private final AmazonS3 s3;
+    /**
+     * The reference to underlying Amazon S3 client to be used for initiating
+     * requests to Amazon S3.
+     */
+    private final AmazonS3 s3;
 
-	/** The reference to the request initiated by the user. */
-	private final CopyObjectRequest origReq;
+    /** The reference to the request initiated by the user. */
+    private final CopyObjectRequest origReq;
 
-	/** The futures of threads that copies individual parts. */
-	private final List<Future<PartETag>> futures;
+    /** The futures of threads that copies individual parts. */
+    private final List<Future<PartETag>> futures;
 
-	/** The monitor to which the copy progress has to be communicated. */
-	private final CopyMonitor monitor;
+    /** The monitor to which the copy progress has to be communicated. */
+    private final CopyMonitor monitor;
 
-	/** The listener where progress of the copy needs to be published. */
-	private final ProgressListenerChain listener;
+    /** The listener where progress of the copy needs to be published. */
+    private final ProgressListenerChain listener;
 
-	public CompleteMultipartCopy(String uploadId, AmazonS3 s3,
-			CopyObjectRequest copyObjectRequest, List<Future<PartETag>> futures,
-			ProgressListenerChain progressListenerChain, CopyMonitor monitor) {
-		this.uploadId = uploadId;
-		this.s3 = s3;
-		this.origReq = copyObjectRequest;
-		this.futures = futures;
-		this.listener = progressListenerChain;
-		this.monitor = monitor;
-	}
+    public CompleteMultipartCopy(String uploadId, AmazonS3 s3,
+                                 CopyObjectRequest copyObjectRequest, List<Future<PartETag>> futures,
+                                 ProgressListenerChain progressListenerChain, CopyMonitor monitor) {
+        this.uploadId = uploadId;
+        this.s3 = s3;
+        this.origReq = copyObjectRequest;
+        this.futures = futures;
+        this.listener = progressListenerChain;
+        this.monitor = monitor;
+    }
 
-	@Override
-	public CopyResult call() throws Exception {
-		CompleteMultipartUploadResult res;
+    @Override
+    public CopyResult call() throws Exception {
+        CompleteMultipartUploadResult res;
 
-		try {
-			CompleteMultipartUploadRequest req = new CompleteMultipartUploadRequest(
-					origReq.getDestinationBucketName(), origReq.getDestinationKey(), uploadId,
-					collectPartETags())
-					.withRequesterPays(origReq.isRequesterPays())
-					.withGeneralProgressListener(origReq.getGeneralProgressListener())
-					.withRequestMetricCollector(origReq.getRequestMetricCollector())
-					;
-			res = s3.completeMultipartUpload(req);
-		} catch (Exception e) {
-			monitor.reportFailure();
-			publishProgress(listener, ProgressEventType.TRANSFER_FAILED_EVENT);
-			throw e;
-		}
+        try {
+            CompleteMultipartUploadRequest req = new CompleteMultipartUploadRequest(
+                    origReq.getDestinationBucketName(), origReq.getDestinationKey(), uploadId,
+                    collectPartETags())
+                    .withRequesterPays(origReq.isRequesterPays())
+                    .withGeneralProgressListener(origReq.getGeneralProgressListener())
+                    .withRequestMetricCollector(origReq.getRequestMetricCollector())
+                    .withRequestCredentialsProvider(origReq.getRequestCredentialsProvider())
+                    ;
+            res = s3.completeMultipartUpload(req);
+        } catch (Exception e) {
+            monitor.reportFailure();
+            publishProgress(listener, ProgressEventType.TRANSFER_FAILED_EVENT);
+            throw e;
+        }
 
-		CopyResult copyResult = new CopyResult();
-		copyResult.setSourceBucketName(origReq.getSourceBucketName());
-		copyResult.setSourceKey(origReq.getSourceKey());
-		copyResult.setDestinationBucketName(res
-				.getBucketName());
-		copyResult.setDestinationKey(res.getKey());
-		copyResult.setETag(res.getETag());
-		copyResult.setVersionId(res.getVersionId());
+        CopyResult copyResult = new CopyResult();
+        copyResult.setSourceBucketName(origReq.getSourceBucketName());
+        copyResult.setSourceKey(origReq.getSourceKey());
+        copyResult.setDestinationBucketName(res
+                .getBucketName());
+        copyResult.setDestinationKey(res.getKey());
+        copyResult.setETag(res.getETag());
+        copyResult.setVersionId(res.getVersionId());
 
-		monitor.copyComplete();
+        monitor.copyComplete();
 
-		return copyResult;
-	}
+        return copyResult;
+    }
 
-	/**
-	 * Collects the Part ETags for initiating the complete multi-part copy
-	 * request. This is blocking as it waits until all the upload part threads
-	 * complete.
-	 */
-	private List<PartETag> collectPartETags() {
+    /**
+     * Collects the Part ETags for initiating the complete multi-part copy
+     * request. This is blocking as it waits until all the upload part threads
+     * complete.
+     */
+    private List<PartETag> collectPartETags() {
 
-		final List<PartETag> partETags = new ArrayList<PartETag>();
-		for (Future<PartETag> future : futures) {
-			try {
-				partETags.add(future.get());
-			} catch (Exception e) {
-				throw new SdkClientException("Unable to copy part: "
-						+ e.getCause().getMessage(), e.getCause());
-			}
-		}
-		return partETags;
-	}
+        final List<PartETag> partETags = new ArrayList<PartETag>();
+        for (Future<PartETag> future : futures) {
+            try {
+                partETags.add(future.get());
+            } catch (Exception e) {
+                throw new SdkClientException("Unable to copy part: "
+                        + e.getCause().getMessage(), e.getCause());
+            }
+        }
+        return partETags;
+    }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2011-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2011-2022 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -15,6 +15,7 @@
 package com.ibm.cloud.objectstorage.http;
 
 import com.ibm.cloud.objectstorage.AmazonServiceException;
+import com.ibm.cloud.objectstorage.ClientConfiguration;
 import com.ibm.cloud.objectstorage.annotation.SdkInternalApi;
 import com.ibm.cloud.objectstorage.util.AWSRequestMetrics;
 import java.util.Arrays;
@@ -28,12 +29,15 @@ class AwsErrorResponseHandler implements HttpResponseHandler<AmazonServiceExcept
 
     private final HttpResponseHandler<AmazonServiceException> delegate;
     private final AWSRequestMetrics awsRequestMetrics;
+    private final ClientConfiguration clientConfiguration;
 
 
     AwsErrorResponseHandler(HttpResponseHandler<AmazonServiceException> errorResponseHandler,
-                            AWSRequestMetrics awsRequestMetrics) {
+                            AWSRequestMetrics awsRequestMetrics,
+                            ClientConfiguration clientConfiguration) {
         this.delegate = errorResponseHandler;
         this.awsRequestMetrics = awsRequestMetrics;
+        this.clientConfiguration = clientConfiguration;
     }
 
     @Override
@@ -41,6 +45,7 @@ class AwsErrorResponseHandler implements HttpResponseHandler<AmazonServiceExcept
         final AmazonServiceException ase = handleAse(response);
         ase.setStatusCode(response.getStatusCode());
         ase.setServiceName(response.getRequest().getServiceName());
+        ase.setProxyHost(clientConfiguration.getProxyHost());
         awsRequestMetrics.addPropertyWith(AWSRequestMetrics.Field.AWSRequestID, ase.getRequestId())
                 .addPropertyWith(AWSRequestMetrics.Field.AWSErrorCode, ase.getErrorCode())
                 .addPropertyWith(AWSRequestMetrics.Field.StatusCode, ase.getStatusCode());

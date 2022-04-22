@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2019 Amazon Technologies, Inc.
+ * Copyright 2015-2022 Amazon Technologies, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,7 +20,10 @@ import com.ibm.cloud.objectstorage.AmazonWebServiceRequest;
 import com.ibm.cloud.objectstorage.util.json.Jackson;
 
 public class SetBucketReplicationConfigurationRequest extends
-        AmazonWebServiceRequest implements Serializable{
+        AmazonWebServiceRequest implements Serializable
+        //IBM unsupported
+        //, ExpectedBucketOwnerRequest 
+        {
 
     /**
      * The name of Amazon S3 bucket to which the replication configuration is
@@ -33,6 +36,8 @@ public class SetBucketReplicationConfigurationRequest extends
      */
     private BucketReplicationConfiguration replicationConfiguration;
 
+    //IBM unsupported
+    //private String expectedBucketOwner;
     /**
      * Creates a new SetReplicationConfigurationRequest.
      */
@@ -52,6 +57,20 @@ public class SetBucketReplicationConfigurationRequest extends
         this.bucketName = bucketName;
         this.replicationConfiguration = replicationConfiguration;
     }
+
+//IBM unsupported
+//    public String getExpectedBucketOwner() {
+//        return expectedBucketOwner;
+//    }
+//
+//    public SetBucketReplicationConfigurationRequest withExpectedBucketOwner(String expectedBucketOwner) {
+//        this.expectedBucketOwner = expectedBucketOwner;
+//        return this;
+//    }
+//
+//    public void setExpectedBucketOwner(String expectedBucketOwner) {
+//        withExpectedBucketOwner(expectedBucketOwner);
+//    }
 
     /**
      * Returns the name of Amazon S3 bucket.

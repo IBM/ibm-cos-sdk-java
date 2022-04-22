@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2010-2022 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -13,6 +13,8 @@
  * permissions and limitations under the License.
  */
 package com.ibm.cloud.objectstorage.retry;
+
+import static com.ibm.cloud.objectstorage.retry.PredefinedBackoffStrategies.STANDARD_BACKOFF_STRATEGY;
 
 import com.ibm.cloud.objectstorage.AmazonClientException;
 import com.ibm.cloud.objectstorage.AmazonServiceException;
@@ -35,8 +37,11 @@ public class PredefinedRetryPolicies {
 
     /* SDK default */
 
-    /** SDK default max retry count **/
+    /** SDK default max retry count for legacy retry mode **/
     public static final int DEFAULT_MAX_ERROR_RETRY = 3;
+
+    /** SDK default max retry count for standard retry mode **/
+    public static final int DEFAULT_MAX_ERROR_RETRY_STANDARD_MODE = 2;
 
     /**
      * SDK default retry policy. Amazon DynamoDB has a custom retry policy that is used when no
@@ -46,8 +51,11 @@ public class PredefinedRetryPolicies {
 
     /* Default for DynamoDB client */
 
-    /** Default max retry count for DynamoDB client **/
-    public static final int DYNAMODB_DEFAULT_MAX_ERROR_RETRY = 10;
+    /** Standard max retry count for DynamoDB client **/
+    private static final int DYNAMODB_STANDARD_DEFAULT_MAX_ERROR_RETRY = 10;
+
+    /** Standard max retry count for DynamoDB client for DynamoDB client **/
+    public static final int DYNAMODB_DEFAULT_MAX_ERROR_RETRY = DYNAMODB_STANDARD_DEFAULT_MAX_ERROR_RETRY;
 
     /** Default policy for DynamoDB client **/
     public static final RetryPolicy DYNAMODB_DEFAULT;
@@ -96,6 +104,18 @@ public class PredefinedRetryPolicies {
         DYNAMODB_DEFAULT = getDynamoDBDefaultRetryPolicy();
     }
 
+    public static RetryPolicy.BackoffStrategy getDefaultBackoffStrategy(RetryMode retryMode) {
+        switch (retryMode) {
+            case LEGACY:
+                return DEFAULT_BACKOFF_STRATEGY;
+            case ADAPTIVE:
+            case STANDARD:
+                return STANDARD_BACKOFF_STRATEGY;
+            default:
+                throw new IllegalStateException("Unsupported RetryMode: " + retryMode);
+        }
+    }
+
     /**
      * Returns the SDK default retry policy. This policy will honor the
      * maxErrorRetry set in ClientConfiguration.
@@ -106,20 +126,27 @@ public class PredefinedRetryPolicies {
         return new RetryPolicy(DEFAULT_RETRY_CONDITION,
                                DEFAULT_BACKOFF_STRATEGY,
                                DEFAULT_MAX_ERROR_RETRY,
+                               true,
+                               true,
                                true);
     }
 
     /**
      * Returns the default retry policy for DynamoDB client. This policy will
      * honor the maxErrorRetry set in ClientConfiguration.
+     * For DynamoDB the Default max error retry attempts is kept same as Standard Max retry of Dynamo DB.
+     * Thus honorDefaultMaxErrorRetryInRetryMode is set to False so that it uses max error retries same as
+     * DYNAMODB_STANDARD_DEFAULT_MAX_ERROR_RETRY which is 10.
      *
      * @see ClientConfiguration#setMaxErrorRetry(int)
      */
     public static RetryPolicy getDynamoDBDefaultRetryPolicy() {
         return new RetryPolicy(DEFAULT_RETRY_CONDITION,
                                DYNAMODB_DEFAULT_BACKOFF_STRATEGY,
-                               DYNAMODB_DEFAULT_MAX_ERROR_RETRY,
-                               true);
+                               DYNAMODB_STANDARD_DEFAULT_MAX_ERROR_RETRY,
+                               true,
+                               false,
+                               false);
     }
 
     /**

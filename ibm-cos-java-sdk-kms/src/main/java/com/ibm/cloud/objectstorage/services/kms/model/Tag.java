@@ -1,11 +1,11 @@
 /*
- * Copyright 2014-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
- * 
+ * Copyright 2017-2022 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"). You may not use this file except in compliance with
  * the License. A copy of the License is located at
- * 
+ *
  * http://aws.amazon.com/apache2.0
- * 
+ *
  * or in the "license" file accompanying this file. This file is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
  * CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions
  * and limitations under the License.
@@ -22,7 +22,12 @@ import com.ibm.cloud.objectstorage.protocol.ProtocolMarshaller;
  * A key-value pair. A tag consists of a tag key and a tag value. Tag keys and tag values are both required, but tag
  * values can be empty (null) strings.
  * </p>
- * 
+ * <p>
+ * For information about the rules that apply to tag keys and tag values, see <a
+ * href="https://docs.aws.amazon.com/awsaccountbilling/latest/aboutv2/allocation-tag-restrictions.html">User-Defined Tag
+ * Restrictions</a> in the <i>Amazon Web Services Billing and Cost Management User Guide</i>.
+ * </p>
+ *
  * @see <a href="http://docs.aws.amazon.com/goto/WebAPI/kms-2014-11-01/Tag" target="_top">AWS API Documentation</a>
  */
 @Generated("com.amazonaws:aws-java-sdk-code-generator")
@@ -45,7 +50,7 @@ public class Tag implements Serializable, Cloneable, StructuredPojo {
      * <p>
      * The key of the tag.
      * </p>
-     * 
+     *
      * @param tagKey
      *        The key of the tag.
      */
@@ -58,7 +63,7 @@ public class Tag implements Serializable, Cloneable, StructuredPojo {
      * <p>
      * The key of the tag.
      * </p>
-     * 
+     *
      * @return The key of the tag.
      */
 
@@ -70,7 +75,7 @@ public class Tag implements Serializable, Cloneable, StructuredPojo {
      * <p>
      * The key of the tag.
      * </p>
-     * 
+     *
      * @param tagKey
      *        The key of the tag.
      * @return Returns a reference to this object so that method calls can be chained together.
@@ -85,7 +90,7 @@ public class Tag implements Serializable, Cloneable, StructuredPojo {
      * <p>
      * The value of the tag.
      * </p>
-     * 
+     *
      * @param tagValue
      *        The value of the tag.
      */
@@ -98,7 +103,7 @@ public class Tag implements Serializable, Cloneable, StructuredPojo {
      * <p>
      * The value of the tag.
      * </p>
-     * 
+     *
      * @return The value of the tag.
      */
 
@@ -110,7 +115,7 @@ public class Tag implements Serializable, Cloneable, StructuredPojo {
      * <p>
      * The value of the tag.
      * </p>
-     * 
+     *
      * @param tagValue
      *        The value of the tag.
      * @return Returns a reference to this object so that method calls can be chained together.
@@ -122,7 +127,8 @@ public class Tag implements Serializable, Cloneable, StructuredPojo {
     }
 
     /**
-     * Returns a string representation of this object; useful for testing and debugging.
+     * Returns a string representation of this object. This is useful for testing and debugging. Sensitive data will be
+     * redacted from this string using a placeholder value.
      *
      * @return A string representation of this object.
      *

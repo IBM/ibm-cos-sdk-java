@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2014-2022 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -78,21 +78,24 @@ public final class AWS4SignerRequestParams {
         }
         if (signingAlgorithm == null) {
             throw new IllegalArgumentException(
-                    "Signing Algorithm cannot be null");
+                "Signing Algorithm cannot be null");
         }
+
         this.request = request;
         this.signingDateTimeMilli = signingDateOverride != null ? signingDateOverride
-                .getTime() : getSigningDate(request);
+            .getTime() : getSigningDate(request);
         this.formattedSigningDate = AWS4SignerUtils
-                .formatDateStamp(signingDateTimeMilli);
+            .formatDateStamp(signingDateTimeMilli);
         this.serviceName = serviceName;
+
         this.regionName = regionNameOverride != null ? regionNameOverride
                 : AwsHostNameUtils.parseRegionName(request.getEndpoint()
                         .getHost(), this.serviceName);
+
         this.scope = generateScope(request, formattedSigningDate, this.serviceName,
-                regionName);
+                                   regionName);
         this.formattedSigningDateTime = AWS4SignerUtils
-                .formatTimestamp(signingDateTimeMilli);
+            .formatTimestamp(signingDateTimeMilli);
         this.signingAlgorithm = signingAlgorithm;
     }
 

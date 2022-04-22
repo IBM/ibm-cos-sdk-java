@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2010-2022 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -53,6 +53,11 @@ public class InternalConfig {
             + DEFAULT_CONFIG_RESOURCE_RELATIVE_PATH;
 
     static final String CONFIG_OVERRIDE_RESOURCE = "awssdk_config_override.json";
+
+    //IBM unsupported
+    // static final String ENDPOINT_DISCOVERY_CONFIG_ABSOLUTE_PATH =
+    //         "/com/amazonaws/endpointdiscovery/endpoint-discovery.json";
+
     private static final String SERVICE_REGION_DELIMITOR = "/";
 
     private final SignerConfig defaultSignerConfig;
@@ -65,13 +70,21 @@ public class InternalConfig {
 
     private final String userAgentTemplate;
 
+    //IBM unsupported
+    // private final boolean endpointDiscoveryEnabled;
+
+    private final String defaultRetryMode;
+
     /**
      * @param defaults
      *            default configuration
      * @param override
      *            override configuration
      */
-    InternalConfig(InternalConfigJsonHelper defaults, InternalConfigJsonHelper override) {
+    InternalConfig(InternalConfigJsonHelper defaults,
+                   InternalConfigJsonHelper override) {
+                   //IBM unsupported
+                   //EndpointDiscoveryConfig endpointDiscoveryConfig)
         SignerConfigJsonHelper scb = defaults.getDefaultSigner();
         this.defaultSignerConfig = scb == null ? null : scb.build();
 
@@ -89,6 +102,11 @@ public class InternalConfig {
         } else {
             userAgentTemplate = defaults.getUserAgentTemplate();
         }
+
+        //IBM unsupported
+        // endpointDiscoveryEnabled = endpointDiscoveryConfig.isEndpointDiscoveryEnabled();
+
+        defaultRetryMode = override.getDefaultRetryMode();
     }
 
     /**
@@ -186,7 +204,7 @@ public class InternalConfig {
 
     /**
      * Returns the signer configuration for the specified service name and an optional region name.
-     * 
+     *
      * @param serviceName
      *            must not be null
      * @param regionName
@@ -230,6 +248,17 @@ public class InternalConfig {
         return userAgentTemplate;
     }
 
+    //IBM unsupported
+    // public boolean endpointDiscoveryEnabled() {
+    //     return endpointDiscoveryEnabled;
+    // }
+
+    /**
+     * @return the default retry mode, or null if not configured
+     */
+    public String getDefaultRetryMode() {
+        return defaultRetryMode;
+    }
 
     static <T> T loadfrom(URL url, Class<T> clazz) throws JsonParseException, JsonMappingException, IOException {
         if (url == null)
@@ -260,7 +289,19 @@ public class InternalConfig {
         } else {
             configOverride = loadfrom(overrideUrl, InternalConfigJsonHelper.class);
         }
+
+        //IBM unsupported
+        // EndpointDiscoveryConfig endpointDiscoveryConfig = new EndpointDiscoveryConfig();
+
+        // URL endpointDiscoveryConfigUrl = getResource(ENDPOINT_DISCOVERY_CONFIG_ABSOLUTE_PATH, false, false);
+
+        // if (endpointDiscoveryConfigUrl != null) {
+        //     endpointDiscoveryConfig = loadfrom(endpointDiscoveryConfigUrl, EndpointDiscoveryConfig.class);
+        // }
+
         InternalConfig merged = new InternalConfig(config, configOverride);
+        //IBM unsupported
+        //, endpointDiscoveryConfig);
         merged.setDefaultConfigFileLocation(configUrl);
         merged.setOverrideConfigFileLocation(overrideUrl);
         return merged;

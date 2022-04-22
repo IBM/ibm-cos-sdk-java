@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2010-2022 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -69,6 +69,8 @@ public abstract class AmazonWebServiceClient {
 
     private static final String AMAZON = "Amazon";
     private static final String AWS = "AWS";
+    //IBM unsupported
+    //private static final String DEFAULT_CLIENT_ID = "";
 
     private static final Log log =
         LogFactory.getLog(AmazonWebServiceClient.class);
@@ -127,6 +129,9 @@ public abstract class AmazonWebServiceClient {
 
     private volatile SignerProvider signerProvider;
 
+    //IBM unsupported
+    //private final CsmConfiguration csmConfiguration;
+
     /**
      * The cached service abbreviation for this service, used for identifying
      * service endpoints by region, identifying the necessary signer, etc.
@@ -139,7 +144,16 @@ public abstract class AmazonWebServiceClient {
      */
     private volatile String endpointPrefix;
 
+    /**
+     * Region used to sign requests.
+     */
+    //IBM unsupported
+    //private volatile String signingRegion;
+
     private Collection<MonitoringListener> monitoringListeners;
+
+    //IBM unsupported
+    //private AgentMonitoringListener agentMonitoringListener;
 
     /**
      * Constructs a new AmazonWebServiceClient object using the specified
@@ -192,6 +206,12 @@ public abstract class AmazonWebServiceClient {
                 return new CopyOnWriteArrayList<RequestHandler2>();
             }
 
+            //IBM unsupported
+            // @Override
+            // public CsmConfigurationProvider getClientSideMonitoringConfigurationProvider() {
+            //     return DefaultCsmConfigurationProviderChain.getInstance();
+            // }
+
             @Override
             public MonitoringListener getMonitoringListener() {
                 return null;
@@ -215,11 +235,22 @@ public abstract class AmazonWebServiceClient {
                                            clientParams.getRequestMetricCollector(),
                                            !useStrictHostNameVerification,
                                            calculateCRC32FromCompressedData());
+        //IBM unsupported
+        // this.csmConfiguration = getCsmConfiguration(clientParams.getClientSideMonitoringConfigurationProvider());
+
+        // if (isCsmEnabled()) {
+        //     agentMonitoringListener = new AgentMonitoringListener(csmConfiguration.getHost(), csmConfiguration.getPort());
+        //     monitoringListeners.add(agentMonitoringListener);
+        // }
 
         if (clientParams.getMonitoringListener() != null) {
             monitoringListeners.add(clientParams.getMonitoringListener());
         }
 
+        //IBM unsupported
+        // if (shouldGenerateClientSideMonitoringEvents()) {
+        //     requestHandler2s.add(new ClientSideMonitoringRequestHandler(getClientId(), monitoringListeners));
+        // }
     }
 
     /**
@@ -289,6 +320,8 @@ public abstract class AmazonWebServiceClient {
             this.isEndpointOverridden = true;
             this.endpoint = uri;
             this.signerProvider = createSignerProvider(signer);
+            //IBM unsupported
+            //this.signingRegion = EndpointToRegion.guessRegionNameForEndpoint(endpoint, getEndpointPrefix());
         }
     }
 
@@ -296,6 +329,65 @@ public abstract class AmazonWebServiceClient {
     private URI toURI(String endpoint) throws IllegalArgumentException {
         return RuntimeHttpUtils.toUri(endpoint, clientConfiguration);
     }
+
+    /**
+     * Allows specifying the endpoint along with signing information (service name and signing region). This method will
+     * overwrite any information set previously by any set/with/configure Region/Endpoint methods.
+     * <p>
+     * Overrides the default endpoint for this client
+     * ("http://dynamodb.us-east-1.amazonaws.com/") and explicitly provides an
+     * AWS region ID and AWS service name to use when the client calculates a
+     * signature for requests. In almost all cases, this region ID and service
+     * name are automatically determined from the endpoint, and callers should
+     * use the simpler one-argument form of setEndpoint instead of this method.
+     * <p>
+     * Callers can pass in just the endpoint (ex:
+     * "dynamodb.us-east-1.amazonaws.com/") or a full URL, including the
+     * protocol (ex: "http://dynamodb.us-east-1.amazonaws.com/"). If the
+     * protocol is not specified here, the default protocol from this client's
+     * {@link ClientConfiguration} will be used, which by default is HTTPS.
+     * <p>
+     * For more information on using AWS regions with the AWS SDK for Java, and
+     * a complete list of all available endpoints for all AWS services, see: <a
+     * href=
+     * "http://developer.amazonwebservices.com/connect/entry.jspa?externalID=3912"
+     * > http://developer.amazonwebservices.com/connect/entry.jspa?externalID=
+     * 3912</a>
+     *
+     * @param endpoint
+     *            The endpoint (ex: "dynamodb.us-east-1.amazonaws.com/") or a
+     *            full URL, including the protocol (ex:
+     *            "http://dynamodb.us-east-1.amazonaws.com/") of the region
+     *            specific AWS endpoint this client will communicate with.
+     * @param serviceName
+     *            This parameter is ignored.
+     * @param regionId
+     *            The ID of the region in which this service resides AND the
+     *            overriding region for signing purposes.
+     *
+     * @throws IllegalArgumentException
+     *             If any problems are detected with the specified endpoint.
+     * @deprecated Please use the client builders instead. The
+     * {@link AwsClientBuilder#withEndpointConfiguration(AwsClientBuilder.EndpointConfiguration)} method on the builder allows
+     * setting both endpoint and signing region. See
+     * <a href="http://docs.aws.amazon.com/sdk-for-java/v1/developer-guide/creating-clients.html">Creating Service Clients</a>
+     * for more information.
+     */
+    //IBM unsupported
+    // @Deprecated
+    // public void setEndpoint(String endpoint, String serviceName, String regionId) {
+    //     URI uri = toURI(endpoint);
+    //     Signer signer = computeSignerByServiceRegion(serviceName, regionId,
+    //                                                  regionId, true);
+    //     synchronized (this) {
+    //         setServiceNameIntern(serviceName);
+    //         this.signerProvider = createSignerProvider(signer);
+    //         this.isEndpointOverridden = true;
+    //         this.endpoint = uri;
+    //         this.signerRegionOverride = regionId;
+    //         this.signingRegion = regionId;
+    //     }
+    // }
 
     /**
      * Returns the signer based on the given URI and the current AWS client
@@ -331,6 +423,9 @@ public abstract class AmazonWebServiceClient {
         if (uri == null) {
             throw new IllegalArgumentException(
                     "Endpoint is not set. Use setEndpoint to set an endpoint before performing any request.");
+        }
+        if (uri.getHost() == null) {
+            throw new IllegalArgumentException("Endpoint does not contain a valid host name: " + uri);
         }
         String service = getServiceNameIntern();
         String region = AwsHostNameUtils.parseRegionName(uri.getHost(), service);
@@ -377,6 +472,23 @@ public abstract class AmazonWebServiceClient {
              else if (regionId != null && isRegionIdAsSignerParam)
                  regionAwareSigner.setRegionName(regionId);
          }
+
+        //IBM unsupported
+        //  if (signer instanceof EndpointPrefixAwareSigner) {
+        //      EndpointPrefixAwareSigner endpointPrefixAwareSigner = (EndpointPrefixAwareSigner) signer;
+        //      /*
+        //       * This will be used to compute the region name required for signing
+        //       * if signerRegionOverride is not provided
+        //       */
+        //      endpointPrefixAwareSigner.setEndpointPrefix(endpointPrefix);
+        //  }
+
+        //  if (signer instanceof RegionFromEndpointResolverAwareSigner) {
+        //      // Allow the signer to assess the endpoints.json file for regions
+        //      RegionFromEndpointResolverAwareSigner awareSigner = (RegionFromEndpointResolverAwareSigner) signer;
+        //      awareSigner.setRegionFromEndpointResolver(new MetadataSupportedRegionFromEndpointProvider());
+        //  }
+
          return signer;
     }
 
@@ -419,6 +531,8 @@ public abstract class AmazonWebServiceClient {
             this.isEndpointOverridden = false;
             this.endpoint = uri;
             this.signerProvider = createSignerProvider(signer);
+            //IBM unsupported
+            //this.signingRegion = EndpointToRegion.guessRegionNameForEndpoint(endpoint.toString(), getEndpointPrefix());
         }
     }
 
@@ -444,6 +558,10 @@ public abstract class AmazonWebServiceClient {
      * has been shutdown, it should not be used to make any more requests.
      */
     public void shutdown() {
+        //IBM unsupported
+        // if (agentMonitoringListener != null) {
+        //     agentMonitoringListener.shutdown();
+        // }
         client.shutdown();
     }
 
@@ -527,6 +645,8 @@ public abstract class AmazonWebServiceClient {
     protected ExecutionContext createExecutionContext(AmazonWebServiceRequest req,
                                                       SignerProvider signerProvider) {
         boolean isMetricsEnabled = isRequestMetricsEnabled(req) || isProfilingEnabled();
+         //IBM unsupported
+         //|| shouldGenerateClientSideMonitoringEvents();
         return ExecutionContext.builder()
                                .withRequestHandler2s(requestHandler2s)
                                .withUseRequestMetrics(isMetricsEnabled)
@@ -546,6 +666,17 @@ public abstract class AmazonWebServiceClient {
     protected static boolean isProfilingEnabled() {
         return System.getProperty(PROFILING_SYSTEM_PROPERTY) != null;
     }
+
+    /*
+     * Whether to generate client side monitoring events. Only generating
+     * client side monitoring events when there are monitoring listeners attached.
+     *
+     * @see ClientSideMonitoringRequestMetricCollector
+     */
+    //IBM unsupported
+    // protected boolean shouldGenerateClientSideMonitoringEvents() {
+    //     return !monitoringListeners.isEmpty();
+    // }
 
     /**
      * Returns true if request metric collection is applicable to the given
@@ -744,6 +875,15 @@ public abstract class AmazonWebServiceClient {
     }
 
     /**
+     * @return The region used to sign requests with AWS SigV4 auth.
+     */
+    //IBM unsupported
+    // @SdkProtectedApi
+    // protected String getSigningRegion() {
+    //     return this.signingRegion;
+    // }
+
+    /**
      * An internal method used to explicitly override the service name for region metadata.
      * This service name is used to compute the region endpoints.
      */
@@ -849,6 +989,8 @@ public abstract class AmazonWebServiceClient {
         synchronized(this)  {
             this.signerRegionOverride = signerRegionOverride;
             this.signerProvider = createSignerProvider(signer);
+            //IBM unsupported
+            //this.signingRegion = signerRegionOverride;
         }
     }
 
@@ -952,4 +1094,35 @@ public abstract class AmazonWebServiceClient {
     public ClientConfiguration getClientConfiguration() {
         return new ClientConfiguration(clientConfiguration);
     }
+
+    /**
+     * @return {@code true} if Client Side Monitoring is enabled, {@code false}
+     * otherwise.
+     */
+    //IBM unsupported
+    // protected final boolean isCsmEnabled() {
+    //     return csmConfiguration != null && csmConfiguration.isEnabled();
+    // }
+
+    // protected String getClientId() {
+    //     if (csmConfiguration == null) {
+    //         return DEFAULT_CLIENT_ID;
+    //     }
+    //     return csmConfiguration.getClientId();
+    // }
+
+
+    /**
+     * Convenience method to return {@code null} if the provider throws {@code
+     * SdkClientException}.
+     */
+    //IBM unsupported
+    // private CsmConfiguration getCsmConfiguration(
+    //         CsmConfigurationProvider csmConfigurationProvider) {
+    //     try {
+    //         return csmConfigurationProvider.getConfiguration();
+    //     } catch (SdkClientException e) {
+    //         return null;
+    //     }
+    // }
 }

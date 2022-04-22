@@ -43,59 +43,52 @@ import org.apache.http.client.methods.HttpPatch;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpPut;
 import org.apache.http.client.methods.HttpRequestBase;
-import org.apache.http.entity.BufferedHttpEntity;
 
 /**
  * Responsible for creating Apache HttpClient 4 request objects.
  */
-public class ApacheHttpRequestFactory implements
-        HttpRequestFactory<HttpRequestBase> {
+public class ApacheHttpRequestFactory implements HttpRequestFactory<HttpRequestBase> {
 
     private static final String DEFAULT_ENCODING = "UTF-8";
-
-    private static final List<String> ignoreHeaders = Arrays.asList
-            (HttpHeaders.CONTENT_LENGTH, HttpHeaders.HOST);
+    private static final String QUERY_PARAM_CONTENT_TYPE = "application/x-www-form-urlencoded; charset=" +
+                                                           DEFAULT_ENCODING.toLowerCase();
+    private static final List<String> ignoreHeaders = Arrays.asList(HttpHeaders.CONTENT_LENGTH, HttpHeaders.HOST);
 
     @Override
     public HttpRequestBase create(final Request<?> request,
-                                  final HttpClientSettings settings)
-            throws
-            FakeIOException {
+                                  final HttpClientSettings settings) throws FakeIOException {
+
+        String endpointUri = getUriEndpoint(request);
+        String encodedParams = SdkHttpUtils.encodeParameters(request);
+        final HttpRequestBase base;
+
+        if (shouldMoveQueryParametersToBody(request, encodedParams)) {
+            base = createPostParamsInBodyRequest(endpointUri, encodedParams);
+            addHeadersToRequest(base, request);
+            addContentTypeHeaderIfNeeded(base);
+        } else {
+            if (encodedParams != null) {
+                endpointUri += "?" + encodedParams;
+            }
+            base = createStandardRequest(request, endpointUri);
+            addHeadersToRequest(base, request);
+        }
+
+        addRequestConfig(base, request, settings);
+        return base;
+    }
+
+    private String getUriEndpoint(Request<?> request) {
         URI endpoint = request.getEndpoint();
 
-        String uri;
-        // skipAppendUriPath is set for APIs making requests with presigned urls. Otherwise
-        // a slash will be appended at the end and the request will fail
+        // skipAppendUriPath is set for APIs making requests with presigned urls.
+        // Otherwise a slash will be appended at the end and the request will fail
         if (request.getOriginalRequest().getRequestClientOptions().isSkipAppendUriPath()) {
-            uri = endpoint.toString();
-        } else {
-            /*
-             * HttpClient cannot handle url in pattern of "http://host//path", so we
-             * have to escape the double-slash between endpoint and resource-path
-             * into "/%2F"
-             */
-            uri = SdkHttpUtils.appendUri(endpoint.toString(), request.getResourcePath(), true);
+            return endpoint.toString();
         }
-
-        String encodedParams = SdkHttpUtils.encodeParameters(request);
-
-        /*
-         * For all non-POST requests, and any POST requests that already have a
-         * payload, we put the encoded params directly in the URI, otherwise,
-         * we'll put them in the POST request's payload.
-         */
-        boolean requestHasNoPayload = request.getContent() != null;
-        boolean requestIsPost = request.getHttpMethod() == HttpMethodName.POST;
-        boolean putParamsInUri = !requestIsPost || requestHasNoPayload;
-        if (encodedParams != null && putParamsInUri) {
-            uri += "?" + encodedParams;
-        }
-
-        final HttpRequestBase base = createApacheRequest(request, uri, encodedParams);
-        addHeadersToRequest(base, request);
-        addRequestConfig(base, request, settings);
-
-        return base;
+        // HttpClient cannot handle url in pattern of "http://host//path", so we have to escape the double-slash
+        // between endpoint and resource-path into "/%2F"
+        return SdkHttpUtils.appendUri(endpoint.toString(), request.getResourcePath(), true);
     }
 
     private void addRequestConfig(final HttpRequestBase base,
@@ -111,77 +104,54 @@ public class ApacheHttpRequestFactory implements
         ApacheUtils.disableNormalizeUri(requestConfigBuilder);
 
         /*
-         * Enable 100-continue support for PUT operations, since this is
-         * where we're potentially uploading large amounts of data and want
-         * to find out as early as possible if an operation will fail. We
-         * don't want to do this for all operations since it will cause
-         * extra latency in the network interaction.
+         * Enable 100-continue support for PUT operations, since this is where we're potentially uploading large amounts of
+         * data and want to find out as early as possible if an operation will fail. We don't want to do this for all
+         * operations since it will cause extra latency in the network interaction.
          */
         if (HttpMethodName.PUT == request.getHttpMethod() && settings.isUseExpectContinue()) {
             requestConfigBuilder.setExpectContinueEnabled(true);
         }
-
         addProxyConfig(requestConfigBuilder, settings);
-
         base.setConfig(requestConfigBuilder.build());
     }
 
-    private HttpRequestBase createApacheRequest(Request<?> request, String uri, String encodedParams) throws FakeIOException {
+    private HttpRequestBase createStandardRequest(Request<?> request, String uri) throws FakeIOException {
         switch (request.getHttpMethod()) {
             case HEAD:
                 return new HttpHead(uri);
             case GET:
-                return wrapEntity(request, new HttpGetWithBody(uri), encodedParams);
+                return wrapEntity(request, new HttpGetWithBody(uri));
             case DELETE:
                 return new HttpDelete(uri);
             case OPTIONS:
                 return new HttpOptions(uri);
             case PATCH:
-                return wrapEntity(request, new HttpPatch(uri), encodedParams);
+                return wrapEntity(request, new HttpPatch(uri));
             case POST:
-                return wrapEntity(request, new HttpPost(uri), encodedParams);
+                return wrapEntity(request, new HttpPost(uri));
             case PUT:
-                return wrapEntity(request, new HttpPut(uri), encodedParams);
+                return wrapEntity(request, new HttpPut(uri));
             default:
                 throw new SdkClientException("Unknown HTTP method name: " + request.getHttpMethod());
         }
     }
 
-
     /**
-     * If SDK want to set Content-Length header if it missing on the request, wrap the http entity with
-     * {@link BufferedHttpEntity} as this will buffer the data and set the Content-Length header.
-     *
      * Otherwise use the {@link RepeatableInputStreamRequestEntity} and Apache http client will
      * set the proper header (Content-Length or Transfer-Encoding) based on whether it can find content length
      * from the input stream. This is fine as services accept both headers.
      */
     private HttpRequestBase wrapEntity(Request<?> request,
-                                       HttpEntityEnclosingRequestBase entityEnclosingRequest,
-                                       String encodedParams) throws FakeIOException {
+                                       HttpEntityEnclosingRequestBase entityEnclosingRequest) throws FakeIOException {
 
         if (HttpMethodName.POST == request.getHttpMethod()) {
-            /*
-             * If there isn't any payload content to include in this request,
-             * then try to include the POST parameters in the query body,
-             * otherwise, just use the query string. For all AWS Query services,
-             * the best behavior is putting the params in the request body for
-             * POST requests, but we can't do that for S3.
-             */
-            if (request.getContent() == null && encodedParams != null) {
-                entityEnclosingRequest.setEntity(ApacheUtils.newStringEntity(encodedParams));
-            } else {
-                createHttpEntityForPostVerb(request, entityEnclosingRequest);
-            }
+            createHttpEntityForPostVerb(request, entityEnclosingRequest);
         } else {
             /*
-             * We should never reuse the entity of the previous request, since
-             * reading from the buffered entity will bypass reading from the
-             * original request content. And if the content contains InputStream
-             * wrappers that were added for validation-purpose (e.g.
-             * Md5DigestCalculationInputStream), these wrappers would never be
-             * read and updated again after AmazonHttpClient resets it in
-             * preparation for the retry. Eventually, these wrappers would
+             * We should never reuse the entity of the previous request, since reading from the buffered entity will bypass
+             * reading from the original request content. And if the content contains InputStream wrappers that were added for
+             * validation-purpose (e.g. Md5DigestCalculationInputStream), these wrappers would never be read and updated again
+             * after AmazonHttpClient resets it in preparation for the retry. Eventually, these wrappers would
              * return incorrect validation result.
              */
             if (request.getContent() != null) {
@@ -208,7 +178,6 @@ public class ApacheHttpRequestFactory implements
         entityEnclosingRequest.setEntity(entity);
     }
 
-
     /**
      * For non-POST APIs, use buffered entity if op is either
      * (a) No Streaming Input or
@@ -219,7 +188,6 @@ public class ApacheHttpRequestFactory implements
      */
     private void createHttpEntityForNonPostVerbs(Request<?> request,
                                                  HttpEntityEnclosingRequestBase entityEnclosingRequest) throws FakeIOException {
-
         HttpEntity entity = new RepeatableInputStreamRequestEntity(request);
 
         if (request.getHeaders().get(HttpHeaders.CONTENT_LENGTH) == null) {
@@ -227,7 +195,6 @@ public class ApacheHttpRequestFactory implements
                 entity = ApacheUtils.newBufferedHttpEntity(entity);
             }
         }
-
         entityEnclosingRequest.setEntity(entity);
     }
 
@@ -239,34 +206,44 @@ public class ApacheHttpRequestFactory implements
         return Boolean.TRUE.equals(request.getHandlerContext(HandlerContextKey.HAS_STREAMING_INPUT));
     }
 
-
     /**
      * Configures the headers in the specified Apache HTTP request.
      */
     private void addHeadersToRequest(HttpRequestBase httpRequest, Request<?> request) {
-
         httpRequest.addHeader(HttpHeaders.HOST, getHostHeaderValue(request.getEndpoint()));
-
-        // Copy over any other headers already in our request
         for (Entry<String, String> entry : request.getHeaders().entrySet()) {
-            /*
-             * HttpClient4 fills in the Content-Length header and complains if
-             * it's already present, so we skip it here. We also skip the Host
-             * header to avoid sending it twice, which will interfere with some
-             * signing schemes.
-             */
+            // HttpClient4 fills in the Content-Length header and complains if it's already present, so we skip it here.
+            // We also skip the Host header to avoid sending it twice, which will interfere with some signing schemes.
             if (!(ignoreHeaders.contains(entry.getKey()))) {
                 httpRequest.addHeader(entry.getKey(), entry.getValue());
             }
         }
+    }
 
-        /* Set content type and encoding */
-        if (httpRequest.getHeaders(HttpHeaders.CONTENT_TYPE) == null || httpRequest
-                .getHeaders
-                        (HttpHeaders.CONTENT_TYPE).length == 0) {
-            httpRequest.addHeader(HttpHeaders.CONTENT_TYPE,
-                    "application/x-www-form-urlencoded; " +
-                            "charset=" + DEFAULT_ENCODING.toLowerCase());
+    /**
+     * For all non-POST requests, and any POST requests that already have a payload,
+     * we put the encoded params directly in the URI, otherwise, we'll put them in the POST request's payload.
+     */
+    private boolean shouldMoveQueryParametersToBody(Request<?> request, String encodedParams) {
+        boolean requestIsPost = request.getHttpMethod() == HttpMethodName.POST;
+        return requestIsPost && request.getContent() == null && encodedParams != null;
+    }
+
+    /**
+     * When query parameters are sent in a POST body, use a StringEntity.
+     */
+    private HttpRequestBase createPostParamsInBodyRequest(String endpointUri, String encodedParams) {
+        HttpEntityEnclosingRequestBase requestBase = new HttpPost(endpointUri);
+        requestBase.setEntity(ApacheUtils.newStringEntity(encodedParams));
+        return requestBase;
+    }
+
+    /**
+     * When query parameters are sent in a POST body, there should be a content type.
+     */
+    private void addContentTypeHeaderIfNeeded(HttpRequestBase base) {
+        if (base.getHeaders(HttpHeaders.CONTENT_TYPE) == null || base.getHeaders(HttpHeaders.CONTENT_TYPE).length == 0) {
+            base.addHeader(HttpHeaders.CONTENT_TYPE, QUERY_PARAM_CONTENT_TYPE);
         }
     }
 
@@ -297,7 +274,6 @@ public class ApacheHttpRequestFactory implements
             for (ProxyAuthenticationMethod authenticationMethod : settings.getProxyAuthenticationMethods()) {
                 apacheAuthenticationSchemes.add(toApacheAuthenticationScheme(authenticationMethod));
             }
-
             requestConfigBuilder.setProxyPreferredAuthSchemes(apacheAuthenticationSchemes);
         }
     }

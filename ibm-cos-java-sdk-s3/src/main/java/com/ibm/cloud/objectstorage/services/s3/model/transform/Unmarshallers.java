@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2010-2022 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -420,6 +420,49 @@ public class Unmarshallers {
             return new SetBucketAnalyticsConfigurationResult();
         }
     }
+    
+//IBM unsupported 
+//
+//    /**
+//     * Unmarshaller for the GetBucketIntelligenTieringConfiguration XML response.
+//     */
+//    public static final class GetBucketIntelligenTieringConfigurationUnmarshaller implements
+//            Unmarshaller<GetBucketIntelligentTieringConfigurationResult, InputStream> {
+//        public GetBucketIntelligentTieringConfigurationResult unmarshall(InputStream in) throws Exception {
+//            return new XmlResponsesSaxParser().parseGetBucketIntelligentTieringConfigurationResponse(in).getResult();
+//        }
+//    }
+//
+//    /**
+//     * Unmarshaller for the ListBucketIntelligenTieringConfigurations XML response.
+//     */
+//    public static final class ListBucketIntelligenTieringConfigurationUnmarshaller implements
+//            Unmarshaller<ListBucketIntelligentTieringConfigurationsResult, InputStream> {
+//        public ListBucketIntelligentTieringConfigurationsResult unmarshall(InputStream in) throws Exception {
+//            return new XmlResponsesSaxParser().parseListBucketIntelligentTieringConfigurationResponse(in).getResult();
+//        }
+//    }
+//
+//    /**
+//     * Unmarshaller for the DeleteBucketIntelligenTieringConfiguration XML response.
+//     */
+//    public static final class DeleteBucketIntelligenTieringConfigurationUnmarshaller implements
+//            Unmarshaller<DeleteBucketIntelligentTieringConfigurationResult, InputStream> {
+//        public DeleteBucketIntelligentTieringConfigurationResult unmarshall(InputStream in) throws Exception {
+//            return new DeleteBucketIntelligentTieringConfigurationResult();
+//        }
+//    }
+//
+//    /**
+//     * Unmarshaller for the SetBucketIntelligenTieringConfiguration XML response.
+//     */
+//    public static final class SetBucketIntelligentTieringConfigurationUnmarshaller implements
+//            Unmarshaller<SetBucketIntelligentTieringConfigurationResult, InputStream> {
+//        public SetBucketIntelligentTieringConfigurationResult unmarshall(InputStream in) throws Exception {
+//            return new SetBucketIntelligentTieringConfigurationResult();
+//        }
+//    }
+//
 
     /**
      * Unmarshaller for the GetBucketMetricsConfiguration XML response.
@@ -460,6 +503,37 @@ public class Unmarshallers {
             return new SetBucketMetricsConfigurationResult();
         }
     }
+
+//IBM unsupported    
+//    /**
+//     * Unmarshaller for the DeleteBucketOwnershipControls XML response.
+//     */
+//    public static final class DeleteBucketOwnershipControlsUnmarshaller implements
+//            Unmarshaller<DeleteBucketOwnershipControlsResult, InputStream> {
+//        public DeleteBucketOwnershipControlsResult unmarshall(InputStream in) throws Exception {
+//            return new DeleteBucketOwnershipControlsResult();
+//        }
+//    }
+//
+//    /**
+//     * Unmarshaller for the GetBucketOwnershipControls XML response.
+//     */
+//    public static final class GetBucketOwnershipControlsUnmarshaller implements
+//            Unmarshaller<GetBucketOwnershipControlsResult, InputStream> {
+//        public GetBucketOwnershipControlsResult unmarshall(InputStream in) throws Exception {
+//            return new XmlResponsesSaxParser().parseGetBucketOwnershipControlsResponse(in).getResult();
+//        }
+//    }
+//
+//    /**
+//     * Unmarshaller for the SetBucketOwnershipControls XML response.
+//     */
+//    public static final class SetBucketOwnershipControlsUnmarshaller implements
+//            Unmarshaller<SetBucketOwnershipControlsResult, InputStream> {
+//        public SetBucketOwnershipControlsResult unmarshall(InputStream in) throws Exception {
+//            return new SetBucketOwnershipControlsResult();
+//        }
+//    }
 
     /**
      * Unmarshaller for the GetBucketInventoryConfiguration XML response.
@@ -504,4 +578,72 @@ public class Unmarshallers {
             return new SetBucketInventoryConfigurationResult();
         }
     }
+
+//IBM unsupported
+//    /**
+//     * Unmarshaller for the RestoreObjectResult XML response.
+//     */
+//    public static final class RestoreObjectResultUnmarshaller
+//        implements Unmarshaller<RestoreObjectResult, InputStream> {
+//
+//        public RestoreObjectResult unmarshall(InputStream in) {
+//            return new RestoreObjectResult();
+//        }
+//    }
+//
+//    public static final class GetObjectLegalHoldResultUnmarshaller implements Unmarshaller<GetObjectLegalHoldResult, InputStream> {
+//
+//        @Override
+//        public GetObjectLegalHoldResult unmarshall(InputStream in) throws Exception {
+//            return new XmlResponsesSaxParser().parseGetObjectLegalHoldResponse(in).getResult();
+//        }
+//    }
+//
+//    public static final class SetObjectLockConfigurationResultUnmarshaller implements Unmarshaller<SetObjectLockConfigurationResult, InputStream> {
+//
+//        @Override
+//        public SetObjectLockConfigurationResult unmarshall(InputStream in) throws Exception {
+//            return new SetObjectLockConfigurationResult();
+//        }
+//    }
+//
+//    public static final class SetObjectLegalHoldResultUnmarshaller implements Unmarshaller<SetObjectLegalHoldResult, InputStream> {
+//
+//        @Override
+//        public SetObjectLegalHoldResult unmarshall(InputStream in) throws Exception {
+//            return new SetObjectLegalHoldResult();
+//        }
+//    }
+//
+//    public static final class GetObjectLockConfigurationResultUnmarshaller implements Unmarshaller<GetObjectLockConfigurationResult, InputStream> {
+//
+//        @Override
+//        public GetObjectLockConfigurationResult unmarshall(InputStream in) throws Exception {
+//            return new XmlResponsesSaxParser().parseGetObjectLockConfigurationResponse(in).getResult();
+//        }
+//    }
+//
+//    public static final class SetObjectRetentionResultUnmarshaller implements Unmarshaller<SetObjectRetentionResult, InputStream> {
+//
+//        @Override
+//        public SetObjectRetentionResult unmarshall(InputStream in) throws Exception {
+//            return new SetObjectRetentionResult();
+//        }
+//    }
+//
+//    public static final class GetObjectRetentionResultUnmarshaller implements Unmarshaller<GetObjectRetentionResult, InputStream> {
+//
+//        @Override
+//        public GetObjectRetentionResult unmarshall(InputStream in) throws Exception {
+//            return new XmlResponsesSaxParser().parseGetObjectRetentionResponse(in).getResult();
+//        }
+//    }
+//
+//    public static final class WriteGetObjectResponseResultUnmarshaller implements Unmarshaller<WriteGetObjectResponseResult, InputStream> {
+//
+//        @Override
+//        public WriteGetObjectResponseResult unmarshall(InputStream inputStream) throws Exception {
+//            return new WriteGetObjectResponseResult();
+//        }
+//    }
 }

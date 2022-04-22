@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2010-2022 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -88,7 +88,7 @@ public class S3Signer extends AbstractAWSSigner {
     }
 
     /**
-     * Constructs a new S3Signer to sign requests based on the AWS credentials,
+     * Constructs a new S3Signer to sign requests based on the Amazon Web Services credentials,
      * HTTP method and canonical S3 resource path.
      *
      * @param httpVerb
@@ -103,7 +103,7 @@ public class S3Signer extends AbstractAWSSigner {
     }
 
     /**
-     * Constructs a new S3Signer to sign requests based on the AWS credentials,
+     * Constructs a new S3Signer to sign requests based on the Amazon Web Services credentials,
      * HTTP method and canonical S3 resource path.
      *
      * @param httpVerb

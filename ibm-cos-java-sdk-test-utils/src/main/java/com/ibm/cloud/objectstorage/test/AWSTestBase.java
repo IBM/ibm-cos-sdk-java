@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2010-2022 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -29,6 +29,7 @@ import com.ibm.cloud.objectstorage.auth.profile.ProfileCredentialsProvider;
 import com.ibm.cloud.objectstorage.test.util.InputStreamUtils;
 import com.ibm.cloud.objectstorage.test.util.SdkAsserts;
 import com.ibm.cloud.objectstorage.util.IOUtils;
+import java.util.concurrent.TimeUnit;
 import org.junit.Rule;
 
 public abstract class AWSTestBase {
@@ -54,7 +55,7 @@ public abstract class AWSTestBase {
             new SystemPropertiesCredentialsProvider());
 
     @Rule
-    public RetryRule retry = new RetryRule(3);
+    public RetryRule retry = new RetryRule(3, 2, TimeUnit.SECONDS);
 
     /**
      * @deprecated Extend from {@link AWSIntegrationTestBase} to access credentials

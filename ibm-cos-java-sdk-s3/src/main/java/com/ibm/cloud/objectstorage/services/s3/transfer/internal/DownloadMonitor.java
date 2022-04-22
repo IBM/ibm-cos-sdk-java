@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2019 Amazon Technologies, Inc.
+ * Copyright 2012-2022 Amazon Technologies, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,28 +14,24 @@
  */
 package com.ibm.cloud.objectstorage.services.s3.transfer.internal;
 
+import java.io.File;
 import java.util.concurrent.Future;
 
 public class DownloadMonitor implements TransferMonitor {
-
-    private Future<?> future;
+    private Future<File> future;
     private final AbstractTransfer download;
 
-    public DownloadMonitor(DownloadImpl download, Future<?> future) {
-        this((AbstractTransfer) download, future);
-    }
-
-    public DownloadMonitor(AbstractTransfer download, Future<?> future) {
+    public DownloadMonitor(AbstractTransfer download, Future<File> future) {
         this.download = download;
         this.future = future;
     }
 
     @Override
-    public synchronized Future<?> getFuture() {
+    public synchronized Future<File> getFuture() {
         return future;
     }
 
-    public synchronized void setFuture(Future<?> future) {
+    public synchronized void setFuture(Future<File> future) {
         this.future = future;
     }
 

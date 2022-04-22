@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2010-2022 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -25,6 +25,7 @@ import com.ibm.cloud.objectstorage.auth.ServiceAwareSigner;
 import com.ibm.cloud.objectstorage.auth.Signer;
 import com.ibm.cloud.objectstorage.auth.SignerFactory;
 import com.ibm.cloud.objectstorage.auth.SignerTypeAware;
+import com.ibm.cloud.objectstorage.handlers.HandlerContextKey;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
@@ -39,6 +40,7 @@ import java.net.URISyntaxException;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.not;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -139,6 +141,15 @@ public class DefaultSignerProviderTest {
         assertThat(defaultSignerProvider.getSigner(ctx) == DEFAULT_SIGNER, is(true));
     }
 
+    @Test
+    public void signingNameOverridden_shouldCreateNewSigner() {
+        DefaultRequest<FooSignedRequest> request = new DefaultRequest<FooSignedRequest>(new FooSignedRequest(), "MockService");
+        request.addHandlerContext(HandlerContextKey.SIGNING_NAME, "newservicename");
+        request.setEndpoint(URI.create(ENDPOINT));
+        SignerProviderContext ctx = SignerProviderContext.builder().withRequest(request).build();
+
+        assertThat(defaultSignerProvider.getSigner(ctx), not(equalTo(DEFAULT_SIGNER)));
+    }
 
     public static class FooSigner implements Signer, RegionAwareSigner, ServiceAwareSigner {
         private String regionName;

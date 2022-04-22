@@ -77,7 +77,7 @@ public class AbortedExceptionClientExecutionTimerIntegrationTest extends
         doThrow(new AbortedException()).when(rawHttpClient).execute(any
                 (HttpRequestBase.class), any(HttpContext.class));
 
-        httpClient = new AmazonHttpClient(config, rawHttpClient, null);
+        httpClient = new AmazonHttpClient(config, rawHttpClient, null, null);
 
         execute(httpClient, createMockGetRequest());
     }
@@ -92,7 +92,7 @@ public class AbortedExceptionClientExecutionTimerIntegrationTest extends
         ConnectionManagerAwareHttpClient rawHttpClient =
                 createRawHttpClientSpy(config);
 
-        httpClient = new AmazonHttpClient(config, rawHttpClient, null);
+        httpClient = new AmazonHttpClient(config, rawHttpClient, null, null);
 
         execute(httpClient, new EmptyHttpRequest(server.getEndpoint(),
                 HttpMethodName.PUT, new SdkBufferedInputStream(new InputStream() {

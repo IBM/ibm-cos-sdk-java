@@ -1,5 +1,5 @@
 /*
- * Copyright 2011-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2011-2022 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,6 +14,7 @@
  */
 package com.ibm.cloud.objectstorage.services.s3.transfer.internal;
 
+import com.ibm.cloud.objectstorage.SdkClientException;
 import com.ibm.cloud.objectstorage.annotation.SdkInternalApi;
 import com.ibm.cloud.objectstorage.services.s3.internal.FileLocks;
 import com.ibm.cloud.objectstorage.services.s3.transfer.Transfer;
@@ -48,10 +49,20 @@ public class CompleteMultipartDownload implements Callable<File> {
             }
 
             download.setState(Transfer.TransferState.Completed);
+        } catch (Exception exception) {
+            cleanUpAfterException();
+            throw new SdkClientException("Unable to complete multipart download. Individual part download failed.", exception);
         } finally {
             FileLocks.unlock(destinationFile);
         }
 
         return destinationFile;
+    }
+
+    private void cleanUpAfterException()  {
+        for (Future<Long> file : partFiles) {
+            file.cancel(false);
+        }
+        download.setState(Transfer.TransferState.Failed);
     }
 }

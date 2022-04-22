@@ -1,5 +1,5 @@
 /*
- * Copyright 2011-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2011-2022 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -32,15 +32,26 @@ import java.util.Map;
 @SdkInternalApi
 public class SimpleTypeJsonMarshallers {
 
+    /**
+     * If the marshallingInfo is null, we are in a container (not a top level member) and should preserve
+     * JSON null.
+     *
+     * Otherwise, we're at the top level and if it's an explicit payload member (which also means that
+     * marshallLocationName is null) the member should be rendered using the empty body marshaller.
+     *
+     * In other cases, do nothing.
+     */
     public static final JsonMarshaller<Void> NULL = new JsonMarshaller<Void>() {
         @Override
         public void marshall(Void val, JsonMarshallerContext context, MarshallingInfo<Void> marshallingInfo) {
-            // If paramName is non null then we are emitting a field of an object, in that
-            // we just don't write the field. If param name is null then we are either in a container
-            // or the thing being marshalled is the payload itself in which case we want to preserve
-            // the JSON null.
-            if (marshallingInfo == null || marshallingInfo.marshallLocationName() == null) {
+            if (marshallingInfo == null) {
                 context.jsonGenerator().writeNull();
+            }
+            else if (marshallingInfo.isExplicitPayloadMember()) {
+                if (marshallingInfo.marshallLocationName() != null) {
+                    throw new IllegalStateException("Expected marshalling location name to be null if explicit member is null");
+                }
+                context.emptyBodyJsonMarshaller().marshall(context.jsonGenerator());
             }
         }
     };

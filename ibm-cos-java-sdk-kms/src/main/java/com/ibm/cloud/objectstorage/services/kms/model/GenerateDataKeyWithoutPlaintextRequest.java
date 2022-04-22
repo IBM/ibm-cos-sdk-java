@@ -1,11 +1,11 @@
 /*
- * Copyright 2014-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
- * 
+ * Copyright 2017-2022 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"). You may not use this file except in compliance with
  * the License. A copy of the License is located at
- * 
+ *
  * http://aws.amazon.com/apache2.0
- * 
+ *
  * or in the "license" file accompanying this file. This file is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
  * CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions
  * and limitations under the License.
@@ -18,7 +18,7 @@ import javax.annotation.Generated;
 import com.ibm.cloud.objectstorage.AmazonWebServiceRequest;
 
 /**
- * 
+ *
  * @see <a href="http://docs.aws.amazon.com/goto/WebAPI/kms-2014-11-01/GenerateDataKeyWithoutPlaintext"
  *      target="_top">AWS API Documentation</a>
  */
@@ -27,21 +27,25 @@ public class GenerateDataKeyWithoutPlaintextRequest extends com.ibm.cloud.object
 
     /**
      * <p>
-     * The identifier of the CMK under which to generate and encrypt the data encryption key.
+     * The identifier of the symmetric KMS key that encrypts the data key.
      * </p>
      * <p>
-     * A valid identifier is the unique key ID or the Amazon Resource Name (ARN) of the CMK, or the alias name or ARN of
-     * an alias that refers to the CMK. Examples:
+     * To specify a KMS key, use its key ID, key ARN, alias name, or alias ARN. When using an alias name, prefix it with
+     * <code>"alias/"</code>. To specify a KMS key in a different Amazon Web Services account, you must use the key ARN
+     * or alias ARN.
+     * </p>
+     * <p>
+     * For example:
      * </p>
      * <ul>
      * <li>
      * <p>
-     * Unique key ID: <code>1234abcd-12ab-34cd-56ef-1234567890ab</code>
+     * Key ID: <code>1234abcd-12ab-34cd-56ef-1234567890ab</code>
      * </p>
      * </li>
      * <li>
      * <p>
-     * CMK ARN: <code>arn:aws:kms:us-east-2:111122223333:key/1234abcd-12ab-34cd-56ef-1234567890ab</code>
+     * Key ARN: <code>arn:aws:kms:us-east-2:111122223333:key/1234abcd-12ab-34cd-56ef-1234567890ab</code>
      * </p>
      * </li>
      * <li>
@@ -55,30 +59,40 @@ public class GenerateDataKeyWithoutPlaintextRequest extends com.ibm.cloud.object
      * </p>
      * </li>
      * </ul>
+     * <p>
+     * To get the key ID and key ARN for a KMS key, use <a>ListKeys</a> or <a>DescribeKey</a>. To get the alias name and
+     * alias ARN, use <a>ListAliases</a>.
+     * </p>
      */
     private String keyId;
     /**
      * <p>
-     * A set of key-value pairs that represents additional authenticated data.
+     * Specifies the encryption context that will be used when encrypting the data key.
+     * </p>
+     * <p>
+     * An <i>encryption context</i> is a collection of non-secret key-value pairs that represents additional
+     * authenticated data. When you use an encryption context to encrypt data, you must specify the same (an exact
+     * case-sensitive match) encryption context to decrypt the data. An encryption context is optional when encrypting
+     * with a symmetric KMS key, but it is highly recommended.
      * </p>
      * <p>
      * For more information, see <a
-     * href="http://docs.aws.amazon.com/kms/latest/developerguide/encryption-context.html">Encryption Context</a> in the
-     * <i>AWS Key Management Service Developer Guide</i>.
+     * href="https://docs.aws.amazon.com/kms/latest/developerguide/concepts.html#encrypt_context">Encryption Context</a>
+     * in the <i>Key Management Service Developer Guide</i>.
      * </p>
      */
     private com.ibm.cloud.objectstorage.internal.SdkInternalMap<String, String> encryptionContext;
     /**
      * <p>
-     * The length of the data encryption key. Use <code>AES_128</code> to generate a 128-bit symmetric key, or
-     * <code>AES_256</code> to generate a 256-bit symmetric key.
+     * The length of the data key. Use <code>AES_128</code> to generate a 128-bit symmetric key, or <code>AES_256</code>
+     * to generate a 256-bit symmetric key.
      * </p>
      */
     private String keySpec;
     /**
      * <p>
-     * The length of the data encryption key in bytes. For example, use the value 64 to generate a 512-bit data key (64
-     * bytes is 512 bits). For common key lengths (128-bit and 256-bit symmetric keys), we recommend that you use the
+     * The length of the data key in bytes. For example, use the value 64 to generate a 512-bit data key (64 bytes is
+     * 512 bits). For common key lengths (128-bit and 256-bit symmetric keys), we recommend that you use the
      * <code>KeySpec</code> field instead of this one.
      * </p>
      */
@@ -88,30 +102,36 @@ public class GenerateDataKeyWithoutPlaintextRequest extends com.ibm.cloud.object
      * A list of grant tokens.
      * </p>
      * <p>
-     * For more information, see <a
-     * href="http://docs.aws.amazon.com/kms/latest/developerguide/concepts.html#grant_token">Grant Tokens</a> in the
-     * <i>AWS Key Management Service Developer Guide</i>.
+     * Use a grant token when your permission to call this operation comes from a new grant that has not yet achieved
+     * <i>eventual consistency</i>. For more information, see <a
+     * href="https://docs.aws.amazon.com/kms/latest/developerguide/grants.html#grant_token">Grant token</a> and <a
+     * href="https://docs.aws.amazon.com/kms/latest/developerguide/grant-manage.html#using-grant-token">Using a grant
+     * token</a> in the <i>Key Management Service Developer Guide</i>.
      * </p>
      */
     private com.ibm.cloud.objectstorage.internal.SdkInternalList<String> grantTokens;
 
     /**
      * <p>
-     * The identifier of the CMK under which to generate and encrypt the data encryption key.
+     * The identifier of the symmetric KMS key that encrypts the data key.
      * </p>
      * <p>
-     * A valid identifier is the unique key ID or the Amazon Resource Name (ARN) of the CMK, or the alias name or ARN of
-     * an alias that refers to the CMK. Examples:
+     * To specify a KMS key, use its key ID, key ARN, alias name, or alias ARN. When using an alias name, prefix it with
+     * <code>"alias/"</code>. To specify a KMS key in a different Amazon Web Services account, you must use the key ARN
+     * or alias ARN.
+     * </p>
+     * <p>
+     * For example:
      * </p>
      * <ul>
      * <li>
      * <p>
-     * Unique key ID: <code>1234abcd-12ab-34cd-56ef-1234567890ab</code>
+     * Key ID: <code>1234abcd-12ab-34cd-56ef-1234567890ab</code>
      * </p>
      * </li>
      * <li>
      * <p>
-     * CMK ARN: <code>arn:aws:kms:us-east-2:111122223333:key/1234abcd-12ab-34cd-56ef-1234567890ab</code>
+     * Key ARN: <code>arn:aws:kms:us-east-2:111122223333:key/1234abcd-12ab-34cd-56ef-1234567890ab</code>
      * </p>
      * </li>
      * <li>
@@ -125,22 +145,30 @@ public class GenerateDataKeyWithoutPlaintextRequest extends com.ibm.cloud.object
      * </p>
      * </li>
      * </ul>
-     * 
+     * <p>
+     * To get the key ID and key ARN for a KMS key, use <a>ListKeys</a> or <a>DescribeKey</a>. To get the alias name and
+     * alias ARN, use <a>ListAliases</a>.
+     * </p>
+     *
      * @param keyId
-     *        The identifier of the CMK under which to generate and encrypt the data encryption key.</p>
+     *        The identifier of the symmetric KMS key that encrypts the data key.</p>
      *        <p>
-     *        A valid identifier is the unique key ID or the Amazon Resource Name (ARN) of the CMK, or the alias name or
-     *        ARN of an alias that refers to the CMK. Examples:
+     *        To specify a KMS key, use its key ID, key ARN, alias name, or alias ARN. When using an alias name, prefix
+     *        it with <code>"alias/"</code>. To specify a KMS key in a different Amazon Web Services account, you must
+     *        use the key ARN or alias ARN.
+     *        </p>
+     *        <p>
+     *        For example:
      *        </p>
      *        <ul>
      *        <li>
      *        <p>
-     *        Unique key ID: <code>1234abcd-12ab-34cd-56ef-1234567890ab</code>
+     *        Key ID: <code>1234abcd-12ab-34cd-56ef-1234567890ab</code>
      *        </p>
      *        </li>
      *        <li>
      *        <p>
-     *        CMK ARN: <code>arn:aws:kms:us-east-2:111122223333:key/1234abcd-12ab-34cd-56ef-1234567890ab</code>
+     *        Key ARN: <code>arn:aws:kms:us-east-2:111122223333:key/1234abcd-12ab-34cd-56ef-1234567890ab</code>
      *        </p>
      *        </li>
      *        <li>
@@ -153,6 +181,10 @@ public class GenerateDataKeyWithoutPlaintextRequest extends com.ibm.cloud.object
      *        Alias ARN: <code>arn:aws:kms:us-east-2:111122223333:alias/ExampleAlias</code>
      *        </p>
      *        </li>
+     *        </ul>
+     *        <p>
+     *        To get the key ID and key ARN for a KMS key, use <a>ListKeys</a> or <a>DescribeKey</a>. To get the alias
+     *        name and alias ARN, use <a>ListAliases</a>.
      */
 
     public void setKeyId(String keyId) {
@@ -161,21 +193,25 @@ public class GenerateDataKeyWithoutPlaintextRequest extends com.ibm.cloud.object
 
     /**
      * <p>
-     * The identifier of the CMK under which to generate and encrypt the data encryption key.
+     * The identifier of the symmetric KMS key that encrypts the data key.
      * </p>
      * <p>
-     * A valid identifier is the unique key ID or the Amazon Resource Name (ARN) of the CMK, or the alias name or ARN of
-     * an alias that refers to the CMK. Examples:
+     * To specify a KMS key, use its key ID, key ARN, alias name, or alias ARN. When using an alias name, prefix it with
+     * <code>"alias/"</code>. To specify a KMS key in a different Amazon Web Services account, you must use the key ARN
+     * or alias ARN.
+     * </p>
+     * <p>
+     * For example:
      * </p>
      * <ul>
      * <li>
      * <p>
-     * Unique key ID: <code>1234abcd-12ab-34cd-56ef-1234567890ab</code>
+     * Key ID: <code>1234abcd-12ab-34cd-56ef-1234567890ab</code>
      * </p>
      * </li>
      * <li>
      * <p>
-     * CMK ARN: <code>arn:aws:kms:us-east-2:111122223333:key/1234abcd-12ab-34cd-56ef-1234567890ab</code>
+     * Key ARN: <code>arn:aws:kms:us-east-2:111122223333:key/1234abcd-12ab-34cd-56ef-1234567890ab</code>
      * </p>
      * </li>
      * <li>
@@ -189,21 +225,29 @@ public class GenerateDataKeyWithoutPlaintextRequest extends com.ibm.cloud.object
      * </p>
      * </li>
      * </ul>
-     * 
-     * @return The identifier of the CMK under which to generate and encrypt the data encryption key.</p>
+     * <p>
+     * To get the key ID and key ARN for a KMS key, use <a>ListKeys</a> or <a>DescribeKey</a>. To get the alias name and
+     * alias ARN, use <a>ListAliases</a>.
+     * </p>
+     *
+     * @return The identifier of the symmetric KMS key that encrypts the data key.</p>
      *         <p>
-     *         A valid identifier is the unique key ID or the Amazon Resource Name (ARN) of the CMK, or the alias name
-     *         or ARN of an alias that refers to the CMK. Examples:
+     *         To specify a KMS key, use its key ID, key ARN, alias name, or alias ARN. When using an alias name, prefix
+     *         it with <code>"alias/"</code>. To specify a KMS key in a different Amazon Web Services account, you must
+     *         use the key ARN or alias ARN.
+     *         </p>
+     *         <p>
+     *         For example:
      *         </p>
      *         <ul>
      *         <li>
      *         <p>
-     *         Unique key ID: <code>1234abcd-12ab-34cd-56ef-1234567890ab</code>
+     *         Key ID: <code>1234abcd-12ab-34cd-56ef-1234567890ab</code>
      *         </p>
      *         </li>
      *         <li>
      *         <p>
-     *         CMK ARN: <code>arn:aws:kms:us-east-2:111122223333:key/1234abcd-12ab-34cd-56ef-1234567890ab</code>
+     *         Key ARN: <code>arn:aws:kms:us-east-2:111122223333:key/1234abcd-12ab-34cd-56ef-1234567890ab</code>
      *         </p>
      *         </li>
      *         <li>
@@ -216,6 +260,10 @@ public class GenerateDataKeyWithoutPlaintextRequest extends com.ibm.cloud.object
      *         Alias ARN: <code>arn:aws:kms:us-east-2:111122223333:alias/ExampleAlias</code>
      *         </p>
      *         </li>
+     *         </ul>
+     *         <p>
+     *         To get the key ID and key ARN for a KMS key, use <a>ListKeys</a> or <a>DescribeKey</a>. To get the alias
+     *         name and alias ARN, use <a>ListAliases</a>.
      */
 
     public String getKeyId() {
@@ -224,21 +272,25 @@ public class GenerateDataKeyWithoutPlaintextRequest extends com.ibm.cloud.object
 
     /**
      * <p>
-     * The identifier of the CMK under which to generate and encrypt the data encryption key.
+     * The identifier of the symmetric KMS key that encrypts the data key.
      * </p>
      * <p>
-     * A valid identifier is the unique key ID or the Amazon Resource Name (ARN) of the CMK, or the alias name or ARN of
-     * an alias that refers to the CMK. Examples:
+     * To specify a KMS key, use its key ID, key ARN, alias name, or alias ARN. When using an alias name, prefix it with
+     * <code>"alias/"</code>. To specify a KMS key in a different Amazon Web Services account, you must use the key ARN
+     * or alias ARN.
+     * </p>
+     * <p>
+     * For example:
      * </p>
      * <ul>
      * <li>
      * <p>
-     * Unique key ID: <code>1234abcd-12ab-34cd-56ef-1234567890ab</code>
+     * Key ID: <code>1234abcd-12ab-34cd-56ef-1234567890ab</code>
      * </p>
      * </li>
      * <li>
      * <p>
-     * CMK ARN: <code>arn:aws:kms:us-east-2:111122223333:key/1234abcd-12ab-34cd-56ef-1234567890ab</code>
+     * Key ARN: <code>arn:aws:kms:us-east-2:111122223333:key/1234abcd-12ab-34cd-56ef-1234567890ab</code>
      * </p>
      * </li>
      * <li>
@@ -252,22 +304,30 @@ public class GenerateDataKeyWithoutPlaintextRequest extends com.ibm.cloud.object
      * </p>
      * </li>
      * </ul>
-     * 
+     * <p>
+     * To get the key ID and key ARN for a KMS key, use <a>ListKeys</a> or <a>DescribeKey</a>. To get the alias name and
+     * alias ARN, use <a>ListAliases</a>.
+     * </p>
+     *
      * @param keyId
-     *        The identifier of the CMK under which to generate and encrypt the data encryption key.</p>
+     *        The identifier of the symmetric KMS key that encrypts the data key.</p>
      *        <p>
-     *        A valid identifier is the unique key ID or the Amazon Resource Name (ARN) of the CMK, or the alias name or
-     *        ARN of an alias that refers to the CMK. Examples:
+     *        To specify a KMS key, use its key ID, key ARN, alias name, or alias ARN. When using an alias name, prefix
+     *        it with <code>"alias/"</code>. To specify a KMS key in a different Amazon Web Services account, you must
+     *        use the key ARN or alias ARN.
+     *        </p>
+     *        <p>
+     *        For example:
      *        </p>
      *        <ul>
      *        <li>
      *        <p>
-     *        Unique key ID: <code>1234abcd-12ab-34cd-56ef-1234567890ab</code>
+     *        Key ID: <code>1234abcd-12ab-34cd-56ef-1234567890ab</code>
      *        </p>
      *        </li>
      *        <li>
      *        <p>
-     *        CMK ARN: <code>arn:aws:kms:us-east-2:111122223333:key/1234abcd-12ab-34cd-56ef-1234567890ab</code>
+     *        Key ARN: <code>arn:aws:kms:us-east-2:111122223333:key/1234abcd-12ab-34cd-56ef-1234567890ab</code>
      *        </p>
      *        </li>
      *        <li>
@@ -280,6 +340,10 @@ public class GenerateDataKeyWithoutPlaintextRequest extends com.ibm.cloud.object
      *        Alias ARN: <code>arn:aws:kms:us-east-2:111122223333:alias/ExampleAlias</code>
      *        </p>
      *        </li>
+     *        </ul>
+     *        <p>
+     *        To get the key ID and key ARN for a KMS key, use <a>ListKeys</a> or <a>DescribeKey</a>. To get the alias
+     *        name and alias ARN, use <a>ListAliases</a>.
      * @return Returns a reference to this object so that method calls can be chained together.
      */
 
@@ -290,19 +354,31 @@ public class GenerateDataKeyWithoutPlaintextRequest extends com.ibm.cloud.object
 
     /**
      * <p>
-     * A set of key-value pairs that represents additional authenticated data.
+     * Specifies the encryption context that will be used when encrypting the data key.
+     * </p>
+     * <p>
+     * An <i>encryption context</i> is a collection of non-secret key-value pairs that represents additional
+     * authenticated data. When you use an encryption context to encrypt data, you must specify the same (an exact
+     * case-sensitive match) encryption context to decrypt the data. An encryption context is optional when encrypting
+     * with a symmetric KMS key, but it is highly recommended.
      * </p>
      * <p>
      * For more information, see <a
-     * href="http://docs.aws.amazon.com/kms/latest/developerguide/encryption-context.html">Encryption Context</a> in the
-     * <i>AWS Key Management Service Developer Guide</i>.
+     * href="https://docs.aws.amazon.com/kms/latest/developerguide/concepts.html#encrypt_context">Encryption Context</a>
+     * in the <i>Key Management Service Developer Guide</i>.
      * </p>
-     * 
-     * @return A set of key-value pairs that represents additional authenticated data.</p>
+     *
+     * @return Specifies the encryption context that will be used when encrypting the data key.</p>
+     *         <p>
+     *         An <i>encryption context</i> is a collection of non-secret key-value pairs that represents additional
+     *         authenticated data. When you use an encryption context to encrypt data, you must specify the same (an
+     *         exact case-sensitive match) encryption context to decrypt the data. An encryption context is optional
+     *         when encrypting with a symmetric KMS key, but it is highly recommended.
+     *         </p>
      *         <p>
      *         For more information, see <a
-     *         href="http://docs.aws.amazon.com/kms/latest/developerguide/encryption-context.html">Encryption
-     *         Context</a> in the <i>AWS Key Management Service Developer Guide</i>.
+     *         href="https://docs.aws.amazon.com/kms/latest/developerguide/concepts.html#encrypt_context">Encryption
+     *         Context</a> in the <i>Key Management Service Developer Guide</i>.
      */
 
     public java.util.Map<String, String> getEncryptionContext() {
@@ -314,20 +390,32 @@ public class GenerateDataKeyWithoutPlaintextRequest extends com.ibm.cloud.object
 
     /**
      * <p>
-     * A set of key-value pairs that represents additional authenticated data.
+     * Specifies the encryption context that will be used when encrypting the data key.
+     * </p>
+     * <p>
+     * An <i>encryption context</i> is a collection of non-secret key-value pairs that represents additional
+     * authenticated data. When you use an encryption context to encrypt data, you must specify the same (an exact
+     * case-sensitive match) encryption context to decrypt the data. An encryption context is optional when encrypting
+     * with a symmetric KMS key, but it is highly recommended.
      * </p>
      * <p>
      * For more information, see <a
-     * href="http://docs.aws.amazon.com/kms/latest/developerguide/encryption-context.html">Encryption Context</a> in the
-     * <i>AWS Key Management Service Developer Guide</i>.
+     * href="https://docs.aws.amazon.com/kms/latest/developerguide/concepts.html#encrypt_context">Encryption Context</a>
+     * in the <i>Key Management Service Developer Guide</i>.
      * </p>
-     * 
+     *
      * @param encryptionContext
-     *        A set of key-value pairs that represents additional authenticated data.</p>
+     *        Specifies the encryption context that will be used when encrypting the data key.</p>
+     *        <p>
+     *        An <i>encryption context</i> is a collection of non-secret key-value pairs that represents additional
+     *        authenticated data. When you use an encryption context to encrypt data, you must specify the same (an
+     *        exact case-sensitive match) encryption context to decrypt the data. An encryption context is optional when
+     *        encrypting with a symmetric KMS key, but it is highly recommended.
+     *        </p>
      *        <p>
      *        For more information, see <a
-     *        href="http://docs.aws.amazon.com/kms/latest/developerguide/encryption-context.html">Encryption Context</a>
-     *        in the <i>AWS Key Management Service Developer Guide</i>.
+     *        href="https://docs.aws.amazon.com/kms/latest/developerguide/concepts.html#encrypt_context">Encryption
+     *        Context</a> in the <i>Key Management Service Developer Guide</i>.
      */
 
     public void setEncryptionContext(java.util.Map<String, String> encryptionContext) {
@@ -336,20 +424,32 @@ public class GenerateDataKeyWithoutPlaintextRequest extends com.ibm.cloud.object
 
     /**
      * <p>
-     * A set of key-value pairs that represents additional authenticated data.
+     * Specifies the encryption context that will be used when encrypting the data key.
+     * </p>
+     * <p>
+     * An <i>encryption context</i> is a collection of non-secret key-value pairs that represents additional
+     * authenticated data. When you use an encryption context to encrypt data, you must specify the same (an exact
+     * case-sensitive match) encryption context to decrypt the data. An encryption context is optional when encrypting
+     * with a symmetric KMS key, but it is highly recommended.
      * </p>
      * <p>
      * For more information, see <a
-     * href="http://docs.aws.amazon.com/kms/latest/developerguide/encryption-context.html">Encryption Context</a> in the
-     * <i>AWS Key Management Service Developer Guide</i>.
+     * href="https://docs.aws.amazon.com/kms/latest/developerguide/concepts.html#encrypt_context">Encryption Context</a>
+     * in the <i>Key Management Service Developer Guide</i>.
      * </p>
-     * 
+     *
      * @param encryptionContext
-     *        A set of key-value pairs that represents additional authenticated data.</p>
+     *        Specifies the encryption context that will be used when encrypting the data key.</p>
+     *        <p>
+     *        An <i>encryption context</i> is a collection of non-secret key-value pairs that represents additional
+     *        authenticated data. When you use an encryption context to encrypt data, you must specify the same (an
+     *        exact case-sensitive match) encryption context to decrypt the data. An encryption context is optional when
+     *        encrypting with a symmetric KMS key, but it is highly recommended.
+     *        </p>
      *        <p>
      *        For more information, see <a
-     *        href="http://docs.aws.amazon.com/kms/latest/developerguide/encryption-context.html">Encryption Context</a>
-     *        in the <i>AWS Key Management Service Developer Guide</i>.
+     *        href="https://docs.aws.amazon.com/kms/latest/developerguide/concepts.html#encrypt_context">Encryption
+     *        Context</a> in the <i>Key Management Service Developer Guide</i>.
      * @return Returns a reference to this object so that method calls can be chained together.
      */
 
@@ -357,6 +457,13 @@ public class GenerateDataKeyWithoutPlaintextRequest extends com.ibm.cloud.object
         setEncryptionContext(encryptionContext);
         return this;
     }
+
+    /**
+     * Add a single EncryptionContext entry
+     *
+     * @see GenerateDataKeyWithoutPlaintextRequest#withEncryptionContext
+     * @returns a reference to this object so that method calls can be chained together.
+     */
 
     public GenerateDataKeyWithoutPlaintextRequest addEncryptionContextEntry(String key, String value) {
         if (null == this.encryptionContext) {
@@ -381,12 +488,12 @@ public class GenerateDataKeyWithoutPlaintextRequest extends com.ibm.cloud.object
 
     /**
      * <p>
-     * The length of the data encryption key. Use <code>AES_128</code> to generate a 128-bit symmetric key, or
-     * <code>AES_256</code> to generate a 256-bit symmetric key.
+     * The length of the data key. Use <code>AES_128</code> to generate a 128-bit symmetric key, or <code>AES_256</code>
+     * to generate a 256-bit symmetric key.
      * </p>
-     * 
+     *
      * @param keySpec
-     *        The length of the data encryption key. Use <code>AES_128</code> to generate a 128-bit symmetric key, or
+     *        The length of the data key. Use <code>AES_128</code> to generate a 128-bit symmetric key, or
      *        <code>AES_256</code> to generate a 256-bit symmetric key.
      * @see DataKeySpec
      */
@@ -397,11 +504,11 @@ public class GenerateDataKeyWithoutPlaintextRequest extends com.ibm.cloud.object
 
     /**
      * <p>
-     * The length of the data encryption key. Use <code>AES_128</code> to generate a 128-bit symmetric key, or
-     * <code>AES_256</code> to generate a 256-bit symmetric key.
+     * The length of the data key. Use <code>AES_128</code> to generate a 128-bit symmetric key, or <code>AES_256</code>
+     * to generate a 256-bit symmetric key.
      * </p>
-     * 
-     * @return The length of the data encryption key. Use <code>AES_128</code> to generate a 128-bit symmetric key, or
+     *
+     * @return The length of the data key. Use <code>AES_128</code> to generate a 128-bit symmetric key, or
      *         <code>AES_256</code> to generate a 256-bit symmetric key.
      * @see DataKeySpec
      */
@@ -412,12 +519,12 @@ public class GenerateDataKeyWithoutPlaintextRequest extends com.ibm.cloud.object
 
     /**
      * <p>
-     * The length of the data encryption key. Use <code>AES_128</code> to generate a 128-bit symmetric key, or
-     * <code>AES_256</code> to generate a 256-bit symmetric key.
+     * The length of the data key. Use <code>AES_128</code> to generate a 128-bit symmetric key, or <code>AES_256</code>
+     * to generate a 256-bit symmetric key.
      * </p>
-     * 
+     *
      * @param keySpec
-     *        The length of the data encryption key. Use <code>AES_128</code> to generate a 128-bit symmetric key, or
+     *        The length of the data key. Use <code>AES_128</code> to generate a 128-bit symmetric key, or
      *        <code>AES_256</code> to generate a 256-bit symmetric key.
      * @return Returns a reference to this object so that method calls can be chained together.
      * @see DataKeySpec
@@ -430,49 +537,49 @@ public class GenerateDataKeyWithoutPlaintextRequest extends com.ibm.cloud.object
 
     /**
      * <p>
-     * The length of the data encryption key. Use <code>AES_128</code> to generate a 128-bit symmetric key, or
-     * <code>AES_256</code> to generate a 256-bit symmetric key.
+     * The length of the data key. Use <code>AES_128</code> to generate a 128-bit symmetric key, or <code>AES_256</code>
+     * to generate a 256-bit symmetric key.
      * </p>
-     * 
+     *
      * @param keySpec
-     *        The length of the data encryption key. Use <code>AES_128</code> to generate a 128-bit symmetric key, or
+     *        The length of the data key. Use <code>AES_128</code> to generate a 128-bit symmetric key, or
      *        <code>AES_256</code> to generate a 256-bit symmetric key.
      * @see DataKeySpec
      */
 
     public void setKeySpec(DataKeySpec keySpec) {
-        this.keySpec = keySpec.toString();
+        withKeySpec(keySpec);
     }
 
     /**
      * <p>
-     * The length of the data encryption key. Use <code>AES_128</code> to generate a 128-bit symmetric key, or
-     * <code>AES_256</code> to generate a 256-bit symmetric key.
+     * The length of the data key. Use <code>AES_128</code> to generate a 128-bit symmetric key, or <code>AES_256</code>
+     * to generate a 256-bit symmetric key.
      * </p>
-     * 
+     *
      * @param keySpec
-     *        The length of the data encryption key. Use <code>AES_128</code> to generate a 128-bit symmetric key, or
+     *        The length of the data key. Use <code>AES_128</code> to generate a 128-bit symmetric key, or
      *        <code>AES_256</code> to generate a 256-bit symmetric key.
      * @return Returns a reference to this object so that method calls can be chained together.
      * @see DataKeySpec
      */
 
     public GenerateDataKeyWithoutPlaintextRequest withKeySpec(DataKeySpec keySpec) {
-        setKeySpec(keySpec);
+        this.keySpec = keySpec.toString();
         return this;
     }
 
     /**
      * <p>
-     * The length of the data encryption key in bytes. For example, use the value 64 to generate a 512-bit data key (64
-     * bytes is 512 bits). For common key lengths (128-bit and 256-bit symmetric keys), we recommend that you use the
+     * The length of the data key in bytes. For example, use the value 64 to generate a 512-bit data key (64 bytes is
+     * 512 bits). For common key lengths (128-bit and 256-bit symmetric keys), we recommend that you use the
      * <code>KeySpec</code> field instead of this one.
      * </p>
-     * 
+     *
      * @param numberOfBytes
-     *        The length of the data encryption key in bytes. For example, use the value 64 to generate a 512-bit data
-     *        key (64 bytes is 512 bits). For common key lengths (128-bit and 256-bit symmetric keys), we recommend that
-     *        you use the <code>KeySpec</code> field instead of this one.
+     *        The length of the data key in bytes. For example, use the value 64 to generate a 512-bit data key (64
+     *        bytes is 512 bits). For common key lengths (128-bit and 256-bit symmetric keys), we recommend that you use
+     *        the <code>KeySpec</code> field instead of this one.
      */
 
     public void setNumberOfBytes(Integer numberOfBytes) {
@@ -481,14 +588,14 @@ public class GenerateDataKeyWithoutPlaintextRequest extends com.ibm.cloud.object
 
     /**
      * <p>
-     * The length of the data encryption key in bytes. For example, use the value 64 to generate a 512-bit data key (64
-     * bytes is 512 bits). For common key lengths (128-bit and 256-bit symmetric keys), we recommend that you use the
+     * The length of the data key in bytes. For example, use the value 64 to generate a 512-bit data key (64 bytes is
+     * 512 bits). For common key lengths (128-bit and 256-bit symmetric keys), we recommend that you use the
      * <code>KeySpec</code> field instead of this one.
      * </p>
-     * 
-     * @return The length of the data encryption key in bytes. For example, use the value 64 to generate a 512-bit data
-     *         key (64 bytes is 512 bits). For common key lengths (128-bit and 256-bit symmetric keys), we recommend
-     *         that you use the <code>KeySpec</code> field instead of this one.
+     *
+     * @return The length of the data key in bytes. For example, use the value 64 to generate a 512-bit data key (64
+     *         bytes is 512 bits). For common key lengths (128-bit and 256-bit symmetric keys), we recommend that you
+     *         use the <code>KeySpec</code> field instead of this one.
      */
 
     public Integer getNumberOfBytes() {
@@ -497,15 +604,15 @@ public class GenerateDataKeyWithoutPlaintextRequest extends com.ibm.cloud.object
 
     /**
      * <p>
-     * The length of the data encryption key in bytes. For example, use the value 64 to generate a 512-bit data key (64
-     * bytes is 512 bits). For common key lengths (128-bit and 256-bit symmetric keys), we recommend that you use the
+     * The length of the data key in bytes. For example, use the value 64 to generate a 512-bit data key (64 bytes is
+     * 512 bits). For common key lengths (128-bit and 256-bit symmetric keys), we recommend that you use the
      * <code>KeySpec</code> field instead of this one.
      * </p>
-     * 
+     *
      * @param numberOfBytes
-     *        The length of the data encryption key in bytes. For example, use the value 64 to generate a 512-bit data
-     *        key (64 bytes is 512 bits). For common key lengths (128-bit and 256-bit symmetric keys), we recommend that
-     *        you use the <code>KeySpec</code> field instead of this one.
+     *        The length of the data key in bytes. For example, use the value 64 to generate a 512-bit data key (64
+     *        bytes is 512 bits). For common key lengths (128-bit and 256-bit symmetric keys), we recommend that you use
+     *        the <code>KeySpec</code> field instead of this one.
      * @return Returns a reference to this object so that method calls can be chained together.
      */
 
@@ -519,16 +626,20 @@ public class GenerateDataKeyWithoutPlaintextRequest extends com.ibm.cloud.object
      * A list of grant tokens.
      * </p>
      * <p>
-     * For more information, see <a
-     * href="http://docs.aws.amazon.com/kms/latest/developerguide/concepts.html#grant_token">Grant Tokens</a> in the
-     * <i>AWS Key Management Service Developer Guide</i>.
+     * Use a grant token when your permission to call this operation comes from a new grant that has not yet achieved
+     * <i>eventual consistency</i>. For more information, see <a
+     * href="https://docs.aws.amazon.com/kms/latest/developerguide/grants.html#grant_token">Grant token</a> and <a
+     * href="https://docs.aws.amazon.com/kms/latest/developerguide/grant-manage.html#using-grant-token">Using a grant
+     * token</a> in the <i>Key Management Service Developer Guide</i>.
      * </p>
-     * 
+     *
      * @return A list of grant tokens.</p>
      *         <p>
-     *         For more information, see <a
-     *         href="http://docs.aws.amazon.com/kms/latest/developerguide/concepts.html#grant_token">Grant Tokens</a> in
-     *         the <i>AWS Key Management Service Developer Guide</i>.
+     *         Use a grant token when your permission to call this operation comes from a new grant that has not yet
+     *         achieved <i>eventual consistency</i>. For more information, see <a
+     *         href="https://docs.aws.amazon.com/kms/latest/developerguide/grants.html#grant_token">Grant token</a> and
+     *         <a href="https://docs.aws.amazon.com/kms/latest/developerguide/grant-manage.html#using-grant-token">Using
+     *         a grant token</a> in the <i>Key Management Service Developer Guide</i>.
      */
 
     public java.util.List<String> getGrantTokens() {
@@ -543,17 +654,21 @@ public class GenerateDataKeyWithoutPlaintextRequest extends com.ibm.cloud.object
      * A list of grant tokens.
      * </p>
      * <p>
-     * For more information, see <a
-     * href="http://docs.aws.amazon.com/kms/latest/developerguide/concepts.html#grant_token">Grant Tokens</a> in the
-     * <i>AWS Key Management Service Developer Guide</i>.
+     * Use a grant token when your permission to call this operation comes from a new grant that has not yet achieved
+     * <i>eventual consistency</i>. For more information, see <a
+     * href="https://docs.aws.amazon.com/kms/latest/developerguide/grants.html#grant_token">Grant token</a> and <a
+     * href="https://docs.aws.amazon.com/kms/latest/developerguide/grant-manage.html#using-grant-token">Using a grant
+     * token</a> in the <i>Key Management Service Developer Guide</i>.
      * </p>
-     * 
+     *
      * @param grantTokens
      *        A list of grant tokens.</p>
      *        <p>
-     *        For more information, see <a
-     *        href="http://docs.aws.amazon.com/kms/latest/developerguide/concepts.html#grant_token">Grant Tokens</a> in
-     *        the <i>AWS Key Management Service Developer Guide</i>.
+     *        Use a grant token when your permission to call this operation comes from a new grant that has not yet
+     *        achieved <i>eventual consistency</i>. For more information, see <a
+     *        href="https://docs.aws.amazon.com/kms/latest/developerguide/grants.html#grant_token">Grant token</a> and
+     *        <a href="https://docs.aws.amazon.com/kms/latest/developerguide/grant-manage.html#using-grant-token">Using
+     *        a grant token</a> in the <i>Key Management Service Developer Guide</i>.
      */
 
     public void setGrantTokens(java.util.Collection<String> grantTokens) {
@@ -570,22 +685,26 @@ public class GenerateDataKeyWithoutPlaintextRequest extends com.ibm.cloud.object
      * A list of grant tokens.
      * </p>
      * <p>
-     * For more information, see <a
-     * href="http://docs.aws.amazon.com/kms/latest/developerguide/concepts.html#grant_token">Grant Tokens</a> in the
-     * <i>AWS Key Management Service Developer Guide</i>.
+     * Use a grant token when your permission to call this operation comes from a new grant that has not yet achieved
+     * <i>eventual consistency</i>. For more information, see <a
+     * href="https://docs.aws.amazon.com/kms/latest/developerguide/grants.html#grant_token">Grant token</a> and <a
+     * href="https://docs.aws.amazon.com/kms/latest/developerguide/grant-manage.html#using-grant-token">Using a grant
+     * token</a> in the <i>Key Management Service Developer Guide</i>.
      * </p>
      * <p>
      * <b>NOTE:</b> This method appends the values to the existing list (if any). Use
      * {@link #setGrantTokens(java.util.Collection)} or {@link #withGrantTokens(java.util.Collection)} if you want to
      * override the existing values.
      * </p>
-     * 
+     *
      * @param grantTokens
      *        A list of grant tokens.</p>
      *        <p>
-     *        For more information, see <a
-     *        href="http://docs.aws.amazon.com/kms/latest/developerguide/concepts.html#grant_token">Grant Tokens</a> in
-     *        the <i>AWS Key Management Service Developer Guide</i>.
+     *        Use a grant token when your permission to call this operation comes from a new grant that has not yet
+     *        achieved <i>eventual consistency</i>. For more information, see <a
+     *        href="https://docs.aws.amazon.com/kms/latest/developerguide/grants.html#grant_token">Grant token</a> and
+     *        <a href="https://docs.aws.amazon.com/kms/latest/developerguide/grant-manage.html#using-grant-token">Using
+     *        a grant token</a> in the <i>Key Management Service Developer Guide</i>.
      * @return Returns a reference to this object so that method calls can be chained together.
      */
 
@@ -604,17 +723,21 @@ public class GenerateDataKeyWithoutPlaintextRequest extends com.ibm.cloud.object
      * A list of grant tokens.
      * </p>
      * <p>
-     * For more information, see <a
-     * href="http://docs.aws.amazon.com/kms/latest/developerguide/concepts.html#grant_token">Grant Tokens</a> in the
-     * <i>AWS Key Management Service Developer Guide</i>.
+     * Use a grant token when your permission to call this operation comes from a new grant that has not yet achieved
+     * <i>eventual consistency</i>. For more information, see <a
+     * href="https://docs.aws.amazon.com/kms/latest/developerguide/grants.html#grant_token">Grant token</a> and <a
+     * href="https://docs.aws.amazon.com/kms/latest/developerguide/grant-manage.html#using-grant-token">Using a grant
+     * token</a> in the <i>Key Management Service Developer Guide</i>.
      * </p>
-     * 
+     *
      * @param grantTokens
      *        A list of grant tokens.</p>
      *        <p>
-     *        For more information, see <a
-     *        href="http://docs.aws.amazon.com/kms/latest/developerguide/concepts.html#grant_token">Grant Tokens</a> in
-     *        the <i>AWS Key Management Service Developer Guide</i>.
+     *        Use a grant token when your permission to call this operation comes from a new grant that has not yet
+     *        achieved <i>eventual consistency</i>. For more information, see <a
+     *        href="https://docs.aws.amazon.com/kms/latest/developerguide/grants.html#grant_token">Grant token</a> and
+     *        <a href="https://docs.aws.amazon.com/kms/latest/developerguide/grant-manage.html#using-grant-token">Using
+     *        a grant token</a> in the <i>Key Management Service Developer Guide</i>.
      * @return Returns a reference to this object so that method calls can be chained together.
      */
 
@@ -624,7 +747,8 @@ public class GenerateDataKeyWithoutPlaintextRequest extends com.ibm.cloud.object
     }
 
     /**
-     * Returns a string representation of this object; useful for testing and debugging.
+     * Returns a string representation of this object. This is useful for testing and debugging. Sensitive data will be
+     * redacted from this string using a placeholder value.
      *
      * @return A string representation of this object.
      *

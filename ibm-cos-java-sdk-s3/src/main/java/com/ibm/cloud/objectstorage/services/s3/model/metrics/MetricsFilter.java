@@ -1,5 +1,5 @@
 /*
- * Copyright 2011-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2011-2022 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,8 +20,8 @@ import java.io.Serializable;
  * The filter used to describe a set of objects to include for metrics.
  * The metrics configuration will only include objects that meet the filter's criteria.
  *
- * A filter contains one of {@link MetricsPrefixPredicate}, {@link MetricsTagPredicate}
- * or {@link MetricsAndOperator}.
+ * A filter contains one of {@link MetricsPrefixPredicate}, {@link MetricsTagPredicate},
+ * {@link MetricsAccessPointArnPredicate} or {@link MetricsAndOperator}.
  */
 public class MetricsFilter implements Serializable {
 

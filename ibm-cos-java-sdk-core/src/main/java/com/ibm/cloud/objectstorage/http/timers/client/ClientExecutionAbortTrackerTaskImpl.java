@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2015-2022 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -52,8 +52,11 @@ public class ClientExecutionAbortTrackerTaskImpl implements ClientExecutionAbort
 
     @Override
     public void cancelTask() {
-        // Ensure task is canceled even if it's running as we don't want the Thread to be
+        // Best-effort attempt to ensure task is canceled even if it's running as we don't want the Thread to be
         // interrupted in the caller's code
         future.cancel(false);
+
+        // Ensure that if the future hasn't executed its timeout logic already, it won't do so.
+        task.cancel();
     }
 }

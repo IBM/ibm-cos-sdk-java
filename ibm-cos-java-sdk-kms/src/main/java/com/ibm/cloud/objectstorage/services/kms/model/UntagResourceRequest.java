@@ -1,11 +1,11 @@
 /*
- * Copyright 2014-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
- * 
+ * Copyright 2017-2022 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"). You may not use this file except in compliance with
  * the License. A copy of the License is located at
- * 
+ *
  * http://aws.amazon.com/apache2.0
- * 
+ *
  * or in the "license" file accompanying this file. This file is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
  * CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions
  * and limitations under the License.
@@ -18,7 +18,7 @@ import javax.annotation.Generated;
 import com.ibm.cloud.objectstorage.AmazonWebServiceRequest;
 
 /**
- * 
+ *
  * @see <a href="http://docs.aws.amazon.com/goto/WebAPI/kms-2014-11-01/UntagResource" target="_top">AWS API
  *      Documentation</a>
  */
@@ -27,13 +27,18 @@ public class UntagResourceRequest extends com.ibm.cloud.objectstorage.AmazonWebS
 
     /**
      * <p>
-     * A unique identifier for the CMK from which you are removing tags. You can use the unique key ID or the Amazon
-     * Resource Name (ARN) of the CMK. Examples:
+     * Identifies the KMS key from which you are removing tags.
+     * </p>
+     * <p>
+     * Specify the key ID or key ARN of the KMS key.
+     * </p>
+     * <p>
+     * For example:
      * </p>
      * <ul>
      * <li>
      * <p>
-     * Unique key ID: <code>1234abcd-12ab-34cd-56ef-1234567890ab</code>
+     * Key ID: <code>1234abcd-12ab-34cd-56ef-1234567890ab</code>
      * </p>
      * </li>
      * <li>
@@ -42,6 +47,9 @@ public class UntagResourceRequest extends com.ibm.cloud.objectstorage.AmazonWebS
      * </p>
      * </li>
      * </ul>
+     * <p>
+     * To get the key ID and key ARN for a KMS key, use <a>ListKeys</a> or <a>DescribeKey</a>.
+     * </p>
      */
     private String keyId;
     /**
@@ -53,13 +61,18 @@ public class UntagResourceRequest extends com.ibm.cloud.objectstorage.AmazonWebS
 
     /**
      * <p>
-     * A unique identifier for the CMK from which you are removing tags. You can use the unique key ID or the Amazon
-     * Resource Name (ARN) of the CMK. Examples:
+     * Identifies the KMS key from which you are removing tags.
+     * </p>
+     * <p>
+     * Specify the key ID or key ARN of the KMS key.
+     * </p>
+     * <p>
+     * For example:
      * </p>
      * <ul>
      * <li>
      * <p>
-     * Unique key ID: <code>1234abcd-12ab-34cd-56ef-1234567890ab</code>
+     * Key ID: <code>1234abcd-12ab-34cd-56ef-1234567890ab</code>
      * </p>
      * </li>
      * <li>
@@ -68,14 +81,22 @@ public class UntagResourceRequest extends com.ibm.cloud.objectstorage.AmazonWebS
      * </p>
      * </li>
      * </ul>
-     * 
+     * <p>
+     * To get the key ID and key ARN for a KMS key, use <a>ListKeys</a> or <a>DescribeKey</a>.
+     * </p>
+     *
      * @param keyId
-     *        A unique identifier for the CMK from which you are removing tags. You can use the unique key ID or the
-     *        Amazon Resource Name (ARN) of the CMK. Examples:</p>
+     *        Identifies the KMS key from which you are removing tags.</p>
+     *        <p>
+     *        Specify the key ID or key ARN of the KMS key.
+     *        </p>
+     *        <p>
+     *        For example:
+     *        </p>
      *        <ul>
      *        <li>
      *        <p>
-     *        Unique key ID: <code>1234abcd-12ab-34cd-56ef-1234567890ab</code>
+     *        Key ID: <code>1234abcd-12ab-34cd-56ef-1234567890ab</code>
      *        </p>
      *        </li>
      *        <li>
@@ -83,6 +104,9 @@ public class UntagResourceRequest extends com.ibm.cloud.objectstorage.AmazonWebS
      *        Key ARN: <code>arn:aws:kms:us-east-2:111122223333:key/1234abcd-12ab-34cd-56ef-1234567890ab</code>
      *        </p>
      *        </li>
+     *        </ul>
+     *        <p>
+     *        To get the key ID and key ARN for a KMS key, use <a>ListKeys</a> or <a>DescribeKey</a>.
      */
 
     public void setKeyId(String keyId) {
@@ -91,13 +115,18 @@ public class UntagResourceRequest extends com.ibm.cloud.objectstorage.AmazonWebS
 
     /**
      * <p>
-     * A unique identifier for the CMK from which you are removing tags. You can use the unique key ID or the Amazon
-     * Resource Name (ARN) of the CMK. Examples:
+     * Identifies the KMS key from which you are removing tags.
+     * </p>
+     * <p>
+     * Specify the key ID or key ARN of the KMS key.
+     * </p>
+     * <p>
+     * For example:
      * </p>
      * <ul>
      * <li>
      * <p>
-     * Unique key ID: <code>1234abcd-12ab-34cd-56ef-1234567890ab</code>
+     * Key ID: <code>1234abcd-12ab-34cd-56ef-1234567890ab</code>
      * </p>
      * </li>
      * <li>
@@ -106,13 +135,21 @@ public class UntagResourceRequest extends com.ibm.cloud.objectstorage.AmazonWebS
      * </p>
      * </li>
      * </ul>
-     * 
-     * @return A unique identifier for the CMK from which you are removing tags. You can use the unique key ID or the
-     *         Amazon Resource Name (ARN) of the CMK. Examples:</p>
+     * <p>
+     * To get the key ID and key ARN for a KMS key, use <a>ListKeys</a> or <a>DescribeKey</a>.
+     * </p>
+     *
+     * @return Identifies the KMS key from which you are removing tags.</p>
+     *         <p>
+     *         Specify the key ID or key ARN of the KMS key.
+     *         </p>
+     *         <p>
+     *         For example:
+     *         </p>
      *         <ul>
      *         <li>
      *         <p>
-     *         Unique key ID: <code>1234abcd-12ab-34cd-56ef-1234567890ab</code>
+     *         Key ID: <code>1234abcd-12ab-34cd-56ef-1234567890ab</code>
      *         </p>
      *         </li>
      *         <li>
@@ -120,6 +157,9 @@ public class UntagResourceRequest extends com.ibm.cloud.objectstorage.AmazonWebS
      *         Key ARN: <code>arn:aws:kms:us-east-2:111122223333:key/1234abcd-12ab-34cd-56ef-1234567890ab</code>
      *         </p>
      *         </li>
+     *         </ul>
+     *         <p>
+     *         To get the key ID and key ARN for a KMS key, use <a>ListKeys</a> or <a>DescribeKey</a>.
      */
 
     public String getKeyId() {
@@ -128,13 +168,18 @@ public class UntagResourceRequest extends com.ibm.cloud.objectstorage.AmazonWebS
 
     /**
      * <p>
-     * A unique identifier for the CMK from which you are removing tags. You can use the unique key ID or the Amazon
-     * Resource Name (ARN) of the CMK. Examples:
+     * Identifies the KMS key from which you are removing tags.
+     * </p>
+     * <p>
+     * Specify the key ID or key ARN of the KMS key.
+     * </p>
+     * <p>
+     * For example:
      * </p>
      * <ul>
      * <li>
      * <p>
-     * Unique key ID: <code>1234abcd-12ab-34cd-56ef-1234567890ab</code>
+     * Key ID: <code>1234abcd-12ab-34cd-56ef-1234567890ab</code>
      * </p>
      * </li>
      * <li>
@@ -143,14 +188,22 @@ public class UntagResourceRequest extends com.ibm.cloud.objectstorage.AmazonWebS
      * </p>
      * </li>
      * </ul>
-     * 
+     * <p>
+     * To get the key ID and key ARN for a KMS key, use <a>ListKeys</a> or <a>DescribeKey</a>.
+     * </p>
+     *
      * @param keyId
-     *        A unique identifier for the CMK from which you are removing tags. You can use the unique key ID or the
-     *        Amazon Resource Name (ARN) of the CMK. Examples:</p>
+     *        Identifies the KMS key from which you are removing tags.</p>
+     *        <p>
+     *        Specify the key ID or key ARN of the KMS key.
+     *        </p>
+     *        <p>
+     *        For example:
+     *        </p>
      *        <ul>
      *        <li>
      *        <p>
-     *        Unique key ID: <code>1234abcd-12ab-34cd-56ef-1234567890ab</code>
+     *        Key ID: <code>1234abcd-12ab-34cd-56ef-1234567890ab</code>
      *        </p>
      *        </li>
      *        <li>
@@ -158,6 +211,9 @@ public class UntagResourceRequest extends com.ibm.cloud.objectstorage.AmazonWebS
      *        Key ARN: <code>arn:aws:kms:us-east-2:111122223333:key/1234abcd-12ab-34cd-56ef-1234567890ab</code>
      *        </p>
      *        </li>
+     *        </ul>
+     *        <p>
+     *        To get the key ID and key ARN for a KMS key, use <a>ListKeys</a> or <a>DescribeKey</a>.
      * @return Returns a reference to this object so that method calls can be chained together.
      */
 
@@ -170,7 +226,7 @@ public class UntagResourceRequest extends com.ibm.cloud.objectstorage.AmazonWebS
      * <p>
      * One or more tag keys. Specify only the tag keys, not the tag values.
      * </p>
-     * 
+     *
      * @return One or more tag keys. Specify only the tag keys, not the tag values.
      */
 
@@ -185,7 +241,7 @@ public class UntagResourceRequest extends com.ibm.cloud.objectstorage.AmazonWebS
      * <p>
      * One or more tag keys. Specify only the tag keys, not the tag values.
      * </p>
-     * 
+     *
      * @param tagKeys
      *        One or more tag keys. Specify only the tag keys, not the tag values.
      */
@@ -208,7 +264,7 @@ public class UntagResourceRequest extends com.ibm.cloud.objectstorage.AmazonWebS
      * {@link #setTagKeys(java.util.Collection)} or {@link #withTagKeys(java.util.Collection)} if you want to override
      * the existing values.
      * </p>
-     * 
+     *
      * @param tagKeys
      *        One or more tag keys. Specify only the tag keys, not the tag values.
      * @return Returns a reference to this object so that method calls can be chained together.
@@ -228,7 +284,7 @@ public class UntagResourceRequest extends com.ibm.cloud.objectstorage.AmazonWebS
      * <p>
      * One or more tag keys. Specify only the tag keys, not the tag values.
      * </p>
-     * 
+     *
      * @param tagKeys
      *        One or more tag keys. Specify only the tag keys, not the tag values.
      * @return Returns a reference to this object so that method calls can be chained together.
@@ -240,7 +296,8 @@ public class UntagResourceRequest extends com.ibm.cloud.objectstorage.AmazonWebS
     }
 
     /**
-     * Returns a string representation of this object; useful for testing and debugging.
+     * Returns a string representation of this object. This is useful for testing and debugging. Sensitive data will be
+     * redacted from this string using a placeholder value.
      *
      * @return A string representation of this object.
      *

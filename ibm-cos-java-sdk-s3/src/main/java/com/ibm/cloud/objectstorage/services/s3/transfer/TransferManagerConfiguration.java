@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2010-2022 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -91,15 +91,25 @@ public class TransferManagerConfiguration {
      * in parallel. Setting this option to true will disable parallel downloads.
      * </p>
      * <p>
-     * During parallel downloads, each part is downloaded to a temporary file, gets merged
-     * into the final destination file and will be deleted. These temporary files uses disk space temporarily.
-     * Disable parallel downloads if your system do not have enough space to store these files during download.
-     * </p>
-     * <p>
      * Disabling parallel downloads might reduce performance for large files.
      * </p>
      */
     private boolean disableParallelDownloads = false;
+
+    /**
+     * Option to instruct Transfer Manager to calculate MD5 for multipart uploads.
+     * <p>
+     * For instance, if a bucket is enabled for Object Locking, put requests for
+     * objects and object parts must contain an MD5 digest. Since Transfer Manager
+     * operates on a whole object, the user cannot supply the MD5
+     * digest directly if multipart uploads are in effect.
+     *
+     * <p>
+     * Supplying any object locking parameter also instructs Transfer Manager
+     * to calculate MD5 for parts. This flag should be used in instances where
+     * they are not present.
+     */
+    private boolean alwaysCalculateMultipartMd5 = false;
 
     /**
      * Returns the minimum part size for upload parts.
@@ -230,7 +240,7 @@ public class TransferManagerConfiguration {
      * connection for the upload.
      *
      * This reversed the backward incompatibility with Hadoop 2.7 and S3A filesystem
-     * introduced in AWS SDK v1.7.6 by this pull request:
+     * introduced in Amazon Web Services SDK v1.7.6 by this pull request:
      * https://github.com/aws/aws-sdk-java/pull/201
      *
      * See details (on error message, and fix targeted for Hadoop 2.8) here:
@@ -257,11 +267,6 @@ public class TransferManagerConfiguration {
      * in parallel. Setting this option to true will disable parallel downloads.
      * </p>
      * <p>
-     * During parallel downloads, each part is downloaded to a temporary file, gets merged
-     * into the final destination file and will be deleted. These temporary files uses disk space temporarily.
-     * Disable parallel downloads if your system do not have enough space to store these files during download.
-     * </p>
-     * <p>
      * Disabling parallel downloads might reduce performance for large files.
      * </p>
      *
@@ -279,11 +284,6 @@ public class TransferManagerConfiguration {
      * in parallel. Setting this option to true will disable parallel downloads.
      * </p>
      * <p>
-     * During parallel downloads, each part is downloaded to a temporary file, gets merged
-     * into the final destination file and will be deleted. These temporary files uses disk space temporarily.
-     * Disable parallel downloads if your system do not have enough space to store these files during download.
-     * </p>
-     * <p>
      * Disabling parallel downloads might reduce performance for large files.
      * </p>
      *
@@ -292,4 +292,39 @@ public class TransferManagerConfiguration {
     public void setDisableParallelDownloads(boolean disableParallelDownloads) {
         this.disableParallelDownloads = disableParallelDownloads;
     }
+
+    /**
+     * Returns true if Transfer Manager should calculate MD5 for multipart uploads.
+     * <p>
+     * For instance, if a bucket is enabled for Object Locking, put requests for
+     * objects and object parts must contain an MD5 digest. Since Transfer Manager
+     * operates on a whole object, the user cannot supply the MD5
+     * digest directly if multipart uploads are in effect.
+     *
+     * <p>
+     * Supplying any object locking parameter also instructs Transfer Manager
+     * to calculate MD5 for parts. This flag should be used in instances where
+     * they are not present.
+     */
+    public boolean isAlwaysCalculateMultipartMd5() {
+        return alwaysCalculateMultipartMd5;
+    }
+
+    /**
+     * Set to true if Transfer Manager should calculate MD5 for multipart uploads.
+     * <p>
+     * For instance, if a bucket is enabled for Object Locking, put requests for
+     * objects and object parts must contain an MD5 digest. Since Transfer Manager
+     * operates on a whole object, the user cannot supply the MD5
+     * digest directly if multipart uploads are in effect.
+     *
+     * <p>
+     * Supplying any object locking parameter also instructs Transfer Manager
+     * to calculate MD5 for parts. This flag should be used in instances where
+     * they are not present.
+     */
+    public void setAlwaysCalculateMultipartMd5(boolean alwaysCalculateMultipartMd5) {
+        this.alwaysCalculateMultipartMd5 = alwaysCalculateMultipartMd5;
+    }
+
 }

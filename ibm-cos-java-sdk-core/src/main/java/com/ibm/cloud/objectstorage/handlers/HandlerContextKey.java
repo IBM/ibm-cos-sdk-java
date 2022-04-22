@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2015-2022 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -16,6 +16,7 @@ package com.ibm.cloud.objectstorage.handlers;
 
 import com.ibm.cloud.objectstorage.auth.AWSCredentials;
 import com.ibm.cloud.objectstorage.client.builder.AdvancedConfig;
+import java.net.URI;
 
 /**
  * A type safe key used for setting and retrieving context in a {@link
@@ -56,6 +57,11 @@ public class HandlerContextKey<T> {
     public static final HandlerContextKey<String> SIGNING_REGION = new HandlerContextKey<String>("SigningRegion");
 
     /**
+     * The optional service name to sign the request. If present, it will override the service name in the client
+     */
+    public static final HandlerContextKey<String> SIGNING_NAME = new HandlerContextKey<String>("SIGNING_NAME");
+
+    /**
      * The name of the operation for the request.
      */
     public static final HandlerContextKey<String> OPERATION_NAME = new HandlerContextKey<String>("OperationName");
@@ -77,9 +83,24 @@ public class HandlerContextKey<T> {
     public static final HandlerContextKey<Boolean> HAS_STREAMING_INPUT = new HandlerContextKey<Boolean>("HasStreamingInput");
 
     /**
+     * A boolean value indicating if the output of the operation has a streaming member.
+     */
+    public static final HandlerContextKey<Boolean> HAS_STREAMING_OUTPUT = new HandlerContextKey<Boolean>("HasStreamingOutput");
+
+    /**
      * Advanced client configuration. Contents will be service specific.
      */
     public static final HandlerContextKey<AdvancedConfig> ADVANCED_CONFIG = new HandlerContextKey<AdvancedConfig>("AdvancedConfig");
+
+    /**
+     * A boolean value indicating if an endpoint is overridden or not
+     */
+    public static final HandlerContextKey<Boolean> ENDPOINT_OVERRIDDEN = new HandlerContextKey<Boolean>("EndpointOverridden");
+
+    /**
+     * The endpoint configured on the client.
+     */
+    public static final HandlerContextKey<URI> CLIENT_ENDPOINT = new HandlerContextKey<URI>("ClientEndpoint");
 
     private final String name;
 

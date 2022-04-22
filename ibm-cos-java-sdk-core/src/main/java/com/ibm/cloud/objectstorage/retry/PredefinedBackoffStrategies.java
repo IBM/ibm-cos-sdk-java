@@ -1,5 +1,5 @@
 /*
- * Copyright 2011-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2011-2022 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -14,6 +14,7 @@
  */
 package com.ibm.cloud.objectstorage.retry;
 
+import com.ibm.cloud.objectstorage.annotation.SdkTestInternalApi;
 import com.ibm.cloud.objectstorage.retry.v2.BackoffStrategy;
 import com.ibm.cloud.objectstorage.retry.v2.RetryPolicyContext;
 import com.ibm.cloud.objectstorage.util.ValidationUtils;
@@ -55,23 +56,41 @@ public class PredefinedBackoffStrategies {
      **/
     private static final int MAX_RETRIES = 30;
 
+    static final int STANDARD_DEFAULT_BASE_DELAY_IN_MILLISECONDS = 100;
+
+    /**
+     * Default backoff strategy used for standard and adaptive retry mode
+     */
+    static final V2CompatibleBackoffStrategy STANDARD_BACKOFF_STRATEGY = new FullJitterBackoffStrategy(STANDARD_DEFAULT_BASE_DELAY_IN_MILLISECONDS,
+                                                                                                       SDK_DEFAULT_MAX_BACKOFF_IN_MILLISECONDS);
+
     public static class FullJitterBackoffStrategy extends V2CompatibleBackoffStrategyAdapter {
 
         private final int baseDelay;
         private final int maxBackoffTime;
-        private final Random random = new Random();
+        private final Random random;
 
         public FullJitterBackoffStrategy(final int baseDelay,
                                          final int maxBackoffTime) {
+            this(baseDelay, maxBackoffTime, new Random());
+        }
+
+        @SdkTestInternalApi
+        FullJitterBackoffStrategy(int baseDelay,
+                                  int maxBackoffTime,
+                                  Random random) {
             this.baseDelay = ValidationUtils.assertIsPositive(baseDelay, "Base delay");
             this.maxBackoffTime = ValidationUtils.assertIsPositive(maxBackoffTime, "Max backoff");
+            this.random = random;
         }
 
 
         @Override
         public long computeDelayBeforeNextRetry(RetryPolicyContext context) {
             int ceil = calculateExponentialDelay(context.retriesAttempted(), baseDelay, maxBackoffTime);
-            return random.nextInt(ceil);
+            // add 1 ms to the random result to allow us to reach our maximum value (since the random
+            // parameter is exclusive)
+            return random.nextInt(ceil) + 1;
         }
     }
 

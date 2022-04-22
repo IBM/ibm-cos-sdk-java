@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2015-2022 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -20,10 +20,10 @@ import java.net.URL;
 import java.util.Date;
 import java.util.List;
 
-import com.ibm.cloud.objectstorage.SdkClientException;
 import com.ibm.cloud.objectstorage.AmazonServiceException;
 import com.ibm.cloud.objectstorage.AmazonWebServiceRequest;
 import com.ibm.cloud.objectstorage.HttpMethod;
+import com.ibm.cloud.objectstorage.SdkClientException;
 import com.ibm.cloud.objectstorage.regions.Region;
 import com.ibm.cloud.objectstorage.services.s3.model.*;
 import com.ibm.cloud.objectstorage.services.s3.waiters.AmazonS3Waiters;
@@ -755,10 +755,67 @@ public abstract class AbstractAmazonS3 implements AmazonS3 {
 
     }
 
+//IBM unsupported
+//    @Override
+//    public void setRequestPaymentConfiguration(SetRequestPaymentConfigurationRequest request) {
+//        throw new UnsupportedOperationException("Extend AbstractAmazonS3 to provide an implementation");
+//    }
+//
+
+    @Override
     public boolean doesObjectExist(String bucketName, String objectName)
             throws AmazonServiceException, SdkClientException {
         throw new UnsupportedOperationException("Extend AbstractAmazonS3 to provide an implementation");
     }
+
+//IBM unsupported
+//    @Override
+//    public DeleteBucketIntelligentTieringConfigurationResult deleteBucketIntelligentTieringConfiguration(
+//            String bucketName, String id) throws AmazonServiceException, SdkClientException {
+//        return deleteBucketIntelligentTieringConfiguration(new DeleteBucketIntelligentTieringConfigurationRequest(bucketName, id));
+//    }
+//
+//    @Override
+//    public DeleteBucketIntelligentTieringConfigurationResult deleteBucketIntelligentTieringConfiguration(
+//            DeleteBucketIntelligentTieringConfigurationRequest deleteBucketIntelligentTieringConfigurationRequest)
+//            throws AmazonServiceException, SdkClientException {
+//        throw new UnsupportedOperationException("Extend AbstractAmazonS3 to provide an implementation");
+//    }
+//
+//    @Override
+//    public GetBucketIntelligentTieringConfigurationResult getBucketIntelligentTieringConfiguration(
+//            String bucketName, String id) throws AmazonServiceException, SdkClientException {
+//        return getBucketIntelligentTieringConfiguration(new GetBucketIntelligentTieringConfigurationRequest(bucketName, id));
+//    }
+//
+//    @Override
+//    public GetBucketIntelligentTieringConfigurationResult getBucketIntelligentTieringConfiguration(
+//            GetBucketIntelligentTieringConfigurationRequest getBucketIntelligentTieringConfigurationRequest)
+//            throws AmazonServiceException, SdkClientException {
+//        throw new UnsupportedOperationException("Extend AbstractAmazonS3 to provide an implementation");
+//    }
+//
+//    @Override
+//    public SetBucketIntelligentTieringConfigurationResult setBucketIntelligentTieringConfiguration(
+//            String bucketName, IntelligentTieringConfiguration intelligentTieringConfiguration)
+//            throws AmazonServiceException, SdkClientException {
+//        return setBucketIntelligentTieringConfiguration(
+//                new SetBucketIntelligentTieringConfigurationRequest(bucketName, intelligentTieringConfiguration));
+//    }
+//
+//    @Override
+//    public SetBucketIntelligentTieringConfigurationResult setBucketIntelligentTieringConfiguration(
+//            SetBucketIntelligentTieringConfigurationRequest setBucketIntelligentTieringConfigurationRequest)
+//            throws AmazonServiceException, SdkClientException {
+//        throw new UnsupportedOperationException("Extend AbstractAmazonS3 to provide an implementation");
+//    }
+//
+//    @Override
+//    public ListBucketIntelligentTieringConfigurationsResult listBucketIntelligentTieringConfigurations(
+//            ListBucketIntelligentTieringConfigurationsRequest listBucketIntelligentTieringConfigurationsRequest)
+//            throws AmazonServiceException, SdkClientException {
+//        throw new UnsupportedOperationException("Extend AbstractAmazonS3 to provide an implementation");
+//    }
 
     @Override
     public SetPublicAccessBlockResult setPublicAccessBlock(SetPublicAccessBlockRequest request) {
@@ -774,6 +831,12 @@ public abstract class AbstractAmazonS3 implements AmazonS3 {
     public DeletePublicAccessBlockResult deletePublicAccessBlock(DeletePublicAccessBlockRequest request) {
         throw new UnsupportedOperationException("Extend AbstractAmazonS3 to provide an implementation");
     }
+
+//IBM unsupported
+//	  @Override
+//    public WriteGetObjectResponseResult writeGetObjectResponse(WriteGetObjectResponseRequest writeGetObjectResponseRequest) {
+//        throw new UnsupportedOperationException("Extend AbstractAmazonS3 to provide an implementation");
+//    }
 
     @Override
     public PresignedUrlDownloadResult download(PresignedUrlDownloadRequest presignedUrlDownloadRequest) {
@@ -814,4 +877,29 @@ public abstract class AbstractAmazonS3 implements AmazonS3 {
     public AmazonS3Waiters waiters() {
         throw new UnsupportedOperationException("Extend AbstractAmazonS3 to provide an implementation");
     }
+
+//IBM unsupported
+//    @Override
+//    public DeleteBucketOwnershipControlsResult deleteBucketOwnershipControls(DeleteBucketOwnershipControlsRequest deleteBucketOwnershipControlsRequest)
+//        throws AmazonServiceException, SdkClientException {
+//        throw new UnsupportedOperationException("Extend AbstractAmazonS3 to provide an implementation");
+//    }
+//
+//    @Override
+//    public GetBucketOwnershipControlsResult getBucketOwnershipControls(GetBucketOwnershipControlsRequest getBucketOwnershipControlsRequest)
+//        throws AmazonServiceException, SdkClientException {
+//        throw new UnsupportedOperationException("Extend AbstractAmazonS3 to provide an implementation");
+//    }
+//
+//    @Override
+//    public SetBucketOwnershipControlsResult setBucketOwnershipControls(String bucketName, OwnershipControls ownershipControls)
+//        throws AmazonServiceException, SdkClientException {
+//        throw new UnsupportedOperationException("Extend AbstractAmazonS3 to provide an implementation");
+//    }
+//
+//    @Override
+//    public SetBucketOwnershipControlsResult setBucketOwnershipControls(SetBucketOwnershipControlsRequest setBucketOwnershipControlsRequest)
+//        throws AmazonServiceException, SdkClientException {
+//        throw new UnsupportedOperationException("Extend AbstractAmazonS3 to provide an implementation");
+//    }
 }

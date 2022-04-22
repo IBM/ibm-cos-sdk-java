@@ -1,11 +1,11 @@
 /*
- * Copyright 2014-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
- * 
+ * Copyright 2017-2022 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"). You may not use this file except in compliance with
  * the License. A copy of the License is located at
- * 
+ *
  * http://aws.amazon.com/apache2.0
- * 
+ *
  * or in the "license" file accompanying this file. This file is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
  * CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions
  * and limitations under the License.
@@ -18,7 +18,7 @@ import javax.annotation.Generated;
 import com.ibm.cloud.objectstorage.AmazonWebServiceRequest;
 
 /**
- * 
+ *
  * @see <a href="http://docs.aws.amazon.com/goto/WebAPI/kms-2014-11-01/UpdateAlias" target="_top">AWS API
  *      Documentation</a>
  */
@@ -27,43 +27,61 @@ public class UpdateAliasRequest extends com.ibm.cloud.objectstorage.AmazonWebSer
 
     /**
      * <p>
-     * String that contains the name of the alias to be modified. The name must start with the word "alias" followed by
-     * a forward slash (alias/). Aliases that begin with "alias/aws" are reserved.
+     * Identifies the alias that is changing its KMS key. This value must begin with <code>alias/</code> followed by the
+     * alias name, such as <code>alias/ExampleAlias</code>. You cannot use UpdateAlias to change the alias name.
      * </p>
      */
     private String aliasName;
     /**
      * <p>
-     * Unique identifier of the customer master key to be mapped to the alias. This value can be a globally unique
-     * identifier or the fully specified ARN of a key.
+     * Identifies the <a
+     * href="https://docs.aws.amazon.com/kms/latest/developerguide/concepts.html#customer-cmk">customer managed key</a>
+     * to associate with the alias. You don't have permission to associate an alias with an <a
+     * href="https://docs.aws.amazon.com/kms/latest/developerguide/concepts.html#aws-managed-cmk">Amazon Web Services
+     * managed key</a>.
+     * </p>
+     * <p>
+     * The KMS key must be in the same Amazon Web Services account and Region as the alias. Also, the new target KMS key
+     * must be the same type as the current target KMS key (both symmetric or both asymmetric) and they must have the
+     * same key usage.
+     * </p>
+     * <p>
+     * Specify the key ID or key ARN of the KMS key.
+     * </p>
+     * <p>
+     * For example:
      * </p>
      * <ul>
      * <li>
      * <p>
-     * Key ARN Example - arn:aws:kms:us-east-1:123456789012:key/12345678-1234-1234-1234-123456789012
+     * Key ID: <code>1234abcd-12ab-34cd-56ef-1234567890ab</code>
      * </p>
      * </li>
      * <li>
      * <p>
-     * Globally Unique Key ID Example - 12345678-1234-1234-1234-123456789012
+     * Key ARN: <code>arn:aws:kms:us-east-2:111122223333:key/1234abcd-12ab-34cd-56ef-1234567890ab</code>
      * </p>
      * </li>
      * </ul>
      * <p>
-     * You can call <a>ListAliases</a> to verify that the alias is mapped to the correct <code>TargetKeyId</code>.
+     * To get the key ID and key ARN for a KMS key, use <a>ListKeys</a> or <a>DescribeKey</a>.
+     * </p>
+     * <p>
+     * To verify that the alias is mapped to the correct KMS key, use <a>ListAliases</a>.
      * </p>
      */
     private String targetKeyId;
 
     /**
      * <p>
-     * String that contains the name of the alias to be modified. The name must start with the word "alias" followed by
-     * a forward slash (alias/). Aliases that begin with "alias/aws" are reserved.
+     * Identifies the alias that is changing its KMS key. This value must begin with <code>alias/</code> followed by the
+     * alias name, such as <code>alias/ExampleAlias</code>. You cannot use UpdateAlias to change the alias name.
      * </p>
-     * 
+     *
      * @param aliasName
-     *        String that contains the name of the alias to be modified. The name must start with the word "alias"
-     *        followed by a forward slash (alias/). Aliases that begin with "alias/aws" are reserved.
+     *        Identifies the alias that is changing its KMS key. This value must begin with <code>alias/</code> followed
+     *        by the alias name, such as <code>alias/ExampleAlias</code>. You cannot use UpdateAlias to change the alias
+     *        name.
      */
 
     public void setAliasName(String aliasName) {
@@ -72,12 +90,13 @@ public class UpdateAliasRequest extends com.ibm.cloud.objectstorage.AmazonWebSer
 
     /**
      * <p>
-     * String that contains the name of the alias to be modified. The name must start with the word "alias" followed by
-     * a forward slash (alias/). Aliases that begin with "alias/aws" are reserved.
+     * Identifies the alias that is changing its KMS key. This value must begin with <code>alias/</code> followed by the
+     * alias name, such as <code>alias/ExampleAlias</code>. You cannot use UpdateAlias to change the alias name.
      * </p>
-     * 
-     * @return String that contains the name of the alias to be modified. The name must start with the word "alias"
-     *         followed by a forward slash (alias/). Aliases that begin with "alias/aws" are reserved.
+     *
+     * @return Identifies the alias that is changing its KMS key. This value must begin with <code>alias/</code>
+     *         followed by the alias name, such as <code>alias/ExampleAlias</code>. You cannot use UpdateAlias to change
+     *         the alias name.
      */
 
     public String getAliasName() {
@@ -86,13 +105,14 @@ public class UpdateAliasRequest extends com.ibm.cloud.objectstorage.AmazonWebSer
 
     /**
      * <p>
-     * String that contains the name of the alias to be modified. The name must start with the word "alias" followed by
-     * a forward slash (alias/). Aliases that begin with "alias/aws" are reserved.
+     * Identifies the alias that is changing its KMS key. This value must begin with <code>alias/</code> followed by the
+     * alias name, such as <code>alias/ExampleAlias</code>. You cannot use UpdateAlias to change the alias name.
      * </p>
-     * 
+     *
      * @param aliasName
-     *        String that contains the name of the alias to be modified. The name must start with the word "alias"
-     *        followed by a forward slash (alias/). Aliases that begin with "alias/aws" are reserved.
+     *        Identifies the alias that is changing its KMS key. This value must begin with <code>alias/</code> followed
+     *        by the alias name, such as <code>alias/ExampleAlias</code>. You cannot use UpdateAlias to change the alias
+     *        name.
      * @return Returns a reference to this object so that method calls can be chained together.
      */
 
@@ -103,42 +123,76 @@ public class UpdateAliasRequest extends com.ibm.cloud.objectstorage.AmazonWebSer
 
     /**
      * <p>
-     * Unique identifier of the customer master key to be mapped to the alias. This value can be a globally unique
-     * identifier or the fully specified ARN of a key.
+     * Identifies the <a
+     * href="https://docs.aws.amazon.com/kms/latest/developerguide/concepts.html#customer-cmk">customer managed key</a>
+     * to associate with the alias. You don't have permission to associate an alias with an <a
+     * href="https://docs.aws.amazon.com/kms/latest/developerguide/concepts.html#aws-managed-cmk">Amazon Web Services
+     * managed key</a>.
+     * </p>
+     * <p>
+     * The KMS key must be in the same Amazon Web Services account and Region as the alias. Also, the new target KMS key
+     * must be the same type as the current target KMS key (both symmetric or both asymmetric) and they must have the
+     * same key usage.
+     * </p>
+     * <p>
+     * Specify the key ID or key ARN of the KMS key.
+     * </p>
+     * <p>
+     * For example:
      * </p>
      * <ul>
      * <li>
      * <p>
-     * Key ARN Example - arn:aws:kms:us-east-1:123456789012:key/12345678-1234-1234-1234-123456789012
+     * Key ID: <code>1234abcd-12ab-34cd-56ef-1234567890ab</code>
      * </p>
      * </li>
      * <li>
      * <p>
-     * Globally Unique Key ID Example - 12345678-1234-1234-1234-123456789012
+     * Key ARN: <code>arn:aws:kms:us-east-2:111122223333:key/1234abcd-12ab-34cd-56ef-1234567890ab</code>
      * </p>
      * </li>
      * </ul>
      * <p>
-     * You can call <a>ListAliases</a> to verify that the alias is mapped to the correct <code>TargetKeyId</code>.
+     * To get the key ID and key ARN for a KMS key, use <a>ListKeys</a> or <a>DescribeKey</a>.
      * </p>
-     * 
+     * <p>
+     * To verify that the alias is mapped to the correct KMS key, use <a>ListAliases</a>.
+     * </p>
+     *
      * @param targetKeyId
-     *        Unique identifier of the customer master key to be mapped to the alias. This value can be a globally
-     *        unique identifier or the fully specified ARN of a key.</p>
+     *        Identifies the <a
+     *        href="https://docs.aws.amazon.com/kms/latest/developerguide/concepts.html#customer-cmk">customer managed
+     *        key</a> to associate with the alias. You don't have permission to associate an alias with an <a
+     *        href="https://docs.aws.amazon.com/kms/latest/developerguide/concepts.html#aws-managed-cmk">Amazon Web
+     *        Services managed key</a>.</p>
+     *        <p>
+     *        The KMS key must be in the same Amazon Web Services account and Region as the alias. Also, the new target
+     *        KMS key must be the same type as the current target KMS key (both symmetric or both asymmetric) and they
+     *        must have the same key usage.
+     *        </p>
+     *        <p>
+     *        Specify the key ID or key ARN of the KMS key.
+     *        </p>
+     *        <p>
+     *        For example:
+     *        </p>
      *        <ul>
      *        <li>
      *        <p>
-     *        Key ARN Example - arn:aws:kms:us-east-1:123456789012:key/12345678-1234-1234-1234-123456789012
+     *        Key ID: <code>1234abcd-12ab-34cd-56ef-1234567890ab</code>
      *        </p>
      *        </li>
      *        <li>
      *        <p>
-     *        Globally Unique Key ID Example - 12345678-1234-1234-1234-123456789012
+     *        Key ARN: <code>arn:aws:kms:us-east-2:111122223333:key/1234abcd-12ab-34cd-56ef-1234567890ab</code>
      *        </p>
      *        </li>
      *        </ul>
      *        <p>
-     *        You can call <a>ListAliases</a> to verify that the alias is mapped to the correct <code>TargetKeyId</code>.
+     *        To get the key ID and key ARN for a KMS key, use <a>ListKeys</a> or <a>DescribeKey</a>.
+     *        </p>
+     *        <p>
+     *        To verify that the alias is mapped to the correct KMS key, use <a>ListAliases</a>.
      */
 
     public void setTargetKeyId(String targetKeyId) {
@@ -147,42 +201,75 @@ public class UpdateAliasRequest extends com.ibm.cloud.objectstorage.AmazonWebSer
 
     /**
      * <p>
-     * Unique identifier of the customer master key to be mapped to the alias. This value can be a globally unique
-     * identifier or the fully specified ARN of a key.
+     * Identifies the <a
+     * href="https://docs.aws.amazon.com/kms/latest/developerguide/concepts.html#customer-cmk">customer managed key</a>
+     * to associate with the alias. You don't have permission to associate an alias with an <a
+     * href="https://docs.aws.amazon.com/kms/latest/developerguide/concepts.html#aws-managed-cmk">Amazon Web Services
+     * managed key</a>.
+     * </p>
+     * <p>
+     * The KMS key must be in the same Amazon Web Services account and Region as the alias. Also, the new target KMS key
+     * must be the same type as the current target KMS key (both symmetric or both asymmetric) and they must have the
+     * same key usage.
+     * </p>
+     * <p>
+     * Specify the key ID or key ARN of the KMS key.
+     * </p>
+     * <p>
+     * For example:
      * </p>
      * <ul>
      * <li>
      * <p>
-     * Key ARN Example - arn:aws:kms:us-east-1:123456789012:key/12345678-1234-1234-1234-123456789012
+     * Key ID: <code>1234abcd-12ab-34cd-56ef-1234567890ab</code>
      * </p>
      * </li>
      * <li>
      * <p>
-     * Globally Unique Key ID Example - 12345678-1234-1234-1234-123456789012
+     * Key ARN: <code>arn:aws:kms:us-east-2:111122223333:key/1234abcd-12ab-34cd-56ef-1234567890ab</code>
      * </p>
      * </li>
      * </ul>
      * <p>
-     * You can call <a>ListAliases</a> to verify that the alias is mapped to the correct <code>TargetKeyId</code>.
+     * To get the key ID and key ARN for a KMS key, use <a>ListKeys</a> or <a>DescribeKey</a>.
      * </p>
-     * 
-     * @return Unique identifier of the customer master key to be mapped to the alias. This value can be a globally
-     *         unique identifier or the fully specified ARN of a key.</p>
+     * <p>
+     * To verify that the alias is mapped to the correct KMS key, use <a>ListAliases</a>.
+     * </p>
+     *
+     * @return Identifies the <a
+     *         href="https://docs.aws.amazon.com/kms/latest/developerguide/concepts.html#customer-cmk">customer managed
+     *         key</a> to associate with the alias. You don't have permission to associate an alias with an <a
+     *         href="https://docs.aws.amazon.com/kms/latest/developerguide/concepts.html#aws-managed-cmk">Amazon Web
+     *         Services managed key</a>.</p>
+     *         <p>
+     *         The KMS key must be in the same Amazon Web Services account and Region as the alias. Also, the new target
+     *         KMS key must be the same type as the current target KMS key (both symmetric or both asymmetric) and they
+     *         must have the same key usage.
+     *         </p>
+     *         <p>
+     *         Specify the key ID or key ARN of the KMS key.
+     *         </p>
+     *         <p>
+     *         For example:
+     *         </p>
      *         <ul>
      *         <li>
      *         <p>
-     *         Key ARN Example - arn:aws:kms:us-east-1:123456789012:key/12345678-1234-1234-1234-123456789012
+     *         Key ID: <code>1234abcd-12ab-34cd-56ef-1234567890ab</code>
      *         </p>
      *         </li>
      *         <li>
      *         <p>
-     *         Globally Unique Key ID Example - 12345678-1234-1234-1234-123456789012
+     *         Key ARN: <code>arn:aws:kms:us-east-2:111122223333:key/1234abcd-12ab-34cd-56ef-1234567890ab</code>
      *         </p>
      *         </li>
      *         </ul>
      *         <p>
-     *         You can call <a>ListAliases</a> to verify that the alias is mapped to the correct
-     *         <code>TargetKeyId</code>.
+     *         To get the key ID and key ARN for a KMS key, use <a>ListKeys</a> or <a>DescribeKey</a>.
+     *         </p>
+     *         <p>
+     *         To verify that the alias is mapped to the correct KMS key, use <a>ListAliases</a>.
      */
 
     public String getTargetKeyId() {
@@ -191,42 +278,76 @@ public class UpdateAliasRequest extends com.ibm.cloud.objectstorage.AmazonWebSer
 
     /**
      * <p>
-     * Unique identifier of the customer master key to be mapped to the alias. This value can be a globally unique
-     * identifier or the fully specified ARN of a key.
+     * Identifies the <a
+     * href="https://docs.aws.amazon.com/kms/latest/developerguide/concepts.html#customer-cmk">customer managed key</a>
+     * to associate with the alias. You don't have permission to associate an alias with an <a
+     * href="https://docs.aws.amazon.com/kms/latest/developerguide/concepts.html#aws-managed-cmk">Amazon Web Services
+     * managed key</a>.
+     * </p>
+     * <p>
+     * The KMS key must be in the same Amazon Web Services account and Region as the alias. Also, the new target KMS key
+     * must be the same type as the current target KMS key (both symmetric or both asymmetric) and they must have the
+     * same key usage.
+     * </p>
+     * <p>
+     * Specify the key ID or key ARN of the KMS key.
+     * </p>
+     * <p>
+     * For example:
      * </p>
      * <ul>
      * <li>
      * <p>
-     * Key ARN Example - arn:aws:kms:us-east-1:123456789012:key/12345678-1234-1234-1234-123456789012
+     * Key ID: <code>1234abcd-12ab-34cd-56ef-1234567890ab</code>
      * </p>
      * </li>
      * <li>
      * <p>
-     * Globally Unique Key ID Example - 12345678-1234-1234-1234-123456789012
+     * Key ARN: <code>arn:aws:kms:us-east-2:111122223333:key/1234abcd-12ab-34cd-56ef-1234567890ab</code>
      * </p>
      * </li>
      * </ul>
      * <p>
-     * You can call <a>ListAliases</a> to verify that the alias is mapped to the correct <code>TargetKeyId</code>.
+     * To get the key ID and key ARN for a KMS key, use <a>ListKeys</a> or <a>DescribeKey</a>.
      * </p>
-     * 
+     * <p>
+     * To verify that the alias is mapped to the correct KMS key, use <a>ListAliases</a>.
+     * </p>
+     *
      * @param targetKeyId
-     *        Unique identifier of the customer master key to be mapped to the alias. This value can be a globally
-     *        unique identifier or the fully specified ARN of a key.</p>
+     *        Identifies the <a
+     *        href="https://docs.aws.amazon.com/kms/latest/developerguide/concepts.html#customer-cmk">customer managed
+     *        key</a> to associate with the alias. You don't have permission to associate an alias with an <a
+     *        href="https://docs.aws.amazon.com/kms/latest/developerguide/concepts.html#aws-managed-cmk">Amazon Web
+     *        Services managed key</a>.</p>
+     *        <p>
+     *        The KMS key must be in the same Amazon Web Services account and Region as the alias. Also, the new target
+     *        KMS key must be the same type as the current target KMS key (both symmetric or both asymmetric) and they
+     *        must have the same key usage.
+     *        </p>
+     *        <p>
+     *        Specify the key ID or key ARN of the KMS key.
+     *        </p>
+     *        <p>
+     *        For example:
+     *        </p>
      *        <ul>
      *        <li>
      *        <p>
-     *        Key ARN Example - arn:aws:kms:us-east-1:123456789012:key/12345678-1234-1234-1234-123456789012
+     *        Key ID: <code>1234abcd-12ab-34cd-56ef-1234567890ab</code>
      *        </p>
      *        </li>
      *        <li>
      *        <p>
-     *        Globally Unique Key ID Example - 12345678-1234-1234-1234-123456789012
+     *        Key ARN: <code>arn:aws:kms:us-east-2:111122223333:key/1234abcd-12ab-34cd-56ef-1234567890ab</code>
      *        </p>
      *        </li>
      *        </ul>
      *        <p>
-     *        You can call <a>ListAliases</a> to verify that the alias is mapped to the correct <code>TargetKeyId</code>.
+     *        To get the key ID and key ARN for a KMS key, use <a>ListKeys</a> or <a>DescribeKey</a>.
+     *        </p>
+     *        <p>
+     *        To verify that the alias is mapped to the correct KMS key, use <a>ListAliases</a>.
      * @return Returns a reference to this object so that method calls can be chained together.
      */
 
@@ -236,7 +357,8 @@ public class UpdateAliasRequest extends com.ibm.cloud.objectstorage.AmazonWebSer
     }
 
     /**
-     * Returns a string representation of this object; useful for testing and debugging.
+     * Returns a string representation of this object. This is useful for testing and debugging. Sensitive data will be
+     * redacted from this string using a placeholder value.
      *
      * @return A string representation of this object.
      *

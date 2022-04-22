@@ -1,11 +1,11 @@
 /*
- * Copyright 2014-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
- * 
+ * Copyright 2017-2022 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"). You may not use this file except in compliance with
  * the License. A copy of the License is located at
- * 
+ *
  * http://aws.amazon.com/apache2.0
- * 
+ *
  * or in the "license" file accompanying this file. This file is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
  * CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions
  * and limitations under the License.
@@ -18,7 +18,7 @@ import javax.annotation.Generated;
 import com.ibm.cloud.objectstorage.AmazonWebServiceRequest;
 
 /**
- * 
+ *
  * @see <a href="http://docs.aws.amazon.com/goto/WebAPI/kms-2014-11-01/RevokeGrant" target="_top">AWS API
  *      Documentation</a>
  */
@@ -27,62 +27,93 @@ public class RevokeGrantRequest extends com.ibm.cloud.objectstorage.AmazonWebSer
 
     /**
      * <p>
-     * A unique identifier for the customer master key associated with the grant. This value can be a globally unique
-     * identifier or the fully specified ARN to a key.
+     * A unique identifier for the KMS key associated with the grant. To get the key ID and key ARN for a KMS key, use
+     * <a>ListKeys</a> or <a>DescribeKey</a>.
+     * </p>
+     * <p>
+     * Specify the key ID or key ARN of the KMS key. To specify a KMS key in a different Amazon Web Services account,
+     * you must use the key ARN.
+     * </p>
+     * <p>
+     * For example:
      * </p>
      * <ul>
      * <li>
      * <p>
-     * Key ARN Example - arn:aws:kms:us-east-1:123456789012:key/12345678-1234-1234-1234-123456789012
+     * Key ID: <code>1234abcd-12ab-34cd-56ef-1234567890ab</code>
      * </p>
      * </li>
      * <li>
      * <p>
-     * Globally Unique Key ID Example - 12345678-1234-1234-1234-123456789012
+     * Key ARN: <code>arn:aws:kms:us-east-2:111122223333:key/1234abcd-12ab-34cd-56ef-1234567890ab</code>
      * </p>
      * </li>
      * </ul>
+     * <p>
+     * To get the key ID and key ARN for a KMS key, use <a>ListKeys</a> or <a>DescribeKey</a>.
+     * </p>
      */
     private String keyId;
     /**
      * <p>
-     * Identifier of the grant to be revoked.
+     * Identifies the grant to revoke. To get the grant ID, use <a>CreateGrant</a>, <a>ListGrants</a>, or
+     * <a>ListRetirableGrants</a>.
      * </p>
      */
     private String grantId;
 
     /**
      * <p>
-     * A unique identifier for the customer master key associated with the grant. This value can be a globally unique
-     * identifier or the fully specified ARN to a key.
+     * A unique identifier for the KMS key associated with the grant. To get the key ID and key ARN for a KMS key, use
+     * <a>ListKeys</a> or <a>DescribeKey</a>.
+     * </p>
+     * <p>
+     * Specify the key ID or key ARN of the KMS key. To specify a KMS key in a different Amazon Web Services account,
+     * you must use the key ARN.
+     * </p>
+     * <p>
+     * For example:
      * </p>
      * <ul>
      * <li>
      * <p>
-     * Key ARN Example - arn:aws:kms:us-east-1:123456789012:key/12345678-1234-1234-1234-123456789012
+     * Key ID: <code>1234abcd-12ab-34cd-56ef-1234567890ab</code>
      * </p>
      * </li>
      * <li>
      * <p>
-     * Globally Unique Key ID Example - 12345678-1234-1234-1234-123456789012
+     * Key ARN: <code>arn:aws:kms:us-east-2:111122223333:key/1234abcd-12ab-34cd-56ef-1234567890ab</code>
      * </p>
      * </li>
      * </ul>
-     * 
+     * <p>
+     * To get the key ID and key ARN for a KMS key, use <a>ListKeys</a> or <a>DescribeKey</a>.
+     * </p>
+     *
      * @param keyId
-     *        A unique identifier for the customer master key associated with the grant. This value can be a globally
-     *        unique identifier or the fully specified ARN to a key.</p>
+     *        A unique identifier for the KMS key associated with the grant. To get the key ID and key ARN for a KMS
+     *        key, use <a>ListKeys</a> or <a>DescribeKey</a>.</p>
+     *        <p>
+     *        Specify the key ID or key ARN of the KMS key. To specify a KMS key in a different Amazon Web Services
+     *        account, you must use the key ARN.
+     *        </p>
+     *        <p>
+     *        For example:
+     *        </p>
      *        <ul>
      *        <li>
      *        <p>
-     *        Key ARN Example - arn:aws:kms:us-east-1:123456789012:key/12345678-1234-1234-1234-123456789012
+     *        Key ID: <code>1234abcd-12ab-34cd-56ef-1234567890ab</code>
      *        </p>
      *        </li>
      *        <li>
      *        <p>
-     *        Globally Unique Key ID Example - 12345678-1234-1234-1234-123456789012
+     *        Key ARN: <code>arn:aws:kms:us-east-2:111122223333:key/1234abcd-12ab-34cd-56ef-1234567890ab</code>
      *        </p>
      *        </li>
+     *        </ul>
+     *        <p>
+     *        To get the key ID and key ARN for a KMS key, use <a>ListKeys</a> or <a>DescribeKey</a>.
      */
 
     public void setKeyId(String keyId) {
@@ -91,35 +122,55 @@ public class RevokeGrantRequest extends com.ibm.cloud.objectstorage.AmazonWebSer
 
     /**
      * <p>
-     * A unique identifier for the customer master key associated with the grant. This value can be a globally unique
-     * identifier or the fully specified ARN to a key.
+     * A unique identifier for the KMS key associated with the grant. To get the key ID and key ARN for a KMS key, use
+     * <a>ListKeys</a> or <a>DescribeKey</a>.
+     * </p>
+     * <p>
+     * Specify the key ID or key ARN of the KMS key. To specify a KMS key in a different Amazon Web Services account,
+     * you must use the key ARN.
+     * </p>
+     * <p>
+     * For example:
      * </p>
      * <ul>
      * <li>
      * <p>
-     * Key ARN Example - arn:aws:kms:us-east-1:123456789012:key/12345678-1234-1234-1234-123456789012
+     * Key ID: <code>1234abcd-12ab-34cd-56ef-1234567890ab</code>
      * </p>
      * </li>
      * <li>
      * <p>
-     * Globally Unique Key ID Example - 12345678-1234-1234-1234-123456789012
+     * Key ARN: <code>arn:aws:kms:us-east-2:111122223333:key/1234abcd-12ab-34cd-56ef-1234567890ab</code>
      * </p>
      * </li>
      * </ul>
-     * 
-     * @return A unique identifier for the customer master key associated with the grant. This value can be a globally
-     *         unique identifier or the fully specified ARN to a key.</p>
+     * <p>
+     * To get the key ID and key ARN for a KMS key, use <a>ListKeys</a> or <a>DescribeKey</a>.
+     * </p>
+     *
+     * @return A unique identifier for the KMS key associated with the grant. To get the key ID and key ARN for a KMS
+     *         key, use <a>ListKeys</a> or <a>DescribeKey</a>.</p>
+     *         <p>
+     *         Specify the key ID or key ARN of the KMS key. To specify a KMS key in a different Amazon Web Services
+     *         account, you must use the key ARN.
+     *         </p>
+     *         <p>
+     *         For example:
+     *         </p>
      *         <ul>
      *         <li>
      *         <p>
-     *         Key ARN Example - arn:aws:kms:us-east-1:123456789012:key/12345678-1234-1234-1234-123456789012
+     *         Key ID: <code>1234abcd-12ab-34cd-56ef-1234567890ab</code>
      *         </p>
      *         </li>
      *         <li>
      *         <p>
-     *         Globally Unique Key ID Example - 12345678-1234-1234-1234-123456789012
+     *         Key ARN: <code>arn:aws:kms:us-east-2:111122223333:key/1234abcd-12ab-34cd-56ef-1234567890ab</code>
      *         </p>
      *         </li>
+     *         </ul>
+     *         <p>
+     *         To get the key ID and key ARN for a KMS key, use <a>ListKeys</a> or <a>DescribeKey</a>.
      */
 
     public String getKeyId() {
@@ -128,36 +179,56 @@ public class RevokeGrantRequest extends com.ibm.cloud.objectstorage.AmazonWebSer
 
     /**
      * <p>
-     * A unique identifier for the customer master key associated with the grant. This value can be a globally unique
-     * identifier or the fully specified ARN to a key.
+     * A unique identifier for the KMS key associated with the grant. To get the key ID and key ARN for a KMS key, use
+     * <a>ListKeys</a> or <a>DescribeKey</a>.
+     * </p>
+     * <p>
+     * Specify the key ID or key ARN of the KMS key. To specify a KMS key in a different Amazon Web Services account,
+     * you must use the key ARN.
+     * </p>
+     * <p>
+     * For example:
      * </p>
      * <ul>
      * <li>
      * <p>
-     * Key ARN Example - arn:aws:kms:us-east-1:123456789012:key/12345678-1234-1234-1234-123456789012
+     * Key ID: <code>1234abcd-12ab-34cd-56ef-1234567890ab</code>
      * </p>
      * </li>
      * <li>
      * <p>
-     * Globally Unique Key ID Example - 12345678-1234-1234-1234-123456789012
+     * Key ARN: <code>arn:aws:kms:us-east-2:111122223333:key/1234abcd-12ab-34cd-56ef-1234567890ab</code>
      * </p>
      * </li>
      * </ul>
-     * 
+     * <p>
+     * To get the key ID and key ARN for a KMS key, use <a>ListKeys</a> or <a>DescribeKey</a>.
+     * </p>
+     *
      * @param keyId
-     *        A unique identifier for the customer master key associated with the grant. This value can be a globally
-     *        unique identifier or the fully specified ARN to a key.</p>
+     *        A unique identifier for the KMS key associated with the grant. To get the key ID and key ARN for a KMS
+     *        key, use <a>ListKeys</a> or <a>DescribeKey</a>.</p>
+     *        <p>
+     *        Specify the key ID or key ARN of the KMS key. To specify a KMS key in a different Amazon Web Services
+     *        account, you must use the key ARN.
+     *        </p>
+     *        <p>
+     *        For example:
+     *        </p>
      *        <ul>
      *        <li>
      *        <p>
-     *        Key ARN Example - arn:aws:kms:us-east-1:123456789012:key/12345678-1234-1234-1234-123456789012
+     *        Key ID: <code>1234abcd-12ab-34cd-56ef-1234567890ab</code>
      *        </p>
      *        </li>
      *        <li>
      *        <p>
-     *        Globally Unique Key ID Example - 12345678-1234-1234-1234-123456789012
+     *        Key ARN: <code>arn:aws:kms:us-east-2:111122223333:key/1234abcd-12ab-34cd-56ef-1234567890ab</code>
      *        </p>
      *        </li>
+     *        </ul>
+     *        <p>
+     *        To get the key ID and key ARN for a KMS key, use <a>ListKeys</a> or <a>DescribeKey</a>.
      * @return Returns a reference to this object so that method calls can be chained together.
      */
 
@@ -168,11 +239,13 @@ public class RevokeGrantRequest extends com.ibm.cloud.objectstorage.AmazonWebSer
 
     /**
      * <p>
-     * Identifier of the grant to be revoked.
+     * Identifies the grant to revoke. To get the grant ID, use <a>CreateGrant</a>, <a>ListGrants</a>, or
+     * <a>ListRetirableGrants</a>.
      * </p>
-     * 
+     *
      * @param grantId
-     *        Identifier of the grant to be revoked.
+     *        Identifies the grant to revoke. To get the grant ID, use <a>CreateGrant</a>, <a>ListGrants</a>, or
+     *        <a>ListRetirableGrants</a>.
      */
 
     public void setGrantId(String grantId) {
@@ -181,10 +254,12 @@ public class RevokeGrantRequest extends com.ibm.cloud.objectstorage.AmazonWebSer
 
     /**
      * <p>
-     * Identifier of the grant to be revoked.
+     * Identifies the grant to revoke. To get the grant ID, use <a>CreateGrant</a>, <a>ListGrants</a>, or
+     * <a>ListRetirableGrants</a>.
      * </p>
-     * 
-     * @return Identifier of the grant to be revoked.
+     *
+     * @return Identifies the grant to revoke. To get the grant ID, use <a>CreateGrant</a>, <a>ListGrants</a>, or
+     *         <a>ListRetirableGrants</a>.
      */
 
     public String getGrantId() {
@@ -193,11 +268,13 @@ public class RevokeGrantRequest extends com.ibm.cloud.objectstorage.AmazonWebSer
 
     /**
      * <p>
-     * Identifier of the grant to be revoked.
+     * Identifies the grant to revoke. To get the grant ID, use <a>CreateGrant</a>, <a>ListGrants</a>, or
+     * <a>ListRetirableGrants</a>.
      * </p>
-     * 
+     *
      * @param grantId
-     *        Identifier of the grant to be revoked.
+     *        Identifies the grant to revoke. To get the grant ID, use <a>CreateGrant</a>, <a>ListGrants</a>, or
+     *        <a>ListRetirableGrants</a>.
      * @return Returns a reference to this object so that method calls can be chained together.
      */
 
@@ -207,7 +284,8 @@ public class RevokeGrantRequest extends com.ibm.cloud.objectstorage.AmazonWebSer
     }
 
     /**
-     * Returns a string representation of this object; useful for testing and debugging.
+     * Returns a string representation of this object. This is useful for testing and debugging. Sensitive data will be
+     * redacted from this string using a placeholder value.
      *
      * @return A string representation of this object.
      *

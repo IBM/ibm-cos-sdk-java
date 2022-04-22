@@ -1,5 +1,5 @@
 /*
- * Copyright 2011-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2011-2022 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,9 +21,14 @@ import java.io.Serializable;
 /**
  * The {@link LifecycleFilter} is used to identify objects that a Lifecycle Rule applies to.
  *
- * This predicate in {@link LifecycleFilter} should be one of
- * {@link LifecyclePrefixPredicate}, {@link LifecycleTagPredicate}, or
- * {@link LifecycleAndOperator}.
+ * This predicate in {@link LifecycleFilter} should be one of:
+ * <ul>
+ *     <li>{@link LifecyclePrefixPredicate}</li>
+ *     <li>{@link LifecycleTagPredicate}</li>
+ *     <li>{@link LifecycleObjectSizeGreaterThanPredicate}</li>
+ *     <li>{@link LifecycleObjectSizeLessThanPredicate}</li>
+ *     <li>{@link LifecycleAndOperator}</li>
+ * </ul>
  */
 public class LifecycleFilter implements Serializable{
     private LifecycleFilterPredicate predicate;
@@ -37,9 +42,14 @@ public class LifecycleFilter implements Serializable{
     /**
      * Returns the {@link LifecycleFilterPredicate} to be applied to {@link BucketLifecycleConfiguration.Rule}.
      *
-     * The predicate is one of {@link LifecyclePrefixPredicate},
-     * {@link LifecycleTagPredicate} or
-     * {@link LifecycleAndOperator} type.
+     * This predicate in {@link LifecycleFilter} should be one of:
+     * <ul>
+     *     <li>{@link LifecyclePrefixPredicate}</li>
+     *     <li>{@link LifecycleTagPredicate}</li>
+     *     <li>{@link LifecycleObjectSizeGreaterThanPredicate}</li>
+     *     <li>{@link LifecycleObjectSizeLessThanPredicate}</li>
+     *     <li>{@link LifecycleAndOperator}</li>
+     * </ul>
      */
     public LifecycleFilterPredicate getPredicate() {
         return predicate;
@@ -48,9 +58,14 @@ public class LifecycleFilter implements Serializable{
     /**
      * Sets the {@link LifecycleFilterPredicate} to be applied to {@link BucketLifecycleConfiguration.Rule}.
      *
-     * The predicate should be one of {@link LifecyclePrefixPredicate},
-     * {@link LifecycleTagPredicate} or
-     * {@link LifecycleAndOperator} type.
+     * This predicate in {@link LifecycleFilter} should be one of:
+     * <ul>
+     *     <li>{@link LifecyclePrefixPredicate}</li>
+     *     <li>{@link LifecycleTagPredicate}</li>
+     *     <li>{@link LifecycleObjectSizeGreaterThanPredicate}</li>
+     *     <li>{@link LifecycleObjectSizeLessThanPredicate}</li>
+     *     <li>{@link LifecycleAndOperator}</li>
+     * </ul>
      *
      * @param predicate An object of type {@link LifecycleFilterPredicate}.
      */
@@ -62,9 +77,14 @@ public class LifecycleFilter implements Serializable{
      * Sets the {@link LifecycleFilterPredicate} to be applied to {@link BucketLifecycleConfiguration.Rule} and returns the object
      * for method chaining.
      *
-     * The predicate should be one of {@link LifecyclePrefixPredicate},
-     * {@link LifecycleTagPredicate} or
-     * {@link LifecycleAndOperator} type.
+     * This predicate in {@link LifecycleFilter} should be one of:
+     * <ul>
+     *     <li>{@link LifecyclePrefixPredicate}</li>
+     *     <li>{@link LifecycleTagPredicate}</li>
+     *     <li>{@link LifecycleObjectSizeGreaterThanPredicate}</li>
+     *     <li>{@link LifecycleObjectSizeLessThanPredicate}</li>
+     *     <li>{@link LifecycleAndOperator}</li>
+     * </ul>
      *
      * @param predicate An object of type {@link LifecycleFilterPredicate}.
      *

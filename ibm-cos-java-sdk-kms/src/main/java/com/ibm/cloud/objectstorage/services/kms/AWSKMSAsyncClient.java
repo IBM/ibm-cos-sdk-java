@@ -1,11 +1,11 @@
 /*
- * Copyright 2014-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
- * 
+ * Copyright 2017-2022 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"). You may not use this file except in compliance with
  * the License. A copy of the License is located at
- * 
+ *
  * http://aws.amazon.com/apache2.0
- * 
+ *
  * or in the "license" file accompanying this file. This file is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
  * CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions
  * and limitations under the License.
@@ -30,24 +30,28 @@ import com.ibm.cloud.objectstorage.auth.DefaultAWSCredentialsProviderChain;
  * asynchronous operation; overloads which accept an {@code AsyncHandler} can be used to receive notification when an
  * asynchronous operation completes.
  * <p>
- * <fullname>AWS Key Management Service</fullname>
+ * <fullname>Key Management Service</fullname>
  * <p>
- * AWS Key Management Service (AWS KMS) is an encryption and key management web service. This guide describes the AWS
- * KMS operations that you can call programmatically. For general information about AWS KMS, see the <a
- * href="https://docs.aws.amazon.com/kms/latest/developerguide/"> <i>AWS Key Management Service Developer Guide</i>
- * </a>.
+ * Key Management Service (KMS) is an encryption and key management web service. This guide describes the KMS operations
+ * that you can call programmatically. For general information about KMS, see the <a
+ * href="https://docs.aws.amazon.com/kms/latest/developerguide/"> <i>Key Management Service Developer Guide</i> </a>.
  * </p>
  * <note>
  * <p>
- * AWS provides SDKs that consist of libraries and sample code for various programming languages and platforms (Java,
- * Ruby, .Net, macOS, Android, etc.). The SDKs provide a convenient way to create programmatic access to AWS KMS and
- * other AWS services. For example, the SDKs take care of tasks such as signing requests (see below), managing errors,
- * and retrying requests automatically. For more information about the AWS SDKs, including how to download and install
- * them, see <a href="http://aws.amazon.com/tools/">Tools for Amazon Web Services</a>.
+ * KMS is replacing the term <i>customer master key (CMK)</i> with <i>KMS key</i> and <i>KMS key</i>. The concept has
+ * not changed. To prevent breaking changes, KMS is keeping some variations of this term.
+ * </p>
+ * <p>
+ * Amazon Web Services provides SDKs that consist of libraries and sample code for various programming languages and
+ * platforms (Java, Ruby, .Net, macOS, Android, etc.). The SDKs provide a convenient way to create programmatic access
+ * to KMS and other Amazon Web Services services. For example, the SDKs take care of tasks such as signing requests (see
+ * below), managing errors, and retrying requests automatically. For more information about the Amazon Web Services
+ * SDKs, including how to download and install them, see <a href="http://aws.amazon.com/tools/">Tools for Amazon Web
+ * Services</a>.
  * </p>
  * </note>
  * <p>
- * We recommend that you use the AWS SDKs to make programmatic API calls to AWS KMS.
+ * We recommend that you use the Amazon Web Services SDKs to make programmatic API calls to KMS.
  * </p>
  * <p>
  * Clients must support TLS (Transport Layer Security) 1.0. We recommend TLS 1.2. Clients must also support cipher
@@ -59,23 +63,23 @@ import com.ibm.cloud.objectstorage.auth.DefaultAWSCredentialsProviderChain;
  * </p>
  * <p>
  * Requests must be signed by using an access key ID and a secret access key. We strongly recommend that you <i>do
- * not</i> use your AWS account (root) access key ID and secret key for everyday work with AWS KMS. Instead, use the
- * access key ID and secret access key for an IAM user. You can also use the AWS Security Token Service to generate
- * temporary security credentials that you can use to sign requests.
+ * not</i> use your Amazon Web Services account (root) access key ID and secret key for everyday work with KMS. Instead,
+ * use the access key ID and secret access key for an IAM user. You can also use the Amazon Web Services Security Token
+ * Service to generate temporary security credentials that you can use to sign requests.
  * </p>
  * <p>
- * All AWS KMS operations require <a
- * href="https://docs.aws.amazon.com/general/latest/gr/signature-version-4.html">Signature Version 4</a>.
+ * All KMS operations require <a href="https://docs.aws.amazon.com/general/latest/gr/signature-version-4.html">Signature
+ * Version 4</a>.
  * </p>
  * <p>
  * <b>Logging API Requests</b>
  * </p>
  * <p>
- * AWS KMS supports AWS CloudTrail, a service that logs AWS API calls and related events for your AWS account and
- * delivers them to an Amazon S3 bucket that you specify. By using the information collected by CloudTrail, you can
- * determine what requests were made to AWS KMS, who made the request, when it was made, and so on. To learn more about
- * CloudTrail, including how to turn it on and find your log files, see the <a
- * href="https://docs.aws.amazon.com/awscloudtrail/latest/userguide/">AWS CloudTrail User Guide</a>.
+ * KMS supports CloudTrail, a service that logs Amazon Web Services API calls and related events for your Amazon Web
+ * Services account and delivers them to an Amazon S3 bucket that you specify. By using the information collected by
+ * CloudTrail, you can determine what requests were made to KMS, who made the request, when it was made, and so on. To
+ * learn more about CloudTrail, including how to turn it on and find your log files, see the <a
+ * href="https://docs.aws.amazon.com/awscloudtrail/latest/userguide/">CloudTrail User Guide</a>.
  * </p>
  * <p>
  * <b>Additional Resources</b>
@@ -86,8 +90,9 @@ import com.ibm.cloud.objectstorage.auth.DefaultAWSCredentialsProviderChain;
  * <ul>
  * <li>
  * <p>
- * <a href="https://docs.aws.amazon.com/general/latest/gr/aws-security-credentials.html">AWS Security Credentials</a> -
- * This topic provides general information about the types of credentials used for accessing AWS.
+ * <a href="https://docs.aws.amazon.com/general/latest/gr/aws-security-credentials.html">Amazon Web Services Security
+ * Credentials</a> - This topic provides general information about the types of credentials used to access Amazon Web
+ * Services.
  * </p>
  * </li>
  * <li>
@@ -336,6 +341,20 @@ public class AWSKMSAsyncClient extends AWSKMSClient implements AWSKMSAsync {
     }
 
     /**
+     * Constructs a new asynchronous client to invoke service methods on KMS using the specified parameters.
+     *
+     * @param asyncClientParams
+     *        Object providing client parameters.
+     * @param endpointDiscoveryEnabled
+     *        true will enable endpoint discovery if the service supports it.
+     */
+    //IBM unsupported
+    // AWSKMSAsyncClient(AwsAsyncClientParams asyncClientParams, boolean endpointDiscoveryEnabled) {
+    //     super(asyncClientParams, endpointDiscoveryEnabled);
+    //     this.executorService = asyncClientParams.getExecutor();
+    // }
+
+    /**
      * Returns the executor service used by this client to execute async requests.
      *
      * @return The executor service used by this client to execute async requests.
@@ -377,6 +396,40 @@ public class AWSKMSAsyncClient extends AWSKMSClient implements AWSKMSAsync {
         });
     }
 
+    // IBM unsupported
+    // @Override
+    // public java.util.concurrent.Future<ConnectCustomKeyStoreResult> connectCustomKeyStoreAsync(ConnectCustomKeyStoreRequest request) {
+
+    //     return connectCustomKeyStoreAsync(request, null);
+    // }
+
+    // @Override
+    // public java.util.concurrent.Future<ConnectCustomKeyStoreResult> connectCustomKeyStoreAsync(final ConnectCustomKeyStoreRequest request,
+    //         final com.ibm.cloud.objectstorage.handlers.AsyncHandler<ConnectCustomKeyStoreRequest, ConnectCustomKeyStoreResult> asyncHandler) {
+    //     final ConnectCustomKeyStoreRequest finalRequest = beforeClientExecution(request);
+
+    //     return executorService.submit(new java.util.concurrent.Callable<ConnectCustomKeyStoreResult>() {
+    //         @Override
+    //         public ConnectCustomKeyStoreResult call() throws Exception {
+    //             ConnectCustomKeyStoreResult result = null;
+
+    //             try {
+    //                 result = executeConnectCustomKeyStore(finalRequest);
+    //             } catch (Exception ex) {
+    //                 if (asyncHandler != null) {
+    //                     asyncHandler.onError(ex);
+    //                 }
+    //                 throw ex;
+    //             }
+
+    //             if (asyncHandler != null) {
+    //                 asyncHandler.onSuccess(finalRequest, result);
+    //             }
+    //             return result;
+    //         }
+    //     });
+    // }
+
     @Override
     public java.util.concurrent.Future<CreateAliasResult> createAliasAsync(CreateAliasRequest request) {
 
@@ -409,6 +462,40 @@ public class AWSKMSAsyncClient extends AWSKMSClient implements AWSKMSAsync {
             }
         });
     }
+
+    // IBM unsupported
+    // @Override
+    // public java.util.concurrent.Future<CreateCustomKeyStoreResult> createCustomKeyStoreAsync(CreateCustomKeyStoreRequest request) {
+
+    //     return createCustomKeyStoreAsync(request, null);
+    // }
+
+    // @Override
+    // public java.util.concurrent.Future<CreateCustomKeyStoreResult> createCustomKeyStoreAsync(final CreateCustomKeyStoreRequest request,
+    //         final com.ibm.cloud.objectstorage.handlers.AsyncHandler<CreateCustomKeyStoreRequest, CreateCustomKeyStoreResult> asyncHandler) {
+    //     final CreateCustomKeyStoreRequest finalRequest = beforeClientExecution(request);
+
+    //     return executorService.submit(new java.util.concurrent.Callable<CreateCustomKeyStoreResult>() {
+    //         @Override
+    //         public CreateCustomKeyStoreResult call() throws Exception {
+    //             CreateCustomKeyStoreResult result = null;
+
+    //             try {
+    //                 result = executeCreateCustomKeyStore(finalRequest);
+    //             } catch (Exception ex) {
+    //                 if (asyncHandler != null) {
+    //                     asyncHandler.onError(ex);
+    //                 }
+    //                 throw ex;
+    //             }
+
+    //             if (asyncHandler != null) {
+    //                 asyncHandler.onSuccess(finalRequest, result);
+    //             }
+    //             return result;
+    //         }
+    //     });
+    // }
 
     @Override
     public java.util.concurrent.Future<CreateGrantResult> createGrantAsync(CreateGrantRequest request) {
@@ -564,6 +651,40 @@ public class AWSKMSAsyncClient extends AWSKMSClient implements AWSKMSAsync {
         });
     }
 
+    //IBM unsupported
+    // @Override
+    // public java.util.concurrent.Future<DeleteCustomKeyStoreResult> deleteCustomKeyStoreAsync(DeleteCustomKeyStoreRequest request) {
+
+    //     return deleteCustomKeyStoreAsync(request, null);
+    // }
+
+    // @Override
+    // public java.util.concurrent.Future<DeleteCustomKeyStoreResult> deleteCustomKeyStoreAsync(final DeleteCustomKeyStoreRequest request,
+    //         final com.ibm.cloud.objectstorage.handlers.AsyncHandler<DeleteCustomKeyStoreRequest, DeleteCustomKeyStoreResult> asyncHandler) {
+    //     final DeleteCustomKeyStoreRequest finalRequest = beforeClientExecution(request);
+
+    //     return executorService.submit(new java.util.concurrent.Callable<DeleteCustomKeyStoreResult>() {
+    //         @Override
+    //         public DeleteCustomKeyStoreResult call() throws Exception {
+    //             DeleteCustomKeyStoreResult result = null;
+
+    //             try {
+    //                 result = executeDeleteCustomKeyStore(finalRequest);
+    //             } catch (Exception ex) {
+    //                 if (asyncHandler != null) {
+    //                     asyncHandler.onError(ex);
+    //                 }
+    //                 throw ex;
+    //             }
+
+    //             if (asyncHandler != null) {
+    //                 asyncHandler.onSuccess(finalRequest, result);
+    //             }
+    //             return result;
+    //         }
+    //     });
+    // }
+
     @Override
     public java.util.concurrent.Future<DeleteImportedKeyMaterialResult> deleteImportedKeyMaterialAsync(DeleteImportedKeyMaterialRequest request) {
 
@@ -596,6 +717,40 @@ public class AWSKMSAsyncClient extends AWSKMSClient implements AWSKMSAsync {
             }
         });
     }
+
+    //IBM unsupported
+    // @Override
+    // public java.util.concurrent.Future<DescribeCustomKeyStoresResult> describeCustomKeyStoresAsync(DescribeCustomKeyStoresRequest request) {
+
+    //     return describeCustomKeyStoresAsync(request, null);
+    // }
+
+    // @Override
+    // public java.util.concurrent.Future<DescribeCustomKeyStoresResult> describeCustomKeyStoresAsync(final DescribeCustomKeyStoresRequest request,
+    //         final com.ibm.cloud.objectstorage.handlers.AsyncHandler<DescribeCustomKeyStoresRequest, DescribeCustomKeyStoresResult> asyncHandler) {
+    //     final DescribeCustomKeyStoresRequest finalRequest = beforeClientExecution(request);
+
+    //     return executorService.submit(new java.util.concurrent.Callable<DescribeCustomKeyStoresResult>() {
+    //         @Override
+    //         public DescribeCustomKeyStoresResult call() throws Exception {
+    //             DescribeCustomKeyStoresResult result = null;
+
+    //             try {
+    //                 result = executeDescribeCustomKeyStores(finalRequest);
+    //             } catch (Exception ex) {
+    //                 if (asyncHandler != null) {
+    //                     asyncHandler.onError(ex);
+    //                 }
+    //                 throw ex;
+    //             }
+
+    //             if (asyncHandler != null) {
+    //                 asyncHandler.onSuccess(finalRequest, result);
+    //             }
+    //             return result;
+    //         }
+    //     });
+    // }
 
     @Override
     public java.util.concurrent.Future<DescribeKeyResult> describeKeyAsync(DescribeKeyRequest request) {
@@ -695,6 +850,40 @@ public class AWSKMSAsyncClient extends AWSKMSClient implements AWSKMSAsync {
             }
         });
     }
+
+    //IBM unsupported
+    // @Override
+    // public java.util.concurrent.Future<DisconnectCustomKeyStoreResult> disconnectCustomKeyStoreAsync(DisconnectCustomKeyStoreRequest request) {
+
+    //     return disconnectCustomKeyStoreAsync(request, null);
+    // }
+
+    // @Override
+    // public java.util.concurrent.Future<DisconnectCustomKeyStoreResult> disconnectCustomKeyStoreAsync(final DisconnectCustomKeyStoreRequest request,
+    //         final com.ibm.cloud.objectstorage.handlers.AsyncHandler<DisconnectCustomKeyStoreRequest, DisconnectCustomKeyStoreResult> asyncHandler) {
+    //     final DisconnectCustomKeyStoreRequest finalRequest = beforeClientExecution(request);
+
+    //     return executorService.submit(new java.util.concurrent.Callable<DisconnectCustomKeyStoreResult>() {
+    //         @Override
+    //         public DisconnectCustomKeyStoreResult call() throws Exception {
+    //             DisconnectCustomKeyStoreResult result = null;
+
+    //             try {
+    //                 result = executeDisconnectCustomKeyStore(finalRequest);
+    //             } catch (Exception ex) {
+    //                 if (asyncHandler != null) {
+    //                     asyncHandler.onError(ex);
+    //                 }
+    //                 throw ex;
+    //             }
+
+    //             if (asyncHandler != null) {
+    //                 asyncHandler.onSuccess(finalRequest, result);
+    //             }
+    //             return result;
+    //         }
+    //     });
+    // }
 
     @Override
     public java.util.concurrent.Future<EnableKeyResult> enableKeyAsync(EnableKeyRequest request) {
@@ -827,6 +1016,75 @@ public class AWSKMSAsyncClient extends AWSKMSClient implements AWSKMSAsync {
             }
         });
     }
+
+    //IBM unsupported
+    // @Override
+    // public java.util.concurrent.Future<GenerateDataKeyPairResult> generateDataKeyPairAsync(GenerateDataKeyPairRequest request) {
+
+    //     return generateDataKeyPairAsync(request, null);
+    // }
+
+    // @Override
+    // public java.util.concurrent.Future<GenerateDataKeyPairResult> generateDataKeyPairAsync(final GenerateDataKeyPairRequest request,
+    //         final com.ibm.cloud.objectstorage.handlers.AsyncHandler<GenerateDataKeyPairRequest, GenerateDataKeyPairResult> asyncHandler) {
+    //     final GenerateDataKeyPairRequest finalRequest = beforeClientExecution(request);
+
+    //     return executorService.submit(new java.util.concurrent.Callable<GenerateDataKeyPairResult>() {
+    //         @Override
+    //         public GenerateDataKeyPairResult call() throws Exception {
+    //             GenerateDataKeyPairResult result = null;
+
+    //             try {
+    //                 result = executeGenerateDataKeyPair(finalRequest);
+    //             } catch (Exception ex) {
+    //                 if (asyncHandler != null) {
+    //                     asyncHandler.onError(ex);
+    //                 }
+    //                 throw ex;
+    //             }
+
+    //             if (asyncHandler != null) {
+    //                 asyncHandler.onSuccess(finalRequest, result);
+    //             }
+    //             return result;
+    //         }
+    //     });
+    // }
+
+    // @Override
+    // public java.util.concurrent.Future<GenerateDataKeyPairWithoutPlaintextResult> generateDataKeyPairWithoutPlaintextAsync(
+    //         GenerateDataKeyPairWithoutPlaintextRequest request) {
+
+    //     return generateDataKeyPairWithoutPlaintextAsync(request, null);
+    // }
+
+    // @Override
+    // public java.util.concurrent.Future<GenerateDataKeyPairWithoutPlaintextResult> generateDataKeyPairWithoutPlaintextAsync(
+    //         final GenerateDataKeyPairWithoutPlaintextRequest request,
+    //         final com.ibm.cloud.objectstorage.handlers.AsyncHandler<GenerateDataKeyPairWithoutPlaintextRequest, GenerateDataKeyPairWithoutPlaintextResult> asyncHandler) {
+    //     final GenerateDataKeyPairWithoutPlaintextRequest finalRequest = beforeClientExecution(request);
+
+    //     return executorService.submit(new java.util.concurrent.Callable<GenerateDataKeyPairWithoutPlaintextResult>() {
+    //         @Override
+    //         public GenerateDataKeyPairWithoutPlaintextResult call() throws Exception {
+    //             GenerateDataKeyPairWithoutPlaintextResult result = null;
+
+    //             try {
+    //                 result = executeGenerateDataKeyPairWithoutPlaintext(finalRequest);
+    //             } catch (Exception ex) {
+    //                 if (asyncHandler != null) {
+    //                     asyncHandler.onError(ex);
+    //                 }
+    //                 throw ex;
+    //             }
+
+    //             if (asyncHandler != null) {
+    //                 asyncHandler.onSuccess(finalRequest, result);
+    //             }
+    //             return result;
+    //         }
+    //     });
+    // }
 
     @Override
     public java.util.concurrent.Future<GenerateDataKeyWithoutPlaintextResult> generateDataKeyWithoutPlaintextAsync(
@@ -1017,6 +1275,39 @@ public class AWSKMSAsyncClient extends AWSKMSClient implements AWSKMSAsync {
             }
         });
     }
+    //IBM unsupported
+    // @Override
+    // public java.util.concurrent.Future<GetPublicKeyResult> getPublicKeyAsync(GetPublicKeyRequest request) {
+
+    //     return getPublicKeyAsync(request, null);
+    // }
+
+    // @Override
+    // public java.util.concurrent.Future<GetPublicKeyResult> getPublicKeyAsync(final GetPublicKeyRequest request,
+    //         final com.ibm.cloud.objectstorage.handlers.AsyncHandler<GetPublicKeyRequest, GetPublicKeyResult> asyncHandler) {
+    //     final GetPublicKeyRequest finalRequest = beforeClientExecution(request);
+
+    //     return executorService.submit(new java.util.concurrent.Callable<GetPublicKeyResult>() {
+    //         @Override
+    //         public GetPublicKeyResult call() throws Exception {
+    //             GetPublicKeyResult result = null;
+
+    //             try {
+    //                 result = executeGetPublicKey(finalRequest);
+    //             } catch (Exception ex) {
+    //                 if (asyncHandler != null) {
+    //                     asyncHandler.onError(ex);
+    //                 }
+    //                 throw ex;
+    //             }
+
+    //             if (asyncHandler != null) {
+    //                 asyncHandler.onSuccess(finalRequest, result);
+    //             }
+    //             return result;
+    //         }
+    //     });
+    // }
 
     @Override
     public java.util.concurrent.Future<ImportKeyMaterialResult> importKeyMaterialAsync(ImportKeyMaterialRequest request) {
@@ -1360,6 +1651,40 @@ public class AWSKMSAsyncClient extends AWSKMSClient implements AWSKMSAsync {
         });
     }
 
+    //IBM unsupported
+    // @Override
+    // public java.util.concurrent.Future<ReplicateKeyResult> replicateKeyAsync(ReplicateKeyRequest request) {
+
+    //     return replicateKeyAsync(request, null);
+    // }
+
+    // @Override
+    // public java.util.concurrent.Future<ReplicateKeyResult> replicateKeyAsync(final ReplicateKeyRequest request,
+    //         final com.ibm.cloud.objectstorage.handlers.AsyncHandler<ReplicateKeyRequest, ReplicateKeyResult> asyncHandler) {
+    //     final ReplicateKeyRequest finalRequest = beforeClientExecution(request);
+
+    //     return executorService.submit(new java.util.concurrent.Callable<ReplicateKeyResult>() {
+    //         @Override
+    //         public ReplicateKeyResult call() throws Exception {
+    //             ReplicateKeyResult result = null;
+
+    //             try {
+    //                 result = executeReplicateKey(finalRequest);
+    //             } catch (Exception ex) {
+    //                 if (asyncHandler != null) {
+    //                     asyncHandler.onError(ex);
+    //                 }
+    //                 throw ex;
+    //             }
+
+    //             if (asyncHandler != null) {
+    //                 asyncHandler.onSuccess(finalRequest, result);
+    //             }
+    //             return result;
+    //         }
+    //     });
+    // }
+
     @Override
     public java.util.concurrent.Future<RetireGrantResult> retireGrantAsync(RetireGrantRequest request) {
 
@@ -1482,6 +1807,40 @@ public class AWSKMSAsyncClient extends AWSKMSClient implements AWSKMSAsync {
         });
     }
 
+    //IBM unsupported
+    // @Override
+    // public java.util.concurrent.Future<SignResult> signAsync(SignRequest request) {
+
+    //     return signAsync(request, null);
+    // }
+
+    // @Override
+    // public java.util.concurrent.Future<SignResult> signAsync(final SignRequest request,
+    //         final com.ibm.cloud.objectstorage.handlers.AsyncHandler<SignRequest, SignResult> asyncHandler) {
+    //     final SignRequest finalRequest = beforeClientExecution(request);
+
+    //     return executorService.submit(new java.util.concurrent.Callable<SignResult>() {
+    //         @Override
+    //         public SignResult call() throws Exception {
+    //             SignResult result = null;
+
+    //             try {
+    //                 result = executeSign(finalRequest);
+    //             } catch (Exception ex) {
+    //                 if (asyncHandler != null) {
+    //                     asyncHandler.onError(ex);
+    //                 }
+    //                 throw ex;
+    //             }
+
+    //             if (asyncHandler != null) {
+    //                 asyncHandler.onSuccess(finalRequest, result);
+    //             }
+    //             return result;
+    //         }
+    //     });
+    // }
+
     @Override
     public java.util.concurrent.Future<TagResourceResult> tagResourceAsync(TagResourceRequest request) {
 
@@ -1581,6 +1940,40 @@ public class AWSKMSAsyncClient extends AWSKMSClient implements AWSKMSAsync {
         });
     }
 
+    //IBM unsupported
+    // @Override
+    // public java.util.concurrent.Future<UpdateCustomKeyStoreResult> updateCustomKeyStoreAsync(UpdateCustomKeyStoreRequest request) {
+
+    //     return updateCustomKeyStoreAsync(request, null);
+    // }
+
+    // @Override
+    // public java.util.concurrent.Future<UpdateCustomKeyStoreResult> updateCustomKeyStoreAsync(final UpdateCustomKeyStoreRequest request,
+    //         final com.ibm.cloud.objectstorage.handlers.AsyncHandler<UpdateCustomKeyStoreRequest, UpdateCustomKeyStoreResult> asyncHandler) {
+    //     final UpdateCustomKeyStoreRequest finalRequest = beforeClientExecution(request);
+
+    //     return executorService.submit(new java.util.concurrent.Callable<UpdateCustomKeyStoreResult>() {
+    //         @Override
+    //         public UpdateCustomKeyStoreResult call() throws Exception {
+    //             UpdateCustomKeyStoreResult result = null;
+
+    //             try {
+    //                 result = executeUpdateCustomKeyStore(finalRequest);
+    //             } catch (Exception ex) {
+    //                 if (asyncHandler != null) {
+    //                     asyncHandler.onError(ex);
+    //                 }
+    //                 throw ex;
+    //             }
+
+    //             if (asyncHandler != null) {
+    //                 asyncHandler.onSuccess(finalRequest, result);
+    //             }
+    //             return result;
+    //         }
+    //     });
+    // }
+
     @Override
     public java.util.concurrent.Future<UpdateKeyDescriptionResult> updateKeyDescriptionAsync(UpdateKeyDescriptionRequest request) {
 
@@ -1613,6 +2006,73 @@ public class AWSKMSAsyncClient extends AWSKMSClient implements AWSKMSAsync {
             }
         });
     }
+
+    //IBM unsupported
+    // @Override
+    // public java.util.concurrent.Future<UpdatePrimaryRegionResult> updatePrimaryRegionAsync(UpdatePrimaryRegionRequest request) {
+
+    //     return updatePrimaryRegionAsync(request, null);
+    // }
+
+    // @Override
+    // public java.util.concurrent.Future<UpdatePrimaryRegionResult> updatePrimaryRegionAsync(final UpdatePrimaryRegionRequest request,
+    //         final com.ibm.cloud.objectstorage.handlers.AsyncHandler<UpdatePrimaryRegionRequest, UpdatePrimaryRegionResult> asyncHandler) {
+    //     final UpdatePrimaryRegionRequest finalRequest = beforeClientExecution(request);
+
+    //     return executorService.submit(new java.util.concurrent.Callable<UpdatePrimaryRegionResult>() {
+    //         @Override
+    //         public UpdatePrimaryRegionResult call() throws Exception {
+    //             UpdatePrimaryRegionResult result = null;
+
+    //             try {
+    //                 result = executeUpdatePrimaryRegion(finalRequest);
+    //             } catch (Exception ex) {
+    //                 if (asyncHandler != null) {
+    //                     asyncHandler.onError(ex);
+    //                 }
+    //                 throw ex;
+    //             }
+
+    //             if (asyncHandler != null) {
+    //                 asyncHandler.onSuccess(finalRequest, result);
+    //             }
+    //             return result;
+    //         }
+    //     });
+    // }
+
+    // @Override
+    // public java.util.concurrent.Future<VerifyResult> verifyAsync(VerifyRequest request) {
+
+    //     return verifyAsync(request, null);
+    // }
+
+    // @Override
+    // public java.util.concurrent.Future<VerifyResult> verifyAsync(final VerifyRequest request,
+    //         final com.ibm.cloud.objectstorage.handlers.AsyncHandler<VerifyRequest, VerifyResult> asyncHandler) {
+    //     final VerifyRequest finalRequest = beforeClientExecution(request);
+
+    //     return executorService.submit(new java.util.concurrent.Callable<VerifyResult>() {
+    //         @Override
+    //         public VerifyResult call() throws Exception {
+    //             VerifyResult result = null;
+
+    //             try {
+    //                 result = executeVerify(finalRequest);
+    //             } catch (Exception ex) {
+    //                 if (asyncHandler != null) {
+    //                     asyncHandler.onError(ex);
+    //                 }
+    //                 throw ex;
+    //             }
+
+    //             if (asyncHandler != null) {
+    //                 asyncHandler.onSuccess(finalRequest, result);
+    //             }
+    //             return result;
+    //         }
+    //     });
+    // }
 
     /**
      * Shuts down the client, releasing all managed resources. This includes forcibly terminating all pending

@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2010-2022 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -47,7 +47,10 @@ import com.ibm.cloud.objectstorage.AmazonWebServiceRequest;
  * 
  * @see SetBucketLoggingConfigurationRequest#SetBucketLoggingConfigurationRequest(String, BucketLoggingConfiguration)
  */
-public class SetBucketLoggingConfigurationRequest extends AmazonWebServiceRequest implements Serializable {
+public class SetBucketLoggingConfigurationRequest extends AmazonWebServiceRequest implements Serializable
+//IBM unsupported
+//, ExpectedBucketOwnerRequest 
+{
 
     /**
      * The name of the bucket whose logging configuration is being set.
@@ -59,12 +62,15 @@ public class SetBucketLoggingConfigurationRequest extends AmazonWebServiceReques
      */
     private BucketLoggingConfiguration loggingConfiguration;
 
-    
+    //IBM unsupported
+    //private String expectedBucketOwner;
+
+
     /**
-     * Constructs a new {@link SetBucketLoggingConfigurationRequest} 
+     * Constructs a new {@link SetBucketLoggingConfigurationRequest}
      * to set the bucket logging configuration of
      * the specified bucket.
-     * 
+     *
      * @param bucketName
      *            The name of the bucket whose logging configuration is being
      *            set.
@@ -75,6 +81,19 @@ public class SetBucketLoggingConfigurationRequest extends AmazonWebServiceReques
         this.bucketName = bucketName;
         this.loggingConfiguration = loggingConfiguration;
     }
+//IBM unsupported
+//    public String getExpectedBucketOwner() {
+//        return expectedBucketOwner;
+//    }
+//
+//    public SetBucketLoggingConfigurationRequest withExpectedBucketOwner(String expectedBucketOwner) {
+//        this.expectedBucketOwner = expectedBucketOwner;
+//        return this;
+//    }
+//
+//    public void setExpectedBucketOwner(String expectedBucketOwner) {
+//        withExpectedBucketOwner(expectedBucketOwner);
+//    }
 
     /**
      * Gets the name of the bucket whose logging configuration is being set.

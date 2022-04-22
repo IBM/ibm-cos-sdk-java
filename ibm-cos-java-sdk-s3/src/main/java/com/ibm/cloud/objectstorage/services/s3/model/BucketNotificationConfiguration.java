@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2010-2022 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Portions copyright 2006-2009 James Murty. Please see LICENSE.txt
  * for applicable license terms and NOTICE.txt for applicable notices.
@@ -16,8 +16,10 @@
  * permissions and limitations under the License.
  */
 package com.ibm.cloud.objectstorage.services.s3.model;
-import java.io.Serializable;
 
+import com.ibm.cloud.objectstorage.services.s3.AmazonS3;
+import com.ibm.cloud.objectstorage.util.json.Jackson;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -26,9 +28,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
-
-import com.ibm.cloud.objectstorage.services.s3.AmazonS3;
-import com.ibm.cloud.objectstorage.util.json.Jackson;
 
 /**
  * <p>
@@ -61,6 +60,9 @@ import com.ibm.cloud.objectstorage.util.json.Jackson;
 public class BucketNotificationConfiguration implements Serializable {
 
     private Map<String, NotificationConfiguration> configurations = null;
+
+    //IBM unsupported
+    //private EventBridgeConfiguration eventBridgeConfiguration;
 
     /**
      * <p>
@@ -275,6 +277,31 @@ public class BucketNotificationConfiguration implements Serializable {
         }
         return topicConfigs;
     }
+
+    /**
+     * Enables delivery of all bucket events to Amazon EventBridge.
+     */
+//IBM unsupported
+//    public EventBridgeConfiguration getEventBridgeConfiguration() {
+//        return eventBridgeConfiguration;
+//    }
+
+    /**
+     * Enables delivery of all bucket events to Amazon EventBridge.
+     */
+//IBM unsupported
+//    public void setEventBridgeConfiguration(EventBridgeConfiguration eventBridgeConfiguration) {
+//        this.eventBridgeConfiguration = eventBridgeConfiguration;
+//    }
+
+    /**
+     * Enables delivery of all bucket events to Amazon EventBridge.
+     */
+//IBM unsupported
+//    public BucketNotificationConfiguration withEventBridgeConfiguration(EventBridgeConfiguration eventBridgeConfiguration) {
+//        this.eventBridgeConfiguration = eventBridgeConfiguration;
+//        return this;
+//    }
 
     @Override
     public String toString() {

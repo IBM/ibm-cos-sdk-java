@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2010-2022 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -14,29 +14,35 @@
  */
 package com.ibm.cloud.objectstorage.services.s3.model;
 
+import com.ibm.cloud.objectstorage.AmazonWebServiceRequest;
+import com.ibm.cloud.objectstorage.event.ProgressListener;
 import java.io.File;
 import java.io.InputStream;
 import java.io.Serializable;
-
-import com.ibm.cloud.objectstorage.AmazonWebServiceRequest;
-import com.ibm.cloud.objectstorage.event.ProgressListener;
 
 /**
  * Contains the parameters used for the UploadPart operation on Amazon S3.
  * <p>
  * If you are uploading parts for <a
  * href="http://aws.amazon.com/kms/">KMS</a>-encrypted objects, you need to
- * specify the correct region of the bucket on your client and configure AWS
+ * specify the correct region of the bucket on your client and configure Amazon Web Services
  * Signature Version 4 for added security. For more information on how to do
  * this, see
  * http://docs.aws.amazon.com/AmazonS3/latest/dev/UsingAWSSDK.html#specify
  * -signature-version
  * </p>
  * <p>
- * Required Parameters: BucketName, Key, UploadId, PartNumber
+ * Required Parameters: BucketName, Key, UploadId, PartNumber, PartSize
+ *
+ * <b>Note:</b>
+ * If part size is not specified, 0 will be used and could cause unexpected results.
+ *
  */
 public class UploadPartRequest extends AmazonWebServiceRequest implements
-        SSECustomerKeyProvider, S3DataSource, Serializable {
+        SSECustomerKeyProvider, S3DataSource, Serializable
+        //IBM unsupported
+        //, ExpectedBucketOwnerRequest
+        {
 
     private static final long serialVersionUID = 1L;
     /**
@@ -54,10 +60,10 @@ public class UploadPartRequest extends AmazonWebServiceRequest implements
      * <i>AccessPointName</i>-<i>AccountId</i>.s3-accesspoint.<i>Region</i>.amazonaws.com.
      * </p>
      * <p>
-     * When using this operation using an access point through the AWS SDKs, you provide
+     * When using this operation using an access point through the Amazon Web Services SDKs, you provide
      * the access point ARN in place of the bucket name. For more information about access point
      * ARNs, see <a href=\"https://docs.aws.amazon.com/AmazonS3/latest/dev/using-access-points.html\">
-     * Using Access Points</a> in the <i>Amazon Simple Storage Service Developer Guide</i>.
+     * Using access points</a> in the <i>Amazon Simple Storage Service Developer Guide</i>.
      * </p>
      */
     private String bucketName;
@@ -127,9 +133,25 @@ public class UploadPartRequest extends AmazonWebServiceRequest implements
 
     /**
      * Allows the caller to indicate that SDK should calculate the Content-MD5
-     * for part. Defaults to true. 
+     * for part. Defaults to true.
      */
     private boolean isCalculateMD5 = true;
+
+//IBM unsupported
+//    private String expectedBucketOwner;
+//
+//    public String getExpectedBucketOwner() {
+//        return expectedBucketOwner;
+//    }
+//
+//    public UploadPartRequest withExpectedBucketOwner(String expectedBucketOwner) {
+//        this.expectedBucketOwner = expectedBucketOwner;
+//        return this;
+//    }
+//
+//    public void setExpectedBucketOwner(String expectedBucketOwner) {
+//        withExpectedBucketOwner(expectedBucketOwner);
+//    }
 
     /**
      * Sets the stream containing the data to upload for the new part.
@@ -188,10 +210,10 @@ public class UploadPartRequest extends AmazonWebServiceRequest implements
      * <i>AccessPointName</i>-<i>AccountId</i>.s3-accesspoint.<i>Region</i>.amazonaws.com.
      * </p>
      * <p>
-     * When using this operation using an access point through the AWS SDKs, you provide
+     * When using this operation using an access point through the Amazon Web Services SDKs, you provide
      * the access point ARN in place of the bucket name. For more information about access point
      * ARNs, see <a href=\"https://docs.aws.amazon.com/AmazonS3/latest/dev/using-access-points.html\">
-     * Using Access Points</a> in the <i>Amazon Simple Storage Service Developer Guide</i>.
+     * Using access points</a> in the <i>Amazon Simple Storage Service Developer Guide</i>.
      * </p>
      *
      * @param bucketName
@@ -213,10 +235,10 @@ public class UploadPartRequest extends AmazonWebServiceRequest implements
      * <i>AccessPointName</i>-<i>AccountId</i>.s3-accesspoint.<i>Region</i>.amazonaws.com.
      * </p>
      * <p>
-     * When using this operation using an access point through the AWS SDKs, you provide
+     * When using this operation using an access point through the Amazon Web Services SDKs, you provide
      * the access point ARN in place of the bucket name. For more information about access point
      * ARNs, see <a href=\"https://docs.aws.amazon.com/AmazonS3/latest/dev/using-access-points.html\">
-     * Using Access Points</a> in the <i>Amazon Simple Storage Service Developer Guide</i>.
+     * Using access points</a> in the <i>Amazon Simple Storage Service Developer Guide</i>.
      * </p>
      *
      * @param bucketName
@@ -735,7 +757,7 @@ public class UploadPartRequest extends AmazonWebServiceRequest implements
      * MD5 should be calculated for this part.
      *
      * @return True if the creator of this request has indicated this content
-     *             MD5 should be calculated for this part.   
+     *             MD5 should be calculated for this part.
      */
     public boolean isCalculateMD5() {
         return isCalculateMD5;

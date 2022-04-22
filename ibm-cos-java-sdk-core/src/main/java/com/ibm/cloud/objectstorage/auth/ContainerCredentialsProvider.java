@@ -1,5 +1,5 @@
 /*
- * Copyright 2011-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2011-2022 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,6 +35,14 @@ public class ContainerCredentialsProvider implements AWSCredentialsProvider {
 
     /** Environment variable to get the Amazon ECS credentials resource path. */
     static final String ECS_CONTAINER_CREDENTIALS_PATH = "AWS_CONTAINER_CREDENTIALS_RELATIVE_URI";
+
+    /** Environment variable to get the full URI for a credentials path */
+    // IBM unsupported
+    // static final String CONTAINER_CREDENTIALS_FULL_URI = "AWS_CONTAINER_CREDENTIALS_FULL_URI";
+
+    // static final String CONTAINER_AUTHORIZATION_TOKEN = "AWS_CONTAINER_AUTHORIZATION_TOKEN";
+
+    // private static final Set<String> ALLOWED_FULL_URI_HOSTS = allowedHosts();
 
     /** Default endpoint to retreive the Amazon ECS Credentials. */
     private static final String ECS_CREDENTIALS_ENDPOINT = "http://169.254.170.2";
@@ -85,5 +93,47 @@ public class ContainerCredentialsProvider implements AWSCredentialsProvider {
         }
 
     }
+
+    /**
+     * A URI resolver that uses environment variable {@value CONTAINER_CREDENTIALS_FULL_URI} as the URI
+     * for the metadata service.
+     * Optionally an authorization token can be provided using the {@value CONTAINER_AUTHORIZATION_TOKEN} environment variable.
+     */
+    // IBM unsupported
+    // static class FullUriCredentialsEndpointProvider extends CredentialsEndpointProvider {
+
+    //     @Override
+    //     public URI getCredentialsEndpoint() {
+    //         String fullUri = System.getenv(CONTAINER_CREDENTIALS_FULL_URI);
+    //         if (fullUri == null || fullUri.length() == 0) {
+    //             throw new SdkClientException("The environment variable " + CONTAINER_CREDENTIALS_FULL_URI + " is empty");
+    //         }
+
+    //         URI uri = URI.create(fullUri);
+
+    //         if (!ALLOWED_FULL_URI_HOSTS.contains(uri.getHost())) {
+    //             throw new SdkClientException("The full URI (" + uri + ") contained withing environment variable " +
+    //                 CONTAINER_CREDENTIALS_FULL_URI + " has an invalid host. Host can only be one of [" +
+    //                 CollectionUtils.join(ALLOWED_FULL_URI_HOSTS, ", ") + "]");
+    //         }
+
+    //         return uri;
+    //     }
+
+    //     @Override
+    //     public Map<String, String> getHeaders() {
+    //         if (System.getenv(CONTAINER_AUTHORIZATION_TOKEN) != null) {
+    //             return Collections.singletonMap("Authorization", System.getenv(CONTAINER_AUTHORIZATION_TOKEN));
+    //         }
+    //         return new HashMap<String, String>();
+    //     }
+    // }
+
+    // private static Set<String> allowedHosts() {
+    //     HashSet<String> hosts = new HashSet<String>();
+    //     hosts.add("127.0.0.1");
+    //     hosts.add("localhost");
+    //     return Collections.unmodifiableSet(hosts);
+    // }
 
 }

@@ -1,11 +1,11 @@
 /*
- * Copyright 2014-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
- * 
+ * Copyright 2017-2022 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"). You may not use this file except in compliance with
  * the License. A copy of the License is located at
- * 
+ *
  * http://aws.amazon.com/apache2.0
- * 
+ *
  * or in the "license" file accompanying this file. This file is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
  * CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions
  * and limitations under the License.
@@ -18,7 +18,7 @@ import javax.annotation.Generated;
 import com.ibm.cloud.objectstorage.AmazonWebServiceRequest;
 
 /**
- * 
+ *
  * @see <a href="http://docs.aws.amazon.com/goto/WebAPI/kms-2014-11-01/TagResource" target="_top">AWS API
  *      Documentation</a>
  */
@@ -27,13 +27,18 @@ public class TagResourceRequest extends com.ibm.cloud.objectstorage.AmazonWebSer
 
     /**
      * <p>
-     * A unique identifier for the CMK you are tagging. You can use the unique key ID or the Amazon Resource Name (ARN)
-     * of the CMK. Examples:
+     * Identifies a customer managed key in the account and Region.
+     * </p>
+     * <p>
+     * Specify the key ID or key ARN of the KMS key.
+     * </p>
+     * <p>
+     * For example:
      * </p>
      * <ul>
      * <li>
      * <p>
-     * Unique key ID: <code>1234abcd-12ab-34cd-56ef-1234567890ab</code>
+     * Key ID: <code>1234abcd-12ab-34cd-56ef-1234567890ab</code>
      * </p>
      * </li>
      * <li>
@@ -42,24 +47,39 @@ public class TagResourceRequest extends com.ibm.cloud.objectstorage.AmazonWebSer
      * </p>
      * </li>
      * </ul>
+     * <p>
+     * To get the key ID and key ARN for a KMS key, use <a>ListKeys</a> or <a>DescribeKey</a>.
+     * </p>
      */
     private String keyId;
     /**
      * <p>
-     * One or more tags. Each tag consists of a tag key and a tag value.
+     * One or more tags.
+     * </p>
+     * <p>
+     * Each tag consists of a tag key and a tag value. The tag value can be an empty (null) string.
+     * </p>
+     * <p>
+     * You cannot have more than one tag on a KMS key with the same tag key. If you specify an existing tag key with a
+     * different tag value, KMS replaces the current tag value with the specified one.
      * </p>
      */
     private com.ibm.cloud.objectstorage.internal.SdkInternalList<Tag> tags;
 
     /**
      * <p>
-     * A unique identifier for the CMK you are tagging. You can use the unique key ID or the Amazon Resource Name (ARN)
-     * of the CMK. Examples:
+     * Identifies a customer managed key in the account and Region.
+     * </p>
+     * <p>
+     * Specify the key ID or key ARN of the KMS key.
+     * </p>
+     * <p>
+     * For example:
      * </p>
      * <ul>
      * <li>
      * <p>
-     * Unique key ID: <code>1234abcd-12ab-34cd-56ef-1234567890ab</code>
+     * Key ID: <code>1234abcd-12ab-34cd-56ef-1234567890ab</code>
      * </p>
      * </li>
      * <li>
@@ -68,14 +88,22 @@ public class TagResourceRequest extends com.ibm.cloud.objectstorage.AmazonWebSer
      * </p>
      * </li>
      * </ul>
-     * 
+     * <p>
+     * To get the key ID and key ARN for a KMS key, use <a>ListKeys</a> or <a>DescribeKey</a>.
+     * </p>
+     *
      * @param keyId
-     *        A unique identifier for the CMK you are tagging. You can use the unique key ID or the Amazon Resource Name
-     *        (ARN) of the CMK. Examples:</p>
+     *        Identifies a customer managed key in the account and Region.</p>
+     *        <p>
+     *        Specify the key ID or key ARN of the KMS key.
+     *        </p>
+     *        <p>
+     *        For example:
+     *        </p>
      *        <ul>
      *        <li>
      *        <p>
-     *        Unique key ID: <code>1234abcd-12ab-34cd-56ef-1234567890ab</code>
+     *        Key ID: <code>1234abcd-12ab-34cd-56ef-1234567890ab</code>
      *        </p>
      *        </li>
      *        <li>
@@ -83,6 +111,9 @@ public class TagResourceRequest extends com.ibm.cloud.objectstorage.AmazonWebSer
      *        Key ARN: <code>arn:aws:kms:us-east-2:111122223333:key/1234abcd-12ab-34cd-56ef-1234567890ab</code>
      *        </p>
      *        </li>
+     *        </ul>
+     *        <p>
+     *        To get the key ID and key ARN for a KMS key, use <a>ListKeys</a> or <a>DescribeKey</a>.
      */
 
     public void setKeyId(String keyId) {
@@ -91,13 +122,18 @@ public class TagResourceRequest extends com.ibm.cloud.objectstorage.AmazonWebSer
 
     /**
      * <p>
-     * A unique identifier for the CMK you are tagging. You can use the unique key ID or the Amazon Resource Name (ARN)
-     * of the CMK. Examples:
+     * Identifies a customer managed key in the account and Region.
+     * </p>
+     * <p>
+     * Specify the key ID or key ARN of the KMS key.
+     * </p>
+     * <p>
+     * For example:
      * </p>
      * <ul>
      * <li>
      * <p>
-     * Unique key ID: <code>1234abcd-12ab-34cd-56ef-1234567890ab</code>
+     * Key ID: <code>1234abcd-12ab-34cd-56ef-1234567890ab</code>
      * </p>
      * </li>
      * <li>
@@ -106,13 +142,21 @@ public class TagResourceRequest extends com.ibm.cloud.objectstorage.AmazonWebSer
      * </p>
      * </li>
      * </ul>
-     * 
-     * @return A unique identifier for the CMK you are tagging. You can use the unique key ID or the Amazon Resource
-     *         Name (ARN) of the CMK. Examples:</p>
+     * <p>
+     * To get the key ID and key ARN for a KMS key, use <a>ListKeys</a> or <a>DescribeKey</a>.
+     * </p>
+     *
+     * @return Identifies a customer managed key in the account and Region.</p>
+     *         <p>
+     *         Specify the key ID or key ARN of the KMS key.
+     *         </p>
+     *         <p>
+     *         For example:
+     *         </p>
      *         <ul>
      *         <li>
      *         <p>
-     *         Unique key ID: <code>1234abcd-12ab-34cd-56ef-1234567890ab</code>
+     *         Key ID: <code>1234abcd-12ab-34cd-56ef-1234567890ab</code>
      *         </p>
      *         </li>
      *         <li>
@@ -120,6 +164,9 @@ public class TagResourceRequest extends com.ibm.cloud.objectstorage.AmazonWebSer
      *         Key ARN: <code>arn:aws:kms:us-east-2:111122223333:key/1234abcd-12ab-34cd-56ef-1234567890ab</code>
      *         </p>
      *         </li>
+     *         </ul>
+     *         <p>
+     *         To get the key ID and key ARN for a KMS key, use <a>ListKeys</a> or <a>DescribeKey</a>.
      */
 
     public String getKeyId() {
@@ -128,13 +175,18 @@ public class TagResourceRequest extends com.ibm.cloud.objectstorage.AmazonWebSer
 
     /**
      * <p>
-     * A unique identifier for the CMK you are tagging. You can use the unique key ID or the Amazon Resource Name (ARN)
-     * of the CMK. Examples:
+     * Identifies a customer managed key in the account and Region.
+     * </p>
+     * <p>
+     * Specify the key ID or key ARN of the KMS key.
+     * </p>
+     * <p>
+     * For example:
      * </p>
      * <ul>
      * <li>
      * <p>
-     * Unique key ID: <code>1234abcd-12ab-34cd-56ef-1234567890ab</code>
+     * Key ID: <code>1234abcd-12ab-34cd-56ef-1234567890ab</code>
      * </p>
      * </li>
      * <li>
@@ -143,14 +195,22 @@ public class TagResourceRequest extends com.ibm.cloud.objectstorage.AmazonWebSer
      * </p>
      * </li>
      * </ul>
-     * 
+     * <p>
+     * To get the key ID and key ARN for a KMS key, use <a>ListKeys</a> or <a>DescribeKey</a>.
+     * </p>
+     *
      * @param keyId
-     *        A unique identifier for the CMK you are tagging. You can use the unique key ID or the Amazon Resource Name
-     *        (ARN) of the CMK. Examples:</p>
+     *        Identifies a customer managed key in the account and Region.</p>
+     *        <p>
+     *        Specify the key ID or key ARN of the KMS key.
+     *        </p>
+     *        <p>
+     *        For example:
+     *        </p>
      *        <ul>
      *        <li>
      *        <p>
-     *        Unique key ID: <code>1234abcd-12ab-34cd-56ef-1234567890ab</code>
+     *        Key ID: <code>1234abcd-12ab-34cd-56ef-1234567890ab</code>
      *        </p>
      *        </li>
      *        <li>
@@ -158,6 +218,9 @@ public class TagResourceRequest extends com.ibm.cloud.objectstorage.AmazonWebSer
      *        Key ARN: <code>arn:aws:kms:us-east-2:111122223333:key/1234abcd-12ab-34cd-56ef-1234567890ab</code>
      *        </p>
      *        </li>
+     *        </ul>
+     *        <p>
+     *        To get the key ID and key ARN for a KMS key, use <a>ListKeys</a> or <a>DescribeKey</a>.
      * @return Returns a reference to this object so that method calls can be chained together.
      */
 
@@ -168,10 +231,23 @@ public class TagResourceRequest extends com.ibm.cloud.objectstorage.AmazonWebSer
 
     /**
      * <p>
-     * One or more tags. Each tag consists of a tag key and a tag value.
+     * One or more tags.
      * </p>
-     * 
-     * @return One or more tags. Each tag consists of a tag key and a tag value.
+     * <p>
+     * Each tag consists of a tag key and a tag value. The tag value can be an empty (null) string.
+     * </p>
+     * <p>
+     * You cannot have more than one tag on a KMS key with the same tag key. If you specify an existing tag key with a
+     * different tag value, KMS replaces the current tag value with the specified one.
+     * </p>
+     *
+     * @return One or more tags. </p>
+     *         <p>
+     *         Each tag consists of a tag key and a tag value. The tag value can be an empty (null) string.
+     *         </p>
+     *         <p>
+     *         You cannot have more than one tag on a KMS key with the same tag key. If you specify an existing tag key
+     *         with a different tag value, KMS replaces the current tag value with the specified one.
      */
 
     public java.util.List<Tag> getTags() {
@@ -183,11 +259,24 @@ public class TagResourceRequest extends com.ibm.cloud.objectstorage.AmazonWebSer
 
     /**
      * <p>
-     * One or more tags. Each tag consists of a tag key and a tag value.
+     * One or more tags.
      * </p>
-     * 
+     * <p>
+     * Each tag consists of a tag key and a tag value. The tag value can be an empty (null) string.
+     * </p>
+     * <p>
+     * You cannot have more than one tag on a KMS key with the same tag key. If you specify an existing tag key with a
+     * different tag value, KMS replaces the current tag value with the specified one.
+     * </p>
+     *
      * @param tags
-     *        One or more tags. Each tag consists of a tag key and a tag value.
+     *        One or more tags. </p>
+     *        <p>
+     *        Each tag consists of a tag key and a tag value. The tag value can be an empty (null) string.
+     *        </p>
+     *        <p>
+     *        You cannot have more than one tag on a KMS key with the same tag key. If you specify an existing tag key
+     *        with a different tag value, KMS replaces the current tag value with the specified one.
      */
 
     public void setTags(java.util.Collection<Tag> tags) {
@@ -201,16 +290,29 @@ public class TagResourceRequest extends com.ibm.cloud.objectstorage.AmazonWebSer
 
     /**
      * <p>
-     * One or more tags. Each tag consists of a tag key and a tag value.
+     * One or more tags.
+     * </p>
+     * <p>
+     * Each tag consists of a tag key and a tag value. The tag value can be an empty (null) string.
+     * </p>
+     * <p>
+     * You cannot have more than one tag on a KMS key with the same tag key. If you specify an existing tag key with a
+     * different tag value, KMS replaces the current tag value with the specified one.
      * </p>
      * <p>
      * <b>NOTE:</b> This method appends the values to the existing list (if any). Use
      * {@link #setTags(java.util.Collection)} or {@link #withTags(java.util.Collection)} if you want to override the
      * existing values.
      * </p>
-     * 
+     *
      * @param tags
-     *        One or more tags. Each tag consists of a tag key and a tag value.
+     *        One or more tags. </p>
+     *        <p>
+     *        Each tag consists of a tag key and a tag value. The tag value can be an empty (null) string.
+     *        </p>
+     *        <p>
+     *        You cannot have more than one tag on a KMS key with the same tag key. If you specify an existing tag key
+     *        with a different tag value, KMS replaces the current tag value with the specified one.
      * @return Returns a reference to this object so that method calls can be chained together.
      */
 
@@ -226,11 +328,24 @@ public class TagResourceRequest extends com.ibm.cloud.objectstorage.AmazonWebSer
 
     /**
      * <p>
-     * One or more tags. Each tag consists of a tag key and a tag value.
+     * One or more tags.
      * </p>
-     * 
+     * <p>
+     * Each tag consists of a tag key and a tag value. The tag value can be an empty (null) string.
+     * </p>
+     * <p>
+     * You cannot have more than one tag on a KMS key with the same tag key. If you specify an existing tag key with a
+     * different tag value, KMS replaces the current tag value with the specified one.
+     * </p>
+     *
      * @param tags
-     *        One or more tags. Each tag consists of a tag key and a tag value.
+     *        One or more tags. </p>
+     *        <p>
+     *        Each tag consists of a tag key and a tag value. The tag value can be an empty (null) string.
+     *        </p>
+     *        <p>
+     *        You cannot have more than one tag on a KMS key with the same tag key. If you specify an existing tag key
+     *        with a different tag value, KMS replaces the current tag value with the specified one.
      * @return Returns a reference to this object so that method calls can be chained together.
      */
 
@@ -240,7 +355,8 @@ public class TagResourceRequest extends com.ibm.cloud.objectstorage.AmazonWebSer
     }
 
     /**
-     * Returns a string representation of this object; useful for testing and debugging.
+     * Returns a string representation of this object. This is useful for testing and debugging. Sensitive data will be
+     * redacted from this string using a placeholder value.
      *
      * @return A string representation of this object.
      *

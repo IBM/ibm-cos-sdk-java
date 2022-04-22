@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2013-2022 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -14,9 +14,19 @@
  */
 package com.ibm.cloud.objectstorage.services.s3;
 
-import com.ibm.cloud.objectstorage.SdkClientException;
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+
 import com.ibm.cloud.objectstorage.AmazonServiceException;
+import com.ibm.cloud.objectstorage.AmazonWebServiceRequest;
 import com.ibm.cloud.objectstorage.ClientConfiguration;
+import com.ibm.cloud.objectstorage.SdkClientException;
 import com.ibm.cloud.objectstorage.annotation.SdkInternalApi;
 import com.ibm.cloud.objectstorage.auth.AWSCredentials;
 import com.ibm.cloud.objectstorage.auth.AWSCredentialsProvider;
@@ -29,8 +39,8 @@ import com.ibm.cloud.objectstorage.services.kms.AWSKMSClient;
 import com.ibm.cloud.objectstorage.services.s3.internal.MultiFileOutputStream;
 import com.ibm.cloud.objectstorage.services.s3.internal.PartCreationEvent;
 import com.ibm.cloud.objectstorage.services.s3.internal.S3Direct;
-import com.ibm.cloud.objectstorage.services.s3.internal.crypto.CryptoModuleDispatcher;
-import com.ibm.cloud.objectstorage.services.s3.internal.crypto.S3CryptoModule;
+import com.ibm.cloud.objectstorage.services.s3.internal.crypto.v1.CryptoModuleDispatcher;
+import com.ibm.cloud.objectstorage.services.s3.internal.crypto.v1.S3CryptoModule;
 import com.ibm.cloud.objectstorage.services.s3.model.AbortMultipartUploadRequest;
 import com.ibm.cloud.objectstorage.services.s3.model.CompleteMultipartUploadRequest;
 import com.ibm.cloud.objectstorage.services.s3.model.CompleteMultipartUploadResult;
@@ -42,6 +52,7 @@ import com.ibm.cloud.objectstorage.services.s3.model.EncryptedInitiateMultipartU
 import com.ibm.cloud.objectstorage.services.s3.model.EncryptedPutObjectRequest;
 import com.ibm.cloud.objectstorage.services.s3.model.EncryptionMaterials;
 import com.ibm.cloud.objectstorage.services.s3.model.EncryptionMaterialsProvider;
+import com.ibm.cloud.objectstorage.services.s3.model.GetObjectMetadataRequest;
 import com.ibm.cloud.objectstorage.services.s3.model.GetObjectRequest;
 import com.ibm.cloud.objectstorage.services.s3.model.GroupGrantee;
 import com.ibm.cloud.objectstorage.services.s3.model.InitiateMultipartUploadRequest;
@@ -61,15 +72,6 @@ import com.ibm.cloud.objectstorage.services.s3.model.UploadPartRequest;
 import com.ibm.cloud.objectstorage.services.s3.model.UploadPartResult;
 import com.ibm.cloud.objectstorage.util.VersionInfoUtils;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
-
 /**
  * Used to perform client-side encryption for storing data securely in S3. Data
  * encryption is done using a one-time randomly generated content encryption
@@ -77,11 +79,18 @@ import java.util.concurrent.Future;
  * <p>
  * The encryption materials specified in the constructor will be used to
  * protect the CEK which is then stored along side with the S3 object.
+ * <p>
+ * <b>Note:</b> Deprecated in favor of {@link AmazonS3EncryptionClientV2}, which uses only AES/GCM
+ * for content encryption and improved key wrap algorithms.
+ *
+ * @deprecated This feature is in maintenance mode, no new updates will be released.
+ * Please see https://docs.aws.amazon.com/general/latest/gr/aws_sdk_cryptography.html for more information.
  */
+@Deprecated
 public class AmazonS3EncryptionClient extends AmazonS3Client implements
         AmazonS3Encryption {
-    public static final String USER_AGENT = AmazonS3EncryptionClient.class.getName()
-            + "/" + VersionInfoUtils.getVersion();
+    private static final String USER_AGENT_V1 = "S3CryptoV1n/" + VersionInfoUtils.getVersion();
+
     private final S3CryptoModule<?> crypto;
     private final AWSKMS kms;
     /**
@@ -253,13 +262,13 @@ public class AmazonS3EncryptionClient extends AmazonS3Client implements
 
     /**
      * <p>
-     * Constructs a new Amazon S3 Encryption client using the specified AWS credentials to
+     * Constructs a new Amazon S3 Encryption client using the specified Amazon Web Services credentials to
      * access Amazon S3.  Object contents will be encrypted and decrypted with the encryption
      * materials provided.
      * </p>
      *
      * @param credentials
-     *            The AWS credentials to use when making requests to Amazon S3
+     *            The Amazon Web Services credentials to use when making requests to Amazon S3
      *            with this client.
      * @param encryptionMaterials
      *            The encryption materials to be used to encrypt and decrypt data.
@@ -275,13 +284,13 @@ public class AmazonS3EncryptionClient extends AmazonS3Client implements
 
     /**
      * <p>
-     * Constructs a new Amazon S3 Encryption client using the specified AWS credentials to
+     * Constructs a new Amazon S3 Encryption client using the specified Amazon Web Services credentials to
      * access Amazon S3.  Object contents will be encrypted and decrypted with the encryption
      * materials provided.
      * </p>
      *
      * @param credentials
-     *            The AWS credentials to use when making requests to Amazon S3
+     *            The Amazon Web Services credentials to use when making requests to Amazon S3
      *            with this client.
      * @param encryptionMaterialsProvider
      *            A provider for the encryption materials to be used to encrypt and decrypt data.
@@ -297,14 +306,14 @@ public class AmazonS3EncryptionClient extends AmazonS3Client implements
 
     /**
      * <p>
-     * Constructs a new Amazon S3 Encryption client using the specified AWS credentials to
+     * Constructs a new Amazon S3 Encryption client using the specified Amazon Web Services credentials to
      * access Amazon S3.  Object contents will be encrypted and decrypted with the encryption
      * materials provided.
      * </p>
      *
      * @param credentialsProvider
-     *            The AWS credentials provider which will provide credentials
-     *            to authenticate requests with AWS services.
+     *            The Amazon Web Services credentials provider which will provide credentials
+     *            to authenticate requests with Amazon Web Services services.
      * @param encryptionMaterialsProvider
      *            A provider for the encryption materials to be used to encrypt and decrypt data.
      * @deprecated use {@link AmazonS3EncryptionClientBuilder#withEncryptionMaterials(EncryptionMaterialsProvider)} and
@@ -320,14 +329,14 @@ public class AmazonS3EncryptionClient extends AmazonS3Client implements
 
     /**
      * <p>
-     * Constructs a new Amazon S3 Encryption client using the specified AWS credentials to
+     * Constructs a new Amazon S3 Encryption client using the specified Amazon Web Services credentials to
      * access Amazon S3.  Object contents will be encrypted and decrypted with the encryption
      * materials provided.  The encryption implementation of the provided crypto provider will
      * be used to encrypt and decrypt data.
      * </p>
      *
      * @param credentials
-     *            The AWS credentials to use when making requests to Amazon S3
+     *            The Amazon Web Services credentials to use when making requests to Amazon S3
      *            with this client.
      * @param encryptionMaterials
      *            The encryption materials to be used to encrypt and decrypt data.
@@ -347,14 +356,14 @@ public class AmazonS3EncryptionClient extends AmazonS3Client implements
 
     /**
      * <p>
-     * Constructs a new Amazon S3 Encryption client using the specified AWS credentials to
+     * Constructs a new Amazon S3 Encryption client using the specified Amazon Web Services credentials to
      * access Amazon S3.  Object contents will be encrypted and decrypted with the encryption
      * materials provided.  The encryption implementation of the provided crypto provider will
      * be used to encrypt and decrypt data.
      * </p>
      *
      * @param credentials
-     *            The AWS credentials to use when making requests to Amazon S3
+     *            The Amazon Web Services credentials to use when making requests to Amazon S3
      *            with this client.
      * @param encryptionMaterialsProvider
      *            A provider for the encryption materials to be used to encrypt and decrypt data.
@@ -374,15 +383,15 @@ public class AmazonS3EncryptionClient extends AmazonS3Client implements
 
     /**
      * <p>
-     * Constructs a new Amazon S3 Encryption client using the specified AWS credentials to
+     * Constructs a new Amazon S3 Encryption client using the specified Amazon Web Services credentials to
      * access Amazon S3.  Object contents will be encrypted and decrypted with the encryption
      * materials provided.  The encryption implementation of the provided crypto provider will
      * be used to encrypt and decrypt data.
      * </p>
      *
      * @param credentialsProvider
-     *            The AWS credentials provider which will provide credentials
-     *            to authenticate requests with AWS services.
+     *            The Amazon Web Services credentials provider which will provide credentials
+     *            to authenticate requests with Amazon Web Services services.
      * @param encryptionMaterialsProvider
      *            A provider for the encryption materials to be used to encrypt and decrypt data.
      * @param cryptoConfig
@@ -402,14 +411,14 @@ public class AmazonS3EncryptionClient extends AmazonS3Client implements
 
     /**
      * <p>
-     * Constructs a new Amazon S3 Encryption client using the specified AWS credentials and
+     * Constructs a new Amazon S3 Encryption client using the specified Amazon Web Services credentials and
      * client configuration to access Amazon S3.  Object contents will be encrypted and decrypted
      * with the encryption materials provided. The crypto provider and storage mode denoted in
      * the specified crypto configuration will be used to encrypt and decrypt data.
      * </p>
      *
      * @param credentials
-     *            The AWS credentials to use when making requests to Amazon S3
+     *            The Amazon Web Services credentials to use when making requests to Amazon S3
      *            with this client.
      * @param encryptionMaterials
      *            The encryption materials to be used to encrypt and decrypt data.
@@ -533,8 +542,8 @@ public class AmazonS3EncryptionClient extends AmazonS3Client implements
     }
 
     /**
-     * Creates and returns a new instance of AWS KMS client in the case when
-     * an explicit AWS KMS client is not specified.
+     * Creates and returns a new instance of Amazon Web Services KMS client in the case when
+     * an explicit Amazon Web Services KMS client is not specified.
      */
     private AWSKMSClient newAWSKMSClient(
             AWSCredentialsProvider credentialsProvider,
@@ -582,7 +591,7 @@ public class AmazonS3EncryptionClient extends AmazonS3Client implements
 
     @Override
     public void deleteObject(DeleteObjectRequest req) {
-        req.getRequestClientOptions().appendUserAgent(USER_AGENT);
+        req.getRequestClientOptions().appendUserAgent(USER_AGENT_V1);
         // Delete the object
         super.deleteObject(req);
         // If it exists, delete the instruction file.
@@ -687,45 +696,69 @@ public class AmazonS3EncryptionClient extends AmazonS3Client implements
     private final class S3DirectImpl extends S3Direct {
         @Override
         public PutObjectResult putObject(PutObjectRequest req) {
+            appendUserAgent(req, USER_AGENT_V1);
             return AmazonS3EncryptionClient.super.putObject(req);
         }
 
         @Override
         public S3Object getObject(GetObjectRequest req) {
+            appendUserAgent(req, USER_AGENT_V1);
             return AmazonS3EncryptionClient.super.getObject(req);
         }
 
         @Override
         public ObjectMetadata getObject(GetObjectRequest req, File dest) {
+            appendUserAgent(req, USER_AGENT_V1);
             return AmazonS3EncryptionClient.super.getObject(req, dest);
+        }
+
+        @Override
+        public ObjectMetadata getObjectMetadata(GetObjectMetadataRequest req) {
+            appendUserAgent(req, USER_AGENT_V1);
+            return AmazonS3EncryptionClient.super.getObjectMetadata(req);
         }
 
         @Override
         public CompleteMultipartUploadResult completeMultipartUpload(
                 CompleteMultipartUploadRequest req) {
+            appendUserAgent(req, USER_AGENT_V1);
             return AmazonS3EncryptionClient.super.completeMultipartUpload(req);
         }
 
         @Override
         public InitiateMultipartUploadResult initiateMultipartUpload(
                 InitiateMultipartUploadRequest req) {
+            appendUserAgent(req, USER_AGENT_V1);
             return AmazonS3EncryptionClient.super.initiateMultipartUpload(req);
         }
 
         @Override
         public UploadPartResult uploadPart(UploadPartRequest req)
                 throws SdkClientException, AmazonServiceException {
+            appendUserAgent(req, USER_AGENT_V1);
             return AmazonS3EncryptionClient.super.uploadPart(req);
         }
 
         @Override
         public CopyPartResult copyPart(CopyPartRequest req) {
+            appendUserAgent(req, USER_AGENT_V1);
             return AmazonS3EncryptionClient.super.copyPart(req);
         }
 
         @Override
         public void abortMultipartUpload(AbortMultipartUploadRequest req) {
+            appendUserAgent(req, USER_AGENT_V1);
             AmazonS3EncryptionClient.super.abortMultipartUpload(req);
+        }
+
+        /**
+         * Appends a user agent to the request's USER_AGENT_V1 client marker.
+         * This method is intended only for internal use by the Amazon Web Services SDK.
+         */
+        final <X extends AmazonWebServiceRequest> X appendUserAgent(
+            X request, String userAgent) {
+            request.getRequestClientOptions().appendUserAgent(userAgent);
+            return request;
         }
     }
 
