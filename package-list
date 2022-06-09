@@ -73,6 +73,7 @@ com.ibm.cloud.objectstorage.services.s3.model.analytics
 com.ibm.cloud.objectstorage.services.s3.model.inventory
 com.ibm.cloud.objectstorage.services.s3.model.lifecycle
 com.ibm.cloud.objectstorage.services.s3.model.metrics
+com.ibm.cloud.objectstorage.services.s3.model.replication
 com.ibm.cloud.objectstorage.services.s3.request
 com.ibm.cloud.objectstorage.services.s3.transfer
 com.ibm.cloud.objectstorage.services.s3.transfer.exception
