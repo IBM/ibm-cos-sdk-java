@@ -42,16 +42,17 @@ public enum S3Event {
 //
 //    ObjectRestoreCompleted("s3:ObjectRestore:Completed"),
 //
-//    Replication("s3:Replication:*"),
-//
-//    ReplicationOperationFailed("s3:Replication:OperationFailedReplication"),
-//
-//    ReplicationOperationNotTracked("s3:Replication:OperationNotTracked"),
-//
-//    ReplicationOperationMissedThreshold("s3:Replication:OperationMissedThreshold"),
-//
-//    ReplicationOperationReplicatedAfterThreshold("s3:Replication:OperationReplicatedAfterThreshold"),
-//
+    Replication("s3:Replication:*"),
+
+    ReplicationOperationFailed("s3:Replication:OperationFailedReplication"),
+
+    ReplicationOperationNotTracked("s3:Replication:OperationNotTracked"),
+
+    ReplicationOperationMissedThreshold("s3:Replication:OperationMissedThreshold"),
+
+    ReplicationOperationReplicatedAfterThreshold("s3:Replication:OperationReplicatedAfterThreshold"),
+
+// IBM unsupported    
 //    ObjectRestoreDelete("s3:ObjectRestore:Delete"),
 //
 //    LifecycleTransition("s3:LifecycleTransition"),

@@ -37,7 +37,7 @@ import com.ibm.cloud.objectstorage.services.s3.model.BucketWebsiteConfiguration;
 import com.ibm.cloud.objectstorage.services.s3.model.CORSRule;
 import com.ibm.cloud.objectstorage.services.s3.model.CORSRule.AllowedMethods;
 import com.ibm.cloud.objectstorage.services.s3.model.CloudFunctionConfiguration;
-import com.ibm.cloud.objectstorage.services.s3.model.ExistingObjectReplication;
+import com.ibm.cloud.objectstorage.services.s3.model.DeleteMarkerReplication;
 import com.ibm.cloud.objectstorage.services.s3.model.Filter;
 import com.ibm.cloud.objectstorage.services.s3.model.FilterRule;
 import com.ibm.cloud.objectstorage.services.s3.model.LambdaConfiguration;
@@ -86,6 +86,8 @@ import com.ibm.cloud.objectstorage.services.s3.model.metrics.MetricsFilterPredic
 import com.ibm.cloud.objectstorage.services.s3.model.metrics.MetricsPredicateVisitor;
 import com.ibm.cloud.objectstorage.services.s3.model.metrics.MetricsPrefixPredicate;
 import com.ibm.cloud.objectstorage.services.s3.model.metrics.MetricsTagPredicate;
+import com.ibm.cloud.objectstorage.services.s3.model.replication.ReplicationFilter;
+import com.ibm.cloud.objectstorage.services.s3.model.replication.ReplicationFilterPredicate;
 import com.ibm.cloud.objectstorage.util.CollectionUtils;
 import java.util.List;
 import java.util.Map;
@@ -271,16 +273,17 @@ public class BucketConfigurationXmlFactory {
             throw new SdkClientException("Cannot have an S3KeyFilter without any filter rules");
         }
     }
-//IBM unsupported
-//    private void writeReplicationPrefix(final XmlWriter xml, final ReplicationRule rule) {
-//        // If no filter is set stick with the legacy behavior where we treat a null prefix as empty prefix.
-//        if (rule.getFilter() == null) {
-//            xml.start("Prefix").value(rule.getPrefix() == null ? "" : rule.getPrefix()).end();
-//        } else if (rule.getPrefix() != null) {
-//            throw new IllegalArgumentException(
-//                    "Prefix cannot be used with Filter. Use ReplicationPrefixPredicate to create a ReplicationFilter");
-//        }
-//    }
+
+   private void writeReplicationPrefix(final XmlWriter xml, final ReplicationRule rule) {
+       // If no filter is set stick with the legacy behavior where we treat a null prefix as empty prefix.
+       if (rule.getFilter() == null) {
+           // IBM unsupported
+           // xml.start("Prefix").value(rule.getPrefix() == null ? "" : rule.getPrefix()).end();
+       } else if (rule.getPrefix() != null) {
+           throw new IllegalArgumentException(
+                   "Prefix cannot be used with Filter. Use ReplicationPrefixPredicate to create a ReplicationFilter");
+       }
+   }
 
     public byte[] convertToXmlByteArray(BucketReplicationConfiguration replicationConfiguration) {
         XmlWriter xml = new XmlWriter();
@@ -289,7 +292,12 @@ public class BucketConfigurationXmlFactory {
                 .getRules();
 
         final String role = replicationConfiguration.getRoleARN();
-        xml.start("Role").value(role).end();
+
+        // IBM Specific. Role is not supported in COS.
+        if (role != null) {
+            xml.start("Role").value(role).end();
+        }
+
         for (Map.Entry<String, ReplicationRule> entry : rules
                 .entrySet()) {
             final String ruleId = entry.getKey();
@@ -297,25 +305,25 @@ public class BucketConfigurationXmlFactory {
 
             xml.start("Rule");
             xml.start("ID").value(ruleId).end();
-//IBM unsupported            
-//            Integer priority = rule.getPriority();
-//            if (priority != null) {
-//                xml.start("Priority").value(Integer.toString(priority)).end();
-//            }
-            xml.start("Prefix").value(rule.getPrefix()).end();
-            xml.start("Status").value(rule.getStatus()).end();
-            ExistingObjectReplication existingObjectReplication = rule.getExistingObjectReplication();
-            if (existingObjectReplication != null) {
-                xml.start("ExistingObjectReplication").start("Status").value(existingObjectReplication.getStatus()).end().end();
+            Integer priority = rule.getPriority();
+            if (priority != null) {
+                xml.start("Priority").value(Integer.toString(priority)).end();
             }
+            xml.start("Status").value(rule.getStatus()).end();
+
+            // IBM Unsupported 
+            // ExistingObjectReplication existingObjectReplication = rule.getExistingObjectReplication();
+            // if (existingObjectReplication != null) {
+            //     xml.start("ExistingObjectReplication").start("Status").value(existingObjectReplication.getStatus()).end().end();
+            // }
+
+            DeleteMarkerReplication deleteMarkerReplication = rule.getDeleteMarkerReplication();
+            if (deleteMarkerReplication != null) {
+                xml.start("DeleteMarkerReplication").start("Status").value(deleteMarkerReplication.getStatus()).end().end();
+            }
+            writeReplicationPrefix(xml, rule);
+            writeReplicationFilter(xml, rule.getFilter());
 //IBM unsupported 
-//            DeleteMarkerReplication deleteMarkerReplication = rule.getDeleteMarkerReplication();
-//            if (deleteMarkerReplication != null) {
-//                xml.start("DeleteMarkerReplication").start("Status").value(deleteMarkerReplication.getStatus()).end().end();
-//            }
-//            writeReplicationPrefix(xml, rule);
-//            writeReplicationFilter(xml, rule.getFilter());
-//
 //            SourceSelectionCriteria sourceSelectionCriteria = rule.getSourceSelectionCriteria();
 //            if (sourceSelectionCriteria != null) {
 //                xml.start("SourceSelectionCriteria");
@@ -782,24 +790,25 @@ public class BucketConfigurationXmlFactory {
         predicate.accept(new LifecyclePredicateVisitorImpl(xml));
     }
 
+    private void writeReplicationFilter(XmlWriter xml, ReplicationFilter filter) {
+        if (filter == null) {
+            return;
+        }
+
+        xml.start("Filter");
+        writeReplicationPredicate(xml, filter.getPredicate());
+        xml.end();
+    }
+
+
+    private void writeReplicationPredicate(XmlWriter xml, ReplicationFilterPredicate predicate) {
+        if (predicate == null) {
+            return;
+        }
+        predicate.accept(new ReplicationPredicateVisitorImpl(xml));
+    }
+
 //IBM unsupported    
-//    private void writeReplicationFilter(XmlWriter xml, ReplicationFilter filter) {
-//        if (filter == null) {
-//            return;
-//        }
-//
-//        xml.start("Filter");
-//        writeReplicationPredicate(xml, filter.getPredicate());
-//        xml.end();
-//    }
-//
-//    private void writeReplicationPredicate(XmlWriter xml, ReplicationFilterPredicate predicate) {
-//        if (predicate == null) {
-//            return;
-//        }
-//        predicate.accept(new ReplicationPredicateVisitorImpl(xml));
-//    }
-//
 //    public byte[] convertToXmlByteArray(ServerSideEncryptionConfiguration sseConfig) {
 //        XmlWriter xml = new XmlWriter();
 //        xml.start("ServerSideEncryptionConfiguration", "xmlns", Constants.XML_NAMESPACE);

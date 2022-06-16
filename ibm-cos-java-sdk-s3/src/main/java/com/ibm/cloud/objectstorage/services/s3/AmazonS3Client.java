@@ -119,6 +119,7 @@ import com.ibm.cloud.objectstorage.services.s3.model.Bucket;
 import com.ibm.cloud.objectstorage.services.s3.model.BucketCrossOriginConfiguration;
 import com.ibm.cloud.objectstorage.services.s3.model.BucketLifecycleConfiguration;
 import com.ibm.cloud.objectstorage.services.s3.model.BucketProtectionConfiguration;
+import com.ibm.cloud.objectstorage.services.s3.model.BucketReplicationConfiguration;
 import com.ibm.cloud.objectstorage.services.s3.model.BucketTaggingConfiguration;
 import com.ibm.cloud.objectstorage.services.s3.model.BucketVersioningConfiguration;
 import com.ibm.cloud.objectstorage.services.s3.model.BucketWebsiteConfiguration;
@@ -132,6 +133,7 @@ import com.ibm.cloud.objectstorage.services.s3.model.CopyPartResult;
 import com.ibm.cloud.objectstorage.services.s3.model.CreateBucketRequest;
 import com.ibm.cloud.objectstorage.services.s3.model.DeleteBucketCrossOriginConfigurationRequest;
 import com.ibm.cloud.objectstorage.services.s3.model.DeleteBucketLifecycleConfigurationRequest;
+import com.ibm.cloud.objectstorage.services.s3.model.DeleteBucketReplicationConfigurationRequest;
 import com.ibm.cloud.objectstorage.services.s3.model.DeleteBucketRequest;
 import com.ibm.cloud.objectstorage.services.s3.model.DeleteBucketTaggingConfigurationRequest;
 import com.ibm.cloud.objectstorage.services.s3.model.DeleteBucketWebsiteConfigurationRequest;
@@ -153,6 +155,7 @@ import com.ibm.cloud.objectstorage.services.s3.model.GetBucketCrossOriginConfigu
 import com.ibm.cloud.objectstorage.services.s3.model.GetBucketFaspConnectionInfoRequest;
 import com.ibm.cloud.objectstorage.services.s3.model.GetBucketLifecycleConfigurationRequest;
 import com.ibm.cloud.objectstorage.services.s3.model.GetBucketProtectionConfigurationRequest;
+import com.ibm.cloud.objectstorage.services.s3.model.GetBucketReplicationConfigurationRequest;
 import com.ibm.cloud.objectstorage.services.s3.model.GetBucketTaggingConfigurationRequest;
 import com.ibm.cloud.objectstorage.services.s3.model.GetBucketVersioningConfigurationRequest;
 import com.ibm.cloud.objectstorage.services.s3.model.GetBucketWebsiteConfigurationRequest;
@@ -216,6 +219,7 @@ import com.ibm.cloud.objectstorage.services.s3.model.SetBucketAclRequest;
 import com.ibm.cloud.objectstorage.services.s3.model.SetBucketCrossOriginConfigurationRequest;
 import com.ibm.cloud.objectstorage.services.s3.model.SetBucketLifecycleConfigurationRequest;
 import com.ibm.cloud.objectstorage.services.s3.model.SetBucketProtectionConfigurationRequest;
+import com.ibm.cloud.objectstorage.services.s3.model.SetBucketReplicationConfigurationRequest;
 import com.ibm.cloud.objectstorage.services.s3.model.SetBucketTaggingConfigurationRequest;
 import com.ibm.cloud.objectstorage.services.s3.model.SetBucketVersioningConfigurationRequest;
 import com.ibm.cloud.objectstorage.services.s3.model.SetBucketWebsiteConfigurationRequest;
@@ -5981,111 +5985,111 @@ public class AmazonS3Client extends AmazonWebServiceClient implements AmazonS3 {
         // Complete upload
         return observer.onCompletion(partETags);
     }
-    //IBM unsupported
-    // @Override
-    // public void setBucketReplicationConfiguration(String bucketName,
-    //         BucketReplicationConfiguration configuration)
-    //         throws AmazonServiceException, SdkClientException {
-    //     setBucketReplicationConfiguration(new SetBucketReplicationConfigurationRequest(
-    //             bucketName, configuration));
-    // }
 
-    // @Override
-    // public void setBucketReplicationConfiguration(
-    //         SetBucketReplicationConfigurationRequest setBucketReplicationConfigurationRequest)
-    //         throws AmazonServiceException, SdkClientException {
-    //     setBucketReplicationConfigurationRequest = beforeClientExecution(setBucketReplicationConfigurationRequest);
-    //     rejectNull(setBucketReplicationConfigurationRequest,
-    //             "The set bucket replication configuration request object must be specified.");
+    @Override
+    public void setBucketReplicationConfiguration(String bucketName,
+            BucketReplicationConfiguration configuration)
+            throws AmazonServiceException, SdkClientException {
+        setBucketReplicationConfiguration(new SetBucketReplicationConfigurationRequest(
+                bucketName, configuration));
+    }
 
-    //     final String bucketName = setBucketReplicationConfigurationRequest
-    //             .getBucketName();
+    @Override
+    public void setBucketReplicationConfiguration(
+            SetBucketReplicationConfigurationRequest setBucketReplicationConfigurationRequest)
+            throws AmazonServiceException, SdkClientException {
+        setBucketReplicationConfigurationRequest = beforeClientExecution(setBucketReplicationConfigurationRequest);
+        rejectNull(setBucketReplicationConfigurationRequest,
+                "The set bucket replication configuration request object must be specified.");
 
-    //     final BucketReplicationConfiguration bucketReplicationConfiguration = setBucketReplicationConfigurationRequest
-    //             .getReplicationConfiguration();
+        final String bucketName = setBucketReplicationConfigurationRequest
+                .getBucketName();
 
-    //     rejectNull(
-    //             bucketName,
-    //             "The bucket name parameter must be specified when setting replication configuration.");
-    //     rejectNull(
-    //             bucketReplicationConfiguration,
-    //             "The replication configuration parameter must be specified when setting replication configuration.");
+        final BucketReplicationConfiguration bucketReplicationConfiguration = setBucketReplicationConfigurationRequest
+                .getReplicationConfiguration();
 
-    //     Request<SetBucketReplicationConfigurationRequest> request = createRequest(
-    //             bucketName, null, setBucketReplicationConfigurationRequest,
-    //             HttpMethodName.PUT);
-    //     request.addHandlerContext(HandlerContextKey.OPERATION_NAME, "PutBucketReplication");
-    //     request.addParameter("replication", null);
+        rejectNull(
+                bucketName,
+                "The bucket name parameter must be specified when setting replication configuration.");
+        rejectNull(
+                bucketReplicationConfiguration,
+                "The replication configuration parameter must be specified when setting replication configuration.");
 
-    //     final byte[] bytes = bucketConfigurationXmlFactory
-    //             .convertToXmlByteArray(bucketReplicationConfiguration);
+        Request<SetBucketReplicationConfigurationRequest> request = createRequest(
+                bucketName, null, setBucketReplicationConfigurationRequest,
+                HttpMethodName.PUT);
+        request.addHandlerContext(HandlerContextKey.OPERATION_NAME, "PutBucketReplication");
+        request.addParameter("replication", null);
 
-    //     addHeaderIfNotNull(request, Headers.OBJECT_LOCK_TOKEN, setBucketReplicationConfigurationRequest.getToken());
-    //     request.addHeader("Content-Length", String.valueOf(bytes.length));
-    //     request.addHeader("Content-Type", "application/xml");
-    //     request.setContent(new ByteArrayInputStream(bytes));
+        final byte[] bytes = bucketConfigurationXmlFactory
+                .convertToXmlByteArray(bucketReplicationConfiguration);
+        //IBM unsupported
+        // addHeaderIfNotNull(request, Headers.OBJECT_LOCK_TOKEN, setBucketReplicationConfigurationRequest.getToken());
+        request.addHeader("Content-Length", String.valueOf(bytes.length));
+        request.addHeader("Content-Type", "application/xml");
+        request.setContent(new ByteArrayInputStream(bytes));
 
-    //     populateRequestHeaderWithMd5(request, bytes);
+        populateRequestHeaderWithMd5(request, bytes);
 
-    //     invoke(request, voidResponseHandler, bucketName, null);
-    // }
+        invoke(request, voidResponseHandler, bucketName, null);
+    }
 
-    // @Override
-    // public BucketReplicationConfiguration getBucketReplicationConfiguration(
-    //         String bucketName) throws AmazonServiceException,
-    //         SdkClientException {
-    //   return getBucketReplicationConfiguration(new GetBucketReplicationConfigurationRequest(bucketName));
-    // }
+    @Override
+    public BucketReplicationConfiguration getBucketReplicationConfiguration(
+            String bucketName) throws AmazonServiceException,
+            SdkClientException {
+      return getBucketReplicationConfiguration(new GetBucketReplicationConfigurationRequest(bucketName));
+    }
 
-    // @Override
-    // public BucketReplicationConfiguration getBucketReplicationConfiguration(
-    //             GetBucketReplicationConfigurationRequest getBucketReplicationConfigurationRequest)
-    //                 throws AmazonServiceException, SdkClientException {
-    //     getBucketReplicationConfigurationRequest = beforeClientExecution(getBucketReplicationConfigurationRequest);
-    //     rejectNull(
-    //             getBucketReplicationConfigurationRequest,
-    //             "The bucket request parameter must be specified when retrieving replication configuration");
-    //     String bucketName = getBucketReplicationConfigurationRequest.getBucketName();
-    //     rejectNull(
-    //             bucketName,
-    //             "The bucket request must specify a bucket name when retrieving replication configuration");
+    @Override
+    public BucketReplicationConfiguration getBucketReplicationConfiguration(
+                GetBucketReplicationConfigurationRequest getBucketReplicationConfigurationRequest)
+                    throws AmazonServiceException, SdkClientException {
+        getBucketReplicationConfigurationRequest = beforeClientExecution(getBucketReplicationConfigurationRequest);
+        rejectNull(
+                getBucketReplicationConfigurationRequest,
+                "The bucket request parameter must be specified when retrieving replication configuration");
+        String bucketName = getBucketReplicationConfigurationRequest.getBucketName();
+        rejectNull(
+                bucketName,
+                "The bucket request must specify a bucket name when retrieving replication configuration");
 
-    //     Request<GetBucketReplicationConfigurationRequest> request = createRequest(bucketName, null,
-    //                       getBucketReplicationConfigurationRequest, HttpMethodName.GET);
-    //     request.addHandlerContext(HandlerContextKey.OPERATION_NAME, "GetBucketReplication");
-    //     request.addParameter("replication", null);
+        Request<GetBucketReplicationConfigurationRequest> request = createRequest(bucketName, null,
+                          getBucketReplicationConfigurationRequest, HttpMethodName.GET);
+        request.addHandlerContext(HandlerContextKey.OPERATION_NAME, "GetBucketReplication");
+        request.addParameter("replication", null);
 
-    //     return invoke(request,
-    //             new Unmarshallers.BucketReplicationConfigurationUnmarshaller(),
-    //             bucketName, null);
-    // }
+        return invoke(request,
+                new Unmarshallers.BucketReplicationConfigurationUnmarshaller(),
+                bucketName, null);
+    }
 
-    // @Override
-    // public void deleteBucketReplicationConfiguration(String bucketName)
-    //         throws AmazonServiceException, SdkClientException {
-    //     deleteBucketReplicationConfiguration(new
-    //             DeleteBucketReplicationConfigurationRequest(bucketName));
-    // }
+    @Override
+    public void deleteBucketReplicationConfiguration(String bucketName)
+            throws AmazonServiceException, SdkClientException {
+        deleteBucketReplicationConfiguration(new
+                DeleteBucketReplicationConfigurationRequest(bucketName));
+    }
 
-    // @Override
-    // public void deleteBucketReplicationConfiguration
-    //         (DeleteBucketReplicationConfigurationRequest
-    //                  deleteBucketReplicationConfigurationRequest)
-    //         throws AmazonServiceException, SdkClientException {
-    //     deleteBucketReplicationConfigurationRequest = beforeClientExecution(deleteBucketReplicationConfigurationRequest);
-    //     final String bucketName = deleteBucketReplicationConfigurationRequest.getBucketName();
-    //     rejectNull(
-    //             bucketName,
-    //             "The bucket name parameter must be specified when deleting replication configuration");
+    @Override
+    public void deleteBucketReplicationConfiguration
+            (DeleteBucketReplicationConfigurationRequest
+                     deleteBucketReplicationConfigurationRequest)
+            throws AmazonServiceException, SdkClientException {
+        deleteBucketReplicationConfigurationRequest = beforeClientExecution(deleteBucketReplicationConfigurationRequest);
+        final String bucketName = deleteBucketReplicationConfigurationRequest.getBucketName();
+        rejectNull(
+                bucketName,
+                "The bucket name parameter must be specified when deleting replication configuration");
 
-    //     Request<DeleteBucketReplicationConfigurationRequest> request = createRequest(bucketName, null,
-    //             deleteBucketReplicationConfigurationRequest, HttpMethodName
-    //                     .DELETE);
-    //     request.addHandlerContext(HandlerContextKey.OPERATION_NAME, "DeleteBucketReplication");
-    //     request.addParameter("replication", null);
+        Request<DeleteBucketReplicationConfigurationRequest> request = createRequest(bucketName, null,
+                deleteBucketReplicationConfigurationRequest, HttpMethodName
+                        .DELETE);
+        request.addHandlerContext(HandlerContextKey.OPERATION_NAME, "DeleteBucketReplication");
+        request.addParameter("replication", null);
 
-    //     invoke(request, voidResponseHandler, bucketName, null);
-    // }
+        invoke(request, voidResponseHandler, bucketName, null);
+    }
 
     // @Override
     // public DeleteBucketMetricsConfigurationResult deleteBucketMetricsConfiguration(

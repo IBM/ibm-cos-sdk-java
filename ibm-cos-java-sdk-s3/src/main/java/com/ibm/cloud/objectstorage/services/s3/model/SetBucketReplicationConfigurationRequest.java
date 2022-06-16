@@ -36,8 +36,11 @@ public class SetBucketReplicationConfigurationRequest extends
      */
     private BucketReplicationConfiguration replicationConfiguration;
 
+    private String token;
+
     //IBM unsupported
     //private String expectedBucketOwner;
+
     /**
      * Creates a new SetReplicationConfigurationRequest.
      */
@@ -139,6 +142,19 @@ public class SetBucketReplicationConfigurationRequest extends
             BucketReplicationConfiguration replicationConfiguration) {
         setReplicationConfiguration(replicationConfiguration);
         return this;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
+    }
+
+    public SetBucketReplicationConfigurationRequest withToken(String token) {
+        setToken(token);
+        return this;
+    }
+
+    public String getToken() {
+        return token;
     }
 
     @Override

@@ -16,6 +16,7 @@ package com.ibm.cloud.objectstorage.services.s3.model;
 import java.io.Serializable;
 
 import com.ibm.cloud.objectstorage.util.json.Jackson;
+import com.ibm.cloud.objectstorage.services.s3.model.replication.ReplicationFilter;
 
 /**
  * Rule that specifies the replication configuration.
@@ -40,13 +41,32 @@ public class ReplicationRule implements Serializable {
     private ReplicationDestinationConfig destinationConfig;
 
     /**
+     * Filter associated with the replication rule.
+     * Only valid for Replication configuration V2
+     */
+    private ReplicationFilter filter;
+
+    /**
+     * The priority of this replication rule. Valid values are from INT_MIN to INT_MAX.
+     * Only valid for Replication configuration V2
+     */
+    private Integer priority;
+
+    /**
      * The status of the replication of existing objects in this replication rule. Valid values are Enabled, Disabled.
      * The rule will be applied only if the status is Enabled, and is only valid for Replication configuration V2.
      */
-    private ExistingObjectReplication existingObjectReplication;
-
+    // IBM Unsupported
+    // private ExistingObjectReplication existingObjectReplication;
 
     /**
+     * The status of the replication of delete markers in this replication rule. Valid values are Enabled, Disabled.
+     * The rule will be applied only if the status is Enabled, and is only valid for Replication configuration V2.
+     */
+    private DeleteMarkerReplication deleteMarkerReplication;
+
+    /**
+     * Returns the priority of current rule.
      * <p>
      * The priority indicates which rule has precedence whenever two or more replication rules conflict. Amazon S3 will
      * attempt to replicate objects according to all replication rules. However, if there are two or more rules with the
@@ -67,6 +87,13 @@ public class ReplicationRule implements Serializable {
      *         For more information, see <a
      *         href="https://docs.aws.amazon.com/AmazonS3/latest/dev/replication.html">Replication</a> in the <i>Amazon
      *         Simple Storage Service Developer Guide</i>.
+     */
+    public Integer getPriority() {
+        return priority;
+    }
+
+    /**
+     * Set the priority of current rule.
      * <p>
      * Priority must be unique in a configuration (you cannot have two different rules with the same priority).
      * attempt to replicate objects according to all replication rules. However, if there are two or more rules with the
@@ -78,7 +105,17 @@ public class ReplicationRule implements Serializable {
      * href="https://docs.aws.amazon.com/AmazonS3/latest/dev/replication.html">Replication</a> in the <i>Amazon Simple
      * Storage Service Developer Guide</i>.
      * </p>
-     * Fluent method to set the priority of current rule.
+     * @param priority int
+     */
+    public void setPriority(Integer priority) {
+        if (priority < 0) {
+            throw new IllegalArgumentException("Priority has to be a positive number");
+        }
+        this.priority = priority;
+    }
+
+    /**
+     * Set the priority of current rule.
      * <p>
      * Priority must be unique in a configuration (you cannot have two different rules with the same priority).
      * attempt to replicate objects according to all replication rules. However, if there are two or more rules with the
@@ -90,6 +127,43 @@ public class ReplicationRule implements Serializable {
      * href="https://docs.aws.amazon.com/AmazonS3/latest/dev/replication.html">Replication</a> in the <i>Amazon Simple
      * Storage Service Developer Guide</i>.
      * </p>
+     * @param priority int
+     * @return This object for method chaining.
+     */
+    public ReplicationRule withPriority(Integer priority) {
+        setPriority(priority);
+        return this;
+    }
+
+    /**
+     * Returns the status of delete marker replication of current rule.
+     */
+    public DeleteMarkerReplication getDeleteMarkerReplication() {
+        return deleteMarkerReplication;
+    }
+
+    /**
+     * Sets the status of delete marker replication of the current rule.
+     *
+     * @param deleteMarkerReplication Status of delete markers replication.
+     */
+    public void setDeleteMarkerReplication(DeleteMarkerReplication deleteMarkerReplication) {
+        this.deleteMarkerReplication = deleteMarkerReplication;
+    }
+
+    /**
+     * Fluent method to set the DeleteMarkerReplication that is indicate if delete
+     * markers have or don't have to be replicated in Replication configuration V2.
+     *
+     * @param deleteMarkerReplication Status of delete markers replication.
+     * @return This object for method chaining.
+     */
+    public ReplicationRule withDeleteMarkerReplication(DeleteMarkerReplication deleteMarkerReplication) {
+        setDeleteMarkerReplication(deleteMarkerReplication);
+        return this;
+    }
+
+    /**
      * Returns the prefix associated with the replication rule.
      */
     public String getPrefix() {
@@ -107,6 +181,10 @@ public class ReplicationRule implements Serializable {
             throw new IllegalArgumentException(
                     "Prefix cannot be null for a replication rule");
         }
+        if (filter != null) {
+            throw new IllegalArgumentException(
+                    "You cannot use both prefix and filter at the same time in a replication rule");
+        }
         this.prefix = prefix;
     }
 
@@ -120,6 +198,44 @@ public class ReplicationRule implements Serializable {
      */
     public ReplicationRule withPrefix(String prefix) {
         setPrefix(prefix);
+        return this;
+    }
+
+    /**
+     * Returns a {@link ReplicationFilter} that is used to identify objects that a CRR Rule applies to.
+     */
+    public ReplicationFilter getFilter() {
+        return filter;
+    }
+
+    /**
+     * Sets the {@link ReplicationFilter} that is used to identify objects that a CRR Rule applies to.
+     * A rule cannot have both {@link ReplicationFilter} and the deprecated {@link #prefix}.
+     *
+     * @param filter {@link ReplicationFilter}
+     */
+    public void setFilter(ReplicationFilter filter) {
+        if (filter == null) {
+            throw new IllegalArgumentException(
+                    "Filter cannot be null for a replication rule");
+        }
+        if (prefix != null) {
+            throw new IllegalArgumentException(
+                    "You cannot use both prefix and filter at the same time in a replication rule");
+        }
+        this.filter = filter;
+    }
+
+    /**
+     * Fluent method to set the {@link ReplicationFilter} that is used to identify objects
+     * that a CRR Rule applies to. A rule cannot have both {@link ReplicationFilter}
+     * and the deprecated {@link #prefix}.
+     *
+     * @param filter {@link ReplicationFilter}
+     * @return This object for method chaining.
+     */
+    public ReplicationRule withFilter(ReplicationFilter filter) {
+        setFilter(filter);
         return this;
     }
 
@@ -193,8 +309,7 @@ public class ReplicationRule implements Serializable {
      * @throws IllegalArgumentException
      *             if the destinationConfig is null.
      */
-    public void setDestinationConfig(
-            ReplicationDestinationConfig destinationConfig) {
+    public void setDestinationConfig(ReplicationDestinationConfig destinationConfig) {
         if (destinationConfig == null) {
             throw new IllegalArgumentException(
                     "Destination cannot be null in the replication rule");
@@ -216,21 +331,23 @@ public class ReplicationRule implements Serializable {
         return this;
     }
 
-        /**
+    /**
      * Returns the status of existing object replication of current rule.
      */
-    public ExistingObjectReplication getExistingObjectReplication() {
-        return existingObjectReplication;
-    }
+    // IBM Unsupported
+    // public ExistingObjectReplication getExistingObjectReplication() {
+    //     return existingObjectReplication;
+    // }
 
     /**
      * Sets the status of existing object replication of current rule.
      *
      * @param existingObjectReplication Status of existing object replication.
      */
-    public void setExistingObjectReplication(ExistingObjectReplication existingObjectReplication) {
-        this.existingObjectReplication = existingObjectReplication;
-    }
+    // IBM Unsupported
+    // public void setExistingObjectReplication(ExistingObjectReplication existingObjectReplication) {
+    //     this.existingObjectReplication = existingObjectReplication;
+    // }
 
     /**
      * Fluent method to set the ExistingObjectReplication that is indicate if existing
@@ -239,10 +356,11 @@ public class ReplicationRule implements Serializable {
      * @param existingObjectReplication Status of existing object replication.
      * @return This object for method chaining.
      */
-    public ReplicationRule withExistingObjectReplication(ExistingObjectReplication existingObjectReplication) {
-        setExistingObjectReplication(existingObjectReplication);
-        return this;
-    }
+    // IBM Unsupported
+    // public ReplicationRule withExistingObjectReplication(ExistingObjectReplication existingObjectReplication) {
+    //     setExistingObjectReplication(existingObjectReplication);
+    //     return this;
+    // }
 
     @Override
     public String toString() {

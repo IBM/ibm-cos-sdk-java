@@ -1,5 +1,13 @@
 # CHANGELOG
 
+## 2.12.0
+
+### Content
+
+#### Features
+
+* Cloud Object Storage Replication
+
 ## 2.11.2
 
 ### Content

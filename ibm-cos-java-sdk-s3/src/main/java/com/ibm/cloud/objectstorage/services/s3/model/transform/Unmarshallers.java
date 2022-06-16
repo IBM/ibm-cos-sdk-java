@@ -19,6 +19,7 @@ import com.ibm.cloud.objectstorage.services.s3.model.*;
 import com.ibm.cloud.objectstorage.services.s3.model.AccessControlList;
 import com.ibm.cloud.objectstorage.services.s3.model.Bucket;
 import com.ibm.cloud.objectstorage.services.s3.model.BucketLifecycleConfiguration;
+import com.ibm.cloud.objectstorage.services.s3.model.BucketReplicationConfiguration;
 import com.ibm.cloud.objectstorage.services.s3.model.BucketWebsiteConfiguration;
 import com.ibm.cloud.objectstorage.services.s3.model.DeleteObjectTaggingResult;
 import com.ibm.cloud.objectstorage.services.s3.model.DeletePublicAccessBlockResult;

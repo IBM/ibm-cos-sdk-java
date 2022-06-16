@@ -35,6 +35,7 @@ import com.ibm.cloud.objectstorage.services.s3.model.AbortMultipartUploadRequest
 import com.ibm.cloud.objectstorage.services.s3.model.AccessControlList;
 import com.ibm.cloud.objectstorage.services.s3.model.Bucket;
 import com.ibm.cloud.objectstorage.services.s3.model.BucketLifecycleConfiguration;
+import com.ibm.cloud.objectstorage.services.s3.model.BucketReplicationConfiguration;
 import com.ibm.cloud.objectstorage.services.s3.model.BucketWebsiteConfiguration;
 import com.ibm.cloud.objectstorage.services.s3.model.CannedAccessControlList;
 import com.ibm.cloud.objectstorage.services.s3.model.CompleteMultipartUploadRequest;
@@ -45,6 +46,7 @@ import com.ibm.cloud.objectstorage.services.s3.model.CopyPartRequest;
 import com.ibm.cloud.objectstorage.services.s3.model.CopyPartResult;
 import com.ibm.cloud.objectstorage.services.s3.model.CreateBucketRequest;
 import com.ibm.cloud.objectstorage.services.s3.model.DeleteBucketLifecycleConfigurationRequest;
+import com.ibm.cloud.objectstorage.services.s3.model.DeleteBucketReplicationConfigurationRequest;
 import com.ibm.cloud.objectstorage.services.s3.model.DeleteBucketWebsiteConfigurationRequest;
 import com.ibm.cloud.objectstorage.services.s3.model.DeleteObjectRequest;
 import com.ibm.cloud.objectstorage.services.s3.model.DeleteObjectTaggingRequest;
@@ -57,6 +59,7 @@ import com.ibm.cloud.objectstorage.services.s3.model.DeleteVersionRequest;
 import com.ibm.cloud.objectstorage.services.s3.model.GeneratePresignedUrlRequest;
 import com.ibm.cloud.objectstorage.services.s3.model.GetBucketAclRequest;
 import com.ibm.cloud.objectstorage.services.s3.model.GetBucketLifecycleConfigurationRequest;
+import com.ibm.cloud.objectstorage.services.s3.model.GetBucketReplicationConfigurationRequest;
 import com.ibm.cloud.objectstorage.services.s3.model.GetBucketWebsiteConfigurationRequest;
 import com.ibm.cloud.objectstorage.services.s3.model.GetObjectMetadataRequest;
 import com.ibm.cloud.objectstorage.services.s3.model.GetObjectRequest;
@@ -88,6 +91,7 @@ import com.ibm.cloud.objectstorage.services.s3.model.RestoreObjectRequest;
 import com.ibm.cloud.objectstorage.services.s3.model.S3Object;
 import com.ibm.cloud.objectstorage.services.s3.model.SetBucketAclRequest;
 import com.ibm.cloud.objectstorage.services.s3.model.SetBucketLifecycleConfigurationRequest;
+import com.ibm.cloud.objectstorage.services.s3.model.SetBucketReplicationConfigurationRequest;
 import com.ibm.cloud.objectstorage.services.s3.model.SetBucketWebsiteConfigurationRequest;
 import com.ibm.cloud.objectstorage.services.s3.model.SetObjectAclRequest;
 import com.ibm.cloud.objectstorage.services.s3.model.SetObjectTaggingRequest;
@@ -5967,10 +5971,9 @@ public interface AmazonS3 extends S3DirectSpi {
      * @see AmazonS3#getBucketReplicationConfiguration(String)
      * @see AmazonS3#deleteBucketReplicationConfiguration(String)
      */
-//IBM unsupported
-//    public void setBucketReplicationConfiguration(String bucketName,
-//            BucketReplicationConfiguration configuration)
-//            throws AmazonServiceException, SdkClientException;
+    public void setBucketReplicationConfiguration(String bucketName,
+            BucketReplicationConfiguration configuration)
+            throws AmazonServiceException, SdkClientException;
 
     /**
      * <p>
@@ -6065,10 +6068,9 @@ public interface AmazonS3 extends S3DirectSpi {
      * @see AmazonS3#getBucketReplicationConfiguration(String)
      * @see AmazonS3#deleteBucketReplicationConfiguration(String)
      */
-//IBM unsupported
-//    public void setBucketReplicationConfiguration(
-//            SetBucketReplicationConfigurationRequest setBucketReplicationConfigurationRequest)
-//            throws AmazonServiceException, SdkClientException;
+    public void setBucketReplicationConfiguration(
+            SetBucketReplicationConfigurationRequest setBucketReplicationConfigurationRequest)
+            throws AmazonServiceException, SdkClientException;
 
     /**
      * Retrieves the replication configuration for the given Amazon S3 bucket.
@@ -6088,10 +6090,9 @@ public interface AmazonS3 extends S3DirectSpi {
      *      BucketReplicationConfiguration)
      * @see AmazonS3#deleteBucketReplicationConfiguration(String)
      */
-//IBM unsupported
-//    public BucketReplicationConfiguration getBucketReplicationConfiguration(
-//            String bucketName) throws AmazonServiceException,
-//            SdkClientException;
+    public BucketReplicationConfiguration getBucketReplicationConfiguration(
+            String bucketName) throws AmazonServiceException,
+            SdkClientException;
 
     /**
      * Retrieves the replication configuration for the given Amazon S3 bucket.
@@ -6110,9 +6111,8 @@ public interface AmazonS3 extends S3DirectSpi {
      *      BucketReplicationConfiguration)
      * @see AmazonS3#deleteBucketReplicationConfiguration(String)
      */
-//IBM unsupported
-//    BucketReplicationConfiguration getBucketReplicationConfiguration(GetBucketReplicationConfigurationRequest getBucketReplicationConfigurationRequest)
-//            throws AmazonServiceException, SdkClientException;
+    BucketReplicationConfiguration getBucketReplicationConfiguration(GetBucketReplicationConfigurationRequest getBucketReplicationConfigurationRequest)
+            throws AmazonServiceException, SdkClientException;
 
     /**
      * Deletes the replication configuration for the given Amazon S3 bucket.
@@ -6132,9 +6132,8 @@ public interface AmazonS3 extends S3DirectSpi {
      * @see AmazonS3#getBucketReplicationConfiguration(String)
      * @see AmazonS3#deleteBucketReplicationConfiguration(DeleteBucketReplicationConfigurationRequest)
      */
-//IBM unsupported
-//    void deleteBucketReplicationConfiguration(String bucketName)
-//            throws AmazonServiceException, SdkClientException;
+    void deleteBucketReplicationConfiguration(String bucketName)
+            throws AmazonServiceException, SdkClientException;
 
     /**
      * Deletes the replication configuration for the given Amazon S3 bucket.
@@ -6154,10 +6153,9 @@ public interface AmazonS3 extends S3DirectSpi {
      * @see AmazonS3#getBucketReplicationConfiguration(String)
      * @see AmazonS3#deleteBucketReplicationConfiguration(String)
      */
-//IBM unsupported
-//    void deleteBucketReplicationConfiguration
-//    (DeleteBucketReplicationConfigurationRequest request)
-//            throws AmazonServiceException, SdkClientException;
+    void deleteBucketReplicationConfiguration
+    (DeleteBucketReplicationConfigurationRequest request)
+            throws AmazonServiceException, SdkClientException;
 
     /**
      * @param bucketName
