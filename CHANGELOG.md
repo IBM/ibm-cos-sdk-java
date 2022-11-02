@@ -1,5 +1,13 @@
 # CHANGELOG
 
+## 2.12.1
+
+### Content
+
+#### Defect Fixes
+
+* COSSDK-93176: <https://github.com/IBM/ibm-cos-sdk-java/issues/56>
+
 ## 2.12.0
 
 ### Content
