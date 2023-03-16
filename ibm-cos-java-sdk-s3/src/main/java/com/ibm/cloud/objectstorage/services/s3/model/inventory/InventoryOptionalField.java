@@ -36,11 +36,11 @@ public enum InventoryOptionalField {
 //
 //    EncryptionStatus("EncryptionStatus"),
 //
-//    ObjectLockRetainUntilDate("ObjectLockRetainUntilDate"),
-//
-//    ObjectLockMode("ObjectLockMode"),
-//
-//    ObjectLockLegalHoldStatus("ObjectLockLegalHoldStatus"),
+   ObjectLockRetainUntilDate("ObjectLockRetainUntilDate"),
+
+   ObjectLockMode("ObjectLockMode"),
+
+   ObjectLockLegalHoldStatus("ObjectLockLegalHoldStatus"),
 
     IntelligentTieringAccessTier("IntelligentTieringAccessTier"),
 

@@ -274,19 +274,19 @@ public interface Headers {
 //
 //    String S3_RESTORE_OUTPUT_PATH = "x-amz-restore-output-path";
 //
-//    String OBJECT_LOCK_MODE = "x-amz-object-lock-mode";
+   String OBJECT_LOCK_MODE = "x-amz-object-lock-mode";
+
+   String OBJECT_LOCK_RETAIN_UNTIL_DATE = "x-amz-object-lock-retain-until-date";
+
+   String OBJECT_LOCK_LEGAL_HOLD_STATUS = "x-amz-object-lock-legal-hold";
 //
-//    String OBJECT_LOCK_RETAIN_UNTIL_DATE = "x-amz-object-lock-retain-until-date";
+      String OBJECT_LOCK_TOKEN = "x-amz-bucket-object-lock-token";
 //
-//    String OBJECT_LOCK_LEGAL_HOLD_STATUS = "x-amz-object-lock-legal-hold";
-//
-//    String OBJECT_LOCK_TOKEN = "x-amz-bucket-object-lock-token";
-//
-//    String OBJECT_LOCK_ENABLED_FOR_BUCKET = "x-amz-bucket-object-lock-enabled";
-//	
-//    String OBJECT_OWNERSHIP = "x-amz-object-ownership";
-//
-//    String BYPASS_GOVERNANCE_RETENTION = "x-amz-bypass-governance-retention";
+      String OBJECT_LOCK_ENABLED_FOR_BUCKET = "x-amz-bucket-object-lock-enabled";
+	
+//      String OBJECT_OWNERSHIP = "x-amz-object-ownership";
+
+      String BYPASS_GOVERNANCE_RETENTION = "x-amz-bypass-governance-retention";
 //
 //    String REQUEST_ROUTE = "x-amz-request-route";
 //
@@ -324,11 +324,11 @@ public interface Headers {
 //
 //    String FWD_MISSING_META = "x-amz-fwd-header-x-amz-missing-meta";
 //
-//    String FWD_OBJECT_LOCK_MODE = "x-amz-fwd-header-x-amz-object-lock-mode";
-//
-//    String FWD_OBJECT_LOCK_LEGAL_HOLD = "x-amz-fwd-header-x-amz-object-lock-legal-hold";
-//
-//    String FWD_OBJECT_LOCK_RETAIN_UNTIL_DATE = "x-amz-fwd-header-x-amz-object-lock-retain-until-date";
+   String FWD_OBJECT_LOCK_MODE = "x-amz-fwd-header-x-amz-object-lock-mode";
+
+   String FWD_OBJECT_LOCK_LEGAL_HOLD = "x-amz-fwd-header-x-amz-object-lock-legal-hold";
+
+   String FWD_OBJECT_LOCK_RETAIN_UNTIL_DATE = "x-amz-fwd-header-x-amz-object-lock-retain-until-date";
 //
 //    String FWD_PARTS_COUNT = "x-amz-fwd-header-x-amz-mp-parts-count";
 //

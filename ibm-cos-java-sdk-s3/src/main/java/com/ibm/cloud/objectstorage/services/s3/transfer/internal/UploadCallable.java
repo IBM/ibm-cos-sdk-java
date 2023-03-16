@@ -429,10 +429,9 @@ public class UploadCallable implements Callable<UploadResult> {
            .withRequestMetricCollector(origReq.getRequestMetricCollector())
            ;
 
-// IBM does not support Object Locking
-//        req.withObjectLockMode(origReq.getObjectLockMode())
-//           .withObjectLockRetainUntilDate(origReq.getObjectLockRetainUntilDate())
-//           .withObjectLockLegalHoldStatus(origReq.getObjectLockLegalHoldStatus());
+       req.withObjectLockMode(origReq.getObjectLockMode())
+          .withObjectLockRetainUntilDate(origReq.getObjectLockRetainUntilDate())
+          .withObjectLockLegalHoldStatus(origReq.getObjectLockLegalHoldStatus());
 
         req.withRequestCredentialsProvider(origReq.getRequestCredentialsProvider());
 
@@ -459,7 +458,10 @@ public class UploadCallable implements Callable<UploadResult> {
     }
 
     private boolean shouldCalculatePartMd5() {
-        return false;  // IBM does not support Object Locking
+        return origReq.getObjectLockMode() != null
+                || origReq.getObjectLockRetainUntilDate() != null
+                || origReq.getObjectLockLegalHoldStatus() != null
+                || configuration.isAlwaysCalculateMultipartMd5();
     }
 
     private enum State {

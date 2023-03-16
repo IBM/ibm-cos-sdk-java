@@ -239,10 +239,9 @@ public class CopyCallable implements Callable<CopyResult> {
 
         req.setTagging(origReq.getNewObjectTagging());
         
-// IBM does not support object locking
-//        req.withObjectLockMode(origReq.getObjectLockMode())
-//           .withObjectLockLegalHoldStatus(origReq.getObjectLockLegalHoldStatus())
-//           .withObjectLockRetainUntilDate(origReq.getObjectLockRetainUntilDate());
+       req.withObjectLockMode(origReq.getObjectLockMode())
+          .withObjectLockLegalHoldStatus(origReq.getObjectLockLegalHoldStatus())
+          .withObjectLockRetainUntilDate(origReq.getObjectLockRetainUntilDate());
 
         req.withRequestCredentialsProvider(origReq.getRequestCredentialsProvider());
 

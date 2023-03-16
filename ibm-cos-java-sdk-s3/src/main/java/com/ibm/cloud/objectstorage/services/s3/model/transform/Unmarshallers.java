@@ -34,6 +34,12 @@ import com.ibm.cloud.objectstorage.services.s3.model.SetPublicAccessBlockResult;
 import com.ibm.cloud.objectstorage.services.s3.model.VersionListing;
 import com.ibm.cloud.objectstorage.services.s3.model.transform.XmlResponsesSaxParser.CompleteMultipartUploadHandler;
 import com.ibm.cloud.objectstorage.services.s3.model.transform.XmlResponsesSaxParser.CopyObjectResultHandler;
+import com.ibm.cloud.objectstorage.services.s3.model.GetObjectLockConfigurationResult;
+import com.ibm.cloud.objectstorage.services.s3.model.GetObjectLegalHoldResult;
+import com.ibm.cloud.objectstorage.services.s3.model.GetObjectRetentionResult;
+import com.ibm.cloud.objectstorage.services.s3.model.SetObjectLockConfigurationResult;
+import com.ibm.cloud.objectstorage.services.s3.model.SetObjectLegalHoldResult;
+import com.ibm.cloud.objectstorage.services.s3.model.SetObjectRetentionResult;
 import com.ibm.cloud.objectstorage.transform.Unmarshaller;
 import java.io.InputStream;
 import java.util.List;
@@ -592,54 +598,54 @@ public class Unmarshallers {
 //        }
 //    }
 //
-//    public static final class GetObjectLegalHoldResultUnmarshaller implements Unmarshaller<GetObjectLegalHoldResult, InputStream> {
-//
-//        @Override
-//        public GetObjectLegalHoldResult unmarshall(InputStream in) throws Exception {
-//            return new XmlResponsesSaxParser().parseGetObjectLegalHoldResponse(in).getResult();
-//        }
-//    }
-//
-//    public static final class SetObjectLockConfigurationResultUnmarshaller implements Unmarshaller<SetObjectLockConfigurationResult, InputStream> {
-//
-//        @Override
-//        public SetObjectLockConfigurationResult unmarshall(InputStream in) throws Exception {
-//            return new SetObjectLockConfigurationResult();
-//        }
-//    }
-//
-//    public static final class SetObjectLegalHoldResultUnmarshaller implements Unmarshaller<SetObjectLegalHoldResult, InputStream> {
-//
-//        @Override
-//        public SetObjectLegalHoldResult unmarshall(InputStream in) throws Exception {
-//            return new SetObjectLegalHoldResult();
-//        }
-//    }
-//
-//    public static final class GetObjectLockConfigurationResultUnmarshaller implements Unmarshaller<GetObjectLockConfigurationResult, InputStream> {
-//
-//        @Override
-//        public GetObjectLockConfigurationResult unmarshall(InputStream in) throws Exception {
-//            return new XmlResponsesSaxParser().parseGetObjectLockConfigurationResponse(in).getResult();
-//        }
-//    }
-//
-//    public static final class SetObjectRetentionResultUnmarshaller implements Unmarshaller<SetObjectRetentionResult, InputStream> {
-//
-//        @Override
-//        public SetObjectRetentionResult unmarshall(InputStream in) throws Exception {
-//            return new SetObjectRetentionResult();
-//        }
-//    }
-//
-//    public static final class GetObjectRetentionResultUnmarshaller implements Unmarshaller<GetObjectRetentionResult, InputStream> {
-//
-//        @Override
-//        public GetObjectRetentionResult unmarshall(InputStream in) throws Exception {
-//            return new XmlResponsesSaxParser().parseGetObjectRetentionResponse(in).getResult();
-//        }
-//    }
-//
+   public static final class GetObjectLegalHoldResultUnmarshaller implements Unmarshaller<GetObjectLegalHoldResult, InputStream> {
+
+       @Override
+       public GetObjectLegalHoldResult unmarshall(InputStream in) throws Exception {
+           return new XmlResponsesSaxParser().parseGetObjectLegalHoldResponse(in).getResult();
+       }
+   }
+
+   public static final class SetObjectLockConfigurationResultUnmarshaller implements Unmarshaller<SetObjectLockConfigurationResult, InputStream> {
+
+       @Override
+       public SetObjectLockConfigurationResult unmarshall(InputStream in) throws Exception {
+           return new SetObjectLockConfigurationResult();
+       }
+   }
+
+   public static final class SetObjectLegalHoldResultUnmarshaller implements Unmarshaller<SetObjectLegalHoldResult, InputStream> {
+
+       @Override
+       public SetObjectLegalHoldResult unmarshall(InputStream in) throws Exception {
+           return new SetObjectLegalHoldResult();
+       }
+   }
+
+    public static final class GetObjectLockConfigurationResultUnmarshaller implements Unmarshaller<GetObjectLockConfigurationResult, InputStream> {
+
+        @Override
+        public GetObjectLockConfigurationResult unmarshall(InputStream in) throws Exception {
+            return new XmlResponsesSaxParser().parseGetObjectLockConfigurationResponse(in).getResult();
+        }
+    }
+
+   public static final class SetObjectRetentionResultUnmarshaller implements Unmarshaller<SetObjectRetentionResult, InputStream> {
+
+       @Override
+       public SetObjectRetentionResult unmarshall(InputStream in) throws Exception {
+           return new SetObjectRetentionResult();
+       }
+   }
+
+   public static final class GetObjectRetentionResultUnmarshaller implements Unmarshaller<GetObjectRetentionResult, InputStream> {
+
+       @Override
+       public GetObjectRetentionResult unmarshall(InputStream in) throws Exception {
+           return new XmlResponsesSaxParser().parseGetObjectRetentionResponse(in).getResult();
+       }
+   }
+
 //    public static final class WriteGetObjectResponseResultUnmarshaller implements Unmarshaller<WriteGetObjectResponseResult, InputStream> {
 //
 //        @Override

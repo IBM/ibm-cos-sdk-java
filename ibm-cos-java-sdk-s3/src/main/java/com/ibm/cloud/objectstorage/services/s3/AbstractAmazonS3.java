@@ -21,6 +21,18 @@ import java.util.Date;
 import java.util.List;
 
 import com.ibm.cloud.objectstorage.AmazonServiceException;
+import com.ibm.cloud.objectstorage.services.s3.model.GetObjectLockConfigurationRequest;
+import com.ibm.cloud.objectstorage.services.s3.model.GetObjectLockConfigurationResult;
+import com.ibm.cloud.objectstorage.services.s3.model.GetObjectLegalHoldRequest;
+import com.ibm.cloud.objectstorage.services.s3.model.GetObjectLegalHoldResult;
+import com.ibm.cloud.objectstorage.services.s3.model.GetObjectRetentionRequest;
+import com.ibm.cloud.objectstorage.services.s3.model.GetObjectRetentionResult;
+import com.ibm.cloud.objectstorage.services.s3.model.SetObjectLockConfigurationRequest;
+import com.ibm.cloud.objectstorage.services.s3.model.SetObjectLockConfigurationResult;
+import com.ibm.cloud.objectstorage.services.s3.model.SetObjectLegalHoldRequest;
+import com.ibm.cloud.objectstorage.services.s3.model.SetObjectLegalHoldResult;
+import com.ibm.cloud.objectstorage.services.s3.model.SetObjectRetentionRequest;
+import com.ibm.cloud.objectstorage.services.s3.model.SetObjectRetentionResult;
 import com.ibm.cloud.objectstorage.AmazonWebServiceRequest;
 import com.ibm.cloud.objectstorage.HttpMethod;
 import com.ibm.cloud.objectstorage.SdkClientException;
@@ -879,6 +891,36 @@ public abstract class AbstractAmazonS3 implements AmazonS3 {
 //    public WriteGetObjectResponseResult writeGetObjectResponse(WriteGetObjectResponseRequest writeGetObjectResponseRequest) {
 //        throw new UnsupportedOperationException("Extend AbstractAmazonS3 to provide an implementation");
 //    }
+
+    @Override
+    public GetObjectLockConfigurationResult getObjectLockConfiguration(GetObjectLockConfigurationRequest getObjectLockConfigurationRequest) {
+    throw new UnsupportedOperationException("Extend AbstractAmazonS3 to provide an implementation");
+    }
+
+    @Override
+    public GetObjectLegalHoldResult getObjectLegalHold(GetObjectLegalHoldRequest getObjectLegalHoldRequest) {
+        throw new UnsupportedOperationException("Extend AbstractAmazonS3 to provide an implementation");
+    }
+
+    @Override
+    public GetObjectRetentionResult getObjectRetention(GetObjectRetentionRequest getObjectRetentionRequest) {
+        throw new UnsupportedOperationException("Extend AbstractAmazonS3 to provide an implementation");
+    }
+
+    @Override
+    public SetObjectLockConfigurationResult setObjectLockConfiguration(SetObjectLockConfigurationRequest setObjectLockConfigurationRequest) {
+        throw new UnsupportedOperationException("Extend AbstractAmazonS3 to provide an implementation");
+    }
+
+    @Override
+    public SetObjectLegalHoldResult setObjectLegalHold(SetObjectLegalHoldRequest setObjectLegalHoldRequest) {
+        throw new UnsupportedOperationException("Extend AbstractAmazonS3 to provide an implementation");
+    }
+
+    @Override
+    public SetObjectRetentionResult setObjectRetention(SetObjectRetentionRequest setObjectRetentionRequest) {
+        throw new UnsupportedOperationException("Extend AbstractAmazonS3 to provide an implementation");
+    }
 
     @Override
     public PresignedUrlDownloadResult download(PresignedUrlDownloadRequest presignedUrlDownloadRequest) {

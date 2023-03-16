@@ -54,10 +54,10 @@ public class CreateBucketRequest extends AmazonWebServiceRequest implements
      */
     private AccessControlList accessControlList;
    
-//IBM unsupported
-//    private boolean objectLockEnabled;
-//
-//    private String objectOwnership;
+    private boolean objectLockEnabled;
+
+// IBM unsupported
+//     private String objectOwnership;
 
     /**
      * Constructs a new {@link CreateBucketRequest},
@@ -281,6 +281,28 @@ public class CreateBucketRequest extends AmazonWebServiceRequest implements
         setAccessControlList(accessControlList);
         return this;
     }
+	
+	/**
+     * Specifies whether you want S3 Object Lock to be enabled for the new bucket.
+     */
+    public boolean getObjectLockEnabledForBucket() {
+        return objectLockEnabled;
+    }
+
+    /**
+     * Specifies whether you want S3 Object Lock to be enabled for the new bucket.
+     */
+    public CreateBucketRequest withObjectLockEnabledForBucket(boolean objectLockEnabled) {
+        this.objectLockEnabled = objectLockEnabled;
+        return this;
+    }
+
+    /**
+     * Specifies whether you want S3 Object Lock to be enabled for the new bucket.
+     */
+    public void setObjectLockEnabledForBucket(boolean objectLockEnabled) {
+        withObjectLockEnabledForBucket(objectLockEnabled);
+    }
 
     /**
      * Sets the serviceInstanceId on the Request Object.
@@ -302,8 +324,8 @@ public class CreateBucketRequest extends AmazonWebServiceRequest implements
      */
 //IBM unsupported
 //    public String getObjectOwnership() {
-//        return objectOwnership;
-//    }
+//         return objectOwnership;
+//     }
 
     /**
      * Sets the optional object ownership for the new bucket. Returns this {@link CreateBucketRequest},

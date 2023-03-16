@@ -113,7 +113,9 @@ public abstract class AbstractPutObjectRequest extends AmazonWebServiceRequest i
 
     private ObjectTagging tagging;
 
-    /**
+    private String objectLockMode;
+	
+	/**
      * Date on which it will be legal to delete or modify the object.
      * You can only specify this or the Retention-Period header.
      * If both are specified a 400 error will be returned.
@@ -121,6 +123,8 @@ public abstract class AbstractPutObjectRequest extends AmazonWebServiceRequest i
      * This header should be used to calculate a retention period in seconds and then stored in that manner.
      */
     private Date retentionExpirationDate;
+	
+	private Date objectLockRetainUntilDate;
 
     /**
      * A single legal hold to apply to the object.
@@ -128,6 +132,8 @@ public abstract class AbstractPutObjectRequest extends AmazonWebServiceRequest i
      * The object cannot be overwritten or deleted until all legal holds associated with the object are removed.
      */
     private String retentionLegalHoldId;
+	
+	private String objectLockLegalHoldStatus;
 
     /**
      * Retention period to store on the object in seconds.
@@ -136,6 +142,8 @@ public abstract class AbstractPutObjectRequest extends AmazonWebServiceRequest i
      * 0 is a legal value assuming the bucket's minimum retention period is also 0.
      */
     private Long retentionPeriod;
+	
+	private Boolean bucketKeyEnabled;
 
     //IBM does not support SSE-KMS
     //private Boolean bucketKeyEnabled;
@@ -906,6 +914,100 @@ public abstract class AbstractPutObjectRequest extends AmazonWebServiceRequest i
         setTagging(tagSet);
         T t = (T)this;
         return t;
+    }
+
+    /**
+     * The Object Lock mode that you want to apply to this object.
+     */
+    public String getObjectLockMode() {
+        return objectLockMode;
+    }
+
+    /**
+     * The Object Lock mode that you want to apply to this object.
+     */
+    public <T extends PutObjectRequest> T withObjectLockMode(String objectLockMode) {
+        this.objectLockMode = objectLockMode;
+        return (T) this;
+    }
+
+    /**
+     * The Object Lock mode that you want to apply to this object.
+     */
+    public <T extends PutObjectRequest> T withObjectLockMode(ObjectLockMode objectLockMode) {
+        return withObjectLockMode(objectLockMode.toString());
+    }
+
+    /**
+     * The Object Lock mode that you want to apply to this object.
+     */
+    public void setObjectLockMode(String objectLockMode) {
+        withObjectLockMode(objectLockMode);
+    }
+
+    /**
+     * The Object Lock mode that you want to apply to this object.
+     */
+    public void setObjectLockMode(ObjectLockMode objectLockMode) {
+        setObjectLockMode(objectLockMode.toString());
+    }
+
+    /**
+     * The date and time when you want this object's Object Lock to expire.
+     */
+    public Date getObjectLockRetainUntilDate() {
+        return objectLockRetainUntilDate;
+    }
+
+    /**
+     * The date and time when you want this object's Object Lock to expire.
+     */
+    public <T extends PutObjectRequest> T withObjectLockRetainUntilDate(Date objectLockRetainUntilDate) {
+        this.objectLockRetainUntilDate = objectLockRetainUntilDate;
+        return (T) this;
+    }
+
+    /**
+     * The date and time when you want this object's Object Lock to expire.
+     */
+    public void setObjectLockRetainUntilDate(Date objectLockRetainUntilDate) {
+        withObjectLockRetainUntilDate(objectLockRetainUntilDate);
+    }
+
+    /**
+     * The Legal Hold status that you want to apply to the specified object.
+     */
+    public String getObjectLockLegalHoldStatus() {
+        return objectLockLegalHoldStatus;
+    }
+
+    /**
+     * The Legal Hold status that you want to apply to the specified object.
+     */
+    public <T extends PutObjectRequest> T withObjectLockLegalHoldStatus(String objectLockLegalHoldStatus) {
+        this.objectLockLegalHoldStatus = objectLockLegalHoldStatus;
+        return (T) this;
+    }
+
+    /**
+     * The Legal Hold status that you want to apply to the specified object.
+     */
+    public <T extends PutObjectRequest> T withObjectLockLegalHoldStatus(ObjectLockLegalHoldStatus objectLockLegalHoldStatus) {
+        return withObjectLockLegalHoldStatus(objectLockLegalHoldStatus.toString());
+    }
+
+    /**
+     * The Legal Hold status that you want to apply to the specified object.
+     */
+    public void setObjectLockLegalHoldStatus(String objectLockLegalHoldStatus) {
+        withObjectLockLegalHoldStatus(objectLockLegalHoldStatus);
+    }
+
+    /**
+     * The Legal Hold status that you want to apply to the specified object.
+     */
+    public void setObjectLockLegalHoldStatus(ObjectLockLegalHoldStatus objectLockLegalHoldStatus) {
+        setObjectLockLegalHoldStatus(objectLockLegalHoldStatus.toString());
     }
 
     /**

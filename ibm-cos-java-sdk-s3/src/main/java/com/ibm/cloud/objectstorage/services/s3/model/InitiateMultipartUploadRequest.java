@@ -114,6 +114,12 @@ public class InitiateMultipartUploadRequest extends AmazonWebServiceRequest
     private boolean isRequesterPays;
 
     private ObjectTagging tagging;
+	
+	private String objectLockMode;
+
+    private Date objectLockRetainUntilDate;
+
+    private String objectLockLegalHoldStatus;
     
     //IBM unsupported
     //private String expectedBucketOwner;
@@ -731,6 +737,100 @@ public class InitiateMultipartUploadRequest extends AmazonWebServiceRequest
     public InitiateMultipartUploadRequest withTagging(ObjectTagging tagging) {
         setTagging(tagging);
         return this;
+    }
+
+    /**
+     * The Object Lock mode that you want to apply to this object.
+     */
+    public String getObjectLockMode() {
+        return objectLockMode;
+    }
+
+    /**
+     * The Object Lock mode that you want to apply to this object.
+     */
+    public InitiateMultipartUploadRequest withObjectLockMode(String objectLockMode) {
+        this.objectLockMode = objectLockMode;
+        return this;
+    }
+
+    /**
+     * The Object Lock mode that you want to apply to this object.
+     */
+    public InitiateMultipartUploadRequest withObjectLockMode(ObjectLockMode objectLockMode) {
+        return withObjectLockMode(objectLockMode.toString());
+    }
+
+    /**
+     * The Object Lock mode that you want to apply to this object.
+     */
+    public void setObjectLockMode(String objectLockMode) {
+        withObjectLockMode(objectLockMode);
+    }
+
+    /**
+     * The Object Lock mode that you want to apply to this object.
+     */
+    public void setObjectLockMode(ObjectLockMode objectLockMode) {
+        setObjectLockMode(objectLockMode.toString());
+    }
+
+    /**
+     * The date and time when you want this object's Object Lock to expire.
+     */
+    public Date getObjectLockRetainUntilDate() {
+        return objectLockRetainUntilDate;
+    }
+
+    /**
+     * The date and time when you want this object's Object Lock to expire.
+     */
+    public InitiateMultipartUploadRequest withObjectLockRetainUntilDate(Date objectLockRetainUntilDate) {
+        this.objectLockRetainUntilDate = objectLockRetainUntilDate;
+        return this;
+    }
+
+    /**
+     * The date and time when you want this object's Object Lock to expire.
+     */
+    public void setObjectLockRetainUntilDate(Date objectLockRetainUntilDate) {
+        withObjectLockRetainUntilDate(objectLockRetainUntilDate);
+    }
+
+    /**
+     * The Legal Hold status that you want to apply to the specified object.
+     */
+    public String getObjectLockLegalHoldStatus() {
+        return objectLockLegalHoldStatus;
+    }
+
+    /**
+     * The Legal Hold status that you want to apply to the specified object.
+     */
+    public InitiateMultipartUploadRequest withObjectLockLegalHoldStatus(String objectLockLegalHoldStatus) {
+        this.objectLockLegalHoldStatus = objectLockLegalHoldStatus;
+        return this;
+    }
+
+    /**
+     * The Legal Hold status that you want to apply to the specified object.
+     */
+    public InitiateMultipartUploadRequest withObjectLockLegalHoldStatus(ObjectLockLegalHoldStatus objectLockLegalHoldStatus) {
+        return withObjectLockLegalHoldStatus(objectLockLegalHoldStatus.toString());
+    }
+
+    /**
+     * The Legal Hold status that you want to apply to the specified object.
+     */
+    public void setObjectLockLegalHoldStatus(String objectLockLegalHoldStatus) {
+        withObjectLockLegalHoldStatus(objectLockLegalHoldStatus);
+    }
+
+    /**
+     * The Legal Hold status that you want to apply to the specified object.
+     */
+    public void setObjectLockLegalHoldStatus(ObjectLockLegalHoldStatus objectLockLegalHoldStatus) {
+        setObjectLockLegalHoldStatus(objectLockLegalHoldStatus.toString());
     }
 
     /**

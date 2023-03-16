@@ -102,6 +102,18 @@ import com.ibm.cloud.objectstorage.services.s3.model.UploadPartRequest;
 import com.ibm.cloud.objectstorage.services.s3.model.UploadPartResult;
 import com.ibm.cloud.objectstorage.services.s3.model.VersionListing;
 import com.ibm.cloud.objectstorage.services.s3.waiters.AmazonS3Waiters;
+import com.ibm.cloud.objectstorage.services.s3.model.GetObjectLockConfigurationRequest;
+import com.ibm.cloud.objectstorage.services.s3.model.GetObjectLockConfigurationResult;
+import com.ibm.cloud.objectstorage.services.s3.model.GetObjectLegalHoldRequest;
+import com.ibm.cloud.objectstorage.services.s3.model.GetObjectLegalHoldResult;
+import com.ibm.cloud.objectstorage.services.s3.model.GetObjectRetentionRequest;
+import com.ibm.cloud.objectstorage.services.s3.model.GetObjectRetentionResult;
+import com.ibm.cloud.objectstorage.services.s3.model.SetObjectLockConfigurationRequest;
+import com.ibm.cloud.objectstorage.services.s3.model.SetObjectLockConfigurationResult;
+import com.ibm.cloud.objectstorage.services.s3.model.SetObjectLegalHoldRequest;
+import com.ibm.cloud.objectstorage.services.s3.model.SetObjectLegalHoldResult;
+import com.ibm.cloud.objectstorage.services.s3.model.SetObjectRetentionRequest;
+import com.ibm.cloud.objectstorage.services.s3.model.SetObjectRetentionResult;
 
 /**
  * <p>
@@ -7317,8 +7329,8 @@ public interface AmazonS3 extends S3DirectSpi {
      * @throws SdkClientException
      * @see <a href="http://docs.aws.amazon.com/goto/WebAPI/s3-2006-03-01/PutObjectLegalHold">Amazon Web Services API Documentation</a>
      */
-//IBM unsupported
-//    SetObjectLegalHoldResult setObjectLegalHold(SetObjectLegalHoldRequest setObjectLegalHoldRequest);
+
+    SetObjectLegalHoldResult setObjectLegalHold(SetObjectLegalHoldRequest setObjectLegalHoldRequest);
 
     /**
      * Gets an object's current Legal Hold status.
@@ -7330,8 +7342,7 @@ public interface AmazonS3 extends S3DirectSpi {
      * @throws SdkClientException
      * @see <a href="http://docs.aws.amazon.com/goto/WebAPI/s3-2006-03-01/GetObjectLegalHold">Amazon Web Services API Documentation</a>
      */
-//IBM unsupported
-//    GetObjectLegalHoldResult getObjectLegalHold(GetObjectLegalHoldRequest getObjectLegalHoldRequest);
+    GetObjectLegalHoldResult getObjectLegalHold(GetObjectLegalHoldRequest getObjectLegalHoldRequest);
 
     /**
      * Places an Object Lock configuration on the specified bucket. The rule specified in the Object Lock configuration will
@@ -7344,8 +7355,8 @@ public interface AmazonS3 extends S3DirectSpi {
      * @throws SdkClientException
      * @see <a href="http://docs.aws.amazon.com/goto/WebAPI/s3-2006-03-01/PutObjectLockConfiguration">Amazon Web Services API Documentation</a>
      */
-//IBM unsupported
-//    SetObjectLockConfigurationResult setObjectLockConfiguration(SetObjectLockConfigurationRequest setObjectLockConfigurationRequest);
+
+     SetObjectLockConfigurationResult setObjectLockConfiguration(SetObjectLockConfigurationRequest setObjectLockConfigurationRequest);
 
     /**
      * Gets the Object Lock configuration for a bucket. The rule specified in the Object Lock configuration will be applied
@@ -7358,8 +7369,8 @@ public interface AmazonS3 extends S3DirectSpi {
      * @throws SdkClientException
      * @see <a href="http://docs.aws.amazon.com/goto/WebAPI/s3-2006-03-01/GetObjectLockConfiguration">Amazon Web Services API Documentation</a>
      */
-//IBM unsupported
-//    GetObjectLockConfigurationResult getObjectLockConfiguration(GetObjectLockConfigurationRequest getObjectLockConfigurationRequest);
+
+     GetObjectLockConfigurationResult getObjectLockConfiguration(GetObjectLockConfigurationRequest getObjectLockConfigurationRequest);
 
     /**
      * Places an Object Retention configuration on an object.
@@ -7371,8 +7382,8 @@ public interface AmazonS3 extends S3DirectSpi {
      * @throws SdkClientException
      * @see <a href="http://docs.aws.amazon.com/goto/WebAPI/s3-2006-03-01/PutObjectRetention">Amazon Web Services API Documentation</a>
      */
-//IBM unsupported
-//    SetObjectRetentionResult setObjectRetention(SetObjectRetentionRequest setObjectRetentionRequest);
+
+    SetObjectRetentionResult setObjectRetention(SetObjectRetentionRequest setObjectRetentionRequest);
 
     /**
      * Retrieves an object's retention settings.
@@ -7384,8 +7395,8 @@ public interface AmazonS3 extends S3DirectSpi {
      * @throws SdkClientException
      * @see <a href="http://docs.aws.amazon.com/goto/WebAPI/s3-2006-03-01/GetObjectRetention">Amazon Web Services API Documentation</a>
      */
-//IBM unsupported
-//    GetObjectRetentionResult getObjectRetention(GetObjectRetentionRequest getObjectRetentionRequest);
+
+    GetObjectRetentionResult getObjectRetention(GetObjectRetentionRequest getObjectRetentionRequest);
 
     /**
      * <p>

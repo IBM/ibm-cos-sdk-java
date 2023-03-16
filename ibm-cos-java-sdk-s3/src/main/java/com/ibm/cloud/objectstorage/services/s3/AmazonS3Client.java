@@ -48,6 +48,7 @@ import com.ibm.cloud.objectstorage.auth.Presigner;
 import com.ibm.cloud.objectstorage.auth.Signer;
 import com.ibm.cloud.objectstorage.auth.SignerFactory;
 import com.ibm.cloud.objectstorage.client.builder.AwsClientBuilder;
+import com.ibm.cloud.objectstorage.client.builder.AdvancedConfig.Key;
 import com.ibm.cloud.objectstorage.event.ProgressEventType;
 import com.ibm.cloud.objectstorage.event.ProgressInputStream;
 import com.ibm.cloud.objectstorage.event.ProgressListener;
@@ -245,7 +246,22 @@ import com.ibm.cloud.objectstorage.services.s3.model.transform.RequestXmlFactory
 import com.ibm.cloud.objectstorage.services.s3.model.transform.Unmarshallers;
 import com.ibm.cloud.objectstorage.services.s3.model.transform.XmlResponsesSaxParser.CompleteMultipartUploadHandler;
 import com.ibm.cloud.objectstorage.services.s3.model.transform.XmlResponsesSaxParser.CopyObjectResultHandler;
+import com.ibm.cloud.objectstorage.services.s3.model.transform.ObjectLockConfigurationXmlFactory;
+import com.ibm.cloud.objectstorage.services.s3.model.transform.ObjectLockLegalHoldXmlFactory;
+import com.ibm.cloud.objectstorage.services.s3.model.transform.ObjectLockRetentionXmlFactory;
 import com.ibm.cloud.objectstorage.services.s3.request.S3HandlerContextKeys;
+import com.ibm.cloud.objectstorage.services.s3.model.GetObjectLockConfigurationRequest;
+import com.ibm.cloud.objectstorage.services.s3.model.GetObjectLockConfigurationResult;
+import com.ibm.cloud.objectstorage.services.s3.model.GetObjectLegalHoldRequest;
+import com.ibm.cloud.objectstorage.services.s3.model.GetObjectLegalHoldResult;
+import com.ibm.cloud.objectstorage.services.s3.model.GetObjectRetentionRequest;
+import com.ibm.cloud.objectstorage.services.s3.model.GetObjectRetentionResult;
+import com.ibm.cloud.objectstorage.services.s3.model.SetObjectLockConfigurationRequest;
+import com.ibm.cloud.objectstorage.services.s3.model.SetObjectLockConfigurationResult;
+import com.ibm.cloud.objectstorage.services.s3.model.SetObjectLegalHoldRequest;
+import com.ibm.cloud.objectstorage.services.s3.model.SetObjectLegalHoldResult;
+import com.ibm.cloud.objectstorage.services.s3.model.SetObjectRetentionRequest;
+import com.ibm.cloud.objectstorage.services.s3.model.SetObjectRetentionResult;
 import com.ibm.cloud.objectstorage.services.s3.waiters.AmazonS3Waiters;
 import com.ibm.cloud.objectstorage.transform.Unmarshaller;
 import com.ibm.cloud.objectstorage.util.AWSRequestMetrics;
@@ -1070,13 +1086,14 @@ public class AmazonS3Client extends AmazonWebServiceClient implements AmazonS3 {
 
             request.setContent(new ByteArrayInputStream(xml.getBytes()));
         }
-        //IBM unsupported
-        // if (createBucketRequest.getObjectLockEnabledForBucket()) {
-        //     request.addHeader(Headers.OBJECT_LOCK_ENABLED_FOR_BUCKET, "true");
-        // }
-        // if (createBucketRequest.getObjectOwnership() != null) {
-        //     request.addHeader(Headers.OBJECT_OWNERSHIP, createBucketRequest.getObjectOwnership());
-        // }
+
+        if (createBucketRequest.getObjectLockEnabledForBucket()) {
+            request.addHeader(Headers.OBJECT_LOCK_ENABLED_FOR_BUCKET, "true");
+        }
+// IBM unsupported
+//         if (createBucketRequest.getObjectOwnership() != null) {
+//             request.addHeader(Headers.OBJECT_OWNERSHIP, createBucketRequest.getObjectOwnership());
+//         }
 
         invoke(request, voidResponseHandler, bucketName, null);
 
@@ -1721,6 +1738,7 @@ public class AmazonS3Client extends AmazonWebServiceClient implements AmazonS3 {
         rejectNull(putObjectRequest, "The PutObjectRequest parameter must be specified when uploading an object");
         final File file = putObjectRequest.getFile();
         final InputStream isOrig = putObjectRequest.getInputStream();
+        InputStream inputStreamObjectLock = null;
         final String bucketName = putObjectRequest.getBucketName();
         final String key = putObjectRequest.getKey();
         final ProgressListener listener = putObjectRequest.getGeneralProgressListener();
@@ -1777,9 +1795,8 @@ public class AmazonS3Client extends AmazonWebServiceClient implements AmazonS3 {
         populateSSE_KMS(request,
                         putObjectRequest.getSSEAwsKeyManagementParams());
 
-        //IBM unsupported
-        // populateObjectLockHeaders(request, putObjectRequest.getObjectLockMode(), putObjectRequest.getObjectLockRetainUntilDate(),
-        //                           putObjectRequest.getObjectLockLegalHoldStatus());
+        populateObjectLockHeaders(request, putObjectRequest.getObjectLockMode(), putObjectRequest.getObjectLockRetainUntilDate(),
+                                    putObjectRequest.getObjectLockLegalHoldStatus());
 
         // IBM-specific
         // Populate the object retention parameters to the request header
@@ -1798,11 +1815,40 @@ public class AmazonS3Client extends AmazonWebServiceClient implements AmazonS3 {
             request.addHeader(Headers.RETENTION_PERIOD, putObjectRequest.getRetentionPeriod().toString());
         }
 
-        return uploadObject(isOrig, file, metadata, listener, request, putObjectRequest,
+        // IBM-specific
+        if (putObjectRequest.getObjectLockLegalHoldStatus() != null || putObjectRequest.getObjectLockMode() != null || putObjectRequest.getObjectLockRetainUntilDate() != null) { 
+            try {
+                if(isOrig != null && metadata.getContentMD5() == null)
+                {
+                    inputStreamObjectLock = putObjectRequest.getInputStream();
+                    int size = inputStreamObjectLock.available();
+                    byte[] bytes = new byte[size];
+                    inputStreamObjectLock.read(bytes);
+                    populateRequestHeaderWithMd5(request, bytes);
+                    inputStreamObjectLock = new ByteArrayInputStream(bytes);
+                }
+            } catch ( Exception e ) {
+                throw new SdkClientException("Couldn't compute md5 sum", e);
+            }
+        }
+
+        // Object Lock Specific check
+        if(inputStreamObjectLock != null)
+        {
+            return uploadObject(inputStreamObjectLock, file, metadata, listener, request, putObjectRequest,
                             skipMd5CheckStrategy.skipServerSideValidation(putObjectRequest),
                             skipMd5CheckStrategy.skipClientSideValidationPerRequest(putObjectRequest),
                             new PutObjectStrategy(bucketName, key),
                             true);
+        }
+        else
+        {
+            return uploadObject(isOrig, file, metadata, listener, request, putObjectRequest,
+                            skipMd5CheckStrategy.skipServerSideValidation(putObjectRequest),
+                            skipMd5CheckStrategy.skipClientSideValidationPerRequest(putObjectRequest),
+                            new PutObjectStrategy(bucketName, key),
+                            true);
+        }
     }
 
     /**
@@ -2036,9 +2082,9 @@ public class AmazonS3Client extends AmazonWebServiceClient implements AmazonS3 {
         // Populate the SSE Amazon Web Services KMS parameters to the request header
         populateSSE_KMS(request,
                 copyObjectRequest.getSSEAwsKeyManagementParams());
-        //IBM unsupported
-        // populateObjectLockHeaders(request, copyObjectRequest.getObjectLockMode(), copyObjectRequest.getObjectLockRetainUntilDate(),
-        //         copyObjectRequest.getObjectLockLegalHoldStatus());
+
+        populateObjectLockHeaders(request, copyObjectRequest.getObjectLockMode(), copyObjectRequest.getObjectLockRetainUntilDate(),
+                copyObjectRequest.getObjectLockLegalHoldStatus());
 
         /*
          * We can't send a non-zero length Content-Length header if the user
@@ -3238,143 +3284,143 @@ public class AmazonS3Client extends AmazonWebServiceClient implements AmazonS3 {
     //     return new SelectObjectContentResult().withPayload(new SelectObjectContentEventStream(resultStream));
     // }
 
-    // @Override
-    // public SetObjectLegalHoldResult setObjectLegalHold(SetObjectLegalHoldRequest setObjectLegalHoldRequest) {
-    //     setObjectLegalHoldRequest = beforeClientExecution(setObjectLegalHoldRequest);
-    //     rejectNull(setObjectLegalHoldRequest, "The request parameter must be specified");
+    @Override
+    public SetObjectLegalHoldResult setObjectLegalHold(SetObjectLegalHoldRequest setObjectLegalHoldRequest) {
+        setObjectLegalHoldRequest = beforeClientExecution(setObjectLegalHoldRequest);
+        rejectNull(setObjectLegalHoldRequest, "The request parameter must be specified");
 
-    //     String bucketName = setObjectLegalHoldRequest.getBucketName();
-    //     String key = setObjectLegalHoldRequest.getKey();
+        String bucketName = setObjectLegalHoldRequest.getBucketName();
+        String key = setObjectLegalHoldRequest.getKey();
 
-    //     rejectNull(bucketName, "The bucket name parameter must be specified when setting the object legal hold.");
-    //     rejectNull(key, "The key parameter must be specified when setting the object legal hold.");
+        rejectNull(bucketName, "The bucket name parameter must be specified when setting the object legal hold.");
+        rejectNull(key, "The key parameter must be specified when setting the object legal hold.");
 
-    //     Request<SetObjectLegalHoldRequest> request = createRequest(bucketName, key, setObjectLegalHoldRequest, HttpMethodName.PUT);
-    //     request.addHandlerContext(HandlerContextKey.OPERATION_NAME, "PutObjectLegalHold");
-    //     setContent(request, new ObjectLockLegalHoldXmlFactory().convertToXmlByteArray(setObjectLegalHoldRequest.getLegalHold()),
-    //             ContentType.APPLICATION_XML.toString(), true);
-    //     request.addParameter("legal-hold", null);
+        Request<SetObjectLegalHoldRequest> request = createRequest(bucketName, key, setObjectLegalHoldRequest, HttpMethodName.PUT);
+        request.addHandlerContext(HandlerContextKey.OPERATION_NAME, "PutObjectLegalHold");
+        setContent(request, new ObjectLockLegalHoldXmlFactory().convertToXmlByteArray(setObjectLegalHoldRequest.getLegalHold()),
+                ContentType.APPLICATION_XML.toString(), true);
+        request.addParameter("legal-hold", null);
 
-    //     addParameterIfNotNull(request, "versionId", setObjectLegalHoldRequest.getVersionId());
-    //     populateRequesterPaysHeader(request, setObjectLegalHoldRequest.isRequesterPays());
+        addParameterIfNotNull(request, "versionId", setObjectLegalHoldRequest.getVersionId());
+        populateRequesterPaysHeader(request, setObjectLegalHoldRequest.isRequesterPays());
 
-    //     ResponseHeaderHandlerChain<SetObjectLegalHoldResult> responseHandler = new ResponseHeaderHandlerChain<SetObjectLegalHoldResult>(
-    //             new Unmarshallers.SetObjectLegalHoldResultUnmarshaller(),
-    //             new S3RequesterChargedHeaderHandler<SetObjectLegalHoldResult>());
+        ResponseHeaderHandlerChain<SetObjectLegalHoldResult> responseHandler = new ResponseHeaderHandlerChain<SetObjectLegalHoldResult>(
+                new Unmarshallers.SetObjectLegalHoldResultUnmarshaller(),
+                new S3RequesterChargedHeaderHandler<SetObjectLegalHoldResult>());
 
-    //     return invoke(request, responseHandler, bucketName, key);
-    // }
+        return invoke(request, responseHandler, bucketName, key);
+    }
 
-    // @Override
-    // public GetObjectLegalHoldResult getObjectLegalHold(GetObjectLegalHoldRequest getObjectLegalHoldRequest) {
-    //     getObjectLegalHoldRequest = beforeClientExecution(getObjectLegalHoldRequest);
-    //     rejectNull(getObjectLegalHoldRequest, "The request parameter must be specified");
+    @Override
+    public GetObjectLegalHoldResult getObjectLegalHold(GetObjectLegalHoldRequest getObjectLegalHoldRequest) {
+        getObjectLegalHoldRequest = beforeClientExecution(getObjectLegalHoldRequest);
+        rejectNull(getObjectLegalHoldRequest, "The request parameter must be specified");
 
-    //     String bucketName = getObjectLegalHoldRequest.getBucketName();
-    //     String key = getObjectLegalHoldRequest.getKey();
-    //     rejectNull(bucketName, "The bucket name parameter must be specified when getting the object legal hold.");
-    //     rejectNull(key, "The key parameter must be specified when getting the object legal hold.");
+        String bucketName = getObjectLegalHoldRequest.getBucketName();
+        String key = getObjectLegalHoldRequest.getKey();
+        rejectNull(bucketName, "The bucket name parameter must be specified when getting the object legal hold.");
+        rejectNull(key, "The key parameter must be specified when getting the object legal hold.");
 
-    //     Request<GetObjectLegalHoldRequest> request = createRequest(bucketName, key, getObjectLegalHoldRequest, HttpMethodName.GET);
-    //     request.addHandlerContext(HandlerContextKey.OPERATION_NAME, "GetObjectLegalHold");
-    //     request.addParameter("legal-hold", null);
-    //     addParameterIfNotNull(request, "versionId", getObjectLegalHoldRequest.getVersionId());
-    //     populateRequesterPaysHeader(request, getObjectLegalHoldRequest.isRequesterPays());
+        Request<GetObjectLegalHoldRequest> request = createRequest(bucketName, key, getObjectLegalHoldRequest, HttpMethodName.GET);
+        request.addHandlerContext(HandlerContextKey.OPERATION_NAME, "GetObjectLegalHold");
+        request.addParameter("legal-hold", null);
+        addParameterIfNotNull(request, "versionId", getObjectLegalHoldRequest.getVersionId());
+        populateRequesterPaysHeader(request, getObjectLegalHoldRequest.isRequesterPays());
 
-    //     return invoke(request, new Unmarshallers.GetObjectLegalHoldResultUnmarshaller(), bucketName, key);
-    // }
+        return invoke(request, new Unmarshallers.GetObjectLegalHoldResultUnmarshaller(), bucketName, key);
+    }
 
-    // @Override
-    // public SetObjectLockConfigurationResult setObjectLockConfiguration(SetObjectLockConfigurationRequest setObjectLockConfigurationRequest) {
-    //     setObjectLockConfigurationRequest = beforeClientExecution(setObjectLockConfigurationRequest);
-    //     rejectNull(setObjectLockConfigurationRequest, "The request parameter must be specified");
+    @Override
+    public SetObjectLockConfigurationResult setObjectLockConfiguration(SetObjectLockConfigurationRequest setObjectLockConfigurationRequest) {
+        setObjectLockConfigurationRequest = beforeClientExecution(setObjectLockConfigurationRequest);
+        rejectNull(setObjectLockConfigurationRequest, "The request parameter must be specified");
 
-    //     String bucketName = setObjectLockConfigurationRequest.getBucketName();
-    //     rejectNull(bucketName, "The bucket name parameter must be specified when setting the object lock configuration");
+        String bucketName = setObjectLockConfigurationRequest.getBucketName();
+        rejectNull(bucketName, "The bucket name parameter must be specified when setting the object lock configuration");
 
-    //     Request<SetObjectLockConfigurationRequest> request = createRequest(bucketName, null, setObjectLockConfigurationRequest, HttpMethodName.PUT);
-    //     request.addHandlerContext(HandlerContextKey.OPERATION_NAME, "PutObjectLockConfiguration");
-    //     request.addParameter("object-lock", null);
+        Request<SetObjectLockConfigurationRequest> request = createRequest(bucketName, null, setObjectLockConfigurationRequest, HttpMethodName.PUT);
+        request.addHandlerContext(HandlerContextKey.OPERATION_NAME, "PutObjectLockConfiguration");
+        request.addParameter("object-lock", null);
 
-    //     addHeaderIfNotNull(request, Headers.OBJECT_LOCK_TOKEN, setObjectLockConfigurationRequest.getToken());
-    //     populateRequesterPaysHeader(request, setObjectLockConfigurationRequest.isRequesterPays());
+        addHeaderIfNotNull(request, Headers.OBJECT_LOCK_TOKEN, setObjectLockConfigurationRequest.getToken());
+        populateRequesterPaysHeader(request, setObjectLockConfigurationRequest.isRequesterPays());
 
-    //     setContent(request, new ObjectLockConfigurationXmlFactory().convertToXmlByteArray(setObjectLockConfigurationRequest.getObjectLockConfiguration()),
-    //             ContentType.APPLICATION_XML.toString(), true);
+        setContent(request, new ObjectLockConfigurationXmlFactory().convertToXmlByteArray(setObjectLockConfigurationRequest.getObjectLockConfiguration()),
+                ContentType.APPLICATION_XML.toString(), true);
 
-    //     ResponseHeaderHandlerChain<SetObjectLockConfigurationResult> responseHandler = new ResponseHeaderHandlerChain<SetObjectLockConfigurationResult>(
-    //             new Unmarshallers.SetObjectLockConfigurationResultUnmarshaller(),
-    //             new S3RequesterChargedHeaderHandler<SetObjectLockConfigurationResult>());
+        ResponseHeaderHandlerChain<SetObjectLockConfigurationResult> responseHandler = new ResponseHeaderHandlerChain<SetObjectLockConfigurationResult>(
+                new Unmarshallers.SetObjectLockConfigurationResultUnmarshaller(),
+                new S3RequesterChargedHeaderHandler<SetObjectLockConfigurationResult>());
 
-    //     return invoke(request, responseHandler, bucketName, null);
-    // }
+        return invoke(request, responseHandler, bucketName, null);
+    }
 
-    // @Override
-    // public GetObjectLockConfigurationResult getObjectLockConfiguration(GetObjectLockConfigurationRequest getObjectLockConfigurationRequest) {
-    //     getObjectLockConfigurationRequest = beforeClientExecution(getObjectLockConfigurationRequest);
-    //     rejectNull(getObjectLockConfigurationRequest, "The request parameter must be specified");
+    @Override
+    public GetObjectLockConfigurationResult getObjectLockConfiguration(GetObjectLockConfigurationRequest getObjectLockConfigurationRequest) {
+        getObjectLockConfigurationRequest = beforeClientExecution(getObjectLockConfigurationRequest);
+        rejectNull(getObjectLockConfigurationRequest, "The request parameter must be specified");
 
-    //     String bucketName = getObjectLockConfigurationRequest.getBucketName();
-    //     rejectNull(bucketName, "The bucket name parameter must be specified when getting the object lock configuration");
+        String bucketName = getObjectLockConfigurationRequest.getBucketName();
+        rejectNull(bucketName, "The bucket name parameter must be specified when getting the object lock configuration");
 
-    //     Request<GetObjectLockConfigurationRequest> request = createRequest(bucketName, null, getObjectLockConfigurationRequest, HttpMethodName.GET);
-    //     request.addHandlerContext(HandlerContextKey.OPERATION_NAME, "GetObjectLockConfiguration");
-    //     request.addParameter("object-lock", null);
+        Request<GetObjectLockConfigurationRequest> request = createRequest(bucketName, null, getObjectLockConfigurationRequest, HttpMethodName.GET);
+        request.addHandlerContext(HandlerContextKey.OPERATION_NAME, "GetObjectLockConfiguration");
+        request.addParameter("object-lock", null);
 
-    //     return invoke(request, new Unmarshallers.GetObjectLockConfigurationResultUnmarshaller(), bucketName, null);
-    // }
+        return invoke(request, new Unmarshallers.GetObjectLockConfigurationResultUnmarshaller(), bucketName, null);
+    }
 
-    // @Override
-    // public SetObjectRetentionResult setObjectRetention(SetObjectRetentionRequest setObjectRetentionRequest) {
-    //     setObjectRetentionRequest = beforeClientExecution(setObjectRetentionRequest);
-    //     rejectNull(setObjectRetentionRequest, "The request parameter must be specified");
+    @Override
+    public SetObjectRetentionResult setObjectRetention(SetObjectRetentionRequest setObjectRetentionRequest) {
+        setObjectRetentionRequest = beforeClientExecution(setObjectRetentionRequest);
+        rejectNull(setObjectRetentionRequest, "The request parameter must be specified");
 
-    //     String bucketName = setObjectRetentionRequest.getBucketName();
-    //     String key = setObjectRetentionRequest.getKey();
+        String bucketName = setObjectRetentionRequest.getBucketName();
+        String key = setObjectRetentionRequest.getKey();
 
-    //     rejectNull(bucketName, "The bucket name parameter must be specified when setting the object retention.");
-    //     rejectNull(key, "The key parameter must be specified when setting the object retention.");
+        rejectNull(bucketName, "The bucket name parameter must be specified when setting the object retention.");
+        rejectNull(key, "The key parameter must be specified when setting the object retention.");
 
-    //     Request<SetObjectRetentionRequest> request = createRequest(bucketName, key, setObjectRetentionRequest, HttpMethodName.PUT);
-    //     request.addHandlerContext(HandlerContextKey.OPERATION_NAME, "PutObjectRetention");
-    //     request.addParameter("retention", null);
-    //     if (setObjectRetentionRequest.getBypassGovernanceRetention()) {
-    //         request.addHeader(Headers.BYPASS_GOVERNANCE_RETENTION, "true");
-    //     }
-    //     addParameterIfNotNull(request, "versionId", setObjectRetentionRequest.getVersionId());
-    //     populateRequesterPaysHeader(request, setObjectRetentionRequest.isRequesterPays());
+        Request<SetObjectRetentionRequest> request = createRequest(bucketName, key, setObjectRetentionRequest, HttpMethodName.PUT);
+        request.addHandlerContext(HandlerContextKey.OPERATION_NAME, "PutObjectRetention");
+        request.addParameter("retention", null);
+        if (setObjectRetentionRequest.getBypassGovernanceRetention()) {
+            request.addHeader(Headers.BYPASS_GOVERNANCE_RETENTION, "true");
+        }
+        addParameterIfNotNull(request, "versionId", setObjectRetentionRequest.getVersionId());
+        populateRequesterPaysHeader(request, setObjectRetentionRequest.isRequesterPays());
 
-    //     setContent(request, new ObjectLockRetentionXmlFactory().convertToXmlByteArray(setObjectRetentionRequest.getRetention()),
-    //             ContentType.APPLICATION_XML.toString(), true);
+        setContent(request, new ObjectLockRetentionXmlFactory().convertToXmlByteArray(setObjectRetentionRequest.getRetention()),
+                ContentType.APPLICATION_XML.toString(), true);
 
-    //     ResponseHeaderHandlerChain<SetObjectRetentionResult> responseHandler = new ResponseHeaderHandlerChain<SetObjectRetentionResult>(
-    //             new Unmarshallers.SetObjectRetentionResultUnmarshaller(),
-    //             new S3RequesterChargedHeaderHandler<SetObjectRetentionResult>());
+        ResponseHeaderHandlerChain<SetObjectRetentionResult> responseHandler = new ResponseHeaderHandlerChain<SetObjectRetentionResult>(
+                new Unmarshallers.SetObjectRetentionResultUnmarshaller(),
+                new S3RequesterChargedHeaderHandler<SetObjectRetentionResult>());
 
-    //     return invoke(request, responseHandler, bucketName, key);
-    // }
+        return invoke(request, responseHandler, bucketName, key);
+    }
 
-    // @Override
-    // public GetObjectRetentionResult getObjectRetention(GetObjectRetentionRequest getObjectRetentionRequest) {
-    //     getObjectRetentionRequest = beforeClientExecution(getObjectRetentionRequest);
-    //     rejectNull(getObjectRetentionRequest, "The request parameter must be specified");
+    @Override
+    public GetObjectRetentionResult getObjectRetention(GetObjectRetentionRequest getObjectRetentionRequest) {
+        getObjectRetentionRequest = beforeClientExecution(getObjectRetentionRequest);
+        rejectNull(getObjectRetentionRequest, "The request parameter must be specified");
 
-    //     String bucketName = getObjectRetentionRequest.getBucketName();
-    //     String key = getObjectRetentionRequest.getKey();
+        String bucketName = getObjectRetentionRequest.getBucketName();
+        String key = getObjectRetentionRequest.getKey();
 
-    //     rejectNull(bucketName, "The bucket name parameter must be specified when getting the object retention.");
-    //     rejectNull(key, "The key parameter must be specified when getting the object retention.");
+        rejectNull(bucketName, "The bucket name parameter must be specified when getting the object retention.");
+        rejectNull(key, "The key parameter must be specified when getting the object retention.");
 
-    //     Request<GetObjectRetentionRequest> request = createRequest(bucketName, key, getObjectRetentionRequest, HttpMethodName.GET);
-    //     request.addHandlerContext(HandlerContextKey.OPERATION_NAME, "GetObjectRetention");
-    //     request.addParameter("retention", null);
+        Request<GetObjectRetentionRequest> request = createRequest(bucketName, key, getObjectRetentionRequest, HttpMethodName.GET);
+        request.addHandlerContext(HandlerContextKey.OPERATION_NAME, "GetObjectRetention");
+        request.addParameter("retention", null);
 
-    //     addParameterIfNotNull(request, "versionId", getObjectRetentionRequest.getVersionId());
-    //     // Note: the model has a requester pays member on the request but no requester charged on the result...
-    //     populateRequesterPaysHeader(request, getObjectRetentionRequest.isRequesterPays());
+        addParameterIfNotNull(request, "versionId", getObjectRetentionRequest.getVersionId());
+        // Note: the model has a requester pays member on the request but no requester charged on the result...
+        populateRequesterPaysHeader(request, getObjectRetentionRequest.isRequesterPays());
 
-    //     return invoke(request, new Unmarshallers.GetObjectRetentionResultUnmarshaller(), bucketName, key);
-    // }
+        return invoke(request, new Unmarshallers.GetObjectRetentionResultUnmarshaller(), bucketName, key);
+    }
 
     //IBM unsupported
     // @Override
@@ -3411,9 +3457,9 @@ public class AmazonS3Client extends AmazonWebServiceClient implements AmazonS3 {
     //     addHeaderIfNotNull(request, Headers.FWD_EXPIRATION, writeGetObjectResponseRequest.getExpiration());
     //     addDateHeader(request, Headers.FWD_LAST_MODIFIED, writeGetObjectResponseRequest.getLastModified());
     //     addIntegerHeaderIfNotNull(request, Headers.FWD_MISSING_META, writeGetObjectResponseRequest.getMissingMeta());
-    //     addHeaderIfNotNull(request, Headers.FWD_OBJECT_LOCK_MODE, writeGetObjectResponseRequest.getObjectLockMode());
-    //     addHeaderIfNotNull(request, Headers.FWD_OBJECT_LOCK_LEGAL_HOLD, writeGetObjectResponseRequest.getObjectLockLegalHoldStatus());
-    //     addDateHeader(request, Headers.FWD_OBJECT_LOCK_RETAIN_UNTIL_DATE, writeGetObjectResponseRequest.getObjectLockRetainUntilDate());
+        // addHeaderIfNotNull(request, Headers.FWD_OBJECT_LOCK_MODE, writeGetObjectResponseRequest.getObjectLockMode());
+        // addHeaderIfNotNull(request, Headers.FWD_OBJECT_LOCK_LEGAL_HOLD, writeGetObjectResponseRequest.getObjectLockLegalHoldStatus());
+        // addDateHeader(request, Headers.FWD_OBJECT_LOCK_RETAIN_UNTIL_DATE, writeGetObjectResponseRequest.getObjectLockRetainUntilDate());
     //     addIntegerHeaderIfNotNull(request, Headers.FWD_PARTS_COUNT, writeGetObjectResponseRequest.getPartsCount());
     //     addHeaderIfNotNull(request, Headers.FWD_REPLICATION_STATUS, writeGetObjectResponseRequest.getReplicationStatus());
     //     addHeaderIfNotNull(request, Headers.FWD_REQUEST_CHARGED, writeGetObjectResponseRequest.getRequestCharged());
@@ -3425,9 +3471,9 @@ public class AmazonS3Client extends AmazonWebServiceClient implements AmazonS3 {
     //     addHeaderIfNotNull(request, Headers.FWD_STORAGE_CLASS, writeGetObjectResponseRequest.getStorageClass());
     //     addIntegerHeaderIfNotNull(request, Headers.FWD_TAG_COUNT, writeGetObjectResponseRequest.getTagCount());
     //     addHeaderIfNotNull(request, Headers.FWD_VERSION_ID, writeGetObjectResponseRequest.getVersionId());
-    //     if (writeGetObjectResponseRequest.getBucketKeyEnabled() != null) {
-    //         request.addHeader(Headers.FWD_SSE_BUCKET_KEY_ENABLED, writeGetObjectResponseRequest.getBucketKeyEnabled().toString());
-    //     }
+        // if (writeGetObjectResponseRequest.getBucketKeyEnabled() != null) {
+        //     request.addHeader(Headers.FWD_SSE_BUCKET_KEY_ENABLED, writeGetObjectResponseRequest.getBucketKeyEnabled().toString());
+        // }
 
     //     ObjectMetadata metadata = writeGetObjectResponseRequest.getMetadata();
     //     if (metadata == null) {
@@ -3744,9 +3790,8 @@ public class AmazonS3Client extends AmazonWebServiceClient implements AmazonS3 {
 
         addHeaderIfNotNull(request, Headers.S3_TAGGING, urlEncodeTags(initiateMultipartUploadRequest.getTagging()));
 
-        //IBM unsupported
-        // populateObjectLockHeaders(request, initiateMultipartUploadRequest.getObjectLockMode(), initiateMultipartUploadRequest.getObjectLockRetainUntilDate(),
-        //         initiateMultipartUploadRequest.getObjectLockLegalHoldStatus());
+        populateObjectLockHeaders(request, initiateMultipartUploadRequest.getObjectLockMode(), initiateMultipartUploadRequest.getObjectLockRetainUntilDate(),
+                initiateMultipartUploadRequest.getObjectLockLegalHoldStatus());
 
         // Be careful that we don't send the object's total size as the content
         // length for the InitiateMultipartUpload request.
@@ -6023,8 +6068,8 @@ public class AmazonS3Client extends AmazonWebServiceClient implements AmazonS3 {
 
         final byte[] bytes = bucketConfigurationXmlFactory
                 .convertToXmlByteArray(bucketReplicationConfiguration);
-        //IBM unsupported
-        // addHeaderIfNotNull(request, Headers.OBJECT_LOCK_TOKEN, setBucketReplicationConfigurationRequest.getToken());
+
+        addHeaderIfNotNull(request, Headers.OBJECT_LOCK_TOKEN, setBucketReplicationConfigurationRequest.getToken());
         request.addHeader("Content-Length", String.valueOf(bytes.length));
         request.addHeader("Content-Type", "application/xml");
         request.setContent(new ByteArrayInputStream(bytes));
@@ -6702,13 +6747,13 @@ public class AmazonS3Client extends AmazonWebServiceClient implements AmazonS3 {
     //     setContent(request, content, "application/xml", true);
     //     return request;
     // }
-    // private static void populateObjectLockHeaders(Request<?> request, String mode, Date retainUntil, String status) {
-    //     addHeaderIfNotNull(request, Headers.OBJECT_LOCK_MODE, mode);
-    //     if (retainUntil != null) {
-    //         request.addHeader(Headers.OBJECT_LOCK_RETAIN_UNTIL_DATE, ServiceUtils.formatIso8601Date(retainUntil));
-    //     }
-    //     addHeaderIfNotNull(request, Headers.OBJECT_LOCK_LEGAL_HOLD_STATUS, status);
-    // }
+    private static void populateObjectLockHeaders(Request<?> request, String mode, Date retainUntil, String status) {
+        addHeaderIfNotNull(request, Headers.OBJECT_LOCK_MODE, mode);
+        if (retainUntil != null) {
+            request.addHeader(Headers.OBJECT_LOCK_RETAIN_UNTIL_DATE, ServiceUtils.formatIso8601Date(retainUntil));
+        }
+        addHeaderIfNotNull(request, Headers.OBJECT_LOCK_LEGAL_HOLD_STATUS, status);
+    }
 
     /**
      * Add IAM specific headers based on the credentials set & any optional
