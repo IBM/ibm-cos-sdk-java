@@ -91,7 +91,7 @@ Feel free to use GitHub issues for tracking bugs and feature requests, but for h
 
 [changes-file]: ./CHANGELOG.md
 [bluemix-docs]: https://cloud.ibm.com/docs/services/cloud-object-storage/libraries/java.html#java
-[stack-overflow]: http://stackoverflow.com/questions/tagged/object-storage+ibm
+[stack-overflow]: https://stackoverflow.com/questions/tagged/object-storage+ibm
 [ibm-bluemix-support]: https://cloud.ibm.com/unifiedsupport/supportcenter
 [open-an-issue]: https://github.com/ibm/ibm-cos-sdk-java/issues/new
 [immutable-storage-docs]: https://cloud.ibm.com/docs/services/cloud-object-storage/basics/immutable.html

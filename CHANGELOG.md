@@ -1,5 +1,14 @@
 # CHANGELOG
 
+## 2.13.1
+
+### Content
+
+#### Defect Fixes
+
+* Internal fixes and improvements
+* Update dependencies
+
 ## 2.13.0
 
 ### Content
