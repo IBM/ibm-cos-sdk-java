@@ -1512,7 +1512,7 @@ public class TransferManager {
 
     private boolean leavesRoot(File localBaseDirectory, String key) {
         try {
-            return !new File(localBaseDirectory, key).getCanonicalPath().startsWith(localBaseDirectory.getCanonicalPath());
+            return !new File(localBaseDirectory, key).getCanonicalFile().toPath().startsWith(localBaseDirectory.getCanonicalFile().toPath());
         } catch (IOException e) {
             throw new RuntimeException("Unable to canonicalize paths",  e);
         }
