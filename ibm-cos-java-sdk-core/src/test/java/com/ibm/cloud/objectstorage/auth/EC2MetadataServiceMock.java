@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2022 Amazon.com, Inc. or its affiliates. All Rights
+ * Copyright 2010-2023 Amazon.com, Inc. or its affiliates. All Rights
  * Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
@@ -20,6 +20,7 @@ package com.ibm.cloud.objectstorage.auth;
 
 import static com.ibm.cloud.objectstorage.SDKGlobalConfiguration.EC2_METADATA_SERVICE_OVERRIDE_SYSTEM_PROPERTY;
 
+import com.ibm.cloud.objectstorage.util.EC2MetadataUtils;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -27,11 +28,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.List;
-
-import org.apache.commons.io.IOUtils;
-
-import com.ibm.cloud.objectstorage.util.EC2MetadataUtils;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Mock server for imitating the Amazon EC2 Instance Metadata Service. Tests can
@@ -39,9 +36,9 @@ import com.ibm.cloud.objectstorage.util.EC2MetadataUtils;
  * response the server will send when a connection is made.
  */
 public class EC2MetadataServiceMock {
-
     private EC2MockMetadataServiceListenerThread hosmMockServerThread;
     private boolean tokenEnabled;
+    private AtomicInteger requestCount = new AtomicInteger(0);
 
     public EC2MetadataServiceMock(boolean tokenEnabled) {
         this.tokenEnabled = tokenEnabled;
@@ -52,6 +49,10 @@ public class EC2MetadataServiceMock {
                                                  "Content-Length: ";
 
     private static final String OUTPUT_END_OF_HEADERS = "\r\n\r\n";
+
+    public int getRequestCount() {
+        return requestCount.get();
+    }
 
     /**
      * Sets the content that should be sent back as the response from this mock server.
@@ -98,7 +99,7 @@ public class EC2MetadataServiceMock {
      * Thread subclass that listens for connections on an opened server socket
      * and response with a predefined response file.
      */
-    private static class EC2MockMetadataServiceListenerThread extends Thread {
+    private class EC2MockMetadataServiceListenerThread extends Thread {
         private ServerSocket serverSocket;
         private String responseContent;
         private String securityCredentialNames;
@@ -164,6 +165,7 @@ public class EC2MetadataServiceMock {
                 } catch (IOException e) {
                     throw new RuntimeException("Unable to respond to request", e);
                 } finally {
+                    requestCount.incrementAndGet();
                     try {outputStream.close();} catch (Exception e) {}
                 }
             }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2011-2022 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2011-2023 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,7 +15,6 @@
 package com.ibm.cloud.objectstorage.auth;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
-import static com.github.tomakehurst.wiremock.client.WireMock.equalTo;
 import static com.github.tomakehurst.wiremock.client.WireMock.get;
 import static com.github.tomakehurst.wiremock.client.WireMock.stubFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlPathEqualTo;
@@ -24,7 +23,6 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
 
 import java.net.URI;
-import java.net.URISyntaxException;
 
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.joda.time.DateTime;
@@ -38,6 +36,7 @@ import com.ibm.cloud.objectstorage.AmazonClientException;
 import com.ibm.cloud.objectstorage.AmazonServiceException;
 import com.ibm.cloud.objectstorage.internal.CredentialsEndpointProvider;
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
+import utils.EnvironmentVariableHelper;
 
 /**
  * Tests for the ContainerCredentialsProvider.
@@ -57,6 +56,8 @@ public class ContainerCredentialsProviderTest {
 
     private static final String EXPIRATION_DATE = "3000-05-03T04:55:54Z";
 
+    private static final EnvironmentVariableHelper ENV_VAR_HELPER = new EnvironmentVariableHelper();
+
     private static ContainerCredentialsProvider containerCredentialsProvider;
 
     @BeforeClass
@@ -75,8 +76,13 @@ public class ContainerCredentialsProviderTest {
      */
     @Test (expected = AmazonClientException.class)
     public void testEnvVariableNotSet() {
-        ContainerCredentialsProvider credentialsProvider = new ContainerCredentialsProvider();
-        credentialsProvider.getCredentials();
+        ENV_VAR_HELPER.remove("AWS_CONTAINER_CREDENTIALS_RELATIVE_URI");
+        try {
+            ContainerCredentialsProvider credentialsProvider = new ContainerCredentialsProvider();
+            credentialsProvider.getCredentials();
+        } finally {
+            ENV_VAR_HELPER.reset();
+        }
     }
 
     /**

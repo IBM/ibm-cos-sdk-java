@@ -1,11 +1,11 @@
 /*
- * Copyright 2017-2022 Amazon.com, Inc. or its affiliates. All Rights Reserved.
- *
+ * Copyright 2018-2023 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * 
  * Licensed under the Apache License, Version 2.0 (the "License"). You may not use this file except in compliance with
  * the License. A copy of the License is located at
- *
+ * 
  * http://aws.amazon.com/apache2.0
- *
+ * 
  * or in the "license" file accompanying this file. This file is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
  * CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions
  * and limitations under the License.
@@ -22,9 +22,10 @@ import com.ibm.cloud.objectstorage.protocol.ProtocolMarshaller;
  * Contains metadata about a KMS key.
  * </p>
  * <p>
- * This data type is used as a response element for the <a>CreateKey</a> and <a>DescribeKey</a> operations.
+ * This data type is used as a response element for the <a>CreateKey</a>, <a>DescribeKey</a>, and <a>ReplicateKey</a>
+ * operations.
  * </p>
- *
+ * 
  * @see <a href="http://docs.aws.amazon.com/goto/WebAPI/kms-2014-11-01/KeyMetadata" target="_top">AWS API
  *      Documentation</a>
  */
@@ -83,8 +84,8 @@ public class KeyMetadata implements Serializable, Cloneable, StructuredPojo {
      * </p>
      * <p>
      * For more information about how key state affects the use of a KMS key, see <a
-     * href="https://docs.aws.amazon.com/kms/latest/developerguide/key-state.html">Key state: Effect on your KMS key</a>
-     * in the <i>Key Management Service Developer Guide</i>.
+     * href="https://docs.aws.amazon.com/kms/latest/developerguide/key-state.html">Key states of KMS keys</a> in the
+     * <i>Key Management Service Developer Guide</i>.
      * </p>
      */
     private String keyState;
@@ -122,7 +123,7 @@ public class KeyMetadata implements Serializable, Cloneable, StructuredPojo {
      * <p>
      * A unique identifier for the <a
      * href="https://docs.aws.amazon.com/kms/latest/developerguide/custom-key-store-overview.html">custom key store</a>
-     * that contains the KMS key. This value is present only when the KMS key is created in a custom key store.
+     * that contains the KMS key. This field is present only when the KMS key is created in a custom key store.
      * </p>
      */
     //IBM unsupported
@@ -160,8 +161,7 @@ public class KeyMetadata implements Serializable, Cloneable, StructuredPojo {
      * </p>
      * <p>
      * The <code>KeySpec</code> and <code>CustomerMasterKeySpec</code> fields have the same value. We recommend that you
-     * use the <code>KeySpec</code> field in your code. However, to avoid breaking changes, KMS will support both
-     * fields.
+     * use the <code>KeySpec</code> field in your code. However, to avoid breaking changes, KMS supports both fields.
      * </p>
      */
     //IBM unsupported
@@ -204,8 +204,8 @@ public class KeyMetadata implements Serializable, Cloneable, StructuredPojo {
      * </p>
      * <p>
      * For more information about multi-Region keys, see <a
-     * href="https://docs.aws.amazon.com/kms/latest/developerguide/multi-region-keys-overview.html">Using multi-Region
-     * keys</a> in the <i>Key Management Service Developer Guide</i>.
+     * href="https://docs.aws.amazon.com/kms/latest/developerguide/multi-region-keys-overview.html">Multi-Region keys in
+     * KMS</a> in the <i>Key Management Service Developer Guide</i>.
      * </p>
      */
     //IBM unsupported
@@ -264,7 +264,7 @@ public class KeyMetadata implements Serializable, Cloneable, StructuredPojo {
      * <p>
      * The twelve-digit account ID of the Amazon Web Services account that owns the KMS key.
      * </p>
-     *
+     * 
      * @param aWSAccountId
      *        The twelve-digit account ID of the Amazon Web Services account that owns the KMS key.
      */
@@ -629,16 +629,16 @@ public class KeyMetadata implements Serializable, Cloneable, StructuredPojo {
      * </p>
      * <p>
      * For more information about how key state affects the use of a KMS key, see <a
-     * href="https://docs.aws.amazon.com/kms/latest/developerguide/key-state.html">Key state: Effect on your KMS key</a>
-     * in the <i>Key Management Service Developer Guide</i>.
+     * href="https://docs.aws.amazon.com/kms/latest/developerguide/key-state.html">Key states of KMS keys</a> in the
+     * <i>Key Management Service Developer Guide</i>.
      * </p>
-     *
+     * 
      * @param keyState
      *        The current status of the KMS key.</p>
      *        <p>
      *        For more information about how key state affects the use of a KMS key, see <a
-     *        href="https://docs.aws.amazon.com/kms/latest/developerguide/key-state.html">Key state: Effect on your KMS
-     *        key</a> in the <i>Key Management Service Developer Guide</i>.
+     *        href="https://docs.aws.amazon.com/kms/latest/developerguide/key-state.html">Key states of KMS keys</a> in
+     *        the <i>Key Management Service Developer Guide</i>.
      * @see KeyState
      */
 
@@ -652,15 +652,15 @@ public class KeyMetadata implements Serializable, Cloneable, StructuredPojo {
      * </p>
      * <p>
      * For more information about how key state affects the use of a KMS key, see <a
-     * href="https://docs.aws.amazon.com/kms/latest/developerguide/key-state.html">Key state: Effect on your KMS key</a>
-     * in the <i>Key Management Service Developer Guide</i>.
+     * href="https://docs.aws.amazon.com/kms/latest/developerguide/key-state.html">Key states of KMS keys</a> in the
+     * <i>Key Management Service Developer Guide</i>.
      * </p>
-     *
+     * 
      * @return The current status of the KMS key.</p>
      *         <p>
      *         For more information about how key state affects the use of a KMS key, see <a
-     *         href="https://docs.aws.amazon.com/kms/latest/developerguide/key-state.html">Key state: Effect on your KMS
-     *         key</a> in the <i>Key Management Service Developer Guide</i>.
+     *         href="https://docs.aws.amazon.com/kms/latest/developerguide/key-state.html">Key states of KMS keys</a> in
+     *         the <i>Key Management Service Developer Guide</i>.
      * @see KeyState
      */
 
@@ -674,16 +674,16 @@ public class KeyMetadata implements Serializable, Cloneable, StructuredPojo {
      * </p>
      * <p>
      * For more information about how key state affects the use of a KMS key, see <a
-     * href="https://docs.aws.amazon.com/kms/latest/developerguide/key-state.html">Key state: Effect on your KMS key</a>
-     * in the <i>Key Management Service Developer Guide</i>.
+     * href="https://docs.aws.amazon.com/kms/latest/developerguide/key-state.html">Key states of KMS keys</a> in the
+     * <i>Key Management Service Developer Guide</i>.
      * </p>
-     *
+     * 
      * @param keyState
      *        The current status of the KMS key.</p>
      *        <p>
      *        For more information about how key state affects the use of a KMS key, see <a
-     *        href="https://docs.aws.amazon.com/kms/latest/developerguide/key-state.html">Key state: Effect on your KMS
-     *        key</a> in the <i>Key Management Service Developer Guide</i>.
+     *        href="https://docs.aws.amazon.com/kms/latest/developerguide/key-state.html">Key states of KMS keys</a> in
+     *        the <i>Key Management Service Developer Guide</i>.
      * @return Returns a reference to this object so that method calls can be chained together.
      * @see KeyState
      */
@@ -699,16 +699,16 @@ public class KeyMetadata implements Serializable, Cloneable, StructuredPojo {
      * </p>
      * <p>
      * For more information about how key state affects the use of a KMS key, see <a
-     * href="https://docs.aws.amazon.com/kms/latest/developerguide/key-state.html">Key state: Effect on your KMS key</a>
-     * in the <i>Key Management Service Developer Guide</i>.
+     * href="https://docs.aws.amazon.com/kms/latest/developerguide/key-state.html">Key states of KMS keys</a> in the
+     * <i>Key Management Service Developer Guide</i>.
      * </p>
-     *
+     * 
      * @param keyState
      *        The current status of the KMS key.</p>
      *        <p>
      *        For more information about how key state affects the use of a KMS key, see <a
-     *        href="https://docs.aws.amazon.com/kms/latest/developerguide/key-state.html">Key state: Effect on your KMS
-     *        key</a> in the <i>Key Management Service Developer Guide</i>.
+     *        href="https://docs.aws.amazon.com/kms/latest/developerguide/key-state.html">Key states of KMS keys</a> in
+     *        the <i>Key Management Service Developer Guide</i>.
      * @see KeyState
      */
 
@@ -722,16 +722,16 @@ public class KeyMetadata implements Serializable, Cloneable, StructuredPojo {
      * </p>
      * <p>
      * For more information about how key state affects the use of a KMS key, see <a
-     * href="https://docs.aws.amazon.com/kms/latest/developerguide/key-state.html">Key state: Effect on your KMS key</a>
-     * in the <i>Key Management Service Developer Guide</i>.
+     * href="https://docs.aws.amazon.com/kms/latest/developerguide/key-state.html">Key states of KMS keys</a> in the
+     * <i>Key Management Service Developer Guide</i>.
      * </p>
-     *
+     * 
      * @param keyState
      *        The current status of the KMS key.</p>
      *        <p>
      *        For more information about how key state affects the use of a KMS key, see <a
-     *        href="https://docs.aws.amazon.com/kms/latest/developerguide/key-state.html">Key state: Effect on your KMS
-     *        key</a> in the <i>Key Management Service Developer Guide</i>.
+     *        href="https://docs.aws.amazon.com/kms/latest/developerguide/key-state.html">Key states of KMS keys</a> in
+     *        the <i>Key Management Service Developer Guide</i>.
      * @return Returns a reference to this object so that method calls can be chained together.
      * @see KeyState
      */
@@ -979,13 +979,13 @@ public class KeyMetadata implements Serializable, Cloneable, StructuredPojo {
      * <p>
      * A unique identifier for the <a
      * href="https://docs.aws.amazon.com/kms/latest/developerguide/custom-key-store-overview.html">custom key store</a>
-     * that contains the KMS key. This value is present only when the KMS key is created in a custom key store.
+     * that contains the KMS key. This field is present only when the KMS key is created in a custom key store.
      * </p>
-     *
+     * 
      * @param customKeyStoreId
      *        A unique identifier for the <a
      *        href="https://docs.aws.amazon.com/kms/latest/developerguide/custom-key-store-overview.html">custom key
-     *        store</a> that contains the KMS key. This value is present only when the KMS key is created in a custom
+     *        store</a> that contains the KMS key. This field is present only when the KMS key is created in a custom
      *        key store.
      */
 
@@ -998,12 +998,12 @@ public class KeyMetadata implements Serializable, Cloneable, StructuredPojo {
      * <p>
      * A unique identifier for the <a
      * href="https://docs.aws.amazon.com/kms/latest/developerguide/custom-key-store-overview.html">custom key store</a>
-     * that contains the KMS key. This value is present only when the KMS key is created in a custom key store.
+     * that contains the KMS key. This field is present only when the KMS key is created in a custom key store.
      * </p>
-     *
+     * 
      * @return A unique identifier for the <a
      *         href="https://docs.aws.amazon.com/kms/latest/developerguide/custom-key-store-overview.html">custom key
-     *         store</a> that contains the KMS key. This value is present only when the KMS key is created in a custom
+     *         store</a> that contains the KMS key. This field is present only when the KMS key is created in a custom
      *         key store.
      */
 
@@ -1016,13 +1016,13 @@ public class KeyMetadata implements Serializable, Cloneable, StructuredPojo {
      * <p>
      * A unique identifier for the <a
      * href="https://docs.aws.amazon.com/kms/latest/developerguide/custom-key-store-overview.html">custom key store</a>
-     * that contains the KMS key. This value is present only when the KMS key is created in a custom key store.
+     * that contains the KMS key. This field is present only when the KMS key is created in a custom key store.
      * </p>
-     *
+     * 
      * @param customKeyStoreId
      *        A unique identifier for the <a
      *        href="https://docs.aws.amazon.com/kms/latest/developerguide/custom-key-store-overview.html">custom key
-     *        store</a> that contains the KMS key. This value is present only when the KMS key is created in a custom
+     *        store</a> that contains the KMS key. This field is present only when the KMS key is created in a custom
      *        key store.
      * @return Returns a reference to this object so that method calls can be chained together.
      */
@@ -1036,17 +1036,18 @@ public class KeyMetadata implements Serializable, Cloneable, StructuredPojo {
     /**
      * <p>
      * The cluster ID of the CloudHSM cluster that contains the key material for the KMS key. When you create a KMS key
-     * in a <a href="https://docs.aws.amazon.com/kms/latest/developerguide/custom-key-store-overview.html">custom key
-     * store</a>, KMS creates the key material for the KMS key in the associated CloudHSM cluster. This value is present
-     * only when the KMS key is created in a custom key store.
+     * in an CloudHSM <a
+     * href="https://docs.aws.amazon.com/kms/latest/developerguide/custom-key-store-overview.html">custom key store</a>,
+     * KMS creates the key material for the KMS key in the associated CloudHSM cluster. This field is present only when
+     * the KMS key is created in an CloudHSM key store.
      * </p>
-     *
+     * 
      * @param cloudHsmClusterId
      *        The cluster ID of the CloudHSM cluster that contains the key material for the KMS key. When you create a
-     *        KMS key in a <a
+     *        KMS key in an CloudHSM <a
      *        href="https://docs.aws.amazon.com/kms/latest/developerguide/custom-key-store-overview.html">custom key
-     *        store</a>, KMS creates the key material for the KMS key in the associated CloudHSM cluster. This value is
-     *        present only when the KMS key is created in a custom key store.
+     *        store</a>, KMS creates the key material for the KMS key in the associated CloudHSM cluster. This field is
+     *        present only when the KMS key is created in an CloudHSM key store.
      */
     //IBM unsupported
     // public void setCloudHsmClusterId(String cloudHsmClusterId) {
@@ -1056,16 +1057,17 @@ public class KeyMetadata implements Serializable, Cloneable, StructuredPojo {
     /**
      * <p>
      * The cluster ID of the CloudHSM cluster that contains the key material for the KMS key. When you create a KMS key
-     * in a <a href="https://docs.aws.amazon.com/kms/latest/developerguide/custom-key-store-overview.html">custom key
-     * store</a>, KMS creates the key material for the KMS key in the associated CloudHSM cluster. This value is present
-     * only when the KMS key is created in a custom key store.
+     * in an CloudHSM <a
+     * href="https://docs.aws.amazon.com/kms/latest/developerguide/custom-key-store-overview.html">custom key store</a>,
+     * KMS creates the key material for the KMS key in the associated CloudHSM cluster. This field is present only when
+     * the KMS key is created in an CloudHSM key store.
      * </p>
-     *
+     * 
      * @return The cluster ID of the CloudHSM cluster that contains the key material for the KMS key. When you create a
-     *         KMS key in a <a
+     *         KMS key in an CloudHSM <a
      *         href="https://docs.aws.amazon.com/kms/latest/developerguide/custom-key-store-overview.html">custom key
-     *         store</a>, KMS creates the key material for the KMS key in the associated CloudHSM cluster. This value is
-     *         present only when the KMS key is created in a custom key store.
+     *         store</a>, KMS creates the key material for the KMS key in the associated CloudHSM cluster. This field is
+     *         present only when the KMS key is created in an CloudHSM key store.
      */
 
     //IBM unsupported
@@ -1076,17 +1078,18 @@ public class KeyMetadata implements Serializable, Cloneable, StructuredPojo {
     /**
      * <p>
      * The cluster ID of the CloudHSM cluster that contains the key material for the KMS key. When you create a KMS key
-     * in a <a href="https://docs.aws.amazon.com/kms/latest/developerguide/custom-key-store-overview.html">custom key
-     * store</a>, KMS creates the key material for the KMS key in the associated CloudHSM cluster. This value is present
-     * only when the KMS key is created in a custom key store.
+     * in an CloudHSM <a
+     * href="https://docs.aws.amazon.com/kms/latest/developerguide/custom-key-store-overview.html">custom key store</a>,
+     * KMS creates the key material for the KMS key in the associated CloudHSM cluster. This field is present only when
+     * the KMS key is created in an CloudHSM key store.
      * </p>
-     *
+     * 
      * @param cloudHsmClusterId
      *        The cluster ID of the CloudHSM cluster that contains the key material for the KMS key. When you create a
-     *        KMS key in a <a
+     *        KMS key in an CloudHSM <a
      *        href="https://docs.aws.amazon.com/kms/latest/developerguide/custom-key-store-overview.html">custom key
-     *        store</a>, KMS creates the key material for the KMS key in the associated CloudHSM cluster. This value is
-     *        present only when the KMS key is created in a custom key store.
+     *        store</a>, KMS creates the key material for the KMS key in the associated CloudHSM cluster. This field is
+     *        present only when the KMS key is created in an CloudHSM key store.
      * @return Returns a reference to this object so that method calls can be chained together.
      */
 
@@ -1291,16 +1294,15 @@ public class KeyMetadata implements Serializable, Cloneable, StructuredPojo {
      * </p>
      * <p>
      * The <code>KeySpec</code> and <code>CustomerMasterKeySpec</code> fields have the same value. We recommend that you
-     * use the <code>KeySpec</code> field in your code. However, to avoid breaking changes, KMS will support both
-     * fields.
+     * use the <code>KeySpec</code> field in your code. However, to avoid breaking changes, KMS supports both fields.
      * </p>
-     *
+     * 
      * @param customerMasterKeySpec
      *        Instead, use the <code>KeySpec</code> field.</p>
      *        <p>
      *        The <code>KeySpec</code> and <code>CustomerMasterKeySpec</code> fields have the same value. We recommend
-     *        that you use the <code>KeySpec</code> field in your code. However, to avoid breaking changes, KMS will
-     *        support both fields.
+     *        that you use the <code>KeySpec</code> field in your code. However, to avoid breaking changes, KMS supports
+     *        both fields.
      * @see CustomerMasterKeySpec
      */
     //IBM unsupported
@@ -1315,15 +1317,14 @@ public class KeyMetadata implements Serializable, Cloneable, StructuredPojo {
      * </p>
      * <p>
      * The <code>KeySpec</code> and <code>CustomerMasterKeySpec</code> fields have the same value. We recommend that you
-     * use the <code>KeySpec</code> field in your code. However, to avoid breaking changes, KMS will support both
-     * fields.
+     * use the <code>KeySpec</code> field in your code. However, to avoid breaking changes, KMS supports both fields.
      * </p>
-     *
+     * 
      * @return Instead, use the <code>KeySpec</code> field.</p>
      *         <p>
      *         The <code>KeySpec</code> and <code>CustomerMasterKeySpec</code> fields have the same value. We recommend
-     *         that you use the <code>KeySpec</code> field in your code. However, to avoid breaking changes, KMS will
-     *         support both fields.
+     *         that you use the <code>KeySpec</code> field in your code. However, to avoid breaking changes, KMS
+     *         supports both fields.
      * @see CustomerMasterKeySpec
      */
     //IBM unsupported
@@ -1338,16 +1339,15 @@ public class KeyMetadata implements Serializable, Cloneable, StructuredPojo {
      * </p>
      * <p>
      * The <code>KeySpec</code> and <code>CustomerMasterKeySpec</code> fields have the same value. We recommend that you
-     * use the <code>KeySpec</code> field in your code. However, to avoid breaking changes, KMS will support both
-     * fields.
+     * use the <code>KeySpec</code> field in your code. However, to avoid breaking changes, KMS supports both fields.
      * </p>
-     *
+     * 
      * @param customerMasterKeySpec
      *        Instead, use the <code>KeySpec</code> field.</p>
      *        <p>
      *        The <code>KeySpec</code> and <code>CustomerMasterKeySpec</code> fields have the same value. We recommend
-     *        that you use the <code>KeySpec</code> field in your code. However, to avoid breaking changes, KMS will
-     *        support both fields.
+     *        that you use the <code>KeySpec</code> field in your code. However, to avoid breaking changes, KMS supports
+     *        both fields.
      * @return Returns a reference to this object so that method calls can be chained together.
      * @see CustomerMasterKeySpec
      */
@@ -1364,16 +1364,15 @@ public class KeyMetadata implements Serializable, Cloneable, StructuredPojo {
      * </p>
      * <p>
      * The <code>KeySpec</code> and <code>CustomerMasterKeySpec</code> fields have the same value. We recommend that you
-     * use the <code>KeySpec</code> field in your code. However, to avoid breaking changes, KMS will support both
-     * fields.
+     * use the <code>KeySpec</code> field in your code. However, to avoid breaking changes, KMS supports both fields.
      * </p>
-     *
+     * 
      * @param customerMasterKeySpec
      *        Instead, use the <code>KeySpec</code> field.</p>
      *        <p>
      *        The <code>KeySpec</code> and <code>CustomerMasterKeySpec</code> fields have the same value. We recommend
-     *        that you use the <code>KeySpec</code> field in your code. However, to avoid breaking changes, KMS will
-     *        support both fields.
+     *        that you use the <code>KeySpec</code> field in your code. However, to avoid breaking changes, KMS supports
+     *        both fields.
      * @see CustomerMasterKeySpec
      */
     //IBM unsupported
@@ -1388,16 +1387,15 @@ public class KeyMetadata implements Serializable, Cloneable, StructuredPojo {
      * </p>
      * <p>
      * The <code>KeySpec</code> and <code>CustomerMasterKeySpec</code> fields have the same value. We recommend that you
-     * use the <code>KeySpec</code> field in your code. However, to avoid breaking changes, KMS will support both
-     * fields.
+     * use the <code>KeySpec</code> field in your code. However, to avoid breaking changes, KMS supports both fields.
      * </p>
-     *
+     * 
      * @param customerMasterKeySpec
      *        Instead, use the <code>KeySpec</code> field.</p>
      *        <p>
      *        The <code>KeySpec</code> and <code>CustomerMasterKeySpec</code> fields have the same value. We recommend
-     *        that you use the <code>KeySpec</code> field in your code. However, to avoid breaking changes, KMS will
-     *        support both fields.
+     *        that you use the <code>KeySpec</code> field in your code. However, to avoid breaking changes, KMS supports
+     *        both fields.
      * @return Returns a reference to this object so that method calls can be chained together.
      * @see CustomerMasterKeySpec
      */
@@ -1773,18 +1771,18 @@ public class KeyMetadata implements Serializable, Cloneable, StructuredPojo {
      * </p>
      * <p>
      * For more information about multi-Region keys, see <a
-     * href="https://docs.aws.amazon.com/kms/latest/developerguide/multi-region-keys-overview.html">Using multi-Region
-     * keys</a> in the <i>Key Management Service Developer Guide</i>.
+     * href="https://docs.aws.amazon.com/kms/latest/developerguide/multi-region-keys-overview.html">Multi-Region keys in
+     * KMS</a> in the <i>Key Management Service Developer Guide</i>.
      * </p>
-     *
+     * 
      * @param multiRegion
      *        Indicates whether the KMS key is a multi-Region (<code>True</code>) or regional (<code>False</code>) key.
      *        This value is <code>True</code> for multi-Region primary and replica keys and <code>False</code> for
      *        regional KMS keys.</p>
      *        <p>
      *        For more information about multi-Region keys, see <a
-     *        href="https://docs.aws.amazon.com/kms/latest/developerguide/multi-region-keys-overview.html">Using
-     *        multi-Region keys</a> in the <i>Key Management Service Developer Guide</i>.
+     *        href="https://docs.aws.amazon.com/kms/latest/developerguide/multi-region-keys-overview.html">Multi-Region
+     *        keys in KMS</a> in the <i>Key Management Service Developer Guide</i>.
      */
 
     //IBM unsupported
@@ -1800,17 +1798,17 @@ public class KeyMetadata implements Serializable, Cloneable, StructuredPojo {
      * </p>
      * <p>
      * For more information about multi-Region keys, see <a
-     * href="https://docs.aws.amazon.com/kms/latest/developerguide/multi-region-keys-overview.html">Using multi-Region
-     * keys</a> in the <i>Key Management Service Developer Guide</i>.
+     * href="https://docs.aws.amazon.com/kms/latest/developerguide/multi-region-keys-overview.html">Multi-Region keys in
+     * KMS</a> in the <i>Key Management Service Developer Guide</i>.
      * </p>
-     *
+     * 
      * @return Indicates whether the KMS key is a multi-Region (<code>True</code>) or regional (<code>False</code>) key.
      *         This value is <code>True</code> for multi-Region primary and replica keys and <code>False</code> for
      *         regional KMS keys.</p>
      *         <p>
      *         For more information about multi-Region keys, see <a
-     *         href="https://docs.aws.amazon.com/kms/latest/developerguide/multi-region-keys-overview.html">Using
-     *         multi-Region keys</a> in the <i>Key Management Service Developer Guide</i>.
+     *         href="https://docs.aws.amazon.com/kms/latest/developerguide/multi-region-keys-overview.html">Multi-Region
+     *         keys in KMS</a> in the <i>Key Management Service Developer Guide</i>.
      */
 
     //IBM unsupported
@@ -1826,18 +1824,18 @@ public class KeyMetadata implements Serializable, Cloneable, StructuredPojo {
      * </p>
      * <p>
      * For more information about multi-Region keys, see <a
-     * href="https://docs.aws.amazon.com/kms/latest/developerguide/multi-region-keys-overview.html">Using multi-Region
-     * keys</a> in the <i>Key Management Service Developer Guide</i>.
+     * href="https://docs.aws.amazon.com/kms/latest/developerguide/multi-region-keys-overview.html">Multi-Region keys in
+     * KMS</a> in the <i>Key Management Service Developer Guide</i>.
      * </p>
-     *
+     * 
      * @param multiRegion
      *        Indicates whether the KMS key is a multi-Region (<code>True</code>) or regional (<code>False</code>) key.
      *        This value is <code>True</code> for multi-Region primary and replica keys and <code>False</code> for
      *        regional KMS keys.</p>
      *        <p>
      *        For more information about multi-Region keys, see <a
-     *        href="https://docs.aws.amazon.com/kms/latest/developerguide/multi-region-keys-overview.html">Using
-     *        multi-Region keys</a> in the <i>Key Management Service Developer Guide</i>.
+     *        href="https://docs.aws.amazon.com/kms/latest/developerguide/multi-region-keys-overview.html">Multi-Region
+     *        keys in KMS</a> in the <i>Key Management Service Developer Guide</i>.
      * @return Returns a reference to this object so that method calls can be chained together.
      */
 
@@ -1855,17 +1853,17 @@ public class KeyMetadata implements Serializable, Cloneable, StructuredPojo {
      * </p>
      * <p>
      * For more information about multi-Region keys, see <a
-     * href="https://docs.aws.amazon.com/kms/latest/developerguide/multi-region-keys-overview.html">Using multi-Region
-     * keys</a> in the <i>Key Management Service Developer Guide</i>.
+     * href="https://docs.aws.amazon.com/kms/latest/developerguide/multi-region-keys-overview.html">Multi-Region keys in
+     * KMS</a> in the <i>Key Management Service Developer Guide</i>.
      * </p>
-     *
+     * 
      * @return Indicates whether the KMS key is a multi-Region (<code>True</code>) or regional (<code>False</code>) key.
      *         This value is <code>True</code> for multi-Region primary and replica keys and <code>False</code> for
      *         regional KMS keys.</p>
      *         <p>
      *         For more information about multi-Region keys, see <a
-     *         href="https://docs.aws.amazon.com/kms/latest/developerguide/multi-region-keys-overview.html">Using
-     *         multi-Region keys</a> in the <i>Key Management Service Developer Guide</i>.
+     *         href="https://docs.aws.amazon.com/kms/latest/developerguide/multi-region-keys-overview.html">Multi-Region
+     *         keys in KMS</a> in the <i>Key Management Service Developer Guide</i>.
      */
 
     //IBM unsupported

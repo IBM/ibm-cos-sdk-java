@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2022 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2012-2023 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -16,20 +16,29 @@ package com.ibm.cloud.objectstorage.auth;
 
 import com.ibm.cloud.objectstorage.AmazonClientException;
 import com.ibm.cloud.objectstorage.SDKGlobalConfiguration;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import java.io.Closeable;
 import java.io.IOException;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 import java.util.concurrent.ThreadFactory;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import java.util.concurrent.TimeUnit;
 
 /**
- * Credentials provider implementation that loads credentials from the Amazon EC2 Instance Metadata Service.
+ * Credentials provider implementation that loads credentials from the Amazon EC2 Instance Metadata Service (IMDS).
  *
  * <p>When using {@link InstanceProfileCredentialsProvider} with asynchronous refreshing it is
  * <b>strongly</b> recommended to explicitly call {@link #close()} to release the async thread.</p>
+ *
+ * <p>The provider is configured with the default Instance Metadata Service endpoint. You can override the endpoint value
+ * by setting a valid URI as the value of the
+ * <ol>
+ *     <li><i>com.ibm.cloud.objectstorage.sdk.ec2MetadataServiceEndpointOverride</i> system property or</li>
+ *     <li><i>AWS_EC2_METADATA_SERVICE_ENDPOINT</i> environment value</li>
+ * </ol>
+ * </p>
  */
 public class InstanceProfileCredentialsProvider implements AWSCredentialsProvider, Closeable {
 

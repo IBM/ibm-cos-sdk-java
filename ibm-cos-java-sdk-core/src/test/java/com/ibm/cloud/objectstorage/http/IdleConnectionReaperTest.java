@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2022 Amazon.com, Inc. or its affiliates. All Rights
+ * Copyright 2010-2023 Amazon.com, Inc. or its affiliates. All Rights
  * Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
@@ -39,9 +39,16 @@ import org.apache.http.conn.ManagedClientConnection;
 import org.apache.http.conn.routing.HttpRoute;
 import org.apache.http.conn.scheme.SchemeRegistry;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import utils.Retryable;
+import utils.RetryableTestRule;
 
 public class IdleConnectionReaperTest {
+
+    @Rule
+    public RetryableTestRule retryableTestRule = new RetryableTestRule();
+
     @Before
     public void init() {
         IdleConnectionReaper.shutdown();
@@ -60,6 +67,7 @@ public class IdleConnectionReaperTest {
     }
 
     @Test
+    @Retryable
     public void autoShutdown() throws Exception {
         assertEquals(0, IdleConnectionReaper.size());
         for (int i = 0; i < 3; i++) {
@@ -78,6 +86,7 @@ public class IdleConnectionReaperTest {
     }
 
     @Test
+    @Retryable
     public void maxIdle_HonoredOnClose() throws InterruptedException {
         HttpClientConnectionManager connectionManager = mock(HttpClientConnectionManager.class);
         final long idleTime = 10 * 1000;

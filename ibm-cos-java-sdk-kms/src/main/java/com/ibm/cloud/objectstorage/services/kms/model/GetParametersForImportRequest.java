@@ -1,11 +1,11 @@
 /*
- * Copyright 2017-2022 Amazon.com, Inc. or its affiliates. All Rights Reserved.
- *
+ * Copyright 2018-2023 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * 
  * Licensed under the Apache License, Version 2.0 (the "License"). You may not use this file except in compliance with
  * the License. A copy of the License is located at
- *
+ * 
  * http://aws.amazon.com/apache2.0
- *
+ * 
  * or in the "license" file accompanying this file. This file is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
  * CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions
  * and limitations under the License.
@@ -27,8 +27,8 @@ public class GetParametersForImportRequest extends com.ibm.cloud.objectstorage.A
 
     /**
      * <p>
-     * The identifier of the symmetric KMS key into which you will import key material. The <code>Origin</code> of the
-     * KMS key must be <code>EXTERNAL</code>.
+     * The identifier of the symmetric encryption KMS key into which you will import key material. The
+     * <code>Origin</code> of the KMS key must be <code>EXTERNAL</code>.
      * </p>
      * <p>
      * Specify the key ID or key ARN of the KMS key.
@@ -55,11 +55,19 @@ public class GetParametersForImportRequest extends com.ibm.cloud.objectstorage.A
     private String keyId;
     /**
      * <p>
-     * The algorithm you will use to encrypt the key material before importing it with <a>ImportKeyMaterial</a>. For
-     * more information, see <a
+     * The algorithm you will use to encrypt the key material before using the <a>ImportKeyMaterial</a> operation to
+     * import it. For more information, see <a
      * href="https://docs.aws.amazon.com/kms/latest/developerguide/importing-keys-encrypt-key-material.html">Encrypt the
-     * Key Material</a> in the <i>Key Management Service Developer Guide</i>.
+     * key material</a> in the <i>Key Management Service Developer Guide</i>.
      * </p>
+     * <important>
+     * <p>
+     * The <code>RSAES_PKCS1_V1_5</code> wrapping algorithm is deprecated. We recommend that you begin using a different
+     * wrapping algorithm immediately. KMS will end support for <code>RSAES_PKCS1_V1_5</code> by October 1, 2023
+     * pursuant to <a href="https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-131Ar2.pdf">cryptographic
+     * key management guidance</a> from the National Institute of Standards and Technology (NIST).
+     * </p>
+     * </important>
      */
     private String wrappingAlgorithm;
     /**
@@ -71,8 +79,8 @@ public class GetParametersForImportRequest extends com.ibm.cloud.objectstorage.A
 
     /**
      * <p>
-     * The identifier of the symmetric KMS key into which you will import key material. The <code>Origin</code> of the
-     * KMS key must be <code>EXTERNAL</code>.
+     * The identifier of the symmetric encryption KMS key into which you will import key material. The
+     * <code>Origin</code> of the KMS key must be <code>EXTERNAL</code>.
      * </p>
      * <p>
      * Specify the key ID or key ARN of the KMS key.
@@ -95,10 +103,10 @@ public class GetParametersForImportRequest extends com.ibm.cloud.objectstorage.A
      * <p>
      * To get the key ID and key ARN for a KMS key, use <a>ListKeys</a> or <a>DescribeKey</a>.
      * </p>
-     *
+     * 
      * @param keyId
-     *        The identifier of the symmetric KMS key into which you will import key material. The <code>Origin</code>
-     *        of the KMS key must be <code>EXTERNAL</code>.</p>
+     *        The identifier of the symmetric encryption KMS key into which you will import key material. The
+     *        <code>Origin</code> of the KMS key must be <code>EXTERNAL</code>.</p>
      *        <p>
      *        Specify the key ID or key ARN of the KMS key.
      *        </p>
@@ -127,8 +135,8 @@ public class GetParametersForImportRequest extends com.ibm.cloud.objectstorage.A
 
     /**
      * <p>
-     * The identifier of the symmetric KMS key into which you will import key material. The <code>Origin</code> of the
-     * KMS key must be <code>EXTERNAL</code>.
+     * The identifier of the symmetric encryption KMS key into which you will import key material. The
+     * <code>Origin</code> of the KMS key must be <code>EXTERNAL</code>.
      * </p>
      * <p>
      * Specify the key ID or key ARN of the KMS key.
@@ -151,9 +159,9 @@ public class GetParametersForImportRequest extends com.ibm.cloud.objectstorage.A
      * <p>
      * To get the key ID and key ARN for a KMS key, use <a>ListKeys</a> or <a>DescribeKey</a>.
      * </p>
-     *
-     * @return The identifier of the symmetric KMS key into which you will import key material. The <code>Origin</code>
-     *         of the KMS key must be <code>EXTERNAL</code>.</p>
+     * 
+     * @return The identifier of the symmetric encryption KMS key into which you will import key material. The
+     *         <code>Origin</code> of the KMS key must be <code>EXTERNAL</code>.</p>
      *         <p>
      *         Specify the key ID or key ARN of the KMS key.
      *         </p>
@@ -182,8 +190,8 @@ public class GetParametersForImportRequest extends com.ibm.cloud.objectstorage.A
 
     /**
      * <p>
-     * The identifier of the symmetric KMS key into which you will import key material. The <code>Origin</code> of the
-     * KMS key must be <code>EXTERNAL</code>.
+     * The identifier of the symmetric encryption KMS key into which you will import key material. The
+     * <code>Origin</code> of the KMS key must be <code>EXTERNAL</code>.
      * </p>
      * <p>
      * Specify the key ID or key ARN of the KMS key.
@@ -206,10 +214,10 @@ public class GetParametersForImportRequest extends com.ibm.cloud.objectstorage.A
      * <p>
      * To get the key ID and key ARN for a KMS key, use <a>ListKeys</a> or <a>DescribeKey</a>.
      * </p>
-     *
+     * 
      * @param keyId
-     *        The identifier of the symmetric KMS key into which you will import key material. The <code>Origin</code>
-     *        of the KMS key must be <code>EXTERNAL</code>.</p>
+     *        The identifier of the symmetric encryption KMS key into which you will import key material. The
+     *        <code>Origin</code> of the KMS key must be <code>EXTERNAL</code>.</p>
      *        <p>
      *        Specify the key ID or key ARN of the KMS key.
      *        </p>
@@ -240,17 +248,32 @@ public class GetParametersForImportRequest extends com.ibm.cloud.objectstorage.A
 
     /**
      * <p>
-     * The algorithm you will use to encrypt the key material before importing it with <a>ImportKeyMaterial</a>. For
-     * more information, see <a
+     * The algorithm you will use to encrypt the key material before using the <a>ImportKeyMaterial</a> operation to
+     * import it. For more information, see <a
      * href="https://docs.aws.amazon.com/kms/latest/developerguide/importing-keys-encrypt-key-material.html">Encrypt the
-     * Key Material</a> in the <i>Key Management Service Developer Guide</i>.
+     * key material</a> in the <i>Key Management Service Developer Guide</i>.
      * </p>
-     *
+     * <important>
+     * <p>
+     * The <code>RSAES_PKCS1_V1_5</code> wrapping algorithm is deprecated. We recommend that you begin using a different
+     * wrapping algorithm immediately. KMS will end support for <code>RSAES_PKCS1_V1_5</code> by October 1, 2023
+     * pursuant to <a href="https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-131Ar2.pdf">cryptographic
+     * key management guidance</a> from the National Institute of Standards and Technology (NIST).
+     * </p>
+     * </important>
+     * 
      * @param wrappingAlgorithm
-     *        The algorithm you will use to encrypt the key material before importing it with <a>ImportKeyMaterial</a>.
-     *        For more information, see <a
+     *        The algorithm you will use to encrypt the key material before using the <a>ImportKeyMaterial</a> operation
+     *        to import it. For more information, see <a
      *        href="https://docs.aws.amazon.com/kms/latest/developerguide/importing-keys-encrypt-key-material.html"
-     *        >Encrypt the Key Material</a> in the <i>Key Management Service Developer Guide</i>.
+     *        >Encrypt the key material</a> in the <i>Key Management Service Developer Guide</i>.</p> <important>
+     *        <p>
+     *        The <code>RSAES_PKCS1_V1_5</code> wrapping algorithm is deprecated. We recommend that you begin using a
+     *        different wrapping algorithm immediately. KMS will end support for <code>RSAES_PKCS1_V1_5</code> by
+     *        October 1, 2023 pursuant to <a
+     *        href="https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-131Ar2.pdf">cryptographic key
+     *        management guidance</a> from the National Institute of Standards and Technology (NIST).
+     *        </p>
      * @see AlgorithmSpec
      */
 
@@ -260,16 +283,31 @@ public class GetParametersForImportRequest extends com.ibm.cloud.objectstorage.A
 
     /**
      * <p>
-     * The algorithm you will use to encrypt the key material before importing it with <a>ImportKeyMaterial</a>. For
-     * more information, see <a
+     * The algorithm you will use to encrypt the key material before using the <a>ImportKeyMaterial</a> operation to
+     * import it. For more information, see <a
      * href="https://docs.aws.amazon.com/kms/latest/developerguide/importing-keys-encrypt-key-material.html">Encrypt the
-     * Key Material</a> in the <i>Key Management Service Developer Guide</i>.
+     * key material</a> in the <i>Key Management Service Developer Guide</i>.
      * </p>
-     *
-     * @return The algorithm you will use to encrypt the key material before importing it with <a>ImportKeyMaterial</a>.
-     *         For more information, see <a
+     * <important>
+     * <p>
+     * The <code>RSAES_PKCS1_V1_5</code> wrapping algorithm is deprecated. We recommend that you begin using a different
+     * wrapping algorithm immediately. KMS will end support for <code>RSAES_PKCS1_V1_5</code> by October 1, 2023
+     * pursuant to <a href="https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-131Ar2.pdf">cryptographic
+     * key management guidance</a> from the National Institute of Standards and Technology (NIST).
+     * </p>
+     * </important>
+     * 
+     * @return The algorithm you will use to encrypt the key material before using the <a>ImportKeyMaterial</a>
+     *         operation to import it. For more information, see <a
      *         href="https://docs.aws.amazon.com/kms/latest/developerguide/importing-keys-encrypt-key-material.html"
-     *         >Encrypt the Key Material</a> in the <i>Key Management Service Developer Guide</i>.
+     *         >Encrypt the key material</a> in the <i>Key Management Service Developer Guide</i>.</p> <important>
+     *         <p>
+     *         The <code>RSAES_PKCS1_V1_5</code> wrapping algorithm is deprecated. We recommend that you begin using a
+     *         different wrapping algorithm immediately. KMS will end support for <code>RSAES_PKCS1_V1_5</code> by
+     *         October 1, 2023 pursuant to <a
+     *         href="https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-131Ar2.pdf">cryptographic key
+     *         management guidance</a> from the National Institute of Standards and Technology (NIST).
+     *         </p>
      * @see AlgorithmSpec
      */
 
@@ -279,17 +317,32 @@ public class GetParametersForImportRequest extends com.ibm.cloud.objectstorage.A
 
     /**
      * <p>
-     * The algorithm you will use to encrypt the key material before importing it with <a>ImportKeyMaterial</a>. For
-     * more information, see <a
+     * The algorithm you will use to encrypt the key material before using the <a>ImportKeyMaterial</a> operation to
+     * import it. For more information, see <a
      * href="https://docs.aws.amazon.com/kms/latest/developerguide/importing-keys-encrypt-key-material.html">Encrypt the
-     * Key Material</a> in the <i>Key Management Service Developer Guide</i>.
+     * key material</a> in the <i>Key Management Service Developer Guide</i>.
      * </p>
-     *
+     * <important>
+     * <p>
+     * The <code>RSAES_PKCS1_V1_5</code> wrapping algorithm is deprecated. We recommend that you begin using a different
+     * wrapping algorithm immediately. KMS will end support for <code>RSAES_PKCS1_V1_5</code> by October 1, 2023
+     * pursuant to <a href="https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-131Ar2.pdf">cryptographic
+     * key management guidance</a> from the National Institute of Standards and Technology (NIST).
+     * </p>
+     * </important>
+     * 
      * @param wrappingAlgorithm
-     *        The algorithm you will use to encrypt the key material before importing it with <a>ImportKeyMaterial</a>.
-     *        For more information, see <a
+     *        The algorithm you will use to encrypt the key material before using the <a>ImportKeyMaterial</a> operation
+     *        to import it. For more information, see <a
      *        href="https://docs.aws.amazon.com/kms/latest/developerguide/importing-keys-encrypt-key-material.html"
-     *        >Encrypt the Key Material</a> in the <i>Key Management Service Developer Guide</i>.
+     *        >Encrypt the key material</a> in the <i>Key Management Service Developer Guide</i>.</p> <important>
+     *        <p>
+     *        The <code>RSAES_PKCS1_V1_5</code> wrapping algorithm is deprecated. We recommend that you begin using a
+     *        different wrapping algorithm immediately. KMS will end support for <code>RSAES_PKCS1_V1_5</code> by
+     *        October 1, 2023 pursuant to <a
+     *        href="https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-131Ar2.pdf">cryptographic key
+     *        management guidance</a> from the National Institute of Standards and Technology (NIST).
+     *        </p>
      * @return Returns a reference to this object so that method calls can be chained together.
      * @see AlgorithmSpec
      */
@@ -301,17 +354,32 @@ public class GetParametersForImportRequest extends com.ibm.cloud.objectstorage.A
 
     /**
      * <p>
-     * The algorithm you will use to encrypt the key material before importing it with <a>ImportKeyMaterial</a>. For
-     * more information, see <a
+     * The algorithm you will use to encrypt the key material before using the <a>ImportKeyMaterial</a> operation to
+     * import it. For more information, see <a
      * href="https://docs.aws.amazon.com/kms/latest/developerguide/importing-keys-encrypt-key-material.html">Encrypt the
-     * Key Material</a> in the <i>Key Management Service Developer Guide</i>.
+     * key material</a> in the <i>Key Management Service Developer Guide</i>.
      * </p>
-     *
+     * <important>
+     * <p>
+     * The <code>RSAES_PKCS1_V1_5</code> wrapping algorithm is deprecated. We recommend that you begin using a different
+     * wrapping algorithm immediately. KMS will end support for <code>RSAES_PKCS1_V1_5</code> by October 1, 2023
+     * pursuant to <a href="https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-131Ar2.pdf">cryptographic
+     * key management guidance</a> from the National Institute of Standards and Technology (NIST).
+     * </p>
+     * </important>
+     * 
      * @param wrappingAlgorithm
-     *        The algorithm you will use to encrypt the key material before importing it with <a>ImportKeyMaterial</a>.
-     *        For more information, see <a
+     *        The algorithm you will use to encrypt the key material before using the <a>ImportKeyMaterial</a> operation
+     *        to import it. For more information, see <a
      *        href="https://docs.aws.amazon.com/kms/latest/developerguide/importing-keys-encrypt-key-material.html"
-     *        >Encrypt the Key Material</a> in the <i>Key Management Service Developer Guide</i>.
+     *        >Encrypt the key material</a> in the <i>Key Management Service Developer Guide</i>.</p> <important>
+     *        <p>
+     *        The <code>RSAES_PKCS1_V1_5</code> wrapping algorithm is deprecated. We recommend that you begin using a
+     *        different wrapping algorithm immediately. KMS will end support for <code>RSAES_PKCS1_V1_5</code> by
+     *        October 1, 2023 pursuant to <a
+     *        href="https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-131Ar2.pdf">cryptographic key
+     *        management guidance</a> from the National Institute of Standards and Technology (NIST).
+     *        </p>
      * @see AlgorithmSpec
      */
 
@@ -321,17 +389,32 @@ public class GetParametersForImportRequest extends com.ibm.cloud.objectstorage.A
 
     /**
      * <p>
-     * The algorithm you will use to encrypt the key material before importing it with <a>ImportKeyMaterial</a>. For
-     * more information, see <a
+     * The algorithm you will use to encrypt the key material before using the <a>ImportKeyMaterial</a> operation to
+     * import it. For more information, see <a
      * href="https://docs.aws.amazon.com/kms/latest/developerguide/importing-keys-encrypt-key-material.html">Encrypt the
-     * Key Material</a> in the <i>Key Management Service Developer Guide</i>.
+     * key material</a> in the <i>Key Management Service Developer Guide</i>.
      * </p>
-     *
+     * <important>
+     * <p>
+     * The <code>RSAES_PKCS1_V1_5</code> wrapping algorithm is deprecated. We recommend that you begin using a different
+     * wrapping algorithm immediately. KMS will end support for <code>RSAES_PKCS1_V1_5</code> by October 1, 2023
+     * pursuant to <a href="https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-131Ar2.pdf">cryptographic
+     * key management guidance</a> from the National Institute of Standards and Technology (NIST).
+     * </p>
+     * </important>
+     * 
      * @param wrappingAlgorithm
-     *        The algorithm you will use to encrypt the key material before importing it with <a>ImportKeyMaterial</a>.
-     *        For more information, see <a
+     *        The algorithm you will use to encrypt the key material before using the <a>ImportKeyMaterial</a> operation
+     *        to import it. For more information, see <a
      *        href="https://docs.aws.amazon.com/kms/latest/developerguide/importing-keys-encrypt-key-material.html"
-     *        >Encrypt the Key Material</a> in the <i>Key Management Service Developer Guide</i>.
+     *        >Encrypt the key material</a> in the <i>Key Management Service Developer Guide</i>.</p> <important>
+     *        <p>
+     *        The <code>RSAES_PKCS1_V1_5</code> wrapping algorithm is deprecated. We recommend that you begin using a
+     *        different wrapping algorithm immediately. KMS will end support for <code>RSAES_PKCS1_V1_5</code> by
+     *        October 1, 2023 pursuant to <a
+     *        href="https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-131Ar2.pdf">cryptographic key
+     *        management guidance</a> from the National Institute of Standards and Technology (NIST).
+     *        </p>
      * @return Returns a reference to this object so that method calls can be chained together.
      * @see AlgorithmSpec
      */

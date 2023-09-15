@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2022 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2010-2023 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -272,6 +272,7 @@ import com.ibm.cloud.objectstorage.util.Base64;
 import com.ibm.cloud.objectstorage.util.BinaryUtils;
 import com.ibm.cloud.objectstorage.util.CredentialUtils;
 import com.ibm.cloud.objectstorage.util.DateUtils;
+import com.ibm.cloud.objectstorage.util.HostnameValidator;
 import com.ibm.cloud.objectstorage.util.IOUtils;
 import com.ibm.cloud.objectstorage.util.LengthCheckInputStream;
 import com.ibm.cloud.objectstorage.util.Md5Utils;
@@ -2173,6 +2174,9 @@ public class AmazonS3Client extends AmazonWebServiceClient implements AmazonS3 {
      * To copy an object, the caller's account must have read access to the source object and
      * write access to the destination bucket.
      * </p>
+     * <p>For information about maximum and minimum part sizes and other multipart upload specifications,
+     * see <a href=\"https://docs.aws.amazon.com/AmazonS3/latest/userguide/qfacts.html\">Multipart upload limits</a>
+     * in the <i>Amazon S3 User Guide</i>. </p>
      * <p>
      * If constraints are specified in the <code>CopyPartRequest</code>
      * (e.g.
@@ -4348,9 +4352,14 @@ public class AmazonS3Client extends AmazonWebServiceClient implements AmazonS3 {
                      // If cache contains the region for the bucket, create an endpoint for the region and
                      // update the request with that endpoint if accelerate mode is not enabled
                      //IBM unsupported
-                     //request.addHandlerContext(HandlerContextKey.SIGNING_REGION, region);
+					 //request.addHandlerContext(HandlerContextKey.SIGNING_REGION, region);
                      if (!clientOptions.isAccelerateModeEnabled()) {
-                         resolveRequestEndpoint(request, bucketName, key, RuntimeHttpUtils.toUri(RegionUtils.getRegion(region).getServiceEndpoint(S3_SERVICE_NAME), clientConfiguration));
+                         String serviceEndpoint = RegionUtils.getRegion(region).getServiceEndpoint(S3_SERVICE_NAME);
+                         resolveRequestEndpoint(request,
+                                                bucketName,
+                                                key,
+                                                RuntimeHttpUtils.toUri(serviceEndpoint, clientConfiguration),
+                                                region);
                      }
                      return updateSigV4SignerWithServiceAndRegion((AWSS3V4Signer) signer, request, region);
                 } else if (request.getOriginalRequest() instanceof GeneratePresignedUrlRequest) {
@@ -5053,7 +5062,7 @@ public class AmazonS3Client extends AmazonWebServiceClient implements AmazonS3 {
         //                                        + "in the AWS SDK for Java 2.x.");
         // }
         Request<?> request = new DefaultRequest<Object>(Constants.S3_SERVICE_DISPLAY_NAME);
-        resolveRequestEndpoint(request, bucketName, key, endpoint);
+        resolveRequestEndpoint(request, bucketName, key, endpoint, null);
         return ServiceUtils.convertRequestToUrl(request, false, false);
     }
 
@@ -5229,7 +5238,7 @@ public class AmazonS3Client extends AmazonWebServiceClient implements AmazonS3 {
             }
         }
 
-        resolveRequestEndpoint(request, bucketName, key, endpoint);
+        resolveRequestEndpoint(request, bucketName, key, endpoint, null);
 
         //IBM unsupported
         //request.addHandlerContext(HandlerContextKey.SIGNING_REGION, signingRegion);
@@ -5427,19 +5436,25 @@ public class AmazonS3Client extends AmazonWebServiceClient implements AmazonS3 {
      * Configure the given request with an endpoint and resource path based on the bucket name and
      * key provided
      */
-    private void resolveRequestEndpoint(Request<?> request, String bucketName, String key, URI endpoint) {
-        ServiceEndpointBuilder builder = getBuilder(endpoint, endpoint.getScheme(), false);
+    private void resolveRequestEndpoint(Request<?> request, String bucketName, String key, URI endpoint, String regionStr) {
+        ServiceEndpointBuilder builder = getBuilder(endpoint, regionStr, endpoint.getScheme(), false);
         buildEndpointResolver(builder, bucketName, key).resolveRequestEndpoint(request);
     }
 
     private S3RequestEndpointResolver buildDefaultEndpointResolver(String protocol, String bucketName, String key) {
-        ServiceEndpointBuilder builder = getBuilder(endpoint, protocol, true);
+        ServiceEndpointBuilder builder = getBuilder(endpoint, null, protocol, true);
         return new S3RequestEndpointResolver(builder, clientOptions.isPathStyleAccess(), bucketName, key);
     }
 
-    private ServiceEndpointBuilder getBuilder(URI endpoint, String protocol, boolean useDefaultBuilder) {
+    private ServiceEndpointBuilder getBuilder(URI endpoint, String regionStr, String protocol, boolean useDefaultBuilder) {
         if(clientOptions.isDualstackEnabled() && !clientOptions.isAccelerateModeEnabled()) {
-            return new DualstackEndpointBuilder(getServiceNameIntern(), protocol, getRegion().toAWSRegion());
+            com.ibm.cloud.objectstorage.regions.Region awsRegion;
+            if (regionStr != null) {
+                awsRegion = RegionUtils.getRegion(regionStr);
+            } else {
+                awsRegion = getRegion().toAWSRegion();
+            }
+            return new DualstackEndpointBuilder(getServiceNameIntern(), protocol, awsRegion);
         } else {
             if(useDefaultBuilder) {
                 return new DefaultServiceEndpointBuilder(getServiceName(), protocol);

@@ -1,11 +1,11 @@
 /*
- * Copyright 2017-2022 Amazon.com, Inc. or its affiliates. All Rights Reserved.
- *
+ * Copyright 2018-2023 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * 
  * Licensed under the Apache License, Version 2.0 (the "License"). You may not use this file except in compliance with
  * the License. A copy of the License is located at
- *
+ * 
  * http://aws.amazon.com/apache2.0
- *
+ * 
  * or in the "license" file accompanying this file. This file is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
  * CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions
  * and limitations under the License.
@@ -57,7 +57,7 @@ public class ScheduleKeyDeletionRequest extends com.ibm.cloud.objectstorage.Amaz
      * The waiting period, specified in number of days. After the waiting period ends, KMS deletes the KMS key.
      * </p>
      * <p>
-     * If the KMS key is a multi-Region primary key with replicas, the waiting period begins when the last of its
+     * If the KMS key is a multi-Region primary key with replica keys, the waiting period begins when the last of its
      * replica keys is deleted. Otherwise, the waiting period begins immediately.
      * </p>
      * <p>
@@ -235,7 +235,7 @@ public class ScheduleKeyDeletionRequest extends com.ibm.cloud.objectstorage.Amaz
      * The waiting period, specified in number of days. After the waiting period ends, KMS deletes the KMS key.
      * </p>
      * <p>
-     * If the KMS key is a multi-Region primary key with replicas, the waiting period begins when the last of its
+     * If the KMS key is a multi-Region primary key with replica keys, the waiting period begins when the last of its
      * replica keys is deleted. Otherwise, the waiting period begins immediately.
      * </p>
      * <p>
@@ -247,8 +247,8 @@ public class ScheduleKeyDeletionRequest extends com.ibm.cloud.objectstorage.Amaz
      *        The waiting period, specified in number of days. After the waiting period ends, KMS deletes the KMS
      *        key.</p>
      *        <p>
-     *        If the KMS key is a multi-Region primary key with replicas, the waiting period begins when the last of its
-     *        replica keys is deleted. Otherwise, the waiting period begins immediately.
+     *        If the KMS key is a multi-Region primary key with replica keys, the waiting period begins when the last of
+     *        its replica keys is deleted. Otherwise, the waiting period begins immediately.
      *        </p>
      *        <p>
      *        This value is optional. If you include a value, it must be between 7 and 30, inclusive. If you do not
@@ -264,7 +264,7 @@ public class ScheduleKeyDeletionRequest extends com.ibm.cloud.objectstorage.Amaz
      * The waiting period, specified in number of days. After the waiting period ends, KMS deletes the KMS key.
      * </p>
      * <p>
-     * If the KMS key is a multi-Region primary key with replicas, the waiting period begins when the last of its
+     * If the KMS key is a multi-Region primary key with replica keys, the waiting period begins when the last of its
      * replica keys is deleted. Otherwise, the waiting period begins immediately.
      * </p>
      * <p>
@@ -275,8 +275,8 @@ public class ScheduleKeyDeletionRequest extends com.ibm.cloud.objectstorage.Amaz
      * @return The waiting period, specified in number of days. After the waiting period ends, KMS deletes the KMS
      *         key.</p>
      *         <p>
-     *         If the KMS key is a multi-Region primary key with replicas, the waiting period begins when the last of
-     *         its replica keys is deleted. Otherwise, the waiting period begins immediately.
+     *         If the KMS key is a multi-Region primary key with replica keys, the waiting period begins when the last
+     *         of its replica keys is deleted. Otherwise, the waiting period begins immediately.
      *         </p>
      *         <p>
      *         This value is optional. If you include a value, it must be between 7 and 30, inclusive. If you do not
@@ -292,7 +292,7 @@ public class ScheduleKeyDeletionRequest extends com.ibm.cloud.objectstorage.Amaz
      * The waiting period, specified in number of days. After the waiting period ends, KMS deletes the KMS key.
      * </p>
      * <p>
-     * If the KMS key is a multi-Region primary key with replicas, the waiting period begins when the last of its
+     * If the KMS key is a multi-Region primary key with replica keys, the waiting period begins when the last of its
      * replica keys is deleted. Otherwise, the waiting period begins immediately.
      * </p>
      * <p>
@@ -304,8 +304,8 @@ public class ScheduleKeyDeletionRequest extends com.ibm.cloud.objectstorage.Amaz
      *        The waiting period, specified in number of days. After the waiting period ends, KMS deletes the KMS
      *        key.</p>
      *        <p>
-     *        If the KMS key is a multi-Region primary key with replicas, the waiting period begins when the last of its
-     *        replica keys is deleted. Otherwise, the waiting period begins immediately.
+     *        If the KMS key is a multi-Region primary key with replica keys, the waiting period begins when the last of
+     *        its replica keys is deleted. Otherwise, the waiting period begins immediately.
      *        </p>
      *        <p>
      *        This value is optional. If you include a value, it must be between 7 and 30, inclusive. If you do not

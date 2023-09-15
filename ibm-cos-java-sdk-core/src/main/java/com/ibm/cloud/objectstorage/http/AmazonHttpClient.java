@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2022 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2010-2023 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -106,6 +106,7 @@ import com.ibm.cloud.objectstorage.util.NullResponseMetadataCache;
 import com.ibm.cloud.objectstorage.util.ResponseMetadataCache;
 import com.ibm.cloud.objectstorage.util.RuntimeHttpUtils;
 import com.ibm.cloud.objectstorage.util.SdkHttpUtils;
+import com.ibm.cloud.objectstorage.util.StringUtils;
 import com.ibm.cloud.objectstorage.util.UnreliableFilterInputStream;
 import java.io.BufferedInputStream;
 import java.io.Closeable;
@@ -145,6 +146,7 @@ public class AmazonHttpClient {
     public static final String HEADER_USER_AGENT = "User-Agent";
     public static final String HEADER_SDK_TRANSACTION_ID = "amz-sdk-invocation-id";
     public static final String HEADER_SDK_RETRY_INFO = "amz-sdk-retry";
+    private static final String TRACE_ID_HEADER = "X-Amzn-Trace-Id";
 
     /**
      * Logger for more detailed debugging information, that might not be as useful for end users
@@ -792,6 +794,7 @@ public class AmazonHttpClient {
             runBeforeRequestHandlers();
             setSdkTransactionId(request);
             setUserAgent(request);
+            setTraceId(request);
 
             ProgressListener listener = requestConfig.getProgressListener();
             // add custom headers
@@ -1583,6 +1586,20 @@ public class AmazonHttpClient {
                         .getUserAgent(config, opts.getClientMarker(Marker.USER_AGENT)));
             } else {
                 request.addHeader(HEADER_USER_AGENT, RuntimeHttpUtils.getUserAgent(config, null));
+            }
+        }
+
+        /**
+         * Sets the trace id for the specified request if it doesn't exist in the header and it's present in the
+         * environment variables.
+         */
+        private void setTraceId(Request<?> request) {
+            String traceIdHeader = request.getHeaders().get(TRACE_ID_HEADER);
+            if (StringUtils.isNullOrEmpty(traceIdHeader)) {
+                String traceId = RuntimeHttpUtils.getLambdaEnvironmentTraceId();
+                if  (!StringUtils.isNullOrEmpty(traceId)) {
+                    request.addHeader(TRACE_ID_HEADER, traceId);
+                }
             }
         }
 

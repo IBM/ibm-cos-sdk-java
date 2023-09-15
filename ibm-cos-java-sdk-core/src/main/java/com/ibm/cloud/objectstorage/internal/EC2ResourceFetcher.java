@@ -1,5 +1,5 @@
 /*
- * Copyright 2011-2022 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2011-2023 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -76,14 +76,26 @@ public abstract class EC2ResourceFetcher {
         Map<String, String> headersToSent = addDefaultHeaders(headers);
         while (true) {
             try {
-
+                long start = 0;
+                if (LOG.isDebugEnabled()) {
+                    LOG.debug("Executing " + method + " " + endpoint + " with headers " + headersToSent.keySet());
+                    start = System.currentTimeMillis();
+                }
                 HttpURLConnection connection = connectionUtils.connectToEndpoint(endpoint, headersToSent, method);
 
                 int statusCode = connection.getResponseCode();
+                if (LOG.isDebugEnabled()) {
+                    LOG.debug("Got response code " + statusCode + " from " + method + " " + endpoint);
+                }
 
                 if (statusCode == HttpURLConnection.HTTP_OK) {
                     inputStream = connection.getInputStream();
-                    return IOUtils.toString(inputStream);
+                    String result = IOUtils.toString(inputStream);
+                    if (LOG.isDebugEnabled()) {
+                        long duration = System.currentTimeMillis() - start;
+                        LOG.debug("Completed " + method + " " + endpoint + " after " + duration + "ms");
+                    }
+                    return result;
                 } else if (statusCode == HttpURLConnection.HTTP_NOT_FOUND) {
                     // This is to preserve existing behavior of EC2 Instance metadata service.
                     throw new SdkClientException("The requested metadata is not found at " + connection.getURL());

@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2022 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2012-2023 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -56,7 +56,6 @@ public class EnvironmentVariableCredentialsProvider implements AWSCredentialsPro
     
             accessKey = StringUtils.trim(accessKey);
             secretKey = StringUtils.trim(secretKey);
-            String sessionToken = StringUtils.trim(System.getenv(AWS_SESSION_TOKEN_ENV_VAR));
 
         if (StringUtils.isNullOrEmpty(accessKey) || StringUtils.isNullOrEmpty(secretKey)) {
 
@@ -66,7 +65,8 @@ public class EnvironmentVariableCredentialsProvider implements AWSCredentialsPro
                     SECRET_KEY_ENV_VAR + " (or " + ALTERNATE_SECRET_KEY_ENV_VAR + "))");
         }
 
-        return sessionToken == null ?
+        String sessionToken = StringUtils.trim(System.getenv(AWS_SESSION_TOKEN_ENV_VAR));
+        return StringUtils.isNullOrEmpty(sessionToken) ?
                 new BasicAWSCredentials(accessKey, secretKey)
                 :
                 new BasicSessionCredentials(accessKey, secretKey, sessionToken);

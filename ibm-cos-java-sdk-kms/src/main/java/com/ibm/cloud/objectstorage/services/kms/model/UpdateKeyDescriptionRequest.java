@@ -1,11 +1,11 @@
 /*
- * Copyright 2017-2022 Amazon.com, Inc. or its affiliates. All Rights Reserved.
- *
+ * Copyright 2018-2023 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * 
  * Licensed under the Apache License, Version 2.0 (the "License"). You may not use this file except in compliance with
  * the License. A copy of the License is located at
- *
+ * 
  * http://aws.amazon.com/apache2.0
- *
+ * 
  * or in the "license" file accompanying this file. This file is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
  * CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions
  * and limitations under the License.
@@ -56,6 +56,12 @@ public class UpdateKeyDescriptionRequest extends com.ibm.cloud.objectstorage.Ama
      * <p>
      * New description for the KMS key.
      * </p>
+     * <important>
+     * <p>
+     * Do not include confidential or sensitive information in this field. This field may be displayed in plaintext in
+     * CloudTrail logs and other output.
+     * </p>
+     * </important>
      */
     private String description;
 
@@ -226,9 +232,19 @@ public class UpdateKeyDescriptionRequest extends com.ibm.cloud.objectstorage.Ama
      * <p>
      * New description for the KMS key.
      * </p>
-     *
+     * <important>
+     * <p>
+     * Do not include confidential or sensitive information in this field. This field may be displayed in plaintext in
+     * CloudTrail logs and other output.
+     * </p>
+     * </important>
+     * 
      * @param description
-     *        New description for the KMS key.
+     *        New description for the KMS key.</p> <important>
+     *        <p>
+     *        Do not include confidential or sensitive information in this field. This field may be displayed in
+     *        plaintext in CloudTrail logs and other output.
+     *        </p>
      */
 
     public void setDescription(String description) {
@@ -239,8 +255,18 @@ public class UpdateKeyDescriptionRequest extends com.ibm.cloud.objectstorage.Ama
      * <p>
      * New description for the KMS key.
      * </p>
-     *
-     * @return New description for the KMS key.
+     * <important>
+     * <p>
+     * Do not include confidential or sensitive information in this field. This field may be displayed in plaintext in
+     * CloudTrail logs and other output.
+     * </p>
+     * </important>
+     * 
+     * @return New description for the KMS key.</p> <important>
+     *         <p>
+     *         Do not include confidential or sensitive information in this field. This field may be displayed in
+     *         plaintext in CloudTrail logs and other output.
+     *         </p>
      */
 
     public String getDescription() {
@@ -251,9 +277,19 @@ public class UpdateKeyDescriptionRequest extends com.ibm.cloud.objectstorage.Ama
      * <p>
      * New description for the KMS key.
      * </p>
-     *
+     * <important>
+     * <p>
+     * Do not include confidential or sensitive information in this field. This field may be displayed in plaintext in
+     * CloudTrail logs and other output.
+     * </p>
+     * </important>
+     * 
      * @param description
-     *        New description for the KMS key.
+     *        New description for the KMS key.</p> <important>
+     *        <p>
+     *        Do not include confidential or sensitive information in this field. This field may be displayed in
+     *        plaintext in CloudTrail logs and other output.
+     *        </p>
      * @return Returns a reference to this object so that method calls can be chained together.
      */
 

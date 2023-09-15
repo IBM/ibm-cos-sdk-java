@@ -1,11 +1,11 @@
 /*
- * Copyright 2017-2022 Amazon.com, Inc. or its affiliates. All Rights Reserved.
- *
+ * Copyright 2018-2023 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * 
  * Licensed under the Apache License, Version 2.0 (the "License"). You may not use this file except in compliance with
  * the License. A copy of the License is located at
- *
+ * 
  * http://aws.amazon.com/apache2.0
- *
+ * 
  * or in the "license" file accompanying this file. This file is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
  * CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions
  * and limitations under the License.
@@ -35,20 +35,19 @@ public class CreateKeyRequest extends com.ibm.cloud.objectstorage.AmazonWebServi
      * <ul>
      * <li>
      * <p>
-     * If you don't set <code>BypassPolicyLockoutSafetyCheck</code> to true, the key policy must allow the principal
-     * that is making the <code>CreateKey</code> request to make a subsequent <a>PutKeyPolicy</a> request on the KMS
-     * key. This reduces the risk that the KMS key becomes unmanageable. For more information, refer to the scenario in
-     * the <a href=
-     * "https://docs.aws.amazon.com/kms/latest/developerguide/key-policies.html#key-policy-default-allow-root-enable-iam"
-     * >Default Key Policy</a> section of the <i> <i>Key Management Service Developer Guide</i> </i>.
+     * The key policy must allow the calling principal to make a subsequent <code>PutKeyPolicy</code> request on the KMS
+     * key. This reduces the risk that the KMS key becomes unmanageable. For more information, see <a
+     * href="https://docs.aws.amazon.com/kms/latest/developerguide/key-policy-default.html#prevent-unmanageable-key"
+     * >Default key policy</a> in the <i>Key Management Service Developer Guide</i>. (To omit this condition, set
+     * <code>BypassPolicyLockoutSafetyCheck</code> to true.)
      * </p>
      * </li>
      * <li>
      * <p>
      * Each statement in the key policy must contain one or more principals. The principals in the key policy must exist
-     * and be visible to KMS. When you create a new Amazon Web Services principal (for example, an IAM user or role),
-     * you might need to enforce a delay before including the new principal in a key policy because the new principal
-     * might not be immediately visible to KMS. For more information, see <a href=
+     * and be visible to KMS. When you create a new Amazon Web Services principal, you might need to enforce a delay
+     * before including the new principal in a key policy because the new principal might not be immediately visible to
+     * KMS. For more information, see <a href=
      * "https://docs.aws.amazon.com/IAM/latest/UserGuide/troubleshoot_general.html#troubleshoot_general_eventual-consistency"
      * >Changes that I make are not always immediately visible</a> in the <i>Amazon Web Services Identity and Access
      * Management User Guide</i>.
@@ -57,8 +56,8 @@ public class CreateKeyRequest extends com.ibm.cloud.objectstorage.AmazonWebServi
      * </ul>
      * <p>
      * If you do not provide a key policy, KMS attaches a default key policy to the KMS key. For more information, see
-     * <a href="https://docs.aws.amazon.com/kms/latest/developerguide/key-policies.html#key-policy-default">Default Key
-     * Policy</a> in the <i>Key Management Service Developer Guide</i>.
+     * <a href="https://docs.aws.amazon.com/kms/latest/developerguide/key-policies.html#key-policy-default">Default key
+     * policy</a> in the <i>Key Management Service Developer Guide</i>.
      * </p>
      * <p>
      * The key policy size quota is 32 kilobytes (32768 bytes).
@@ -72,12 +71,15 @@ public class CreateKeyRequest extends com.ibm.cloud.objectstorage.AmazonWebServi
     private String policy;
     /**
      * <p>
-     * A description of the KMS key.
+     * A description of the KMS key. Use a description that helps you decide whether the KMS key is appropriate for a
+     * task. The default value is an empty string (no description).
      * </p>
+     * <important>
      * <p>
-     * Use a description that helps you decide whether the KMS key is appropriate for a task. The default value is an
-     * empty string (no description).
+     * Do not include confidential or sensitive information in this field. This field may be displayed in plaintext in
+     * CloudTrail logs and other output.
      * </p>
+     * </important>
      * <p>
      * To set or change the description after the key is created, use <a>UpdateKeyDescription</a>.
      * </p>
@@ -88,8 +90,8 @@ public class CreateKeyRequest extends com.ibm.cloud.objectstorage.AmazonWebServi
      * Determines the <a
      * href="https://docs.aws.amazon.com/kms/latest/developerguide/concepts.html#cryptographic-operations">cryptographic
      * operations</a> for which you can use the KMS key. The default value is <code>ENCRYPT_DECRYPT</code>. This
-     * parameter is required only for asymmetric KMS keys. You can't change the <code>KeyUsage</code> value after the
-     * KMS key is created.
+     * parameter is optional when you are creating a symmetric encryption KMS key; otherwise, it is required. You can't
+     * change the <code>KeyUsage</code> value after the KMS key is created.
      * </p>
      * <p>
      * Select only one valid value.
@@ -97,7 +99,12 @@ public class CreateKeyRequest extends com.ibm.cloud.objectstorage.AmazonWebServi
      * <ul>
      * <li>
      * <p>
-     * For symmetric KMS keys, omit the parameter or specify <code>ENCRYPT_DECRYPT</code>.
+     * For symmetric encryption KMS keys, omit the parameter or specify <code>ENCRYPT_DECRYPT</code>.
+     * </p>
+     * </li>
+     * <li>
+     * <p>
+     * For HMAC KMS keys (symmetric), specify <code>GENERATE_VERIFY_MAC</code>.
      * </p>
      * </li>
      * <li>
@@ -110,6 +117,12 @@ public class CreateKeyRequest extends com.ibm.cloud.objectstorage.AmazonWebServi
      * For asymmetric KMS keys with ECC key material, specify <code>SIGN_VERIFY</code>.
      * </p>
      * </li>
+     * <li>
+     * <p>
+     * For asymmetric KMS keys with SM2 key material (China Regions only), specify <code>ENCRYPT_DECRYPT</code> or
+     * <code>SIGN_VERIFY</code>.
+     * </p>
+     * </li>
      * </ul>
      */
     private String keyUsage;
@@ -120,7 +133,7 @@ public class CreateKeyRequest extends com.ibm.cloud.objectstorage.AmazonWebServi
      * <p>
      * The <code>KeySpec</code> and <code>CustomerMasterKeySpec</code> parameters work the same way. Only the names
      * differ. We recommend that you use <code>KeySpec</code> parameter in your code. However, to avoid breaking
-     * changes, KMS will support both parameters.
+     * changes, KMS supports both parameters.
      * </p>
      */
     @Deprecated
@@ -128,27 +141,28 @@ public class CreateKeyRequest extends com.ibm.cloud.objectstorage.AmazonWebServi
     /**
      * <p>
      * Specifies the type of KMS key to create. The default value, <code>SYMMETRIC_DEFAULT</code>, creates a KMS key
-     * with a 256-bit symmetric key for encryption and decryption. For help choosing a key spec for your KMS key, see <a
-     * href="https://docs.aws.amazon.com/kms/latest/developerguide/symm-asymm-choose.html">How to Choose Your KMS key
-     * Configuration</a> in the <i> <i>Key Management Service Developer Guide</i> </i>.
+     * with a 256-bit AES-GCM key that is used for encryption and decryption, except in China Regions, where it creates
+     * a 128-bit symmetric key that uses SM4 encryption. For help choosing a key spec for your KMS key, see <a
+     * href="https://docs.aws.amazon.com/kms/latest/developerguide/key-types.html#symm-asymm-choose">Choosing a KMS key
+     * type</a> in the <i> <i>Key Management Service Developer Guide</i> </i>.
      * </p>
      * <p>
      * The <code>KeySpec</code> determines whether the KMS key contains a symmetric key or an asymmetric key pair. It
-     * also determines the encryption algorithms or signing algorithms that the KMS key supports. You can't change the
-     * <code>KeySpec</code> after the KMS key is created. To further restrict the algorithms that can be used with the
-     * KMS key, use a condition key in its key policy or IAM policy. For more information, see <a href=
+     * also determines the algorithms that the KMS key supports. You can't change the <code>KeySpec</code> after the KMS
+     * key is created. To further restrict the algorithms that can be used with the KMS key, use a condition key in its
+     * key policy or IAM policy. For more information, see <a href=
      * "https://docs.aws.amazon.com/kms/latest/developerguide/policy-conditions.html#conditions-kms-encryption-algorithm"
-     * >kms:EncryptionAlgorithm</a> or <a href=
+     * >kms:EncryptionAlgorithm</a>, <a href=
+     * "https://docs.aws.amazon.com/kms/latest/developerguide/policy-conditions.html#conditions-kms-mac-algorithm"
+     * >kms:MacAlgorithm</a> or <a href=
      * "https://docs.aws.amazon.com/kms/latest/developerguide/policy-conditions.html#conditions-kms-signing-algorithm"
      * >kms:Signing Algorithm</a> in the <i> <i>Key Management Service Developer Guide</i> </i>.
      * </p>
      * <important>
      * <p>
      * <a href="http://aws.amazon.com/kms/features/#AWS_Service_Integration">Amazon Web Services services that are
-     * integrated with KMS</a> use symmetric KMS keys to protect your data. These services do not support asymmetric KMS
-     * keys. For help determining whether a KMS key is symmetric or asymmetric, see <a
-     * href="https://docs.aws.amazon.com/kms/latest/developerguide/find-symm-asymm.html">Identifying Symmetric and
-     * Asymmetric KMS keys</a> in the <i>Key Management Service Developer Guide</i>.
+     * integrated with KMS</a> use symmetric encryption KMS keys to protect your data. These services do not support
+     * asymmetric KMS keys or HMAC KMS keys.
      * </p>
      * </important>
      * <p>
@@ -157,12 +171,39 @@ public class CreateKeyRequest extends com.ibm.cloud.objectstorage.AmazonWebServi
      * <ul>
      * <li>
      * <p>
-     * Symmetric key (default)
+     * Symmetric encryption key (default)
      * </p>
      * <ul>
      * <li>
      * <p>
-     * <code>SYMMETRIC_DEFAULT</code> (AES-256-GCM)
+     * <code>SYMMETRIC_DEFAULT</code>
+     * </p>
+     * </li>
+     * </ul>
+     * </li>
+     * <li>
+     * <p>
+     * HMAC keys (symmetric)
+     * </p>
+     * <ul>
+     * <li>
+     * <p>
+     * <code>HMAC_224</code>
+     * </p>
+     * </li>
+     * <li>
+     * <p>
+     * <code>HMAC_256</code>
+     * </p>
+     * </li>
+     * <li>
+     * <p>
+     * <code>HMAC_384</code>
+     * </p>
+     * </li>
+     * <li>
+     * <p>
+     * <code>HMAC_512</code>
      * </p>
      * </li>
      * </ul>
@@ -223,6 +264,18 @@ public class CreateKeyRequest extends com.ibm.cloud.objectstorage.AmazonWebServi
      * </li>
      * </ul>
      * </li>
+     * <li>
+     * <p>
+     * SM2 key pairs (China Regions only)
+     * </p>
+     * <ul>
+     * <li>
+     * <p>
+     * <code>SM2</code>
+     * </p>
+     * </li>
+     * </ul>
+     * </li>
      * </ul>
      */
     private String keySpec;
@@ -232,50 +285,50 @@ public class CreateKeyRequest extends com.ibm.cloud.objectstorage.AmazonWebServi
      * default is <code>AWS_KMS</code>, which means that KMS creates the key material.
      * </p>
      * <p>
-     * To create a KMS key with no key material (for imported key material), set the value to <code>EXTERNAL</code>. For
-     * more information about importing key material into KMS, see <a
+     * To <a href="https://docs.aws.amazon.com/kms/latest/developerguide/importing-keys-create-cmk.html">create a KMS
+     * key with no key material</a> (for imported key material), set this value to <code>EXTERNAL</code>. For more
+     * information about importing key material into KMS, see <a
      * href="https://docs.aws.amazon.com/kms/latest/developerguide/importing-keys.html">Importing Key Material</a> in
-     * the <i>Key Management Service Developer Guide</i>. This value is valid only for symmetric KMS keys.
+     * the <i>Key Management Service Developer Guide</i>. The <code>EXTERNAL</code> origin value is valid only for
+     * symmetric KMS keys.
      * </p>
      * <p>
-     * To create a KMS key in an KMS <a
-     * href="https://docs.aws.amazon.com/kms/latest/developerguide/custom-key-store-overview.html">custom key store</a>
-     * and create its key material in the associated CloudHSM cluster, set this value to <code>AWS_CLOUDHSM</code>. You
-     * must also use the <code>CustomKeyStoreId</code> parameter to identify the custom key store. This value is valid
-     * only for symmetric KMS keys.
+     * To <a href="https://docs.aws.amazon.com/kms/latest/developerguide/create-cmk-keystore.html">create a KMS key in
+     * an CloudHSM key store</a> and create its key material in the associated CloudHSM cluster, set this value to
+     * <code>AWS_CLOUDHSM</code>. You must also use the <code>CustomKeyStoreId</code> parameter to identify the CloudHSM
+     * key store. The <code>KeySpec</code> value must be <code>SYMMETRIC_DEFAULT</code>.
+     * </p>
+     * <p>
+     * To <a href="https://docs.aws.amazon.com/kms/latest/developerguide/create-xks-keys.html">create a KMS key in an
+     * external key store</a>, set this value to <code>EXTERNAL_KEY_STORE</code>. You must also use the
+     * <code>CustomKeyStoreId</code> parameter to identify the external key store and the <code>XksKeyId</code>
+     * parameter to identify the associated external key. The <code>KeySpec</code> value must be
+     * <code>SYMMETRIC_DEFAULT</code>.
      * </p>
      */
     private String origin;
     /**
      * <p>
      * Creates the KMS key in the specified <a
-     * href="https://docs.aws.amazon.com/kms/latest/developerguide/custom-key-store-overview.html">custom key store</a>
-     * and the key material in its associated CloudHSM cluster. To create a KMS key in a custom key store, you must also
-     * specify the <code>Origin</code> parameter with a value of <code>AWS_CLOUDHSM</code>. The CloudHSM cluster that is
-     * associated with the custom key store must have at least two active HSMs, each in a different Availability Zone in
-     * the Region.
+     * href="https://docs.aws.amazon.com/kms/latest/developerguide/custom-key-store-overview.html">custom key store</a>.
+     * The <code>ConnectionState</code> of the custom key store must be <code>CONNECTED</code>. To find the
+     * CustomKeyStoreID and ConnectionState use the <a>DescribeCustomKeyStores</a> operation.
      * </p>
      * <p>
-     * This parameter is valid only for symmetric KMS keys and regional KMS keys. You cannot create an asymmetric KMS
-     * key or a multi-Region key in a custom key store.
+     * This parameter is valid only for symmetric encryption KMS keys in a single Region. You cannot create any other
+     * type of KMS key in a custom key store.
      * </p>
      * <p>
-     * To find the ID of a custom key store, use the <a>DescribeCustomKeyStores</a> operation.
-     * </p>
-     * <p>
-     * The response includes the custom key store ID and the ID of the CloudHSM cluster.
-     * </p>
-     * <p>
-     * This operation is part of the <a
-     * href="https://docs.aws.amazon.com/kms/latest/developerguide/custom-key-store-overview.html">Custom Key Store
-     * feature</a> feature in KMS, which combines the convenience and extensive integration of KMS with the isolation
-     * and control of a single-tenant key store.
+     * When you create a KMS key in an CloudHSM key store, KMS generates a non-exportable 256-bit symmetric key in its
+     * associated CloudHSM cluster and associates it with the KMS key. When you create a KMS key in an external key
+     * store, you must use the <code>XksKeyId</code> parameter to specify an external key that serves as key material
+     * for the KMS key.
      * </p>
      */
     private String customKeyStoreId;
     /**
      * <p>
-     * A flag to indicate whether to bypass the key policy lockout safety check.
+     * Skips ("bypasses") the key policy lockout safety check. The default value is false.
      * </p>
      * <important>
      * <p>
@@ -283,17 +336,14 @@ public class CreateKeyRequest extends com.ibm.cloud.objectstorage.AmazonWebServi
      * true indiscriminately.
      * </p>
      * <p>
-     * For more information, refer to the scenario in the <a href=
-     * "https://docs.aws.amazon.com/kms/latest/developerguide/key-policies.html#key-policy-default-allow-root-enable-iam"
-     * >Default Key Policy</a> section in the <i> <i>Key Management Service Developer Guide</i> </i>.
+     * For more information, see <a
+     * href="https://docs.aws.amazon.com/kms/latest/developerguide/key-policy-default.html#prevent-unmanageable-key"
+     * >Default key policy</a> in the <i>Key Management Service Developer Guide</i>.
      * </p>
      * </important>
      * <p>
-     * Use this parameter only when you include a policy in the request and you intend to prevent the principal that is
-     * making the request from making a subsequent <a>PutKeyPolicy</a> request on the KMS key.
-     * </p>
-     * <p>
-     * The default value is false.
+     * Use this parameter only when you intend to prevent the principal that is making the request from making a
+     * subsequent <a>PutKeyPolicy</a> request on the KMS key.
      * </p>
      */
     private Boolean bypassPolicyLockoutSafetyCheck;
@@ -302,11 +352,16 @@ public class CreateKeyRequest extends com.ibm.cloud.objectstorage.AmazonWebServi
      * Assigns one or more tags to the KMS key. Use this parameter to tag the KMS key when it is created. To tag an
      * existing KMS key, use the <a>TagResource</a> operation.
      * </p>
-     * <note>
+     * <important>
+     * <p>
+     * Do not include confidential or sensitive information in this field. This field may be displayed in plaintext in
+     * CloudTrail logs and other output.
+     * </p>
+     * </important> <note>
      * <p>
      * Tagging or untagging a KMS key can allow or deny permission to the KMS key. For details, see <a
-     * href="https://docs.aws.amazon.com/kms/latest/developerguide/abac.html">Using ABAC in KMS</a> in the <i>Key
-     * Management Service Developer Guide</i>.
+     * href="https://docs.aws.amazon.com/kms/latest/developerguide/abac.html">ABAC for KMS</a> in the <i>Key Management
+     * Service Developer Guide</i>.
      * </p>
      * </note>
      * <p>
@@ -342,8 +397,8 @@ public class CreateKeyRequest extends com.ibm.cloud.objectstorage.AmazonWebServi
      * other metadata, you can use them interchangeably to encrypt data in one Amazon Web Services Region and decrypt it
      * in a different Amazon Web Services Region without re-encrypting the data or making a cross-Region call. For more
      * information about multi-Region keys, see <a
-     * href="https://docs.aws.amazon.com/kms/latest/developerguide/multi-region-keys-overview.html">Using multi-Region
-     * keys</a> in the <i>Key Management Service Developer Guide</i>.
+     * href="https://docs.aws.amazon.com/kms/latest/developerguide/multi-region-keys-overview.html">Multi-Region keys in
+     * KMS</a> in the <i>Key Management Service Developer Guide</i>.
      * </p>
      * <p>
      * This value creates a <i>primary key</i>, not a replica. To create a <i>replica key</i>, use the
@@ -355,6 +410,40 @@ public class CreateKeyRequest extends com.ibm.cloud.objectstorage.AmazonWebServi
      * </p>
      */
     private Boolean multiRegion;
+    /**
+     * <p>
+     * Identifies the <a
+     * href="https://docs.aws.amazon.com/kms/latest/developerguide/keystore-external.html#concept-external-key">external
+     * key</a> that serves as key material for the KMS key in an <a
+     * href="https://docs.aws.amazon.com/kms/latest/developerguide/keystore-external.html">external key store</a>.
+     * Specify the ID that the <a
+     * href="https://docs.aws.amazon.com/kms/latest/developerguide/keystore-external.html#concept-xks-proxy">external
+     * key store proxy</a> uses to refer to the external key. For help, see the documentation for your external key
+     * store proxy.
+     * </p>
+     * <p>
+     * This parameter is required for a KMS key with an <code>Origin</code> value of <code>EXTERNAL_KEY_STORE</code>. It
+     * is not valid for KMS keys with any other <code>Origin</code> value.
+     * </p>
+     * <p>
+     * The external key must be an existing 256-bit AES symmetric encryption key hosted outside of Amazon Web Services
+     * in an external key manager associated with the external key store specified by the <code>CustomKeyStoreId</code>
+     * parameter. This key must be enabled and configured to perform encryption and decryption. Each KMS key in an
+     * external key store must use a different external key. For details, see <a
+     * href="https://docs.aws.amazon.com/create-xks-keys.html#xks-key-requirements">Requirements for a KMS key in an
+     * external key store</a> in the <i>Key Management Service Developer Guide</i>.
+     * </p>
+     * <p>
+     * Each KMS key in an external key store is associated two backing keys. One is key material that KMS generates. The
+     * other is the external key specified by this parameter. When you use the KMS key in an external key store to
+     * encrypt data, the encryption operation is performed first by KMS using the KMS key material, and then by the
+     * external key manager using the specified external key, a process known as <i>double encryption</i>. For details,
+     * see <a
+     * href="https://docs.aws.amazon.com/kms/latest/developerguide/keystore-external.html#concept-double-encryption"
+     * >Double encryption</a> in the <i>Key Management Service Developer Guide</i>.
+     * </p>
+     */
+    private String xksKeyId;
 
     /**
      * <p>
@@ -366,20 +455,19 @@ public class CreateKeyRequest extends com.ibm.cloud.objectstorage.AmazonWebServi
      * <ul>
      * <li>
      * <p>
-     * If you don't set <code>BypassPolicyLockoutSafetyCheck</code> to true, the key policy must allow the principal
-     * that is making the <code>CreateKey</code> request to make a subsequent <a>PutKeyPolicy</a> request on the KMS
-     * key. This reduces the risk that the KMS key becomes unmanageable. For more information, refer to the scenario in
-     * the <a href=
-     * "https://docs.aws.amazon.com/kms/latest/developerguide/key-policies.html#key-policy-default-allow-root-enable-iam"
-     * >Default Key Policy</a> section of the <i> <i>Key Management Service Developer Guide</i> </i>.
+     * The key policy must allow the calling principal to make a subsequent <code>PutKeyPolicy</code> request on the KMS
+     * key. This reduces the risk that the KMS key becomes unmanageable. For more information, see <a
+     * href="https://docs.aws.amazon.com/kms/latest/developerguide/key-policy-default.html#prevent-unmanageable-key"
+     * >Default key policy</a> in the <i>Key Management Service Developer Guide</i>. (To omit this condition, set
+     * <code>BypassPolicyLockoutSafetyCheck</code> to true.)
      * </p>
      * </li>
      * <li>
      * <p>
      * Each statement in the key policy must contain one or more principals. The principals in the key policy must exist
-     * and be visible to KMS. When you create a new Amazon Web Services principal (for example, an IAM user or role),
-     * you might need to enforce a delay before including the new principal in a key policy because the new principal
-     * might not be immediately visible to KMS. For more information, see <a href=
+     * and be visible to KMS. When you create a new Amazon Web Services principal, you might need to enforce a delay
+     * before including the new principal in a key policy because the new principal might not be immediately visible to
+     * KMS. For more information, see <a href=
      * "https://docs.aws.amazon.com/IAM/latest/UserGuide/troubleshoot_general.html#troubleshoot_general_eventual-consistency"
      * >Changes that I make are not always immediately visible</a> in the <i>Amazon Web Services Identity and Access
      * Management User Guide</i>.
@@ -388,8 +476,8 @@ public class CreateKeyRequest extends com.ibm.cloud.objectstorage.AmazonWebServi
      * </ul>
      * <p>
      * If you do not provide a key policy, KMS attaches a default key policy to the KMS key. For more information, see
-     * <a href="https://docs.aws.amazon.com/kms/latest/developerguide/key-policies.html#key-policy-default">Default Key
-     * Policy</a> in the <i>Key Management Service Developer Guide</i>.
+     * <a href="https://docs.aws.amazon.com/kms/latest/developerguide/key-policies.html#key-policy-default">Default key
+     * policy</a> in the <i>Key Management Service Developer Guide</i>.
      * </p>
      * <p>
      * The key policy size quota is 32 kilobytes (32768 bytes).
@@ -408,20 +496,20 @@ public class CreateKeyRequest extends com.ibm.cloud.objectstorage.AmazonWebServi
      *        <ul>
      *        <li>
      *        <p>
-     *        If you don't set <code>BypassPolicyLockoutSafetyCheck</code> to true, the key policy must allow the
-     *        principal that is making the <code>CreateKey</code> request to make a subsequent <a>PutKeyPolicy</a>
-     *        request on the KMS key. This reduces the risk that the KMS key becomes unmanageable. For more information,
-     *        refer to the scenario in the <a href=
-     *        "https://docs.aws.amazon.com/kms/latest/developerguide/key-policies.html#key-policy-default-allow-root-enable-iam"
-     *        >Default Key Policy</a> section of the <i> <i>Key Management Service Developer Guide</i> </i>.
+     *        The key policy must allow the calling principal to make a subsequent <code>PutKeyPolicy</code> request on
+     *        the KMS key. This reduces the risk that the KMS key becomes unmanageable. For more information, see <a
+     *        href
+     *        ="https://docs.aws.amazon.com/kms/latest/developerguide/key-policy-default.html#prevent-unmanageable-key"
+     *        >Default key policy</a> in the <i>Key Management Service Developer Guide</i>. (To omit this condition, set
+     *        <code>BypassPolicyLockoutSafetyCheck</code> to true.)
      *        </p>
      *        </li>
      *        <li>
      *        <p>
      *        Each statement in the key policy must contain one or more principals. The principals in the key policy
-     *        must exist and be visible to KMS. When you create a new Amazon Web Services principal (for example, an IAM
-     *        user or role), you might need to enforce a delay before including the new principal in a key policy
-     *        because the new principal might not be immediately visible to KMS. For more information, see <a href=
+     *        must exist and be visible to KMS. When you create a new Amazon Web Services principal, you might need to
+     *        enforce a delay before including the new principal in a key policy because the new principal might not be
+     *        immediately visible to KMS. For more information, see <a href=
      *        "https://docs.aws.amazon.com/IAM/latest/UserGuide/troubleshoot_general.html#troubleshoot_general_eventual-consistency"
      *        >Changes that I make are not always immediately visible</a> in the <i>Amazon Web Services Identity and
      *        Access Management User Guide</i>.
@@ -432,7 +520,7 @@ public class CreateKeyRequest extends com.ibm.cloud.objectstorage.AmazonWebServi
      *        If you do not provide a key policy, KMS attaches a default key policy to the KMS key. For more
      *        information, see <a
      *        href="https://docs.aws.amazon.com/kms/latest/developerguide/key-policies.html#key-policy-default">Default
-     *        Key Policy</a> in the <i>Key Management Service Developer Guide</i>.
+     *        key policy</a> in the <i>Key Management Service Developer Guide</i>.
      *        </p>
      *        <p>
      *        The key policy size quota is 32 kilobytes (32768 bytes).
@@ -457,20 +545,19 @@ public class CreateKeyRequest extends com.ibm.cloud.objectstorage.AmazonWebServi
      * <ul>
      * <li>
      * <p>
-     * If you don't set <code>BypassPolicyLockoutSafetyCheck</code> to true, the key policy must allow the principal
-     * that is making the <code>CreateKey</code> request to make a subsequent <a>PutKeyPolicy</a> request on the KMS
-     * key. This reduces the risk that the KMS key becomes unmanageable. For more information, refer to the scenario in
-     * the <a href=
-     * "https://docs.aws.amazon.com/kms/latest/developerguide/key-policies.html#key-policy-default-allow-root-enable-iam"
-     * >Default Key Policy</a> section of the <i> <i>Key Management Service Developer Guide</i> </i>.
+     * The key policy must allow the calling principal to make a subsequent <code>PutKeyPolicy</code> request on the KMS
+     * key. This reduces the risk that the KMS key becomes unmanageable. For more information, see <a
+     * href="https://docs.aws.amazon.com/kms/latest/developerguide/key-policy-default.html#prevent-unmanageable-key"
+     * >Default key policy</a> in the <i>Key Management Service Developer Guide</i>. (To omit this condition, set
+     * <code>BypassPolicyLockoutSafetyCheck</code> to true.)
      * </p>
      * </li>
      * <li>
      * <p>
      * Each statement in the key policy must contain one or more principals. The principals in the key policy must exist
-     * and be visible to KMS. When you create a new Amazon Web Services principal (for example, an IAM user or role),
-     * you might need to enforce a delay before including the new principal in a key policy because the new principal
-     * might not be immediately visible to KMS. For more information, see <a href=
+     * and be visible to KMS. When you create a new Amazon Web Services principal, you might need to enforce a delay
+     * before including the new principal in a key policy because the new principal might not be immediately visible to
+     * KMS. For more information, see <a href=
      * "https://docs.aws.amazon.com/IAM/latest/UserGuide/troubleshoot_general.html#troubleshoot_general_eventual-consistency"
      * >Changes that I make are not always immediately visible</a> in the <i>Amazon Web Services Identity and Access
      * Management User Guide</i>.
@@ -479,8 +566,8 @@ public class CreateKeyRequest extends com.ibm.cloud.objectstorage.AmazonWebServi
      * </ul>
      * <p>
      * If you do not provide a key policy, KMS attaches a default key policy to the KMS key. For more information, see
-     * <a href="https://docs.aws.amazon.com/kms/latest/developerguide/key-policies.html#key-policy-default">Default Key
-     * Policy</a> in the <i>Key Management Service Developer Guide</i>.
+     * <a href="https://docs.aws.amazon.com/kms/latest/developerguide/key-policies.html#key-policy-default">Default key
+     * policy</a> in the <i>Key Management Service Developer Guide</i>.
      * </p>
      * <p>
      * The key policy size quota is 32 kilobytes (32768 bytes).
@@ -498,20 +585,20 @@ public class CreateKeyRequest extends com.ibm.cloud.objectstorage.AmazonWebServi
      *         <ul>
      *         <li>
      *         <p>
-     *         If you don't set <code>BypassPolicyLockoutSafetyCheck</code> to true, the key policy must allow the
-     *         principal that is making the <code>CreateKey</code> request to make a subsequent <a>PutKeyPolicy</a>
-     *         request on the KMS key. This reduces the risk that the KMS key becomes unmanageable. For more
-     *         information, refer to the scenario in the <a href=
-     *         "https://docs.aws.amazon.com/kms/latest/developerguide/key-policies.html#key-policy-default-allow-root-enable-iam"
-     *         >Default Key Policy</a> section of the <i> <i>Key Management Service Developer Guide</i> </i>.
+     *         The key policy must allow the calling principal to make a subsequent <code>PutKeyPolicy</code> request on
+     *         the KMS key. This reduces the risk that the KMS key becomes unmanageable. For more information, see <a
+     *         href=
+     *         "https://docs.aws.amazon.com/kms/latest/developerguide/key-policy-default.html#prevent-unmanageable-key"
+     *         >Default key policy</a> in the <i>Key Management Service Developer Guide</i>. (To omit this condition,
+     *         set <code>BypassPolicyLockoutSafetyCheck</code> to true.)
      *         </p>
      *         </li>
      *         <li>
      *         <p>
      *         Each statement in the key policy must contain one or more principals. The principals in the key policy
-     *         must exist and be visible to KMS. When you create a new Amazon Web Services principal (for example, an
-     *         IAM user or role), you might need to enforce a delay before including the new principal in a key policy
-     *         because the new principal might not be immediately visible to KMS. For more information, see <a href=
+     *         must exist and be visible to KMS. When you create a new Amazon Web Services principal, you might need to
+     *         enforce a delay before including the new principal in a key policy because the new principal might not be
+     *         immediately visible to KMS. For more information, see <a href=
      *         "https://docs.aws.amazon.com/IAM/latest/UserGuide/troubleshoot_general.html#troubleshoot_general_eventual-consistency"
      *         >Changes that I make are not always immediately visible</a> in the <i>Amazon Web Services Identity and
      *         Access Management User Guide</i>.
@@ -522,7 +609,7 @@ public class CreateKeyRequest extends com.ibm.cloud.objectstorage.AmazonWebServi
      *         If you do not provide a key policy, KMS attaches a default key policy to the KMS key. For more
      *         information, see <a
      *         href="https://docs.aws.amazon.com/kms/latest/developerguide/key-policies.html#key-policy-default">Default
-     *         Key Policy</a> in the <i>Key Management Service Developer Guide</i>.
+     *         key policy</a> in the <i>Key Management Service Developer Guide</i>.
      *         </p>
      *         <p>
      *         The key policy size quota is 32 kilobytes (32768 bytes).
@@ -547,20 +634,19 @@ public class CreateKeyRequest extends com.ibm.cloud.objectstorage.AmazonWebServi
      * <ul>
      * <li>
      * <p>
-     * If you don't set <code>BypassPolicyLockoutSafetyCheck</code> to true, the key policy must allow the principal
-     * that is making the <code>CreateKey</code> request to make a subsequent <a>PutKeyPolicy</a> request on the KMS
-     * key. This reduces the risk that the KMS key becomes unmanageable. For more information, refer to the scenario in
-     * the <a href=
-     * "https://docs.aws.amazon.com/kms/latest/developerguide/key-policies.html#key-policy-default-allow-root-enable-iam"
-     * >Default Key Policy</a> section of the <i> <i>Key Management Service Developer Guide</i> </i>.
+     * The key policy must allow the calling principal to make a subsequent <code>PutKeyPolicy</code> request on the KMS
+     * key. This reduces the risk that the KMS key becomes unmanageable. For more information, see <a
+     * href="https://docs.aws.amazon.com/kms/latest/developerguide/key-policy-default.html#prevent-unmanageable-key"
+     * >Default key policy</a> in the <i>Key Management Service Developer Guide</i>. (To omit this condition, set
+     * <code>BypassPolicyLockoutSafetyCheck</code> to true.)
      * </p>
      * </li>
      * <li>
      * <p>
      * Each statement in the key policy must contain one or more principals. The principals in the key policy must exist
-     * and be visible to KMS. When you create a new Amazon Web Services principal (for example, an IAM user or role),
-     * you might need to enforce a delay before including the new principal in a key policy because the new principal
-     * might not be immediately visible to KMS. For more information, see <a href=
+     * and be visible to KMS. When you create a new Amazon Web Services principal, you might need to enforce a delay
+     * before including the new principal in a key policy because the new principal might not be immediately visible to
+     * KMS. For more information, see <a href=
      * "https://docs.aws.amazon.com/IAM/latest/UserGuide/troubleshoot_general.html#troubleshoot_general_eventual-consistency"
      * >Changes that I make are not always immediately visible</a> in the <i>Amazon Web Services Identity and Access
      * Management User Guide</i>.
@@ -569,8 +655,8 @@ public class CreateKeyRequest extends com.ibm.cloud.objectstorage.AmazonWebServi
      * </ul>
      * <p>
      * If you do not provide a key policy, KMS attaches a default key policy to the KMS key. For more information, see
-     * <a href="https://docs.aws.amazon.com/kms/latest/developerguide/key-policies.html#key-policy-default">Default Key
-     * Policy</a> in the <i>Key Management Service Developer Guide</i>.
+     * <a href="https://docs.aws.amazon.com/kms/latest/developerguide/key-policies.html#key-policy-default">Default key
+     * policy</a> in the <i>Key Management Service Developer Guide</i>.
      * </p>
      * <p>
      * The key policy size quota is 32 kilobytes (32768 bytes).
@@ -589,20 +675,20 @@ public class CreateKeyRequest extends com.ibm.cloud.objectstorage.AmazonWebServi
      *        <ul>
      *        <li>
      *        <p>
-     *        If you don't set <code>BypassPolicyLockoutSafetyCheck</code> to true, the key policy must allow the
-     *        principal that is making the <code>CreateKey</code> request to make a subsequent <a>PutKeyPolicy</a>
-     *        request on the KMS key. This reduces the risk that the KMS key becomes unmanageable. For more information,
-     *        refer to the scenario in the <a href=
-     *        "https://docs.aws.amazon.com/kms/latest/developerguide/key-policies.html#key-policy-default-allow-root-enable-iam"
-     *        >Default Key Policy</a> section of the <i> <i>Key Management Service Developer Guide</i> </i>.
+     *        The key policy must allow the calling principal to make a subsequent <code>PutKeyPolicy</code> request on
+     *        the KMS key. This reduces the risk that the KMS key becomes unmanageable. For more information, see <a
+     *        href
+     *        ="https://docs.aws.amazon.com/kms/latest/developerguide/key-policy-default.html#prevent-unmanageable-key"
+     *        >Default key policy</a> in the <i>Key Management Service Developer Guide</i>. (To omit this condition, set
+     *        <code>BypassPolicyLockoutSafetyCheck</code> to true.)
      *        </p>
      *        </li>
      *        <li>
      *        <p>
      *        Each statement in the key policy must contain one or more principals. The principals in the key policy
-     *        must exist and be visible to KMS. When you create a new Amazon Web Services principal (for example, an IAM
-     *        user or role), you might need to enforce a delay before including the new principal in a key policy
-     *        because the new principal might not be immediately visible to KMS. For more information, see <a href=
+     *        must exist and be visible to KMS. When you create a new Amazon Web Services principal, you might need to
+     *        enforce a delay before including the new principal in a key policy because the new principal might not be
+     *        immediately visible to KMS. For more information, see <a href=
      *        "https://docs.aws.amazon.com/IAM/latest/UserGuide/troubleshoot_general.html#troubleshoot_general_eventual-consistency"
      *        >Changes that I make are not always immediately visible</a> in the <i>Amazon Web Services Identity and
      *        Access Management User Guide</i>.
@@ -613,7 +699,7 @@ public class CreateKeyRequest extends com.ibm.cloud.objectstorage.AmazonWebServi
      *        If you do not provide a key policy, KMS attaches a default key policy to the KMS key. For more
      *        information, see <a
      *        href="https://docs.aws.amazon.com/kms/latest/developerguide/key-policies.html#key-policy-default">Default
-     *        Key Policy</a> in the <i>Key Management Service Developer Guide</i>.
+     *        key policy</a> in the <i>Key Management Service Developer Guide</i>.
      *        </p>
      *        <p>
      *        The key policy size quota is 32 kilobytes (32768 bytes).
@@ -632,22 +718,27 @@ public class CreateKeyRequest extends com.ibm.cloud.objectstorage.AmazonWebServi
 
     /**
      * <p>
-     * A description of the KMS key.
+     * A description of the KMS key. Use a description that helps you decide whether the KMS key is appropriate for a
+     * task. The default value is an empty string (no description).
      * </p>
+     * <important>
      * <p>
-     * Use a description that helps you decide whether the KMS key is appropriate for a task. The default value is an
-     * empty string (no description).
+     * Do not include confidential or sensitive information in this field. This field may be displayed in plaintext in
+     * CloudTrail logs and other output.
      * </p>
+     * </important>
      * <p>
      * To set or change the description after the key is created, use <a>UpdateKeyDescription</a>.
      * </p>
-     *
+     * 
      * @param description
-     *        A description of the KMS key.</p>
+     *        A description of the KMS key. Use a description that helps you decide whether the KMS key is appropriate
+     *        for a task. The default value is an empty string (no description).</p> <important>
      *        <p>
-     *        Use a description that helps you decide whether the KMS key is appropriate for a task. The default value
-     *        is an empty string (no description).
+     *        Do not include confidential or sensitive information in this field. This field may be displayed in
+     *        plaintext in CloudTrail logs and other output.
      *        </p>
+     *        </important>
      *        <p>
      *        To set or change the description after the key is created, use <a>UpdateKeyDescription</a>.
      */
@@ -658,21 +749,26 @@ public class CreateKeyRequest extends com.ibm.cloud.objectstorage.AmazonWebServi
 
     /**
      * <p>
-     * A description of the KMS key.
+     * A description of the KMS key. Use a description that helps you decide whether the KMS key is appropriate for a
+     * task. The default value is an empty string (no description).
      * </p>
+     * <important>
      * <p>
-     * Use a description that helps you decide whether the KMS key is appropriate for a task. The default value is an
-     * empty string (no description).
+     * Do not include confidential or sensitive information in this field. This field may be displayed in plaintext in
+     * CloudTrail logs and other output.
      * </p>
+     * </important>
      * <p>
      * To set or change the description after the key is created, use <a>UpdateKeyDescription</a>.
      * </p>
-     *
-     * @return A description of the KMS key.</p>
+     * 
+     * @return A description of the KMS key. Use a description that helps you decide whether the KMS key is appropriate
+     *         for a task. The default value is an empty string (no description).</p> <important>
      *         <p>
-     *         Use a description that helps you decide whether the KMS key is appropriate for a task. The default value
-     *         is an empty string (no description).
+     *         Do not include confidential or sensitive information in this field. This field may be displayed in
+     *         plaintext in CloudTrail logs and other output.
      *         </p>
+     *         </important>
      *         <p>
      *         To set or change the description after the key is created, use <a>UpdateKeyDescription</a>.
      */
@@ -683,22 +779,27 @@ public class CreateKeyRequest extends com.ibm.cloud.objectstorage.AmazonWebServi
 
     /**
      * <p>
-     * A description of the KMS key.
+     * A description of the KMS key. Use a description that helps you decide whether the KMS key is appropriate for a
+     * task. The default value is an empty string (no description).
      * </p>
+     * <important>
      * <p>
-     * Use a description that helps you decide whether the KMS key is appropriate for a task. The default value is an
-     * empty string (no description).
+     * Do not include confidential or sensitive information in this field. This field may be displayed in plaintext in
+     * CloudTrail logs and other output.
      * </p>
+     * </important>
      * <p>
      * To set or change the description after the key is created, use <a>UpdateKeyDescription</a>.
      * </p>
-     *
+     * 
      * @param description
-     *        A description of the KMS key.</p>
+     *        A description of the KMS key. Use a description that helps you decide whether the KMS key is appropriate
+     *        for a task. The default value is an empty string (no description).</p> <important>
      *        <p>
-     *        Use a description that helps you decide whether the KMS key is appropriate for a task. The default value
-     *        is an empty string (no description).
+     *        Do not include confidential or sensitive information in this field. This field may be displayed in
+     *        plaintext in CloudTrail logs and other output.
      *        </p>
+     *        </important>
      *        <p>
      *        To set or change the description after the key is created, use <a>UpdateKeyDescription</a>.
      * @return Returns a reference to this object so that method calls can be chained together.
@@ -714,8 +815,8 @@ public class CreateKeyRequest extends com.ibm.cloud.objectstorage.AmazonWebServi
      * Determines the <a
      * href="https://docs.aws.amazon.com/kms/latest/developerguide/concepts.html#cryptographic-operations">cryptographic
      * operations</a> for which you can use the KMS key. The default value is <code>ENCRYPT_DECRYPT</code>. This
-     * parameter is required only for asymmetric KMS keys. You can't change the <code>KeyUsage</code> value after the
-     * KMS key is created.
+     * parameter is optional when you are creating a symmetric encryption KMS key; otherwise, it is required. You can't
+     * change the <code>KeyUsage</code> value after the KMS key is created.
      * </p>
      * <p>
      * Select only one valid value.
@@ -723,7 +824,12 @@ public class CreateKeyRequest extends com.ibm.cloud.objectstorage.AmazonWebServi
      * <ul>
      * <li>
      * <p>
-     * For symmetric KMS keys, omit the parameter or specify <code>ENCRYPT_DECRYPT</code>.
+     * For symmetric encryption KMS keys, omit the parameter or specify <code>ENCRYPT_DECRYPT</code>.
+     * </p>
+     * </li>
+     * <li>
+     * <p>
+     * For HMAC KMS keys (symmetric), specify <code>GENERATE_VERIFY_MAC</code>.
      * </p>
      * </li>
      * <li>
@@ -736,21 +842,33 @@ public class CreateKeyRequest extends com.ibm.cloud.objectstorage.AmazonWebServi
      * For asymmetric KMS keys with ECC key material, specify <code>SIGN_VERIFY</code>.
      * </p>
      * </li>
+     * <li>
+     * <p>
+     * For asymmetric KMS keys with SM2 key material (China Regions only), specify <code>ENCRYPT_DECRYPT</code> or
+     * <code>SIGN_VERIFY</code>.
+     * </p>
+     * </li>
      * </ul>
      *
      * @param keyUsage
      *        Determines the <a
      *        href="https://docs.aws.amazon.com/kms/latest/developerguide/concepts.html#cryptographic-operations"
      *        >cryptographic operations</a> for which you can use the KMS key. The default value is
-     *        <code>ENCRYPT_DECRYPT</code>. This parameter is required only for asymmetric KMS keys. You can't change
-     *        the <code>KeyUsage</code> value after the KMS key is created.</p>
+     *        <code>ENCRYPT_DECRYPT</code>. This parameter is optional when you are creating a symmetric encryption KMS
+     *        key; otherwise, it is required. You can't change the <code>KeyUsage</code> value after the KMS key is
+     *        created.</p>
      *        <p>
      *        Select only one valid value.
      *        </p>
      *        <ul>
      *        <li>
      *        <p>
-     *        For symmetric KMS keys, omit the parameter or specify <code>ENCRYPT_DECRYPT</code>.
+     *        For symmetric encryption KMS keys, omit the parameter or specify <code>ENCRYPT_DECRYPT</code>.
+     *        </p>
+     *        </li>
+     *        <li>
+     *        <p>
+     *        For HMAC KMS keys (symmetric), specify <code>GENERATE_VERIFY_MAC</code>.
      *        </p>
      *        </li>
      *        <li>
@@ -762,6 +880,12 @@ public class CreateKeyRequest extends com.ibm.cloud.objectstorage.AmazonWebServi
      *        <li>
      *        <p>
      *        For asymmetric KMS keys with ECC key material, specify <code>SIGN_VERIFY</code>.
+     *        </p>
+     *        </li>
+     *        <li>
+     *        <p>
+     *        For asymmetric KMS keys with SM2 key material (China Regions only), specify <code>ENCRYPT_DECRYPT</code>
+     *        or <code>SIGN_VERIFY</code>.
      *        </p>
      *        </li>
      * @see KeyUsageType
@@ -776,8 +900,8 @@ public class CreateKeyRequest extends com.ibm.cloud.objectstorage.AmazonWebServi
      * Determines the <a
      * href="https://docs.aws.amazon.com/kms/latest/developerguide/concepts.html#cryptographic-operations">cryptographic
      * operations</a> for which you can use the KMS key. The default value is <code>ENCRYPT_DECRYPT</code>. This
-     * parameter is required only for asymmetric KMS keys. You can't change the <code>KeyUsage</code> value after the
-     * KMS key is created.
+     * parameter is optional when you are creating a symmetric encryption KMS key; otherwise, it is required. You can't
+     * change the <code>KeyUsage</code> value after the KMS key is created.
      * </p>
      * <p>
      * Select only one valid value.
@@ -785,7 +909,12 @@ public class CreateKeyRequest extends com.ibm.cloud.objectstorage.AmazonWebServi
      * <ul>
      * <li>
      * <p>
-     * For symmetric KMS keys, omit the parameter or specify <code>ENCRYPT_DECRYPT</code>.
+     * For symmetric encryption KMS keys, omit the parameter or specify <code>ENCRYPT_DECRYPT</code>.
+     * </p>
+     * </li>
+     * <li>
+     * <p>
+     * For HMAC KMS keys (symmetric), specify <code>GENERATE_VERIFY_MAC</code>.
      * </p>
      * </li>
      * <li>
@@ -798,20 +927,32 @@ public class CreateKeyRequest extends com.ibm.cloud.objectstorage.AmazonWebServi
      * For asymmetric KMS keys with ECC key material, specify <code>SIGN_VERIFY</code>.
      * </p>
      * </li>
+     * <li>
+     * <p>
+     * For asymmetric KMS keys with SM2 key material (China Regions only), specify <code>ENCRYPT_DECRYPT</code> or
+     * <code>SIGN_VERIFY</code>.
+     * </p>
+     * </li>
      * </ul>
      *
      * @return Determines the <a
      *         href="https://docs.aws.amazon.com/kms/latest/developerguide/concepts.html#cryptographic-operations"
      *         >cryptographic operations</a> for which you can use the KMS key. The default value is
-     *         <code>ENCRYPT_DECRYPT</code>. This parameter is required only for asymmetric KMS keys. You can't change
-     *         the <code>KeyUsage</code> value after the KMS key is created.</p>
+     *         <code>ENCRYPT_DECRYPT</code>. This parameter is optional when you are creating a symmetric encryption KMS
+     *         key; otherwise, it is required. You can't change the <code>KeyUsage</code> value after the KMS key is
+     *         created.</p>
      *         <p>
      *         Select only one valid value.
      *         </p>
      *         <ul>
      *         <li>
      *         <p>
-     *         For symmetric KMS keys, omit the parameter or specify <code>ENCRYPT_DECRYPT</code>.
+     *         For symmetric encryption KMS keys, omit the parameter or specify <code>ENCRYPT_DECRYPT</code>.
+     *         </p>
+     *         </li>
+     *         <li>
+     *         <p>
+     *         For HMAC KMS keys (symmetric), specify <code>GENERATE_VERIFY_MAC</code>.
      *         </p>
      *         </li>
      *         <li>
@@ -823,6 +964,12 @@ public class CreateKeyRequest extends com.ibm.cloud.objectstorage.AmazonWebServi
      *         <li>
      *         <p>
      *         For asymmetric KMS keys with ECC key material, specify <code>SIGN_VERIFY</code>.
+     *         </p>
+     *         </li>
+     *         <li>
+     *         <p>
+     *         For asymmetric KMS keys with SM2 key material (China Regions only), specify <code>ENCRYPT_DECRYPT</code>
+     *         or <code>SIGN_VERIFY</code>.
      *         </p>
      *         </li>
      * @see KeyUsageType
@@ -837,8 +984,8 @@ public class CreateKeyRequest extends com.ibm.cloud.objectstorage.AmazonWebServi
      * Determines the <a
      * href="https://docs.aws.amazon.com/kms/latest/developerguide/concepts.html#cryptographic-operations">cryptographic
      * operations</a> for which you can use the KMS key. The default value is <code>ENCRYPT_DECRYPT</code>. This
-     * parameter is required only for asymmetric KMS keys. You can't change the <code>KeyUsage</code> value after the
-     * KMS key is created.
+     * parameter is optional when you are creating a symmetric encryption KMS key; otherwise, it is required. You can't
+     * change the <code>KeyUsage</code> value after the KMS key is created.
      * </p>
      * <p>
      * Select only one valid value.
@@ -846,7 +993,12 @@ public class CreateKeyRequest extends com.ibm.cloud.objectstorage.AmazonWebServi
      * <ul>
      * <li>
      * <p>
-     * For symmetric KMS keys, omit the parameter or specify <code>ENCRYPT_DECRYPT</code>.
+     * For symmetric encryption KMS keys, omit the parameter or specify <code>ENCRYPT_DECRYPT</code>.
+     * </p>
+     * </li>
+     * <li>
+     * <p>
+     * For HMAC KMS keys (symmetric), specify <code>GENERATE_VERIFY_MAC</code>.
      * </p>
      * </li>
      * <li>
@@ -859,21 +1011,33 @@ public class CreateKeyRequest extends com.ibm.cloud.objectstorage.AmazonWebServi
      * For asymmetric KMS keys with ECC key material, specify <code>SIGN_VERIFY</code>.
      * </p>
      * </li>
+     * <li>
+     * <p>
+     * For asymmetric KMS keys with SM2 key material (China Regions only), specify <code>ENCRYPT_DECRYPT</code> or
+     * <code>SIGN_VERIFY</code>.
+     * </p>
+     * </li>
      * </ul>
      *
      * @param keyUsage
      *        Determines the <a
      *        href="https://docs.aws.amazon.com/kms/latest/developerguide/concepts.html#cryptographic-operations"
      *        >cryptographic operations</a> for which you can use the KMS key. The default value is
-     *        <code>ENCRYPT_DECRYPT</code>. This parameter is required only for asymmetric KMS keys. You can't change
-     *        the <code>KeyUsage</code> value after the KMS key is created.</p>
+     *        <code>ENCRYPT_DECRYPT</code>. This parameter is optional when you are creating a symmetric encryption KMS
+     *        key; otherwise, it is required. You can't change the <code>KeyUsage</code> value after the KMS key is
+     *        created.</p>
      *        <p>
      *        Select only one valid value.
      *        </p>
      *        <ul>
      *        <li>
      *        <p>
-     *        For symmetric KMS keys, omit the parameter or specify <code>ENCRYPT_DECRYPT</code>.
+     *        For symmetric encryption KMS keys, omit the parameter or specify <code>ENCRYPT_DECRYPT</code>.
+     *        </p>
+     *        </li>
+     *        <li>
+     *        <p>
+     *        For HMAC KMS keys (symmetric), specify <code>GENERATE_VERIFY_MAC</code>.
      *        </p>
      *        </li>
      *        <li>
@@ -885,6 +1049,12 @@ public class CreateKeyRequest extends com.ibm.cloud.objectstorage.AmazonWebServi
      *        <li>
      *        <p>
      *        For asymmetric KMS keys with ECC key material, specify <code>SIGN_VERIFY</code>.
+     *        </p>
+     *        </li>
+     *        <li>
+     *        <p>
+     *        For asymmetric KMS keys with SM2 key material (China Regions only), specify <code>ENCRYPT_DECRYPT</code>
+     *        or <code>SIGN_VERIFY</code>.
      *        </p>
      *        </li>
      * @return Returns a reference to this object so that method calls can be chained together.
@@ -901,8 +1071,8 @@ public class CreateKeyRequest extends com.ibm.cloud.objectstorage.AmazonWebServi
      * Determines the <a
      * href="https://docs.aws.amazon.com/kms/latest/developerguide/concepts.html#cryptographic-operations">cryptographic
      * operations</a> for which you can use the KMS key. The default value is <code>ENCRYPT_DECRYPT</code>. This
-     * parameter is required only for asymmetric KMS keys. You can't change the <code>KeyUsage</code> value after the
-     * KMS key is created.
+     * parameter is optional when you are creating a symmetric encryption KMS key; otherwise, it is required. You can't
+     * change the <code>KeyUsage</code> value after the KMS key is created.
      * </p>
      * <p>
      * Select only one valid value.
@@ -910,7 +1080,12 @@ public class CreateKeyRequest extends com.ibm.cloud.objectstorage.AmazonWebServi
      * <ul>
      * <li>
      * <p>
-     * For symmetric KMS keys, omit the parameter or specify <code>ENCRYPT_DECRYPT</code>.
+     * For symmetric encryption KMS keys, omit the parameter or specify <code>ENCRYPT_DECRYPT</code>.
+     * </p>
+     * </li>
+     * <li>
+     * <p>
+     * For HMAC KMS keys (symmetric), specify <code>GENERATE_VERIFY_MAC</code>.
      * </p>
      * </li>
      * <li>
@@ -923,21 +1098,33 @@ public class CreateKeyRequest extends com.ibm.cloud.objectstorage.AmazonWebServi
      * For asymmetric KMS keys with ECC key material, specify <code>SIGN_VERIFY</code>.
      * </p>
      * </li>
+     * <li>
+     * <p>
+     * For asymmetric KMS keys with SM2 key material (China Regions only), specify <code>ENCRYPT_DECRYPT</code> or
+     * <code>SIGN_VERIFY</code>.
+     * </p>
+     * </li>
      * </ul>
      *
      * @param keyUsage
      *        Determines the <a
      *        href="https://docs.aws.amazon.com/kms/latest/developerguide/concepts.html#cryptographic-operations"
      *        >cryptographic operations</a> for which you can use the KMS key. The default value is
-     *        <code>ENCRYPT_DECRYPT</code>. This parameter is required only for asymmetric KMS keys. You can't change
-     *        the <code>KeyUsage</code> value after the KMS key is created.</p>
+     *        <code>ENCRYPT_DECRYPT</code>. This parameter is optional when you are creating a symmetric encryption KMS
+     *        key; otherwise, it is required. You can't change the <code>KeyUsage</code> value after the KMS key is
+     *        created.</p>
      *        <p>
      *        Select only one valid value.
      *        </p>
      *        <ul>
      *        <li>
      *        <p>
-     *        For symmetric KMS keys, omit the parameter or specify <code>ENCRYPT_DECRYPT</code>.
+     *        For symmetric encryption KMS keys, omit the parameter or specify <code>ENCRYPT_DECRYPT</code>.
+     *        </p>
+     *        </li>
+     *        <li>
+     *        <p>
+     *        For HMAC KMS keys (symmetric), specify <code>GENERATE_VERIFY_MAC</code>.
      *        </p>
      *        </li>
      *        <li>
@@ -949,6 +1136,12 @@ public class CreateKeyRequest extends com.ibm.cloud.objectstorage.AmazonWebServi
      *        <li>
      *        <p>
      *        For asymmetric KMS keys with ECC key material, specify <code>SIGN_VERIFY</code>.
+     *        </p>
+     *        </li>
+     *        <li>
+     *        <p>
+     *        For asymmetric KMS keys with SM2 key material (China Regions only), specify <code>ENCRYPT_DECRYPT</code>
+     *        or <code>SIGN_VERIFY</code>.
      *        </p>
      *        </li>
      * @see KeyUsageType
@@ -963,8 +1156,8 @@ public class CreateKeyRequest extends com.ibm.cloud.objectstorage.AmazonWebServi
      * Determines the <a
      * href="https://docs.aws.amazon.com/kms/latest/developerguide/concepts.html#cryptographic-operations">cryptographic
      * operations</a> for which you can use the KMS key. The default value is <code>ENCRYPT_DECRYPT</code>. This
-     * parameter is required only for asymmetric KMS keys. You can't change the <code>KeyUsage</code> value after the
-     * KMS key is created.
+     * parameter is optional when you are creating a symmetric encryption KMS key; otherwise, it is required. You can't
+     * change the <code>KeyUsage</code> value after the KMS key is created.
      * </p>
      * <p>
      * Select only one valid value.
@@ -972,7 +1165,12 @@ public class CreateKeyRequest extends com.ibm.cloud.objectstorage.AmazonWebServi
      * <ul>
      * <li>
      * <p>
-     * For symmetric KMS keys, omit the parameter or specify <code>ENCRYPT_DECRYPT</code>.
+     * For symmetric encryption KMS keys, omit the parameter or specify <code>ENCRYPT_DECRYPT</code>.
+     * </p>
+     * </li>
+     * <li>
+     * <p>
+     * For HMAC KMS keys (symmetric), specify <code>GENERATE_VERIFY_MAC</code>.
      * </p>
      * </li>
      * <li>
@@ -985,21 +1183,33 @@ public class CreateKeyRequest extends com.ibm.cloud.objectstorage.AmazonWebServi
      * For asymmetric KMS keys with ECC key material, specify <code>SIGN_VERIFY</code>.
      * </p>
      * </li>
+     * <li>
+     * <p>
+     * For asymmetric KMS keys with SM2 key material (China Regions only), specify <code>ENCRYPT_DECRYPT</code> or
+     * <code>SIGN_VERIFY</code>.
+     * </p>
+     * </li>
      * </ul>
      *
      * @param keyUsage
      *        Determines the <a
      *        href="https://docs.aws.amazon.com/kms/latest/developerguide/concepts.html#cryptographic-operations"
      *        >cryptographic operations</a> for which you can use the KMS key. The default value is
-     *        <code>ENCRYPT_DECRYPT</code>. This parameter is required only for asymmetric KMS keys. You can't change
-     *        the <code>KeyUsage</code> value after the KMS key is created.</p>
+     *        <code>ENCRYPT_DECRYPT</code>. This parameter is optional when you are creating a symmetric encryption KMS
+     *        key; otherwise, it is required. You can't change the <code>KeyUsage</code> value after the KMS key is
+     *        created.</p>
      *        <p>
      *        Select only one valid value.
      *        </p>
      *        <ul>
      *        <li>
      *        <p>
-     *        For symmetric KMS keys, omit the parameter or specify <code>ENCRYPT_DECRYPT</code>.
+     *        For symmetric encryption KMS keys, omit the parameter or specify <code>ENCRYPT_DECRYPT</code>.
+     *        </p>
+     *        </li>
+     *        <li>
+     *        <p>
+     *        For HMAC KMS keys (symmetric), specify <code>GENERATE_VERIFY_MAC</code>.
      *        </p>
      *        </li>
      *        <li>
@@ -1011,6 +1221,12 @@ public class CreateKeyRequest extends com.ibm.cloud.objectstorage.AmazonWebServi
      *        <li>
      *        <p>
      *        For asymmetric KMS keys with ECC key material, specify <code>SIGN_VERIFY</code>.
+     *        </p>
+     *        </li>
+     *        <li>
+     *        <p>
+     *        For asymmetric KMS keys with SM2 key material (China Regions only), specify <code>ENCRYPT_DECRYPT</code>
+     *        or <code>SIGN_VERIFY</code>.
      *        </p>
      *        </li>
      * @return Returns a reference to this object so that method calls can be chained together.
@@ -1029,15 +1245,15 @@ public class CreateKeyRequest extends com.ibm.cloud.objectstorage.AmazonWebServi
      * <p>
      * The <code>KeySpec</code> and <code>CustomerMasterKeySpec</code> parameters work the same way. Only the names
      * differ. We recommend that you use <code>KeySpec</code> parameter in your code. However, to avoid breaking
-     * changes, KMS will support both parameters.
+     * changes, KMS supports both parameters.
      * </p>
-     *
+     * 
      * @param customerMasterKeySpec
      *        Instead, use the <code>KeySpec</code> parameter.</p>
      *        <p>
      *        The <code>KeySpec</code> and <code>CustomerMasterKeySpec</code> parameters work the same way. Only the
      *        names differ. We recommend that you use <code>KeySpec</code> parameter in your code. However, to avoid
-     *        breaking changes, KMS will support both parameters.
+     *        breaking changes, KMS supports both parameters.
      * @see CustomerMasterKeySpec
      */
     @Deprecated
@@ -1052,14 +1268,14 @@ public class CreateKeyRequest extends com.ibm.cloud.objectstorage.AmazonWebServi
      * <p>
      * The <code>KeySpec</code> and <code>CustomerMasterKeySpec</code> parameters work the same way. Only the names
      * differ. We recommend that you use <code>KeySpec</code> parameter in your code. However, to avoid breaking
-     * changes, KMS will support both parameters.
+     * changes, KMS supports both parameters.
      * </p>
-     *
+     * 
      * @return Instead, use the <code>KeySpec</code> parameter.</p>
      *         <p>
      *         The <code>KeySpec</code> and <code>CustomerMasterKeySpec</code> parameters work the same way. Only the
      *         names differ. We recommend that you use <code>KeySpec</code> parameter in your code. However, to avoid
-     *         breaking changes, KMS will support both parameters.
+     *         breaking changes, KMS supports both parameters.
      * @see CustomerMasterKeySpec
      */
     @Deprecated
@@ -1074,15 +1290,15 @@ public class CreateKeyRequest extends com.ibm.cloud.objectstorage.AmazonWebServi
      * <p>
      * The <code>KeySpec</code> and <code>CustomerMasterKeySpec</code> parameters work the same way. Only the names
      * differ. We recommend that you use <code>KeySpec</code> parameter in your code. However, to avoid breaking
-     * changes, KMS will support both parameters.
+     * changes, KMS supports both parameters.
      * </p>
-     *
+     * 
      * @param customerMasterKeySpec
      *        Instead, use the <code>KeySpec</code> parameter.</p>
      *        <p>
      *        The <code>KeySpec</code> and <code>CustomerMasterKeySpec</code> parameters work the same way. Only the
      *        names differ. We recommend that you use <code>KeySpec</code> parameter in your code. However, to avoid
-     *        breaking changes, KMS will support both parameters.
+     *        breaking changes, KMS supports both parameters.
      * @return Returns a reference to this object so that method calls can be chained together.
      * @see CustomerMasterKeySpec
      */
@@ -1099,21 +1315,21 @@ public class CreateKeyRequest extends com.ibm.cloud.objectstorage.AmazonWebServi
      * <p>
      * The <code>KeySpec</code> and <code>CustomerMasterKeySpec</code> parameters work the same way. Only the names
      * differ. We recommend that you use <code>KeySpec</code> parameter in your code. However, to avoid breaking
-     * changes, KMS will support both parameters.
+     * changes, KMS supports both parameters.
      * </p>
-     *
+     * 
      * @param customerMasterKeySpec
      *        Instead, use the <code>KeySpec</code> parameter.</p>
      *        <p>
      *        The <code>KeySpec</code> and <code>CustomerMasterKeySpec</code> parameters work the same way. Only the
      *        names differ. We recommend that you use <code>KeySpec</code> parameter in your code. However, to avoid
-     *        breaking changes, KMS will support both parameters.
+     *        breaking changes, KMS supports both parameters.
      * @see CustomerMasterKeySpec
      */
-    //IBM unsupported
+	//IBM unsupported
     // @Deprecated
     // public void setCustomerMasterKeySpec(CustomerMasterKeySpec customerMasterKeySpec) {
-    //     withCustomerMasterKeySpec(customerMasterKeySpec);
+    //   withCustomerMasterKeySpec(customerMasterKeySpec);
     // }
 
     /**
@@ -1123,15 +1339,15 @@ public class CreateKeyRequest extends com.ibm.cloud.objectstorage.AmazonWebServi
      * <p>
      * The <code>KeySpec</code> and <code>CustomerMasterKeySpec</code> parameters work the same way. Only the names
      * differ. We recommend that you use <code>KeySpec</code> parameter in your code. However, to avoid breaking
-     * changes, KMS will support both parameters.
+     * changes, KMS supports both parameters.
      * </p>
-     *
+     * 
      * @param customerMasterKeySpec
      *        Instead, use the <code>KeySpec</code> parameter.</p>
      *        <p>
      *        The <code>KeySpec</code> and <code>CustomerMasterKeySpec</code> parameters work the same way. Only the
      *        names differ. We recommend that you use <code>KeySpec</code> parameter in your code. However, to avoid
-     *        breaking changes, KMS will support both parameters.
+     *        breaking changes, KMS supports both parameters.
      * @return Returns a reference to this object so that method calls can be chained together.
      * @see CustomerMasterKeySpec
      */
@@ -1145,27 +1361,28 @@ public class CreateKeyRequest extends com.ibm.cloud.objectstorage.AmazonWebServi
     /**
      * <p>
      * Specifies the type of KMS key to create. The default value, <code>SYMMETRIC_DEFAULT</code>, creates a KMS key
-     * with a 256-bit symmetric key for encryption and decryption. For help choosing a key spec for your KMS key, see <a
-     * href="https://docs.aws.amazon.com/kms/latest/developerguide/symm-asymm-choose.html">How to Choose Your KMS key
-     * Configuration</a> in the <i> <i>Key Management Service Developer Guide</i> </i>.
+     * with a 256-bit AES-GCM key that is used for encryption and decryption, except in China Regions, where it creates
+     * a 128-bit symmetric key that uses SM4 encryption. For help choosing a key spec for your KMS key, see <a
+     * href="https://docs.aws.amazon.com/kms/latest/developerguide/key-types.html#symm-asymm-choose">Choosing a KMS key
+     * type</a> in the <i> <i>Key Management Service Developer Guide</i> </i>.
      * </p>
      * <p>
      * The <code>KeySpec</code> determines whether the KMS key contains a symmetric key or an asymmetric key pair. It
-     * also determines the encryption algorithms or signing algorithms that the KMS key supports. You can't change the
-     * <code>KeySpec</code> after the KMS key is created. To further restrict the algorithms that can be used with the
-     * KMS key, use a condition key in its key policy or IAM policy. For more information, see <a href=
+     * also determines the algorithms that the KMS key supports. You can't change the <code>KeySpec</code> after the KMS
+     * key is created. To further restrict the algorithms that can be used with the KMS key, use a condition key in its
+     * key policy or IAM policy. For more information, see <a href=
      * "https://docs.aws.amazon.com/kms/latest/developerguide/policy-conditions.html#conditions-kms-encryption-algorithm"
-     * >kms:EncryptionAlgorithm</a> or <a href=
+     * >kms:EncryptionAlgorithm</a>, <a href=
+     * "https://docs.aws.amazon.com/kms/latest/developerguide/policy-conditions.html#conditions-kms-mac-algorithm"
+     * >kms:MacAlgorithm</a> or <a href=
      * "https://docs.aws.amazon.com/kms/latest/developerguide/policy-conditions.html#conditions-kms-signing-algorithm"
      * >kms:Signing Algorithm</a> in the <i> <i>Key Management Service Developer Guide</i> </i>.
      * </p>
      * <important>
      * <p>
      * <a href="http://aws.amazon.com/kms/features/#AWS_Service_Integration">Amazon Web Services services that are
-     * integrated with KMS</a> use symmetric KMS keys to protect your data. These services do not support asymmetric KMS
-     * keys. For help determining whether a KMS key is symmetric or asymmetric, see <a
-     * href="https://docs.aws.amazon.com/kms/latest/developerguide/find-symm-asymm.html">Identifying Symmetric and
-     * Asymmetric KMS keys</a> in the <i>Key Management Service Developer Guide</i>.
+     * integrated with KMS</a> use symmetric encryption KMS keys to protect your data. These services do not support
+     * asymmetric KMS keys or HMAC KMS keys.
      * </p>
      * </important>
      * <p>
@@ -1174,12 +1391,39 @@ public class CreateKeyRequest extends com.ibm.cloud.objectstorage.AmazonWebServi
      * <ul>
      * <li>
      * <p>
-     * Symmetric key (default)
+     * Symmetric encryption key (default)
      * </p>
      * <ul>
      * <li>
      * <p>
-     * <code>SYMMETRIC_DEFAULT</code> (AES-256-GCM)
+     * <code>SYMMETRIC_DEFAULT</code>
+     * </p>
+     * </li>
+     * </ul>
+     * </li>
+     * <li>
+     * <p>
+     * HMAC keys (symmetric)
+     * </p>
+     * <ul>
+     * <li>
+     * <p>
+     * <code>HMAC_224</code>
+     * </p>
+     * </li>
+     * <li>
+     * <p>
+     * <code>HMAC_256</code>
+     * </p>
+     * </li>
+     * <li>
+     * <p>
+     * <code>HMAC_384</code>
+     * </p>
+     * </li>
+     * <li>
+     * <p>
+     * <code>HMAC_512</code>
      * </p>
      * </li>
      * </ul>
@@ -1240,31 +1484,44 @@ public class CreateKeyRequest extends com.ibm.cloud.objectstorage.AmazonWebServi
      * </li>
      * </ul>
      * </li>
+     * <li>
+     * <p>
+     * SM2 key pairs (China Regions only)
+     * </p>
+     * <ul>
+     * <li>
+     * <p>
+     * <code>SM2</code>
+     * </p>
+     * </li>
      * </ul>
-     *
+     * </li>
+     * </ul>
+     * 
      * @param keySpec
      *        Specifies the type of KMS key to create. The default value, <code>SYMMETRIC_DEFAULT</code>, creates a KMS
-     *        key with a 256-bit symmetric key for encryption and decryption. For help choosing a key spec for your KMS
-     *        key, see <a href="https://docs.aws.amazon.com/kms/latest/developerguide/symm-asymm-choose.html">How to
-     *        Choose Your KMS key Configuration</a> in the <i> <i>Key Management Service Developer Guide</i> </i>.</p>
+     *        key with a 256-bit AES-GCM key that is used for encryption and decryption, except in China Regions, where
+     *        it creates a 128-bit symmetric key that uses SM4 encryption. For help choosing a key spec for your KMS
+     *        key, see <a
+     *        href="https://docs.aws.amazon.com/kms/latest/developerguide/key-types.html#symm-asymm-choose">Choosing a
+     *        KMS key type</a> in the <i> <i>Key Management Service Developer Guide</i> </i>.</p>
      *        <p>
      *        The <code>KeySpec</code> determines whether the KMS key contains a symmetric key or an asymmetric key
-     *        pair. It also determines the encryption algorithms or signing algorithms that the KMS key supports. You
-     *        can't change the <code>KeySpec</code> after the KMS key is created. To further restrict the algorithms
-     *        that can be used with the KMS key, use a condition key in its key policy or IAM policy. For more
-     *        information, see <a href=
+     *        pair. It also determines the algorithms that the KMS key supports. You can't change the
+     *        <code>KeySpec</code> after the KMS key is created. To further restrict the algorithms that can be used
+     *        with the KMS key, use a condition key in its key policy or IAM policy. For more information, see <a href=
      *        "https://docs.aws.amazon.com/kms/latest/developerguide/policy-conditions.html#conditions-kms-encryption-algorithm"
-     *        >kms:EncryptionAlgorithm</a> or <a href=
+     *        >kms:EncryptionAlgorithm</a>, <a href=
+     *        "https://docs.aws.amazon.com/kms/latest/developerguide/policy-conditions.html#conditions-kms-mac-algorithm"
+     *        >kms:MacAlgorithm</a> or <a href=
      *        "https://docs.aws.amazon.com/kms/latest/developerguide/policy-conditions.html#conditions-kms-signing-algorithm"
      *        >kms:Signing Algorithm</a> in the <i> <i>Key Management Service Developer Guide</i> </i>.
      *        </p>
      *        <important>
      *        <p>
      *        <a href="http://aws.amazon.com/kms/features/#AWS_Service_Integration">Amazon Web Services services that
-     *        are integrated with KMS</a> use symmetric KMS keys to protect your data. These services do not support
-     *        asymmetric KMS keys. For help determining whether a KMS key is symmetric or asymmetric, see <a
-     *        href="https://docs.aws.amazon.com/kms/latest/developerguide/find-symm-asymm.html">Identifying Symmetric
-     *        and Asymmetric KMS keys</a> in the <i>Key Management Service Developer Guide</i>.
+     *        are integrated with KMS</a> use symmetric encryption KMS keys to protect your data. These services do not
+     *        support asymmetric KMS keys or HMAC KMS keys.
      *        </p>
      *        </important>
      *        <p>
@@ -1273,12 +1530,39 @@ public class CreateKeyRequest extends com.ibm.cloud.objectstorage.AmazonWebServi
      *        <ul>
      *        <li>
      *        <p>
-     *        Symmetric key (default)
+     *        Symmetric encryption key (default)
      *        </p>
      *        <ul>
      *        <li>
      *        <p>
-     *        <code>SYMMETRIC_DEFAULT</code> (AES-256-GCM)
+     *        <code>SYMMETRIC_DEFAULT</code>
+     *        </p>
+     *        </li>
+     *        </ul>
+     *        </li>
+     *        <li>
+     *        <p>
+     *        HMAC keys (symmetric)
+     *        </p>
+     *        <ul>
+     *        <li>
+     *        <p>
+     *        <code>HMAC_224</code>
+     *        </p>
+     *        </li>
+     *        <li>
+     *        <p>
+     *        <code>HMAC_256</code>
+     *        </p>
+     *        </li>
+     *        <li>
+     *        <p>
+     *        <code>HMAC_384</code>
+     *        </p>
+     *        </li>
+     *        <li>
+     *        <p>
+     *        <code>HMAC_512</code>
      *        </p>
      *        </li>
      *        </ul>
@@ -1339,6 +1623,18 @@ public class CreateKeyRequest extends com.ibm.cloud.objectstorage.AmazonWebServi
      *        </li>
      *        </ul>
      *        </li>
+     *        <li>
+     *        <p>
+     *        SM2 key pairs (China Regions only)
+     *        </p>
+     *        <ul>
+     *        <li>
+     *        <p>
+     *        <code>SM2</code>
+     *        </p>
+     *        </li>
+     *        </ul>
+     *        </li>
      * @see KeySpec
      */
 
@@ -1349,27 +1645,28 @@ public class CreateKeyRequest extends com.ibm.cloud.objectstorage.AmazonWebServi
     /**
      * <p>
      * Specifies the type of KMS key to create. The default value, <code>SYMMETRIC_DEFAULT</code>, creates a KMS key
-     * with a 256-bit symmetric key for encryption and decryption. For help choosing a key spec for your KMS key, see <a
-     * href="https://docs.aws.amazon.com/kms/latest/developerguide/symm-asymm-choose.html">How to Choose Your KMS key
-     * Configuration</a> in the <i> <i>Key Management Service Developer Guide</i> </i>.
+     * with a 256-bit AES-GCM key that is used for encryption and decryption, except in China Regions, where it creates
+     * a 128-bit symmetric key that uses SM4 encryption. For help choosing a key spec for your KMS key, see <a
+     * href="https://docs.aws.amazon.com/kms/latest/developerguide/key-types.html#symm-asymm-choose">Choosing a KMS key
+     * type</a> in the <i> <i>Key Management Service Developer Guide</i> </i>.
      * </p>
      * <p>
      * The <code>KeySpec</code> determines whether the KMS key contains a symmetric key or an asymmetric key pair. It
-     * also determines the encryption algorithms or signing algorithms that the KMS key supports. You can't change the
-     * <code>KeySpec</code> after the KMS key is created. To further restrict the algorithms that can be used with the
-     * KMS key, use a condition key in its key policy or IAM policy. For more information, see <a href=
+     * also determines the algorithms that the KMS key supports. You can't change the <code>KeySpec</code> after the KMS
+     * key is created. To further restrict the algorithms that can be used with the KMS key, use a condition key in its
+     * key policy or IAM policy. For more information, see <a href=
      * "https://docs.aws.amazon.com/kms/latest/developerguide/policy-conditions.html#conditions-kms-encryption-algorithm"
-     * >kms:EncryptionAlgorithm</a> or <a href=
+     * >kms:EncryptionAlgorithm</a>, <a href=
+     * "https://docs.aws.amazon.com/kms/latest/developerguide/policy-conditions.html#conditions-kms-mac-algorithm"
+     * >kms:MacAlgorithm</a> or <a href=
      * "https://docs.aws.amazon.com/kms/latest/developerguide/policy-conditions.html#conditions-kms-signing-algorithm"
      * >kms:Signing Algorithm</a> in the <i> <i>Key Management Service Developer Guide</i> </i>.
      * </p>
      * <important>
      * <p>
      * <a href="http://aws.amazon.com/kms/features/#AWS_Service_Integration">Amazon Web Services services that are
-     * integrated with KMS</a> use symmetric KMS keys to protect your data. These services do not support asymmetric KMS
-     * keys. For help determining whether a KMS key is symmetric or asymmetric, see <a
-     * href="https://docs.aws.amazon.com/kms/latest/developerguide/find-symm-asymm.html">Identifying Symmetric and
-     * Asymmetric KMS keys</a> in the <i>Key Management Service Developer Guide</i>.
+     * integrated with KMS</a> use symmetric encryption KMS keys to protect your data. These services do not support
+     * asymmetric KMS keys or HMAC KMS keys.
      * </p>
      * </important>
      * <p>
@@ -1378,12 +1675,39 @@ public class CreateKeyRequest extends com.ibm.cloud.objectstorage.AmazonWebServi
      * <ul>
      * <li>
      * <p>
-     * Symmetric key (default)
+     * Symmetric encryption key (default)
      * </p>
      * <ul>
      * <li>
      * <p>
-     * <code>SYMMETRIC_DEFAULT</code> (AES-256-GCM)
+     * <code>SYMMETRIC_DEFAULT</code>
+     * </p>
+     * </li>
+     * </ul>
+     * </li>
+     * <li>
+     * <p>
+     * HMAC keys (symmetric)
+     * </p>
+     * <ul>
+     * <li>
+     * <p>
+     * <code>HMAC_224</code>
+     * </p>
+     * </li>
+     * <li>
+     * <p>
+     * <code>HMAC_256</code>
+     * </p>
+     * </li>
+     * <li>
+     * <p>
+     * <code>HMAC_384</code>
+     * </p>
+     * </li>
+     * <li>
+     * <p>
+     * <code>HMAC_512</code>
      * </p>
      * </li>
      * </ul>
@@ -1444,30 +1768,43 @@ public class CreateKeyRequest extends com.ibm.cloud.objectstorage.AmazonWebServi
      * </li>
      * </ul>
      * </li>
+     * <li>
+     * <p>
+     * SM2 key pairs (China Regions only)
+     * </p>
+     * <ul>
+     * <li>
+     * <p>
+     * <code>SM2</code>
+     * </p>
+     * </li>
      * </ul>
-     *
+     * </li>
+     * </ul>
+     * 
      * @return Specifies the type of KMS key to create. The default value, <code>SYMMETRIC_DEFAULT</code>, creates a KMS
-     *         key with a 256-bit symmetric key for encryption and decryption. For help choosing a key spec for your KMS
-     *         key, see <a href="https://docs.aws.amazon.com/kms/latest/developerguide/symm-asymm-choose.html">How to
-     *         Choose Your KMS key Configuration</a> in the <i> <i>Key Management Service Developer Guide</i> </i>.</p>
+     *         key with a 256-bit AES-GCM key that is used for encryption and decryption, except in China Regions, where
+     *         it creates a 128-bit symmetric key that uses SM4 encryption. For help choosing a key spec for your KMS
+     *         key, see <a
+     *         href="https://docs.aws.amazon.com/kms/latest/developerguide/key-types.html#symm-asymm-choose">Choosing a
+     *         KMS key type</a> in the <i> <i>Key Management Service Developer Guide</i> </i>.</p>
      *         <p>
      *         The <code>KeySpec</code> determines whether the KMS key contains a symmetric key or an asymmetric key
-     *         pair. It also determines the encryption algorithms or signing algorithms that the KMS key supports. You
-     *         can't change the <code>KeySpec</code> after the KMS key is created. To further restrict the algorithms
-     *         that can be used with the KMS key, use a condition key in its key policy or IAM policy. For more
-     *         information, see <a href=
+     *         pair. It also determines the algorithms that the KMS key supports. You can't change the
+     *         <code>KeySpec</code> after the KMS key is created. To further restrict the algorithms that can be used
+     *         with the KMS key, use a condition key in its key policy or IAM policy. For more information, see <a href=
      *         "https://docs.aws.amazon.com/kms/latest/developerguide/policy-conditions.html#conditions-kms-encryption-algorithm"
-     *         >kms:EncryptionAlgorithm</a> or <a href=
+     *         >kms:EncryptionAlgorithm</a>, <a href=
+     *         "https://docs.aws.amazon.com/kms/latest/developerguide/policy-conditions.html#conditions-kms-mac-algorithm"
+     *         >kms:MacAlgorithm</a> or <a href=
      *         "https://docs.aws.amazon.com/kms/latest/developerguide/policy-conditions.html#conditions-kms-signing-algorithm"
      *         >kms:Signing Algorithm</a> in the <i> <i>Key Management Service Developer Guide</i> </i>.
      *         </p>
      *         <important>
      *         <p>
      *         <a href="http://aws.amazon.com/kms/features/#AWS_Service_Integration">Amazon Web Services services that
-     *         are integrated with KMS</a> use symmetric KMS keys to protect your data. These services do not support
-     *         asymmetric KMS keys. For help determining whether a KMS key is symmetric or asymmetric, see <a
-     *         href="https://docs.aws.amazon.com/kms/latest/developerguide/find-symm-asymm.html">Identifying Symmetric
-     *         and Asymmetric KMS keys</a> in the <i>Key Management Service Developer Guide</i>.
+     *         are integrated with KMS</a> use symmetric encryption KMS keys to protect your data. These services do not
+     *         support asymmetric KMS keys or HMAC KMS keys.
      *         </p>
      *         </important>
      *         <p>
@@ -1476,12 +1813,39 @@ public class CreateKeyRequest extends com.ibm.cloud.objectstorage.AmazonWebServi
      *         <ul>
      *         <li>
      *         <p>
-     *         Symmetric key (default)
+     *         Symmetric encryption key (default)
      *         </p>
      *         <ul>
      *         <li>
      *         <p>
-     *         <code>SYMMETRIC_DEFAULT</code> (AES-256-GCM)
+     *         <code>SYMMETRIC_DEFAULT</code>
+     *         </p>
+     *         </li>
+     *         </ul>
+     *         </li>
+     *         <li>
+     *         <p>
+     *         HMAC keys (symmetric)
+     *         </p>
+     *         <ul>
+     *         <li>
+     *         <p>
+     *         <code>HMAC_224</code>
+     *         </p>
+     *         </li>
+     *         <li>
+     *         <p>
+     *         <code>HMAC_256</code>
+     *         </p>
+     *         </li>
+     *         <li>
+     *         <p>
+     *         <code>HMAC_384</code>
+     *         </p>
+     *         </li>
+     *         <li>
+     *         <p>
+     *         <code>HMAC_512</code>
      *         </p>
      *         </li>
      *         </ul>
@@ -1542,6 +1906,18 @@ public class CreateKeyRequest extends com.ibm.cloud.objectstorage.AmazonWebServi
      *         </li>
      *         </ul>
      *         </li>
+     *         <li>
+     *         <p>
+     *         SM2 key pairs (China Regions only)
+     *         </p>
+     *         <ul>
+     *         <li>
+     *         <p>
+     *         <code>SM2</code>
+     *         </p>
+     *         </li>
+     *         </ul>
+     *         </li>
      * @see KeySpec
      */
 
@@ -1552,27 +1928,28 @@ public class CreateKeyRequest extends com.ibm.cloud.objectstorage.AmazonWebServi
     /**
      * <p>
      * Specifies the type of KMS key to create. The default value, <code>SYMMETRIC_DEFAULT</code>, creates a KMS key
-     * with a 256-bit symmetric key for encryption and decryption. For help choosing a key spec for your KMS key, see <a
-     * href="https://docs.aws.amazon.com/kms/latest/developerguide/symm-asymm-choose.html">How to Choose Your KMS key
-     * Configuration</a> in the <i> <i>Key Management Service Developer Guide</i> </i>.
+     * with a 256-bit AES-GCM key that is used for encryption and decryption, except in China Regions, where it creates
+     * a 128-bit symmetric key that uses SM4 encryption. For help choosing a key spec for your KMS key, see <a
+     * href="https://docs.aws.amazon.com/kms/latest/developerguide/key-types.html#symm-asymm-choose">Choosing a KMS key
+     * type</a> in the <i> <i>Key Management Service Developer Guide</i> </i>.
      * </p>
      * <p>
      * The <code>KeySpec</code> determines whether the KMS key contains a symmetric key or an asymmetric key pair. It
-     * also determines the encryption algorithms or signing algorithms that the KMS key supports. You can't change the
-     * <code>KeySpec</code> after the KMS key is created. To further restrict the algorithms that can be used with the
-     * KMS key, use a condition key in its key policy or IAM policy. For more information, see <a href=
+     * also determines the algorithms that the KMS key supports. You can't change the <code>KeySpec</code> after the KMS
+     * key is created. To further restrict the algorithms that can be used with the KMS key, use a condition key in its
+     * key policy or IAM policy. For more information, see <a href=
      * "https://docs.aws.amazon.com/kms/latest/developerguide/policy-conditions.html#conditions-kms-encryption-algorithm"
-     * >kms:EncryptionAlgorithm</a> or <a href=
+     * >kms:EncryptionAlgorithm</a>, <a href=
+     * "https://docs.aws.amazon.com/kms/latest/developerguide/policy-conditions.html#conditions-kms-mac-algorithm"
+     * >kms:MacAlgorithm</a> or <a href=
      * "https://docs.aws.amazon.com/kms/latest/developerguide/policy-conditions.html#conditions-kms-signing-algorithm"
      * >kms:Signing Algorithm</a> in the <i> <i>Key Management Service Developer Guide</i> </i>.
      * </p>
      * <important>
      * <p>
      * <a href="http://aws.amazon.com/kms/features/#AWS_Service_Integration">Amazon Web Services services that are
-     * integrated with KMS</a> use symmetric KMS keys to protect your data. These services do not support asymmetric KMS
-     * keys. For help determining whether a KMS key is symmetric or asymmetric, see <a
-     * href="https://docs.aws.amazon.com/kms/latest/developerguide/find-symm-asymm.html">Identifying Symmetric and
-     * Asymmetric KMS keys</a> in the <i>Key Management Service Developer Guide</i>.
+     * integrated with KMS</a> use symmetric encryption KMS keys to protect your data. These services do not support
+     * asymmetric KMS keys or HMAC KMS keys.
      * </p>
      * </important>
      * <p>
@@ -1581,12 +1958,39 @@ public class CreateKeyRequest extends com.ibm.cloud.objectstorage.AmazonWebServi
      * <ul>
      * <li>
      * <p>
-     * Symmetric key (default)
+     * Symmetric encryption key (default)
      * </p>
      * <ul>
      * <li>
      * <p>
-     * <code>SYMMETRIC_DEFAULT</code> (AES-256-GCM)
+     * <code>SYMMETRIC_DEFAULT</code>
+     * </p>
+     * </li>
+     * </ul>
+     * </li>
+     * <li>
+     * <p>
+     * HMAC keys (symmetric)
+     * </p>
+     * <ul>
+     * <li>
+     * <p>
+     * <code>HMAC_224</code>
+     * </p>
+     * </li>
+     * <li>
+     * <p>
+     * <code>HMAC_256</code>
+     * </p>
+     * </li>
+     * <li>
+     * <p>
+     * <code>HMAC_384</code>
+     * </p>
+     * </li>
+     * <li>
+     * <p>
+     * <code>HMAC_512</code>
      * </p>
      * </li>
      * </ul>
@@ -1647,31 +2051,44 @@ public class CreateKeyRequest extends com.ibm.cloud.objectstorage.AmazonWebServi
      * </li>
      * </ul>
      * </li>
+     * <li>
+     * <p>
+     * SM2 key pairs (China Regions only)
+     * </p>
+     * <ul>
+     * <li>
+     * <p>
+     * <code>SM2</code>
+     * </p>
+     * </li>
      * </ul>
-     *
+     * </li>
+     * </ul>
+     * 
      * @param keySpec
      *        Specifies the type of KMS key to create. The default value, <code>SYMMETRIC_DEFAULT</code>, creates a KMS
-     *        key with a 256-bit symmetric key for encryption and decryption. For help choosing a key spec for your KMS
-     *        key, see <a href="https://docs.aws.amazon.com/kms/latest/developerguide/symm-asymm-choose.html">How to
-     *        Choose Your KMS key Configuration</a> in the <i> <i>Key Management Service Developer Guide</i> </i>.</p>
+     *        key with a 256-bit AES-GCM key that is used for encryption and decryption, except in China Regions, where
+     *        it creates a 128-bit symmetric key that uses SM4 encryption. For help choosing a key spec for your KMS
+     *        key, see <a
+     *        href="https://docs.aws.amazon.com/kms/latest/developerguide/key-types.html#symm-asymm-choose">Choosing a
+     *        KMS key type</a> in the <i> <i>Key Management Service Developer Guide</i> </i>.</p>
      *        <p>
      *        The <code>KeySpec</code> determines whether the KMS key contains a symmetric key or an asymmetric key
-     *        pair. It also determines the encryption algorithms or signing algorithms that the KMS key supports. You
-     *        can't change the <code>KeySpec</code> after the KMS key is created. To further restrict the algorithms
-     *        that can be used with the KMS key, use a condition key in its key policy or IAM policy. For more
-     *        information, see <a href=
+     *        pair. It also determines the algorithms that the KMS key supports. You can't change the
+     *        <code>KeySpec</code> after the KMS key is created. To further restrict the algorithms that can be used
+     *        with the KMS key, use a condition key in its key policy or IAM policy. For more information, see <a href=
      *        "https://docs.aws.amazon.com/kms/latest/developerguide/policy-conditions.html#conditions-kms-encryption-algorithm"
-     *        >kms:EncryptionAlgorithm</a> or <a href=
+     *        >kms:EncryptionAlgorithm</a>, <a href=
+     *        "https://docs.aws.amazon.com/kms/latest/developerguide/policy-conditions.html#conditions-kms-mac-algorithm"
+     *        >kms:MacAlgorithm</a> or <a href=
      *        "https://docs.aws.amazon.com/kms/latest/developerguide/policy-conditions.html#conditions-kms-signing-algorithm"
      *        >kms:Signing Algorithm</a> in the <i> <i>Key Management Service Developer Guide</i> </i>.
      *        </p>
      *        <important>
      *        <p>
      *        <a href="http://aws.amazon.com/kms/features/#AWS_Service_Integration">Amazon Web Services services that
-     *        are integrated with KMS</a> use symmetric KMS keys to protect your data. These services do not support
-     *        asymmetric KMS keys. For help determining whether a KMS key is symmetric or asymmetric, see <a
-     *        href="https://docs.aws.amazon.com/kms/latest/developerguide/find-symm-asymm.html">Identifying Symmetric
-     *        and Asymmetric KMS keys</a> in the <i>Key Management Service Developer Guide</i>.
+     *        are integrated with KMS</a> use symmetric encryption KMS keys to protect your data. These services do not
+     *        support asymmetric KMS keys or HMAC KMS keys.
      *        </p>
      *        </important>
      *        <p>
@@ -1680,12 +2097,39 @@ public class CreateKeyRequest extends com.ibm.cloud.objectstorage.AmazonWebServi
      *        <ul>
      *        <li>
      *        <p>
-     *        Symmetric key (default)
+     *        Symmetric encryption key (default)
      *        </p>
      *        <ul>
      *        <li>
      *        <p>
-     *        <code>SYMMETRIC_DEFAULT</code> (AES-256-GCM)
+     *        <code>SYMMETRIC_DEFAULT</code>
+     *        </p>
+     *        </li>
+     *        </ul>
+     *        </li>
+     *        <li>
+     *        <p>
+     *        HMAC keys (symmetric)
+     *        </p>
+     *        <ul>
+     *        <li>
+     *        <p>
+     *        <code>HMAC_224</code>
+     *        </p>
+     *        </li>
+     *        <li>
+     *        <p>
+     *        <code>HMAC_256</code>
+     *        </p>
+     *        </li>
+     *        <li>
+     *        <p>
+     *        <code>HMAC_384</code>
+     *        </p>
+     *        </li>
+     *        <li>
+     *        <p>
+     *        <code>HMAC_512</code>
      *        </p>
      *        </li>
      *        </ul>
@@ -1742,6 +2186,18 @@ public class CreateKeyRequest extends com.ibm.cloud.objectstorage.AmazonWebServi
      *        <li>
      *        <p>
      *        <code>ECC_SECG_P256K1</code> (secp256k1), commonly used for cryptocurrencies.
+     *        </p>
+     *        </li>
+     *        </ul>
+     *        </li>
+     *        <li>
+     *        <p>
+     *        SM2 key pairs (China Regions only)
+     *        </p>
+     *        <ul>
+     *        <li>
+     *        <p>
+     *        <code>SM2</code>
      *        </p>
      *        </li>
      *        </ul>
@@ -1758,27 +2214,28 @@ public class CreateKeyRequest extends com.ibm.cloud.objectstorage.AmazonWebServi
     /**
      * <p>
      * Specifies the type of KMS key to create. The default value, <code>SYMMETRIC_DEFAULT</code>, creates a KMS key
-     * with a 256-bit symmetric key for encryption and decryption. For help choosing a key spec for your KMS key, see <a
-     * href="https://docs.aws.amazon.com/kms/latest/developerguide/symm-asymm-choose.html">How to Choose Your KMS key
-     * Configuration</a> in the <i> <i>Key Management Service Developer Guide</i> </i>.
+     * with a 256-bit AES-GCM key that is used for encryption and decryption, except in China Regions, where it creates
+     * a 128-bit symmetric key that uses SM4 encryption. For help choosing a key spec for your KMS key, see <a
+     * href="https://docs.aws.amazon.com/kms/latest/developerguide/key-types.html#symm-asymm-choose">Choosing a KMS key
+     * type</a> in the <i> <i>Key Management Service Developer Guide</i> </i>.
      * </p>
      * <p>
      * The <code>KeySpec</code> determines whether the KMS key contains a symmetric key or an asymmetric key pair. It
-     * also determines the encryption algorithms or signing algorithms that the KMS key supports. You can't change the
-     * <code>KeySpec</code> after the KMS key is created. To further restrict the algorithms that can be used with the
-     * KMS key, use a condition key in its key policy or IAM policy. For more information, see <a href=
+     * also determines the algorithms that the KMS key supports. You can't change the <code>KeySpec</code> after the KMS
+     * key is created. To further restrict the algorithms that can be used with the KMS key, use a condition key in its
+     * key policy or IAM policy. For more information, see <a href=
      * "https://docs.aws.amazon.com/kms/latest/developerguide/policy-conditions.html#conditions-kms-encryption-algorithm"
-     * >kms:EncryptionAlgorithm</a> or <a href=
+     * >kms:EncryptionAlgorithm</a>, <a href=
+     * "https://docs.aws.amazon.com/kms/latest/developerguide/policy-conditions.html#conditions-kms-mac-algorithm"
+     * >kms:MacAlgorithm</a> or <a href=
      * "https://docs.aws.amazon.com/kms/latest/developerguide/policy-conditions.html#conditions-kms-signing-algorithm"
      * >kms:Signing Algorithm</a> in the <i> <i>Key Management Service Developer Guide</i> </i>.
      * </p>
      * <important>
      * <p>
      * <a href="http://aws.amazon.com/kms/features/#AWS_Service_Integration">Amazon Web Services services that are
-     * integrated with KMS</a> use symmetric KMS keys to protect your data. These services do not support asymmetric KMS
-     * keys. For help determining whether a KMS key is symmetric or asymmetric, see <a
-     * href="https://docs.aws.amazon.com/kms/latest/developerguide/find-symm-asymm.html">Identifying Symmetric and
-     * Asymmetric KMS keys</a> in the <i>Key Management Service Developer Guide</i>.
+     * integrated with KMS</a> use symmetric encryption KMS keys to protect your data. These services do not support
+     * asymmetric KMS keys or HMAC KMS keys.
      * </p>
      * </important>
      * <p>
@@ -1787,12 +2244,39 @@ public class CreateKeyRequest extends com.ibm.cloud.objectstorage.AmazonWebServi
      * <ul>
      * <li>
      * <p>
-     * Symmetric key (default)
+     * Symmetric encryption key (default)
      * </p>
      * <ul>
      * <li>
      * <p>
-     * <code>SYMMETRIC_DEFAULT</code> (AES-256-GCM)
+     * <code>SYMMETRIC_DEFAULT</code>
+     * </p>
+     * </li>
+     * </ul>
+     * </li>
+     * <li>
+     * <p>
+     * HMAC keys (symmetric)
+     * </p>
+     * <ul>
+     * <li>
+     * <p>
+     * <code>HMAC_224</code>
+     * </p>
+     * </li>
+     * <li>
+     * <p>
+     * <code>HMAC_256</code>
+     * </p>
+     * </li>
+     * <li>
+     * <p>
+     * <code>HMAC_384</code>
+     * </p>
+     * </li>
+     * <li>
+     * <p>
+     * <code>HMAC_512</code>
      * </p>
      * </li>
      * </ul>
@@ -1853,31 +2337,44 @@ public class CreateKeyRequest extends com.ibm.cloud.objectstorage.AmazonWebServi
      * </li>
      * </ul>
      * </li>
+     * <li>
+     * <p>
+     * SM2 key pairs (China Regions only)
+     * </p>
+     * <ul>
+     * <li>
+     * <p>
+     * <code>SM2</code>
+     * </p>
+     * </li>
      * </ul>
-     *
+     * </li>
+     * </ul>
+     * 
      * @param keySpec
      *        Specifies the type of KMS key to create. The default value, <code>SYMMETRIC_DEFAULT</code>, creates a KMS
-     *        key with a 256-bit symmetric key for encryption and decryption. For help choosing a key spec for your KMS
-     *        key, see <a href="https://docs.aws.amazon.com/kms/latest/developerguide/symm-asymm-choose.html">How to
-     *        Choose Your KMS key Configuration</a> in the <i> <i>Key Management Service Developer Guide</i> </i>.</p>
+     *        key with a 256-bit AES-GCM key that is used for encryption and decryption, except in China Regions, where
+     *        it creates a 128-bit symmetric key that uses SM4 encryption. For help choosing a key spec for your KMS
+     *        key, see <a
+     *        href="https://docs.aws.amazon.com/kms/latest/developerguide/key-types.html#symm-asymm-choose">Choosing a
+     *        KMS key type</a> in the <i> <i>Key Management Service Developer Guide</i> </i>.</p>
      *        <p>
      *        The <code>KeySpec</code> determines whether the KMS key contains a symmetric key or an asymmetric key
-     *        pair. It also determines the encryption algorithms or signing algorithms that the KMS key supports. You
-     *        can't change the <code>KeySpec</code> after the KMS key is created. To further restrict the algorithms
-     *        that can be used with the KMS key, use a condition key in its key policy or IAM policy. For more
-     *        information, see <a href=
+     *        pair. It also determines the algorithms that the KMS key supports. You can't change the
+     *        <code>KeySpec</code> after the KMS key is created. To further restrict the algorithms that can be used
+     *        with the KMS key, use a condition key in its key policy or IAM policy. For more information, see <a href=
      *        "https://docs.aws.amazon.com/kms/latest/developerguide/policy-conditions.html#conditions-kms-encryption-algorithm"
-     *        >kms:EncryptionAlgorithm</a> or <a href=
+     *        >kms:EncryptionAlgorithm</a>, <a href=
+     *        "https://docs.aws.amazon.com/kms/latest/developerguide/policy-conditions.html#conditions-kms-mac-algorithm"
+     *        >kms:MacAlgorithm</a> or <a href=
      *        "https://docs.aws.amazon.com/kms/latest/developerguide/policy-conditions.html#conditions-kms-signing-algorithm"
      *        >kms:Signing Algorithm</a> in the <i> <i>Key Management Service Developer Guide</i> </i>.
      *        </p>
      *        <important>
      *        <p>
      *        <a href="http://aws.amazon.com/kms/features/#AWS_Service_Integration">Amazon Web Services services that
-     *        are integrated with KMS</a> use symmetric KMS keys to protect your data. These services do not support
-     *        asymmetric KMS keys. For help determining whether a KMS key is symmetric or asymmetric, see <a
-     *        href="https://docs.aws.amazon.com/kms/latest/developerguide/find-symm-asymm.html">Identifying Symmetric
-     *        and Asymmetric KMS keys</a> in the <i>Key Management Service Developer Guide</i>.
+     *        are integrated with KMS</a> use symmetric encryption KMS keys to protect your data. These services do not
+     *        support asymmetric KMS keys or HMAC KMS keys.
      *        </p>
      *        </important>
      *        <p>
@@ -1886,12 +2383,39 @@ public class CreateKeyRequest extends com.ibm.cloud.objectstorage.AmazonWebServi
      *        <ul>
      *        <li>
      *        <p>
-     *        Symmetric key (default)
+     *        Symmetric encryption key (default)
      *        </p>
      *        <ul>
      *        <li>
      *        <p>
-     *        <code>SYMMETRIC_DEFAULT</code> (AES-256-GCM)
+     *        <code>SYMMETRIC_DEFAULT</code>
+     *        </p>
+     *        </li>
+     *        </ul>
+     *        </li>
+     *        <li>
+     *        <p>
+     *        HMAC keys (symmetric)
+     *        </p>
+     *        <ul>
+     *        <li>
+     *        <p>
+     *        <code>HMAC_224</code>
+     *        </p>
+     *        </li>
+     *        <li>
+     *        <p>
+     *        <code>HMAC_256</code>
+     *        </p>
+     *        </li>
+     *        <li>
+     *        <p>
+     *        <code>HMAC_384</code>
+     *        </p>
+     *        </li>
+     *        <li>
+     *        <p>
+     *        <code>HMAC_512</code>
      *        </p>
      *        </li>
      *        </ul>
@@ -1948,6 +2472,18 @@ public class CreateKeyRequest extends com.ibm.cloud.objectstorage.AmazonWebServi
      *        <li>
      *        <p>
      *        <code>ECC_SECG_P256K1</code> (secp256k1), commonly used for cryptocurrencies.
+     *        </p>
+     *        </li>
+     *        </ul>
+     *        </li>
+     *        <li>
+     *        <p>
+     *        SM2 key pairs (China Regions only)
+     *        </p>
+     *        <ul>
+     *        <li>
+     *        <p>
+     *        <code>SM2</code>
      *        </p>
      *        </li>
      *        </ul>
@@ -1962,27 +2498,28 @@ public class CreateKeyRequest extends com.ibm.cloud.objectstorage.AmazonWebServi
     /**
      * <p>
      * Specifies the type of KMS key to create. The default value, <code>SYMMETRIC_DEFAULT</code>, creates a KMS key
-     * with a 256-bit symmetric key for encryption and decryption. For help choosing a key spec for your KMS key, see <a
-     * href="https://docs.aws.amazon.com/kms/latest/developerguide/symm-asymm-choose.html">How to Choose Your KMS key
-     * Configuration</a> in the <i> <i>Key Management Service Developer Guide</i> </i>.
+     * with a 256-bit AES-GCM key that is used for encryption and decryption, except in China Regions, where it creates
+     * a 128-bit symmetric key that uses SM4 encryption. For help choosing a key spec for your KMS key, see <a
+     * href="https://docs.aws.amazon.com/kms/latest/developerguide/key-types.html#symm-asymm-choose">Choosing a KMS key
+     * type</a> in the <i> <i>Key Management Service Developer Guide</i> </i>.
      * </p>
      * <p>
      * The <code>KeySpec</code> determines whether the KMS key contains a symmetric key or an asymmetric key pair. It
-     * also determines the encryption algorithms or signing algorithms that the KMS key supports. You can't change the
-     * <code>KeySpec</code> after the KMS key is created. To further restrict the algorithms that can be used with the
-     * KMS key, use a condition key in its key policy or IAM policy. For more information, see <a href=
+     * also determines the algorithms that the KMS key supports. You can't change the <code>KeySpec</code> after the KMS
+     * key is created. To further restrict the algorithms that can be used with the KMS key, use a condition key in its
+     * key policy or IAM policy. For more information, see <a href=
      * "https://docs.aws.amazon.com/kms/latest/developerguide/policy-conditions.html#conditions-kms-encryption-algorithm"
-     * >kms:EncryptionAlgorithm</a> or <a href=
+     * >kms:EncryptionAlgorithm</a>, <a href=
+     * "https://docs.aws.amazon.com/kms/latest/developerguide/policy-conditions.html#conditions-kms-mac-algorithm"
+     * >kms:MacAlgorithm</a> or <a href=
      * "https://docs.aws.amazon.com/kms/latest/developerguide/policy-conditions.html#conditions-kms-signing-algorithm"
      * >kms:Signing Algorithm</a> in the <i> <i>Key Management Service Developer Guide</i> </i>.
      * </p>
      * <important>
      * <p>
      * <a href="http://aws.amazon.com/kms/features/#AWS_Service_Integration">Amazon Web Services services that are
-     * integrated with KMS</a> use symmetric KMS keys to protect your data. These services do not support asymmetric KMS
-     * keys. For help determining whether a KMS key is symmetric or asymmetric, see <a
-     * href="https://docs.aws.amazon.com/kms/latest/developerguide/find-symm-asymm.html">Identifying Symmetric and
-     * Asymmetric KMS keys</a> in the <i>Key Management Service Developer Guide</i>.
+     * integrated with KMS</a> use symmetric encryption KMS keys to protect your data. These services do not support
+     * asymmetric KMS keys or HMAC KMS keys.
      * </p>
      * </important>
      * <p>
@@ -1991,12 +2528,39 @@ public class CreateKeyRequest extends com.ibm.cloud.objectstorage.AmazonWebServi
      * <ul>
      * <li>
      * <p>
-     * Symmetric key (default)
+     * Symmetric encryption key (default)
      * </p>
      * <ul>
      * <li>
      * <p>
-     * <code>SYMMETRIC_DEFAULT</code> (AES-256-GCM)
+     * <code>SYMMETRIC_DEFAULT</code>
+     * </p>
+     * </li>
+     * </ul>
+     * </li>
+     * <li>
+     * <p>
+     * HMAC keys (symmetric)
+     * </p>
+     * <ul>
+     * <li>
+     * <p>
+     * <code>HMAC_224</code>
+     * </p>
+     * </li>
+     * <li>
+     * <p>
+     * <code>HMAC_256</code>
+     * </p>
+     * </li>
+     * <li>
+     * <p>
+     * <code>HMAC_384</code>
+     * </p>
+     * </li>
+     * <li>
+     * <p>
+     * <code>HMAC_512</code>
      * </p>
      * </li>
      * </ul>
@@ -2057,31 +2621,44 @@ public class CreateKeyRequest extends com.ibm.cloud.objectstorage.AmazonWebServi
      * </li>
      * </ul>
      * </li>
+     * <li>
+     * <p>
+     * SM2 key pairs (China Regions only)
+     * </p>
+     * <ul>
+     * <li>
+     * <p>
+     * <code>SM2</code>
+     * </p>
+     * </li>
      * </ul>
-     *
+     * </li>
+     * </ul>
+     * 
      * @param keySpec
      *        Specifies the type of KMS key to create. The default value, <code>SYMMETRIC_DEFAULT</code>, creates a KMS
-     *        key with a 256-bit symmetric key for encryption and decryption. For help choosing a key spec for your KMS
-     *        key, see <a href="https://docs.aws.amazon.com/kms/latest/developerguide/symm-asymm-choose.html">How to
-     *        Choose Your KMS key Configuration</a> in the <i> <i>Key Management Service Developer Guide</i> </i>.</p>
+     *        key with a 256-bit AES-GCM key that is used for encryption and decryption, except in China Regions, where
+     *        it creates a 128-bit symmetric key that uses SM4 encryption. For help choosing a key spec for your KMS
+     *        key, see <a
+     *        href="https://docs.aws.amazon.com/kms/latest/developerguide/key-types.html#symm-asymm-choose">Choosing a
+     *        KMS key type</a> in the <i> <i>Key Management Service Developer Guide</i> </i>.</p>
      *        <p>
      *        The <code>KeySpec</code> determines whether the KMS key contains a symmetric key or an asymmetric key
-     *        pair. It also determines the encryption algorithms or signing algorithms that the KMS key supports. You
-     *        can't change the <code>KeySpec</code> after the KMS key is created. To further restrict the algorithms
-     *        that can be used with the KMS key, use a condition key in its key policy or IAM policy. For more
-     *        information, see <a href=
+     *        pair. It also determines the algorithms that the KMS key supports. You can't change the
+     *        <code>KeySpec</code> after the KMS key is created. To further restrict the algorithms that can be used
+     *        with the KMS key, use a condition key in its key policy or IAM policy. For more information, see <a href=
      *        "https://docs.aws.amazon.com/kms/latest/developerguide/policy-conditions.html#conditions-kms-encryption-algorithm"
-     *        >kms:EncryptionAlgorithm</a> or <a href=
+     *        >kms:EncryptionAlgorithm</a>, <a href=
+     *        "https://docs.aws.amazon.com/kms/latest/developerguide/policy-conditions.html#conditions-kms-mac-algorithm"
+     *        >kms:MacAlgorithm</a> or <a href=
      *        "https://docs.aws.amazon.com/kms/latest/developerguide/policy-conditions.html#conditions-kms-signing-algorithm"
      *        >kms:Signing Algorithm</a> in the <i> <i>Key Management Service Developer Guide</i> </i>.
      *        </p>
      *        <important>
      *        <p>
      *        <a href="http://aws.amazon.com/kms/features/#AWS_Service_Integration">Amazon Web Services services that
-     *        are integrated with KMS</a> use symmetric KMS keys to protect your data. These services do not support
-     *        asymmetric KMS keys. For help determining whether a KMS key is symmetric or asymmetric, see <a
-     *        href="https://docs.aws.amazon.com/kms/latest/developerguide/find-symm-asymm.html">Identifying Symmetric
-     *        and Asymmetric KMS keys</a> in the <i>Key Management Service Developer Guide</i>.
+     *        are integrated with KMS</a> use symmetric encryption KMS keys to protect your data. These services do not
+     *        support asymmetric KMS keys or HMAC KMS keys.
      *        </p>
      *        </important>
      *        <p>
@@ -2090,12 +2667,39 @@ public class CreateKeyRequest extends com.ibm.cloud.objectstorage.AmazonWebServi
      *        <ul>
      *        <li>
      *        <p>
-     *        Symmetric key (default)
+     *        Symmetric encryption key (default)
      *        </p>
      *        <ul>
      *        <li>
      *        <p>
-     *        <code>SYMMETRIC_DEFAULT</code> (AES-256-GCM)
+     *        <code>SYMMETRIC_DEFAULT</code>
+     *        </p>
+     *        </li>
+     *        </ul>
+     *        </li>
+     *        <li>
+     *        <p>
+     *        HMAC keys (symmetric)
+     *        </p>
+     *        <ul>
+     *        <li>
+     *        <p>
+     *        <code>HMAC_224</code>
+     *        </p>
+     *        </li>
+     *        <li>
+     *        <p>
+     *        <code>HMAC_256</code>
+     *        </p>
+     *        </li>
+     *        <li>
+     *        <p>
+     *        <code>HMAC_384</code>
+     *        </p>
+     *        </li>
+     *        <li>
+     *        <p>
+     *        <code>HMAC_512</code>
      *        </p>
      *        </li>
      *        </ul>
@@ -2152,6 +2756,18 @@ public class CreateKeyRequest extends com.ibm.cloud.objectstorage.AmazonWebServi
      *        <li>
      *        <p>
      *        <code>ECC_SECG_P256K1</code> (secp256k1), commonly used for cryptocurrencies.
+     *        </p>
+     *        </li>
+     *        </ul>
+     *        </li>
+     *        <li>
+     *        <p>
+     *        SM2 key pairs (China Regions only)
+     *        </p>
+     *        <ul>
+     *        <li>
+     *        <p>
+     *        <code>SM2</code>
      *        </p>
      *        </li>
      *        </ul>
@@ -2171,35 +2787,50 @@ public class CreateKeyRequest extends com.ibm.cloud.objectstorage.AmazonWebServi
      * default is <code>AWS_KMS</code>, which means that KMS creates the key material.
      * </p>
      * <p>
-     * To create a KMS key with no key material (for imported key material), set the value to <code>EXTERNAL</code>. For
-     * more information about importing key material into KMS, see <a
+     * To <a href="https://docs.aws.amazon.com/kms/latest/developerguide/importing-keys-create-cmk.html">create a KMS
+     * key with no key material</a> (for imported key material), set this value to <code>EXTERNAL</code>. For more
+     * information about importing key material into KMS, see <a
      * href="https://docs.aws.amazon.com/kms/latest/developerguide/importing-keys.html">Importing Key Material</a> in
-     * the <i>Key Management Service Developer Guide</i>. This value is valid only for symmetric KMS keys.
+     * the <i>Key Management Service Developer Guide</i>. The <code>EXTERNAL</code> origin value is valid only for
+     * symmetric KMS keys.
      * </p>
      * <p>
-     * To create a KMS key in an KMS <a
-     * href="https://docs.aws.amazon.com/kms/latest/developerguide/custom-key-store-overview.html">custom key store</a>
-     * and create its key material in the associated CloudHSM cluster, set this value to <code>AWS_CLOUDHSM</code>. You
-     * must also use the <code>CustomKeyStoreId</code> parameter to identify the custom key store. This value is valid
-     * only for symmetric KMS keys.
+     * To <a href="https://docs.aws.amazon.com/kms/latest/developerguide/create-cmk-keystore.html">create a KMS key in
+     * an CloudHSM key store</a> and create its key material in the associated CloudHSM cluster, set this value to
+     * <code>AWS_CLOUDHSM</code>. You must also use the <code>CustomKeyStoreId</code> parameter to identify the CloudHSM
+     * key store. The <code>KeySpec</code> value must be <code>SYMMETRIC_DEFAULT</code>.
      * </p>
-     *
+     * <p>
+     * To <a href="https://docs.aws.amazon.com/kms/latest/developerguide/create-xks-keys.html">create a KMS key in an
+     * external key store</a>, set this value to <code>EXTERNAL_KEY_STORE</code>. You must also use the
+     * <code>CustomKeyStoreId</code> parameter to identify the external key store and the <code>XksKeyId</code>
+     * parameter to identify the associated external key. The <code>KeySpec</code> value must be
+     * <code>SYMMETRIC_DEFAULT</code>.
+     * </p>
+     * 
      * @param origin
      *        The source of the key material for the KMS key. You cannot change the origin after you create the KMS key.
      *        The default is <code>AWS_KMS</code>, which means that KMS creates the key material.</p>
      *        <p>
-     *        To create a KMS key with no key material (for imported key material), set the value to
-     *        <code>EXTERNAL</code>. For more information about importing key material into KMS, see <a
+     *        To <a href="https://docs.aws.amazon.com/kms/latest/developerguide/importing-keys-create-cmk.html">create a
+     *        KMS key with no key material</a> (for imported key material), set this value to <code>EXTERNAL</code>. For
+     *        more information about importing key material into KMS, see <a
      *        href="https://docs.aws.amazon.com/kms/latest/developerguide/importing-keys.html">Importing Key
-     *        Material</a> in the <i>Key Management Service Developer Guide</i>. This value is valid only for symmetric
-     *        KMS keys.
+     *        Material</a> in the <i>Key Management Service Developer Guide</i>. The <code>EXTERNAL</code> origin value
+     *        is valid only for symmetric KMS keys.
      *        </p>
      *        <p>
-     *        To create a KMS key in an KMS <a
-     *        href="https://docs.aws.amazon.com/kms/latest/developerguide/custom-key-store-overview.html">custom key
-     *        store</a> and create its key material in the associated CloudHSM cluster, set this value to
-     *        <code>AWS_CLOUDHSM</code>. You must also use the <code>CustomKeyStoreId</code> parameter to identify the
-     *        custom key store. This value is valid only for symmetric KMS keys.
+     *        To <a href="https://docs.aws.amazon.com/kms/latest/developerguide/create-cmk-keystore.html">create a KMS
+     *        key in an CloudHSM key store</a> and create its key material in the associated CloudHSM cluster, set this
+     *        value to <code>AWS_CLOUDHSM</code>. You must also use the <code>CustomKeyStoreId</code> parameter to
+     *        identify the CloudHSM key store. The <code>KeySpec</code> value must be <code>SYMMETRIC_DEFAULT</code>.
+     *        </p>
+     *        <p>
+     *        To <a href="https://docs.aws.amazon.com/kms/latest/developerguide/create-xks-keys.html">create a KMS key
+     *        in an external key store</a>, set this value to <code>EXTERNAL_KEY_STORE</code>. You must also use the
+     *        <code>CustomKeyStoreId</code> parameter to identify the external key store and the <code>XksKeyId</code>
+     *        parameter to identify the associated external key. The <code>KeySpec</code> value must be
+     *        <code>SYMMETRIC_DEFAULT</code>.
      * @see OriginType
      */
 
@@ -2213,34 +2844,49 @@ public class CreateKeyRequest extends com.ibm.cloud.objectstorage.AmazonWebServi
      * default is <code>AWS_KMS</code>, which means that KMS creates the key material.
      * </p>
      * <p>
-     * To create a KMS key with no key material (for imported key material), set the value to <code>EXTERNAL</code>. For
-     * more information about importing key material into KMS, see <a
+     * To <a href="https://docs.aws.amazon.com/kms/latest/developerguide/importing-keys-create-cmk.html">create a KMS
+     * key with no key material</a> (for imported key material), set this value to <code>EXTERNAL</code>. For more
+     * information about importing key material into KMS, see <a
      * href="https://docs.aws.amazon.com/kms/latest/developerguide/importing-keys.html">Importing Key Material</a> in
-     * the <i>Key Management Service Developer Guide</i>. This value is valid only for symmetric KMS keys.
+     * the <i>Key Management Service Developer Guide</i>. The <code>EXTERNAL</code> origin value is valid only for
+     * symmetric KMS keys.
      * </p>
      * <p>
-     * To create a KMS key in an KMS <a
-     * href="https://docs.aws.amazon.com/kms/latest/developerguide/custom-key-store-overview.html">custom key store</a>
-     * and create its key material in the associated CloudHSM cluster, set this value to <code>AWS_CLOUDHSM</code>. You
-     * must also use the <code>CustomKeyStoreId</code> parameter to identify the custom key store. This value is valid
-     * only for symmetric KMS keys.
+     * To <a href="https://docs.aws.amazon.com/kms/latest/developerguide/create-cmk-keystore.html">create a KMS key in
+     * an CloudHSM key store</a> and create its key material in the associated CloudHSM cluster, set this value to
+     * <code>AWS_CLOUDHSM</code>. You must also use the <code>CustomKeyStoreId</code> parameter to identify the CloudHSM
+     * key store. The <code>KeySpec</code> value must be <code>SYMMETRIC_DEFAULT</code>.
      * </p>
-     *
+     * <p>
+     * To <a href="https://docs.aws.amazon.com/kms/latest/developerguide/create-xks-keys.html">create a KMS key in an
+     * external key store</a>, set this value to <code>EXTERNAL_KEY_STORE</code>. You must also use the
+     * <code>CustomKeyStoreId</code> parameter to identify the external key store and the <code>XksKeyId</code>
+     * parameter to identify the associated external key. The <code>KeySpec</code> value must be
+     * <code>SYMMETRIC_DEFAULT</code>.
+     * </p>
+     * 
      * @return The source of the key material for the KMS key. You cannot change the origin after you create the KMS
      *         key. The default is <code>AWS_KMS</code>, which means that KMS creates the key material.</p>
      *         <p>
-     *         To create a KMS key with no key material (for imported key material), set the value to
-     *         <code>EXTERNAL</code>. For more information about importing key material into KMS, see <a
+     *         To <a href="https://docs.aws.amazon.com/kms/latest/developerguide/importing-keys-create-cmk.html">create
+     *         a KMS key with no key material</a> (for imported key material), set this value to <code>EXTERNAL</code>.
+     *         For more information about importing key material into KMS, see <a
      *         href="https://docs.aws.amazon.com/kms/latest/developerguide/importing-keys.html">Importing Key
-     *         Material</a> in the <i>Key Management Service Developer Guide</i>. This value is valid only for symmetric
-     *         KMS keys.
+     *         Material</a> in the <i>Key Management Service Developer Guide</i>. The <code>EXTERNAL</code> origin value
+     *         is valid only for symmetric KMS keys.
      *         </p>
      *         <p>
-     *         To create a KMS key in an KMS <a
-     *         href="https://docs.aws.amazon.com/kms/latest/developerguide/custom-key-store-overview.html">custom key
-     *         store</a> and create its key material in the associated CloudHSM cluster, set this value to
-     *         <code>AWS_CLOUDHSM</code>. You must also use the <code>CustomKeyStoreId</code> parameter to identify the
-     *         custom key store. This value is valid only for symmetric KMS keys.
+     *         To <a href="https://docs.aws.amazon.com/kms/latest/developerguide/create-cmk-keystore.html">create a KMS
+     *         key in an CloudHSM key store</a> and create its key material in the associated CloudHSM cluster, set this
+     *         value to <code>AWS_CLOUDHSM</code>. You must also use the <code>CustomKeyStoreId</code> parameter to
+     *         identify the CloudHSM key store. The <code>KeySpec</code> value must be <code>SYMMETRIC_DEFAULT</code>.
+     *         </p>
+     *         <p>
+     *         To <a href="https://docs.aws.amazon.com/kms/latest/developerguide/create-xks-keys.html">create a KMS key
+     *         in an external key store</a>, set this value to <code>EXTERNAL_KEY_STORE</code>. You must also use the
+     *         <code>CustomKeyStoreId</code> parameter to identify the external key store and the <code>XksKeyId</code>
+     *         parameter to identify the associated external key. The <code>KeySpec</code> value must be
+     *         <code>SYMMETRIC_DEFAULT</code>.
      * @see OriginType
      */
 
@@ -2254,35 +2900,50 @@ public class CreateKeyRequest extends com.ibm.cloud.objectstorage.AmazonWebServi
      * default is <code>AWS_KMS</code>, which means that KMS creates the key material.
      * </p>
      * <p>
-     * To create a KMS key with no key material (for imported key material), set the value to <code>EXTERNAL</code>. For
-     * more information about importing key material into KMS, see <a
+     * To <a href="https://docs.aws.amazon.com/kms/latest/developerguide/importing-keys-create-cmk.html">create a KMS
+     * key with no key material</a> (for imported key material), set this value to <code>EXTERNAL</code>. For more
+     * information about importing key material into KMS, see <a
      * href="https://docs.aws.amazon.com/kms/latest/developerguide/importing-keys.html">Importing Key Material</a> in
-     * the <i>Key Management Service Developer Guide</i>. This value is valid only for symmetric KMS keys.
+     * the <i>Key Management Service Developer Guide</i>. The <code>EXTERNAL</code> origin value is valid only for
+     * symmetric KMS keys.
      * </p>
      * <p>
-     * To create a KMS key in an KMS <a
-     * href="https://docs.aws.amazon.com/kms/latest/developerguide/custom-key-store-overview.html">custom key store</a>
-     * and create its key material in the associated CloudHSM cluster, set this value to <code>AWS_CLOUDHSM</code>. You
-     * must also use the <code>CustomKeyStoreId</code> parameter to identify the custom key store. This value is valid
-     * only for symmetric KMS keys.
+     * To <a href="https://docs.aws.amazon.com/kms/latest/developerguide/create-cmk-keystore.html">create a KMS key in
+     * an CloudHSM key store</a> and create its key material in the associated CloudHSM cluster, set this value to
+     * <code>AWS_CLOUDHSM</code>. You must also use the <code>CustomKeyStoreId</code> parameter to identify the CloudHSM
+     * key store. The <code>KeySpec</code> value must be <code>SYMMETRIC_DEFAULT</code>.
      * </p>
-     *
+     * <p>
+     * To <a href="https://docs.aws.amazon.com/kms/latest/developerguide/create-xks-keys.html">create a KMS key in an
+     * external key store</a>, set this value to <code>EXTERNAL_KEY_STORE</code>. You must also use the
+     * <code>CustomKeyStoreId</code> parameter to identify the external key store and the <code>XksKeyId</code>
+     * parameter to identify the associated external key. The <code>KeySpec</code> value must be
+     * <code>SYMMETRIC_DEFAULT</code>.
+     * </p>
+     * 
      * @param origin
      *        The source of the key material for the KMS key. You cannot change the origin after you create the KMS key.
      *        The default is <code>AWS_KMS</code>, which means that KMS creates the key material.</p>
      *        <p>
-     *        To create a KMS key with no key material (for imported key material), set the value to
-     *        <code>EXTERNAL</code>. For more information about importing key material into KMS, see <a
+     *        To <a href="https://docs.aws.amazon.com/kms/latest/developerguide/importing-keys-create-cmk.html">create a
+     *        KMS key with no key material</a> (for imported key material), set this value to <code>EXTERNAL</code>. For
+     *        more information about importing key material into KMS, see <a
      *        href="https://docs.aws.amazon.com/kms/latest/developerguide/importing-keys.html">Importing Key
-     *        Material</a> in the <i>Key Management Service Developer Guide</i>. This value is valid only for symmetric
-     *        KMS keys.
+     *        Material</a> in the <i>Key Management Service Developer Guide</i>. The <code>EXTERNAL</code> origin value
+     *        is valid only for symmetric KMS keys.
      *        </p>
      *        <p>
-     *        To create a KMS key in an KMS <a
-     *        href="https://docs.aws.amazon.com/kms/latest/developerguide/custom-key-store-overview.html">custom key
-     *        store</a> and create its key material in the associated CloudHSM cluster, set this value to
-     *        <code>AWS_CLOUDHSM</code>. You must also use the <code>CustomKeyStoreId</code> parameter to identify the
-     *        custom key store. This value is valid only for symmetric KMS keys.
+     *        To <a href="https://docs.aws.amazon.com/kms/latest/developerguide/create-cmk-keystore.html">create a KMS
+     *        key in an CloudHSM key store</a> and create its key material in the associated CloudHSM cluster, set this
+     *        value to <code>AWS_CLOUDHSM</code>. You must also use the <code>CustomKeyStoreId</code> parameter to
+     *        identify the CloudHSM key store. The <code>KeySpec</code> value must be <code>SYMMETRIC_DEFAULT</code>.
+     *        </p>
+     *        <p>
+     *        To <a href="https://docs.aws.amazon.com/kms/latest/developerguide/create-xks-keys.html">create a KMS key
+     *        in an external key store</a>, set this value to <code>EXTERNAL_KEY_STORE</code>. You must also use the
+     *        <code>CustomKeyStoreId</code> parameter to identify the external key store and the <code>XksKeyId</code>
+     *        parameter to identify the associated external key. The <code>KeySpec</code> value must be
+     *        <code>SYMMETRIC_DEFAULT</code>.
      * @return Returns a reference to this object so that method calls can be chained together.
      * @see OriginType
      */
@@ -2298,35 +2959,50 @@ public class CreateKeyRequest extends com.ibm.cloud.objectstorage.AmazonWebServi
      * default is <code>AWS_KMS</code>, which means that KMS creates the key material.
      * </p>
      * <p>
-     * To create a KMS key with no key material (for imported key material), set the value to <code>EXTERNAL</code>. For
-     * more information about importing key material into KMS, see <a
+     * To <a href="https://docs.aws.amazon.com/kms/latest/developerguide/importing-keys-create-cmk.html">create a KMS
+     * key with no key material</a> (for imported key material), set this value to <code>EXTERNAL</code>. For more
+     * information about importing key material into KMS, see <a
      * href="https://docs.aws.amazon.com/kms/latest/developerguide/importing-keys.html">Importing Key Material</a> in
-     * the <i>Key Management Service Developer Guide</i>. This value is valid only for symmetric KMS keys.
+     * the <i>Key Management Service Developer Guide</i>. The <code>EXTERNAL</code> origin value is valid only for
+     * symmetric KMS keys.
      * </p>
      * <p>
-     * To create a KMS key in an KMS <a
-     * href="https://docs.aws.amazon.com/kms/latest/developerguide/custom-key-store-overview.html">custom key store</a>
-     * and create its key material in the associated CloudHSM cluster, set this value to <code>AWS_CLOUDHSM</code>. You
-     * must also use the <code>CustomKeyStoreId</code> parameter to identify the custom key store. This value is valid
-     * only for symmetric KMS keys.
+     * To <a href="https://docs.aws.amazon.com/kms/latest/developerguide/create-cmk-keystore.html">create a KMS key in
+     * an CloudHSM key store</a> and create its key material in the associated CloudHSM cluster, set this value to
+     * <code>AWS_CLOUDHSM</code>. You must also use the <code>CustomKeyStoreId</code> parameter to identify the CloudHSM
+     * key store. The <code>KeySpec</code> value must be <code>SYMMETRIC_DEFAULT</code>.
      * </p>
-     *
+     * <p>
+     * To <a href="https://docs.aws.amazon.com/kms/latest/developerguide/create-xks-keys.html">create a KMS key in an
+     * external key store</a>, set this value to <code>EXTERNAL_KEY_STORE</code>. You must also use the
+     * <code>CustomKeyStoreId</code> parameter to identify the external key store and the <code>XksKeyId</code>
+     * parameter to identify the associated external key. The <code>KeySpec</code> value must be
+     * <code>SYMMETRIC_DEFAULT</code>.
+     * </p>
+     * 
      * @param origin
      *        The source of the key material for the KMS key. You cannot change the origin after you create the KMS key.
      *        The default is <code>AWS_KMS</code>, which means that KMS creates the key material.</p>
      *        <p>
-     *        To create a KMS key with no key material (for imported key material), set the value to
-     *        <code>EXTERNAL</code>. For more information about importing key material into KMS, see <a
+     *        To <a href="https://docs.aws.amazon.com/kms/latest/developerguide/importing-keys-create-cmk.html">create a
+     *        KMS key with no key material</a> (for imported key material), set this value to <code>EXTERNAL</code>. For
+     *        more information about importing key material into KMS, see <a
      *        href="https://docs.aws.amazon.com/kms/latest/developerguide/importing-keys.html">Importing Key
-     *        Material</a> in the <i>Key Management Service Developer Guide</i>. This value is valid only for symmetric
-     *        KMS keys.
+     *        Material</a> in the <i>Key Management Service Developer Guide</i>. The <code>EXTERNAL</code> origin value
+     *        is valid only for symmetric KMS keys.
      *        </p>
      *        <p>
-     *        To create a KMS key in an KMS <a
-     *        href="https://docs.aws.amazon.com/kms/latest/developerguide/custom-key-store-overview.html">custom key
-     *        store</a> and create its key material in the associated CloudHSM cluster, set this value to
-     *        <code>AWS_CLOUDHSM</code>. You must also use the <code>CustomKeyStoreId</code> parameter to identify the
-     *        custom key store. This value is valid only for symmetric KMS keys.
+     *        To <a href="https://docs.aws.amazon.com/kms/latest/developerguide/create-cmk-keystore.html">create a KMS
+     *        key in an CloudHSM key store</a> and create its key material in the associated CloudHSM cluster, set this
+     *        value to <code>AWS_CLOUDHSM</code>. You must also use the <code>CustomKeyStoreId</code> parameter to
+     *        identify the CloudHSM key store. The <code>KeySpec</code> value must be <code>SYMMETRIC_DEFAULT</code>.
+     *        </p>
+     *        <p>
+     *        To <a href="https://docs.aws.amazon.com/kms/latest/developerguide/create-xks-keys.html">create a KMS key
+     *        in an external key store</a>, set this value to <code>EXTERNAL_KEY_STORE</code>. You must also use the
+     *        <code>CustomKeyStoreId</code> parameter to identify the external key store and the <code>XksKeyId</code>
+     *        parameter to identify the associated external key. The <code>KeySpec</code> value must be
+     *        <code>SYMMETRIC_DEFAULT</code>.
      * @see OriginType
      */
 
@@ -2340,35 +3016,50 @@ public class CreateKeyRequest extends com.ibm.cloud.objectstorage.AmazonWebServi
      * default is <code>AWS_KMS</code>, which means that KMS creates the key material.
      * </p>
      * <p>
-     * To create a KMS key with no key material (for imported key material), set the value to <code>EXTERNAL</code>. For
-     * more information about importing key material into KMS, see <a
+     * To <a href="https://docs.aws.amazon.com/kms/latest/developerguide/importing-keys-create-cmk.html">create a KMS
+     * key with no key material</a> (for imported key material), set this value to <code>EXTERNAL</code>. For more
+     * information about importing key material into KMS, see <a
      * href="https://docs.aws.amazon.com/kms/latest/developerguide/importing-keys.html">Importing Key Material</a> in
-     * the <i>Key Management Service Developer Guide</i>. This value is valid only for symmetric KMS keys.
+     * the <i>Key Management Service Developer Guide</i>. The <code>EXTERNAL</code> origin value is valid only for
+     * symmetric KMS keys.
      * </p>
      * <p>
-     * To create a KMS key in an KMS <a
-     * href="https://docs.aws.amazon.com/kms/latest/developerguide/custom-key-store-overview.html">custom key store</a>
-     * and create its key material in the associated CloudHSM cluster, set this value to <code>AWS_CLOUDHSM</code>. You
-     * must also use the <code>CustomKeyStoreId</code> parameter to identify the custom key store. This value is valid
-     * only for symmetric KMS keys.
+     * To <a href="https://docs.aws.amazon.com/kms/latest/developerguide/create-cmk-keystore.html">create a KMS key in
+     * an CloudHSM key store</a> and create its key material in the associated CloudHSM cluster, set this value to
+     * <code>AWS_CLOUDHSM</code>. You must also use the <code>CustomKeyStoreId</code> parameter to identify the CloudHSM
+     * key store. The <code>KeySpec</code> value must be <code>SYMMETRIC_DEFAULT</code>.
      * </p>
-     *
+     * <p>
+     * To <a href="https://docs.aws.amazon.com/kms/latest/developerguide/create-xks-keys.html">create a KMS key in an
+     * external key store</a>, set this value to <code>EXTERNAL_KEY_STORE</code>. You must also use the
+     * <code>CustomKeyStoreId</code> parameter to identify the external key store and the <code>XksKeyId</code>
+     * parameter to identify the associated external key. The <code>KeySpec</code> value must be
+     * <code>SYMMETRIC_DEFAULT</code>.
+     * </p>
+     * 
      * @param origin
      *        The source of the key material for the KMS key. You cannot change the origin after you create the KMS key.
      *        The default is <code>AWS_KMS</code>, which means that KMS creates the key material.</p>
      *        <p>
-     *        To create a KMS key with no key material (for imported key material), set the value to
-     *        <code>EXTERNAL</code>. For more information about importing key material into KMS, see <a
+     *        To <a href="https://docs.aws.amazon.com/kms/latest/developerguide/importing-keys-create-cmk.html">create a
+     *        KMS key with no key material</a> (for imported key material), set this value to <code>EXTERNAL</code>. For
+     *        more information about importing key material into KMS, see <a
      *        href="https://docs.aws.amazon.com/kms/latest/developerguide/importing-keys.html">Importing Key
-     *        Material</a> in the <i>Key Management Service Developer Guide</i>. This value is valid only for symmetric
-     *        KMS keys.
+     *        Material</a> in the <i>Key Management Service Developer Guide</i>. The <code>EXTERNAL</code> origin value
+     *        is valid only for symmetric KMS keys.
      *        </p>
      *        <p>
-     *        To create a KMS key in an KMS <a
-     *        href="https://docs.aws.amazon.com/kms/latest/developerguide/custom-key-store-overview.html">custom key
-     *        store</a> and create its key material in the associated CloudHSM cluster, set this value to
-     *        <code>AWS_CLOUDHSM</code>. You must also use the <code>CustomKeyStoreId</code> parameter to identify the
-     *        custom key store. This value is valid only for symmetric KMS keys.
+     *        To <a href="https://docs.aws.amazon.com/kms/latest/developerguide/create-cmk-keystore.html">create a KMS
+     *        key in an CloudHSM key store</a> and create its key material in the associated CloudHSM cluster, set this
+     *        value to <code>AWS_CLOUDHSM</code>. You must also use the <code>CustomKeyStoreId</code> parameter to
+     *        identify the CloudHSM key store. The <code>KeySpec</code> value must be <code>SYMMETRIC_DEFAULT</code>.
+     *        </p>
+     *        <p>
+     *        To <a href="https://docs.aws.amazon.com/kms/latest/developerguide/create-xks-keys.html">create a KMS key
+     *        in an external key store</a>, set this value to <code>EXTERNAL_KEY_STORE</code>. You must also use the
+     *        <code>CustomKeyStoreId</code> parameter to identify the external key store and the <code>XksKeyId</code>
+     *        parameter to identify the associated external key. The <code>KeySpec</code> value must be
+     *        <code>SYMMETRIC_DEFAULT</code>.
      * @return Returns a reference to this object so that method calls can be chained together.
      * @see OriginType
      */
@@ -2381,51 +3072,35 @@ public class CreateKeyRequest extends com.ibm.cloud.objectstorage.AmazonWebServi
     /**
      * <p>
      * Creates the KMS key in the specified <a
-     * href="https://docs.aws.amazon.com/kms/latest/developerguide/custom-key-store-overview.html">custom key store</a>
-     * and the key material in its associated CloudHSM cluster. To create a KMS key in a custom key store, you must also
-     * specify the <code>Origin</code> parameter with a value of <code>AWS_CLOUDHSM</code>. The CloudHSM cluster that is
-     * associated with the custom key store must have at least two active HSMs, each in a different Availability Zone in
-     * the Region.
+     * href="https://docs.aws.amazon.com/kms/latest/developerguide/custom-key-store-overview.html">custom key store</a>.
+     * The <code>ConnectionState</code> of the custom key store must be <code>CONNECTED</code>. To find the
+     * CustomKeyStoreID and ConnectionState use the <a>DescribeCustomKeyStores</a> operation.
      * </p>
      * <p>
-     * This parameter is valid only for symmetric KMS keys and regional KMS keys. You cannot create an asymmetric KMS
-     * key or a multi-Region key in a custom key store.
+     * This parameter is valid only for symmetric encryption KMS keys in a single Region. You cannot create any other
+     * type of KMS key in a custom key store.
      * </p>
      * <p>
-     * To find the ID of a custom key store, use the <a>DescribeCustomKeyStores</a> operation.
+     * When you create a KMS key in an CloudHSM key store, KMS generates a non-exportable 256-bit symmetric key in its
+     * associated CloudHSM cluster and associates it with the KMS key. When you create a KMS key in an external key
+     * store, you must use the <code>XksKeyId</code> parameter to specify an external key that serves as key material
+     * for the KMS key.
      * </p>
-     * <p>
-     * The response includes the custom key store ID and the ID of the CloudHSM cluster.
-     * </p>
-     * <p>
-     * This operation is part of the <a
-     * href="https://docs.aws.amazon.com/kms/latest/developerguide/custom-key-store-overview.html">Custom Key Store
-     * feature</a> feature in KMS, which combines the convenience and extensive integration of KMS with the isolation
-     * and control of a single-tenant key store.
-     * </p>
-     *
+     * 
      * @param customKeyStoreId
      *        Creates the KMS key in the specified <a
      *        href="https://docs.aws.amazon.com/kms/latest/developerguide/custom-key-store-overview.html">custom key
-     *        store</a> and the key material in its associated CloudHSM cluster. To create a KMS key in a custom key
-     *        store, you must also specify the <code>Origin</code> parameter with a value of <code>AWS_CLOUDHSM</code>.
-     *        The CloudHSM cluster that is associated with the custom key store must have at least two active HSMs, each
-     *        in a different Availability Zone in the Region.</p>
+     *        store</a>. The <code>ConnectionState</code> of the custom key store must be <code>CONNECTED</code>. To
+     *        find the CustomKeyStoreID and ConnectionState use the <a>DescribeCustomKeyStores</a> operation.</p>
      *        <p>
-     *        This parameter is valid only for symmetric KMS keys and regional KMS keys. You cannot create an asymmetric
-     *        KMS key or a multi-Region key in a custom key store.
+     *        This parameter is valid only for symmetric encryption KMS keys in a single Region. You cannot create any
+     *        other type of KMS key in a custom key store.
      *        </p>
      *        <p>
-     *        To find the ID of a custom key store, use the <a>DescribeCustomKeyStores</a> operation.
-     *        </p>
-     *        <p>
-     *        The response includes the custom key store ID and the ID of the CloudHSM cluster.
-     *        </p>
-     *        <p>
-     *        This operation is part of the <a
-     *        href="https://docs.aws.amazon.com/kms/latest/developerguide/custom-key-store-overview.html">Custom Key
-     *        Store feature</a> feature in KMS, which combines the convenience and extensive integration of KMS with the
-     *        isolation and control of a single-tenant key store.
+     *        When you create a KMS key in an CloudHSM key store, KMS generates a non-exportable 256-bit symmetric key
+     *        in its associated CloudHSM cluster and associates it with the KMS key. When you create a KMS key in an
+     *        external key store, you must use the <code>XksKeyId</code> parameter to specify an external key that
+     *        serves as key material for the KMS key.
      */
 
     public void setCustomKeyStoreId(String customKeyStoreId) {
@@ -2435,50 +3110,34 @@ public class CreateKeyRequest extends com.ibm.cloud.objectstorage.AmazonWebServi
     /**
      * <p>
      * Creates the KMS key in the specified <a
-     * href="https://docs.aws.amazon.com/kms/latest/developerguide/custom-key-store-overview.html">custom key store</a>
-     * and the key material in its associated CloudHSM cluster. To create a KMS key in a custom key store, you must also
-     * specify the <code>Origin</code> parameter with a value of <code>AWS_CLOUDHSM</code>. The CloudHSM cluster that is
-     * associated with the custom key store must have at least two active HSMs, each in a different Availability Zone in
-     * the Region.
+     * href="https://docs.aws.amazon.com/kms/latest/developerguide/custom-key-store-overview.html">custom key store</a>.
+     * The <code>ConnectionState</code> of the custom key store must be <code>CONNECTED</code>. To find the
+     * CustomKeyStoreID and ConnectionState use the <a>DescribeCustomKeyStores</a> operation.
      * </p>
      * <p>
-     * This parameter is valid only for symmetric KMS keys and regional KMS keys. You cannot create an asymmetric KMS
-     * key or a multi-Region key in a custom key store.
+     * This parameter is valid only for symmetric encryption KMS keys in a single Region. You cannot create any other
+     * type of KMS key in a custom key store.
      * </p>
      * <p>
-     * To find the ID of a custom key store, use the <a>DescribeCustomKeyStores</a> operation.
+     * When you create a KMS key in an CloudHSM key store, KMS generates a non-exportable 256-bit symmetric key in its
+     * associated CloudHSM cluster and associates it with the KMS key. When you create a KMS key in an external key
+     * store, you must use the <code>XksKeyId</code> parameter to specify an external key that serves as key material
+     * for the KMS key.
      * </p>
-     * <p>
-     * The response includes the custom key store ID and the ID of the CloudHSM cluster.
-     * </p>
-     * <p>
-     * This operation is part of the <a
-     * href="https://docs.aws.amazon.com/kms/latest/developerguide/custom-key-store-overview.html">Custom Key Store
-     * feature</a> feature in KMS, which combines the convenience and extensive integration of KMS with the isolation
-     * and control of a single-tenant key store.
-     * </p>
-     *
+     * 
      * @return Creates the KMS key in the specified <a
      *         href="https://docs.aws.amazon.com/kms/latest/developerguide/custom-key-store-overview.html">custom key
-     *         store</a> and the key material in its associated CloudHSM cluster. To create a KMS key in a custom key
-     *         store, you must also specify the <code>Origin</code> parameter with a value of <code>AWS_CLOUDHSM</code>.
-     *         The CloudHSM cluster that is associated with the custom key store must have at least two active HSMs,
-     *         each in a different Availability Zone in the Region.</p>
+     *         store</a>. The <code>ConnectionState</code> of the custom key store must be <code>CONNECTED</code>. To
+     *         find the CustomKeyStoreID and ConnectionState use the <a>DescribeCustomKeyStores</a> operation.</p>
      *         <p>
-     *         This parameter is valid only for symmetric KMS keys and regional KMS keys. You cannot create an
-     *         asymmetric KMS key or a multi-Region key in a custom key store.
+     *         This parameter is valid only for symmetric encryption KMS keys in a single Region. You cannot create any
+     *         other type of KMS key in a custom key store.
      *         </p>
      *         <p>
-     *         To find the ID of a custom key store, use the <a>DescribeCustomKeyStores</a> operation.
-     *         </p>
-     *         <p>
-     *         The response includes the custom key store ID and the ID of the CloudHSM cluster.
-     *         </p>
-     *         <p>
-     *         This operation is part of the <a
-     *         href="https://docs.aws.amazon.com/kms/latest/developerguide/custom-key-store-overview.html">Custom Key
-     *         Store feature</a> feature in KMS, which combines the convenience and extensive integration of KMS with
-     *         the isolation and control of a single-tenant key store.
+     *         When you create a KMS key in an CloudHSM key store, KMS generates a non-exportable 256-bit symmetric key
+     *         in its associated CloudHSM cluster and associates it with the KMS key. When you create a KMS key in an
+     *         external key store, you must use the <code>XksKeyId</code> parameter to specify an external key that
+     *         serves as key material for the KMS key.
      */
 
     public String getCustomKeyStoreId() {
@@ -2488,51 +3147,35 @@ public class CreateKeyRequest extends com.ibm.cloud.objectstorage.AmazonWebServi
     /**
      * <p>
      * Creates the KMS key in the specified <a
-     * href="https://docs.aws.amazon.com/kms/latest/developerguide/custom-key-store-overview.html">custom key store</a>
-     * and the key material in its associated CloudHSM cluster. To create a KMS key in a custom key store, you must also
-     * specify the <code>Origin</code> parameter with a value of <code>AWS_CLOUDHSM</code>. The CloudHSM cluster that is
-     * associated with the custom key store must have at least two active HSMs, each in a different Availability Zone in
-     * the Region.
+     * href="https://docs.aws.amazon.com/kms/latest/developerguide/custom-key-store-overview.html">custom key store</a>.
+     * The <code>ConnectionState</code> of the custom key store must be <code>CONNECTED</code>. To find the
+     * CustomKeyStoreID and ConnectionState use the <a>DescribeCustomKeyStores</a> operation.
      * </p>
      * <p>
-     * This parameter is valid only for symmetric KMS keys and regional KMS keys. You cannot create an asymmetric KMS
-     * key or a multi-Region key in a custom key store.
+     * This parameter is valid only for symmetric encryption KMS keys in a single Region. You cannot create any other
+     * type of KMS key in a custom key store.
      * </p>
      * <p>
-     * To find the ID of a custom key store, use the <a>DescribeCustomKeyStores</a> operation.
+     * When you create a KMS key in an CloudHSM key store, KMS generates a non-exportable 256-bit symmetric key in its
+     * associated CloudHSM cluster and associates it with the KMS key. When you create a KMS key in an external key
+     * store, you must use the <code>XksKeyId</code> parameter to specify an external key that serves as key material
+     * for the KMS key.
      * </p>
-     * <p>
-     * The response includes the custom key store ID and the ID of the CloudHSM cluster.
-     * </p>
-     * <p>
-     * This operation is part of the <a
-     * href="https://docs.aws.amazon.com/kms/latest/developerguide/custom-key-store-overview.html">Custom Key Store
-     * feature</a> feature in KMS, which combines the convenience and extensive integration of KMS with the isolation
-     * and control of a single-tenant key store.
-     * </p>
-     *
+     * 
      * @param customKeyStoreId
      *        Creates the KMS key in the specified <a
      *        href="https://docs.aws.amazon.com/kms/latest/developerguide/custom-key-store-overview.html">custom key
-     *        store</a> and the key material in its associated CloudHSM cluster. To create a KMS key in a custom key
-     *        store, you must also specify the <code>Origin</code> parameter with a value of <code>AWS_CLOUDHSM</code>.
-     *        The CloudHSM cluster that is associated with the custom key store must have at least two active HSMs, each
-     *        in a different Availability Zone in the Region.</p>
+     *        store</a>. The <code>ConnectionState</code> of the custom key store must be <code>CONNECTED</code>. To
+     *        find the CustomKeyStoreID and ConnectionState use the <a>DescribeCustomKeyStores</a> operation.</p>
      *        <p>
-     *        This parameter is valid only for symmetric KMS keys and regional KMS keys. You cannot create an asymmetric
-     *        KMS key or a multi-Region key in a custom key store.
+     *        This parameter is valid only for symmetric encryption KMS keys in a single Region. You cannot create any
+     *        other type of KMS key in a custom key store.
      *        </p>
      *        <p>
-     *        To find the ID of a custom key store, use the <a>DescribeCustomKeyStores</a> operation.
-     *        </p>
-     *        <p>
-     *        The response includes the custom key store ID and the ID of the CloudHSM cluster.
-     *        </p>
-     *        <p>
-     *        This operation is part of the <a
-     *        href="https://docs.aws.amazon.com/kms/latest/developerguide/custom-key-store-overview.html">Custom Key
-     *        Store feature</a> feature in KMS, which combines the convenience and extensive integration of KMS with the
-     *        isolation and control of a single-tenant key store.
+     *        When you create a KMS key in an CloudHSM key store, KMS generates a non-exportable 256-bit symmetric key
+     *        in its associated CloudHSM cluster and associates it with the KMS key. When you create a KMS key in an
+     *        external key store, you must use the <code>XksKeyId</code> parameter to specify an external key that
+     *        serves as key material for the KMS key.
      * @return Returns a reference to this object so that method calls can be chained together.
      */
 
@@ -2543,7 +3186,7 @@ public class CreateKeyRequest extends com.ibm.cloud.objectstorage.AmazonWebServi
 
     /**
      * <p>
-     * A flag to indicate whether to bypass the key policy lockout safety check.
+     * Skips ("bypasses") the key policy lockout safety check. The default value is false.
      * </p>
      * <important>
      * <p>
@@ -2551,37 +3194,31 @@ public class CreateKeyRequest extends com.ibm.cloud.objectstorage.AmazonWebServi
      * true indiscriminately.
      * </p>
      * <p>
-     * For more information, refer to the scenario in the <a href=
-     * "https://docs.aws.amazon.com/kms/latest/developerguide/key-policies.html#key-policy-default-allow-root-enable-iam"
-     * >Default Key Policy</a> section in the <i> <i>Key Management Service Developer Guide</i> </i>.
+     * For more information, see <a
+     * href="https://docs.aws.amazon.com/kms/latest/developerguide/key-policy-default.html#prevent-unmanageable-key"
+     * >Default key policy</a> in the <i>Key Management Service Developer Guide</i>.
      * </p>
      * </important>
      * <p>
-     * Use this parameter only when you include a policy in the request and you intend to prevent the principal that is
-     * making the request from making a subsequent <a>PutKeyPolicy</a> request on the KMS key.
+     * Use this parameter only when you intend to prevent the principal that is making the request from making a
+     * subsequent <a>PutKeyPolicy</a> request on the KMS key.
      * </p>
-     * <p>
-     * The default value is false.
-     * </p>
-     *
+     * 
      * @param bypassPolicyLockoutSafetyCheck
-     *        A flag to indicate whether to bypass the key policy lockout safety check.</p> <important>
+     *        Skips ("bypasses") the key policy lockout safety check. The default value is false.</p> <important>
      *        <p>
      *        Setting this value to true increases the risk that the KMS key becomes unmanageable. Do not set this value
      *        to true indiscriminately.
      *        </p>
      *        <p>
-     *        For more information, refer to the scenario in the <a href=
-     *        "https://docs.aws.amazon.com/kms/latest/developerguide/key-policies.html#key-policy-default-allow-root-enable-iam"
-     *        >Default Key Policy</a> section in the <i> <i>Key Management Service Developer Guide</i> </i>.
+     *        For more information, see <a href=
+     *        "https://docs.aws.amazon.com/kms/latest/developerguide/key-policy-default.html#prevent-unmanageable-key"
+     *        >Default key policy</a> in the <i>Key Management Service Developer Guide</i>.
      *        </p>
      *        </important>
      *        <p>
-     *        Use this parameter only when you include a policy in the request and you intend to prevent the principal
-     *        that is making the request from making a subsequent <a>PutKeyPolicy</a> request on the KMS key.
-     *        </p>
-     *        <p>
-     *        The default value is false.
+     *        Use this parameter only when you intend to prevent the principal that is making the request from making a
+     *        subsequent <a>PutKeyPolicy</a> request on the KMS key.
      */
 
     public void setBypassPolicyLockoutSafetyCheck(Boolean bypassPolicyLockoutSafetyCheck) {
@@ -2590,7 +3227,7 @@ public class CreateKeyRequest extends com.ibm.cloud.objectstorage.AmazonWebServi
 
     /**
      * <p>
-     * A flag to indicate whether to bypass the key policy lockout safety check.
+     * Skips ("bypasses") the key policy lockout safety check. The default value is false.
      * </p>
      * <important>
      * <p>
@@ -2598,36 +3235,30 @@ public class CreateKeyRequest extends com.ibm.cloud.objectstorage.AmazonWebServi
      * true indiscriminately.
      * </p>
      * <p>
-     * For more information, refer to the scenario in the <a href=
-     * "https://docs.aws.amazon.com/kms/latest/developerguide/key-policies.html#key-policy-default-allow-root-enable-iam"
-     * >Default Key Policy</a> section in the <i> <i>Key Management Service Developer Guide</i> </i>.
+     * For more information, see <a
+     * href="https://docs.aws.amazon.com/kms/latest/developerguide/key-policy-default.html#prevent-unmanageable-key"
+     * >Default key policy</a> in the <i>Key Management Service Developer Guide</i>.
      * </p>
      * </important>
      * <p>
-     * Use this parameter only when you include a policy in the request and you intend to prevent the principal that is
-     * making the request from making a subsequent <a>PutKeyPolicy</a> request on the KMS key.
+     * Use this parameter only when you intend to prevent the principal that is making the request from making a
+     * subsequent <a>PutKeyPolicy</a> request on the KMS key.
      * </p>
-     * <p>
-     * The default value is false.
-     * </p>
-     *
-     * @return A flag to indicate whether to bypass the key policy lockout safety check.</p> <important>
+     * 
+     * @return Skips ("bypasses") the key policy lockout safety check. The default value is false.</p> <important>
      *         <p>
      *         Setting this value to true increases the risk that the KMS key becomes unmanageable. Do not set this
      *         value to true indiscriminately.
      *         </p>
      *         <p>
-     *         For more information, refer to the scenario in the <a href=
-     *         "https://docs.aws.amazon.com/kms/latest/developerguide/key-policies.html#key-policy-default-allow-root-enable-iam"
-     *         >Default Key Policy</a> section in the <i> <i>Key Management Service Developer Guide</i> </i>.
+     *         For more information, see <a href=
+     *         "https://docs.aws.amazon.com/kms/latest/developerguide/key-policy-default.html#prevent-unmanageable-key"
+     *         >Default key policy</a> in the <i>Key Management Service Developer Guide</i>.
      *         </p>
      *         </important>
      *         <p>
-     *         Use this parameter only when you include a policy in the request and you intend to prevent the principal
-     *         that is making the request from making a subsequent <a>PutKeyPolicy</a> request on the KMS key.
-     *         </p>
-     *         <p>
-     *         The default value is false.
+     *         Use this parameter only when you intend to prevent the principal that is making the request from making a
+     *         subsequent <a>PutKeyPolicy</a> request on the KMS key.
      */
 
     public Boolean getBypassPolicyLockoutSafetyCheck() {
@@ -2636,7 +3267,7 @@ public class CreateKeyRequest extends com.ibm.cloud.objectstorage.AmazonWebServi
 
     /**
      * <p>
-     * A flag to indicate whether to bypass the key policy lockout safety check.
+     * Skips ("bypasses") the key policy lockout safety check. The default value is false.
      * </p>
      * <important>
      * <p>
@@ -2644,37 +3275,31 @@ public class CreateKeyRequest extends com.ibm.cloud.objectstorage.AmazonWebServi
      * true indiscriminately.
      * </p>
      * <p>
-     * For more information, refer to the scenario in the <a href=
-     * "https://docs.aws.amazon.com/kms/latest/developerguide/key-policies.html#key-policy-default-allow-root-enable-iam"
-     * >Default Key Policy</a> section in the <i> <i>Key Management Service Developer Guide</i> </i>.
+     * For more information, see <a
+     * href="https://docs.aws.amazon.com/kms/latest/developerguide/key-policy-default.html#prevent-unmanageable-key"
+     * >Default key policy</a> in the <i>Key Management Service Developer Guide</i>.
      * </p>
      * </important>
      * <p>
-     * Use this parameter only when you include a policy in the request and you intend to prevent the principal that is
-     * making the request from making a subsequent <a>PutKeyPolicy</a> request on the KMS key.
+     * Use this parameter only when you intend to prevent the principal that is making the request from making a
+     * subsequent <a>PutKeyPolicy</a> request on the KMS key.
      * </p>
-     * <p>
-     * The default value is false.
-     * </p>
-     *
+     * 
      * @param bypassPolicyLockoutSafetyCheck
-     *        A flag to indicate whether to bypass the key policy lockout safety check.</p> <important>
+     *        Skips ("bypasses") the key policy lockout safety check. The default value is false.</p> <important>
      *        <p>
      *        Setting this value to true increases the risk that the KMS key becomes unmanageable. Do not set this value
      *        to true indiscriminately.
      *        </p>
      *        <p>
-     *        For more information, refer to the scenario in the <a href=
-     *        "https://docs.aws.amazon.com/kms/latest/developerguide/key-policies.html#key-policy-default-allow-root-enable-iam"
-     *        >Default Key Policy</a> section in the <i> <i>Key Management Service Developer Guide</i> </i>.
+     *        For more information, see <a href=
+     *        "https://docs.aws.amazon.com/kms/latest/developerguide/key-policy-default.html#prevent-unmanageable-key"
+     *        >Default key policy</a> in the <i>Key Management Service Developer Guide</i>.
      *        </p>
      *        </important>
      *        <p>
-     *        Use this parameter only when you include a policy in the request and you intend to prevent the principal
-     *        that is making the request from making a subsequent <a>PutKeyPolicy</a> request on the KMS key.
-     *        </p>
-     *        <p>
-     *        The default value is false.
+     *        Use this parameter only when you intend to prevent the principal that is making the request from making a
+     *        subsequent <a>PutKeyPolicy</a> request on the KMS key.
      * @return Returns a reference to this object so that method calls can be chained together.
      */
 
@@ -2685,7 +3310,7 @@ public class CreateKeyRequest extends com.ibm.cloud.objectstorage.AmazonWebServi
 
     /**
      * <p>
-     * A flag to indicate whether to bypass the key policy lockout safety check.
+     * Skips ("bypasses") the key policy lockout safety check. The default value is false.
      * </p>
      * <important>
      * <p>
@@ -2693,36 +3318,30 @@ public class CreateKeyRequest extends com.ibm.cloud.objectstorage.AmazonWebServi
      * true indiscriminately.
      * </p>
      * <p>
-     * For more information, refer to the scenario in the <a href=
-     * "https://docs.aws.amazon.com/kms/latest/developerguide/key-policies.html#key-policy-default-allow-root-enable-iam"
-     * >Default Key Policy</a> section in the <i> <i>Key Management Service Developer Guide</i> </i>.
+     * For more information, see <a
+     * href="https://docs.aws.amazon.com/kms/latest/developerguide/key-policy-default.html#prevent-unmanageable-key"
+     * >Default key policy</a> in the <i>Key Management Service Developer Guide</i>.
      * </p>
      * </important>
      * <p>
-     * Use this parameter only when you include a policy in the request and you intend to prevent the principal that is
-     * making the request from making a subsequent <a>PutKeyPolicy</a> request on the KMS key.
+     * Use this parameter only when you intend to prevent the principal that is making the request from making a
+     * subsequent <a>PutKeyPolicy</a> request on the KMS key.
      * </p>
-     * <p>
-     * The default value is false.
-     * </p>
-     *
-     * @return A flag to indicate whether to bypass the key policy lockout safety check.</p> <important>
+     * 
+     * @return Skips ("bypasses") the key policy lockout safety check. The default value is false.</p> <important>
      *         <p>
      *         Setting this value to true increases the risk that the KMS key becomes unmanageable. Do not set this
      *         value to true indiscriminately.
      *         </p>
      *         <p>
-     *         For more information, refer to the scenario in the <a href=
-     *         "https://docs.aws.amazon.com/kms/latest/developerguide/key-policies.html#key-policy-default-allow-root-enable-iam"
-     *         >Default Key Policy</a> section in the <i> <i>Key Management Service Developer Guide</i> </i>.
+     *         For more information, see <a href=
+     *         "https://docs.aws.amazon.com/kms/latest/developerguide/key-policy-default.html#prevent-unmanageable-key"
+     *         >Default key policy</a> in the <i>Key Management Service Developer Guide</i>.
      *         </p>
      *         </important>
      *         <p>
-     *         Use this parameter only when you include a policy in the request and you intend to prevent the principal
-     *         that is making the request from making a subsequent <a>PutKeyPolicy</a> request on the KMS key.
-     *         </p>
-     *         <p>
-     *         The default value is false.
+     *         Use this parameter only when you intend to prevent the principal that is making the request from making a
+     *         subsequent <a>PutKeyPolicy</a> request on the KMS key.
      */
 
     public Boolean isBypassPolicyLockoutSafetyCheck() {
@@ -2734,11 +3353,16 @@ public class CreateKeyRequest extends com.ibm.cloud.objectstorage.AmazonWebServi
      * Assigns one or more tags to the KMS key. Use this parameter to tag the KMS key when it is created. To tag an
      * existing KMS key, use the <a>TagResource</a> operation.
      * </p>
-     * <note>
+     * <important>
+     * <p>
+     * Do not include confidential or sensitive information in this field. This field may be displayed in plaintext in
+     * CloudTrail logs and other output.
+     * </p>
+     * </important> <note>
      * <p>
      * Tagging or untagging a KMS key can allow or deny permission to the KMS key. For details, see <a
-     * href="https://docs.aws.amazon.com/kms/latest/developerguide/abac.html">Using ABAC in KMS</a> in the <i>Key
-     * Management Service Developer Guide</i>.
+     * href="https://docs.aws.amazon.com/kms/latest/developerguide/abac.html">ABAC for KMS</a> in the <i>Key Management
+     * Service Developer Guide</i>.
      * </p>
      * </note>
      * <p>
@@ -2757,13 +3381,18 @@ public class CreateKeyRequest extends com.ibm.cloud.objectstorage.AmazonWebServi
      * usage and costs aggregated by tags. Tags can also be used to control access to a KMS key. For details, see <a
      * href="https://docs.aws.amazon.com/kms/latest/developerguide/tagging-keys.html">Tagging Keys</a>.
      * </p>
-     *
+     * 
      * @return Assigns one or more tags to the KMS key. Use this parameter to tag the KMS key when it is created. To tag
-     *         an existing KMS key, use the <a>TagResource</a> operation.</p> <note>
+     *         an existing KMS key, use the <a>TagResource</a> operation.</p> <important>
+     *         <p>
+     *         Do not include confidential or sensitive information in this field. This field may be displayed in
+     *         plaintext in CloudTrail logs and other output.
+     *         </p>
+     *         </important> <note>
      *         <p>
      *         Tagging or untagging a KMS key can allow or deny permission to the KMS key. For details, see <a
-     *         href="https://docs.aws.amazon.com/kms/latest/developerguide/abac.html">Using ABAC in KMS</a> in the
-     *         <i>Key Management Service Developer Guide</i>.
+     *         href="https://docs.aws.amazon.com/kms/latest/developerguide/abac.html">ABAC for KMS</a> in the <i>Key
+     *         Management Service Developer Guide</i>.
      *         </p>
      *         </note>
      *         <p>
@@ -2796,11 +3425,16 @@ public class CreateKeyRequest extends com.ibm.cloud.objectstorage.AmazonWebServi
      * Assigns one or more tags to the KMS key. Use this parameter to tag the KMS key when it is created. To tag an
      * existing KMS key, use the <a>TagResource</a> operation.
      * </p>
-     * <note>
+     * <important>
+     * <p>
+     * Do not include confidential or sensitive information in this field. This field may be displayed in plaintext in
+     * CloudTrail logs and other output.
+     * </p>
+     * </important> <note>
      * <p>
      * Tagging or untagging a KMS key can allow or deny permission to the KMS key. For details, see <a
-     * href="https://docs.aws.amazon.com/kms/latest/developerguide/abac.html">Using ABAC in KMS</a> in the <i>Key
-     * Management Service Developer Guide</i>.
+     * href="https://docs.aws.amazon.com/kms/latest/developerguide/abac.html">ABAC for KMS</a> in the <i>Key Management
+     * Service Developer Guide</i>.
      * </p>
      * </note>
      * <p>
@@ -2819,13 +3453,18 @@ public class CreateKeyRequest extends com.ibm.cloud.objectstorage.AmazonWebServi
      * usage and costs aggregated by tags. Tags can also be used to control access to a KMS key. For details, see <a
      * href="https://docs.aws.amazon.com/kms/latest/developerguide/tagging-keys.html">Tagging Keys</a>.
      * </p>
-     *
+     * 
      * @param tags
      *        Assigns one or more tags to the KMS key. Use this parameter to tag the KMS key when it is created. To tag
-     *        an existing KMS key, use the <a>TagResource</a> operation.</p> <note>
+     *        an existing KMS key, use the <a>TagResource</a> operation.</p> <important>
+     *        <p>
+     *        Do not include confidential or sensitive information in this field. This field may be displayed in
+     *        plaintext in CloudTrail logs and other output.
+     *        </p>
+     *        </important> <note>
      *        <p>
      *        Tagging or untagging a KMS key can allow or deny permission to the KMS key. For details, see <a
-     *        href="https://docs.aws.amazon.com/kms/latest/developerguide/abac.html">Using ABAC in KMS</a> in the <i>Key
+     *        href="https://docs.aws.amazon.com/kms/latest/developerguide/abac.html">ABAC for KMS</a> in the <i>Key
      *        Management Service Developer Guide</i>.
      *        </p>
      *        </note>
@@ -2861,11 +3500,16 @@ public class CreateKeyRequest extends com.ibm.cloud.objectstorage.AmazonWebServi
      * Assigns one or more tags to the KMS key. Use this parameter to tag the KMS key when it is created. To tag an
      * existing KMS key, use the <a>TagResource</a> operation.
      * </p>
-     * <note>
+     * <important>
+     * <p>
+     * Do not include confidential or sensitive information in this field. This field may be displayed in plaintext in
+     * CloudTrail logs and other output.
+     * </p>
+     * </important> <note>
      * <p>
      * Tagging or untagging a KMS key can allow or deny permission to the KMS key. For details, see <a
-     * href="https://docs.aws.amazon.com/kms/latest/developerguide/abac.html">Using ABAC in KMS</a> in the <i>Key
-     * Management Service Developer Guide</i>.
+     * href="https://docs.aws.amazon.com/kms/latest/developerguide/abac.html">ABAC for KMS</a> in the <i>Key Management
+     * Service Developer Guide</i>.
      * </p>
      * </note>
      * <p>
@@ -2889,13 +3533,18 @@ public class CreateKeyRequest extends com.ibm.cloud.objectstorage.AmazonWebServi
      * {@link #setTags(java.util.Collection)} or {@link #withTags(java.util.Collection)} if you want to override the
      * existing values.
      * </p>
-     *
+     * 
      * @param tags
      *        Assigns one or more tags to the KMS key. Use this parameter to tag the KMS key when it is created. To tag
-     *        an existing KMS key, use the <a>TagResource</a> operation.</p> <note>
+     *        an existing KMS key, use the <a>TagResource</a> operation.</p> <important>
+     *        <p>
+     *        Do not include confidential or sensitive information in this field. This field may be displayed in
+     *        plaintext in CloudTrail logs and other output.
+     *        </p>
+     *        </important> <note>
      *        <p>
      *        Tagging or untagging a KMS key can allow or deny permission to the KMS key. For details, see <a
-     *        href="https://docs.aws.amazon.com/kms/latest/developerguide/abac.html">Using ABAC in KMS</a> in the <i>Key
+     *        href="https://docs.aws.amazon.com/kms/latest/developerguide/abac.html">ABAC for KMS</a> in the <i>Key
      *        Management Service Developer Guide</i>.
      *        </p>
      *        </note>
@@ -2933,11 +3582,16 @@ public class CreateKeyRequest extends com.ibm.cloud.objectstorage.AmazonWebServi
      * Assigns one or more tags to the KMS key. Use this parameter to tag the KMS key when it is created. To tag an
      * existing KMS key, use the <a>TagResource</a> operation.
      * </p>
-     * <note>
+     * <important>
+     * <p>
+     * Do not include confidential or sensitive information in this field. This field may be displayed in plaintext in
+     * CloudTrail logs and other output.
+     * </p>
+     * </important> <note>
      * <p>
      * Tagging or untagging a KMS key can allow or deny permission to the KMS key. For details, see <a
-     * href="https://docs.aws.amazon.com/kms/latest/developerguide/abac.html">Using ABAC in KMS</a> in the <i>Key
-     * Management Service Developer Guide</i>.
+     * href="https://docs.aws.amazon.com/kms/latest/developerguide/abac.html">ABAC for KMS</a> in the <i>Key Management
+     * Service Developer Guide</i>.
      * </p>
      * </note>
      * <p>
@@ -2956,13 +3610,18 @@ public class CreateKeyRequest extends com.ibm.cloud.objectstorage.AmazonWebServi
      * usage and costs aggregated by tags. Tags can also be used to control access to a KMS key. For details, see <a
      * href="https://docs.aws.amazon.com/kms/latest/developerguide/tagging-keys.html">Tagging Keys</a>.
      * </p>
-     *
+     * 
      * @param tags
      *        Assigns one or more tags to the KMS key. Use this parameter to tag the KMS key when it is created. To tag
-     *        an existing KMS key, use the <a>TagResource</a> operation.</p> <note>
+     *        an existing KMS key, use the <a>TagResource</a> operation.</p> <important>
+     *        <p>
+     *        Do not include confidential or sensitive information in this field. This field may be displayed in
+     *        plaintext in CloudTrail logs and other output.
+     *        </p>
+     *        </important> <note>
      *        <p>
      *        Tagging or untagging a KMS key can allow or deny permission to the KMS key. For details, see <a
-     *        href="https://docs.aws.amazon.com/kms/latest/developerguide/abac.html">Using ABAC in KMS</a> in the <i>Key
+     *        href="https://docs.aws.amazon.com/kms/latest/developerguide/abac.html">ABAC for KMS</a> in the <i>Key
      *        Management Service Developer Guide</i>.
      *        </p>
      *        </note>
@@ -3005,8 +3664,8 @@ public class CreateKeyRequest extends com.ibm.cloud.objectstorage.AmazonWebServi
      * other metadata, you can use them interchangeably to encrypt data in one Amazon Web Services Region and decrypt it
      * in a different Amazon Web Services Region without re-encrypting the data or making a cross-Region call. For more
      * information about multi-Region keys, see <a
-     * href="https://docs.aws.amazon.com/kms/latest/developerguide/multi-region-keys-overview.html">Using multi-Region
-     * keys</a> in the <i>Key Management Service Developer Guide</i>.
+     * href="https://docs.aws.amazon.com/kms/latest/developerguide/multi-region-keys-overview.html">Multi-Region keys in
+     * KMS</a> in the <i>Key Management Service Developer Guide</i>.
      * </p>
      * <p>
      * This value creates a <i>primary key</i>, not a replica. To create a <i>replica key</i>, use the
@@ -3030,8 +3689,8 @@ public class CreateKeyRequest extends com.ibm.cloud.objectstorage.AmazonWebServi
      *        ID, key material, and other metadata, you can use them interchangeably to encrypt data in one Amazon Web
      *        Services Region and decrypt it in a different Amazon Web Services Region without re-encrypting the data or
      *        making a cross-Region call. For more information about multi-Region keys, see <a
-     *        href="https://docs.aws.amazon.com/kms/latest/developerguide/multi-region-keys-overview.html">Using
-     *        multi-Region keys</a> in the <i>Key Management Service Developer Guide</i>.
+     *        href="https://docs.aws.amazon.com/kms/latest/developerguide/multi-region-keys-overview.html">Multi-Region
+     *        keys in KMS</a> in the <i>Key Management Service Developer Guide</i>.
      *        </p>
      *        <p>
      *        This value creates a <i>primary key</i>, not a replica. To create a <i>replica key</i>, use the
@@ -3061,8 +3720,8 @@ public class CreateKeyRequest extends com.ibm.cloud.objectstorage.AmazonWebServi
      * other metadata, you can use them interchangeably to encrypt data in one Amazon Web Services Region and decrypt it
      * in a different Amazon Web Services Region without re-encrypting the data or making a cross-Region call. For more
      * information about multi-Region keys, see <a
-     * href="https://docs.aws.amazon.com/kms/latest/developerguide/multi-region-keys-overview.html">Using multi-Region
-     * keys</a> in the <i>Key Management Service Developer Guide</i>.
+     * href="https://docs.aws.amazon.com/kms/latest/developerguide/multi-region-keys-overview.html">Multi-Region keys in
+     * KMS</a> in the <i>Key Management Service Developer Guide</i>.
      * </p>
      * <p>
      * This value creates a <i>primary key</i>, not a replica. To create a <i>replica key</i>, use the
@@ -3085,8 +3744,8 @@ public class CreateKeyRequest extends com.ibm.cloud.objectstorage.AmazonWebServi
      *         ID, key material, and other metadata, you can use them interchangeably to encrypt data in one Amazon Web
      *         Services Region and decrypt it in a different Amazon Web Services Region without re-encrypting the data
      *         or making a cross-Region call. For more information about multi-Region keys, see <a
-     *         href="https://docs.aws.amazon.com/kms/latest/developerguide/multi-region-keys-overview.html">Using
-     *         multi-Region keys</a> in the <i>Key Management Service Developer Guide</i>.
+     *         href="https://docs.aws.amazon.com/kms/latest/developerguide/multi-region-keys-overview.html">Multi-Region
+     *         keys in KMS</a> in the <i>Key Management Service Developer Guide</i>.
      *         </p>
      *         <p>
      *         This value creates a <i>primary key</i>, not a replica. To create a <i>replica key</i>, use the
@@ -3116,8 +3775,8 @@ public class CreateKeyRequest extends com.ibm.cloud.objectstorage.AmazonWebServi
      * other metadata, you can use them interchangeably to encrypt data in one Amazon Web Services Region and decrypt it
      * in a different Amazon Web Services Region without re-encrypting the data or making a cross-Region call. For more
      * information about multi-Region keys, see <a
-     * href="https://docs.aws.amazon.com/kms/latest/developerguide/multi-region-keys-overview.html">Using multi-Region
-     * keys</a> in the <i>Key Management Service Developer Guide</i>.
+     * href="https://docs.aws.amazon.com/kms/latest/developerguide/multi-region-keys-overview.html">Multi-Region keys in
+     * KMS</a> in the <i>Key Management Service Developer Guide</i>.
      * </p>
      * <p>
      * This value creates a <i>primary key</i>, not a replica. To create a <i>replica key</i>, use the
@@ -3141,8 +3800,8 @@ public class CreateKeyRequest extends com.ibm.cloud.objectstorage.AmazonWebServi
      *        ID, key material, and other metadata, you can use them interchangeably to encrypt data in one Amazon Web
      *        Services Region and decrypt it in a different Amazon Web Services Region without re-encrypting the data or
      *        making a cross-Region call. For more information about multi-Region keys, see <a
-     *        href="https://docs.aws.amazon.com/kms/latest/developerguide/multi-region-keys-overview.html">Using
-     *        multi-Region keys</a> in the <i>Key Management Service Developer Guide</i>.
+     *        href="https://docs.aws.amazon.com/kms/latest/developerguide/multi-region-keys-overview.html">Multi-Region
+     *        keys in KMS</a> in the <i>Key Management Service Developer Guide</i>.
      *        </p>
      *        <p>
      *        This value creates a <i>primary key</i>, not a replica. To create a <i>replica key</i>, use the
@@ -3174,8 +3833,8 @@ public class CreateKeyRequest extends com.ibm.cloud.objectstorage.AmazonWebServi
      * other metadata, you can use them interchangeably to encrypt data in one Amazon Web Services Region and decrypt it
      * in a different Amazon Web Services Region without re-encrypting the data or making a cross-Region call. For more
      * information about multi-Region keys, see <a
-     * href="https://docs.aws.amazon.com/kms/latest/developerguide/multi-region-keys-overview.html">Using multi-Region
-     * keys</a> in the <i>Key Management Service Developer Guide</i>.
+     * href="https://docs.aws.amazon.com/kms/latest/developerguide/multi-region-keys-overview.html">Multi-Region keys in
+     * KMS</a> in the <i>Key Management Service Developer Guide</i>.
      * </p>
      * <p>
      * This value creates a <i>primary key</i>, not a replica. To create a <i>replica key</i>, use the
@@ -3198,8 +3857,8 @@ public class CreateKeyRequest extends com.ibm.cloud.objectstorage.AmazonWebServi
      *         ID, key material, and other metadata, you can use them interchangeably to encrypt data in one Amazon Web
      *         Services Region and decrypt it in a different Amazon Web Services Region without re-encrypting the data
      *         or making a cross-Region call. For more information about multi-Region keys, see <a
-     *         href="https://docs.aws.amazon.com/kms/latest/developerguide/multi-region-keys-overview.html">Using
-     *         multi-Region keys</a> in the <i>Key Management Service Developer Guide</i>.
+     *         href="https://docs.aws.amazon.com/kms/latest/developerguide/multi-region-keys-overview.html">Multi-Region
+     *         keys in KMS</a> in the <i>Key Management Service Developer Guide</i>.
      *         </p>
      *         <p>
      *         This value creates a <i>primary key</i>, not a replica. To create a <i>replica key</i>, use the
@@ -3212,6 +3871,211 @@ public class CreateKeyRequest extends com.ibm.cloud.objectstorage.AmazonWebServi
 
     public Boolean isMultiRegion() {
         return this.multiRegion;
+    }
+
+    /**
+     * <p>
+     * Identifies the <a
+     * href="https://docs.aws.amazon.com/kms/latest/developerguide/keystore-external.html#concept-external-key">external
+     * key</a> that serves as key material for the KMS key in an <a
+     * href="https://docs.aws.amazon.com/kms/latest/developerguide/keystore-external.html">external key store</a>.
+     * Specify the ID that the <a
+     * href="https://docs.aws.amazon.com/kms/latest/developerguide/keystore-external.html#concept-xks-proxy">external
+     * key store proxy</a> uses to refer to the external key. For help, see the documentation for your external key
+     * store proxy.
+     * </p>
+     * <p>
+     * This parameter is required for a KMS key with an <code>Origin</code> value of <code>EXTERNAL_KEY_STORE</code>. It
+     * is not valid for KMS keys with any other <code>Origin</code> value.
+     * </p>
+     * <p>
+     * The external key must be an existing 256-bit AES symmetric encryption key hosted outside of Amazon Web Services
+     * in an external key manager associated with the external key store specified by the <code>CustomKeyStoreId</code>
+     * parameter. This key must be enabled and configured to perform encryption and decryption. Each KMS key in an
+     * external key store must use a different external key. For details, see <a
+     * href="https://docs.aws.amazon.com/create-xks-keys.html#xks-key-requirements">Requirements for a KMS key in an
+     * external key store</a> in the <i>Key Management Service Developer Guide</i>.
+     * </p>
+     * <p>
+     * Each KMS key in an external key store is associated two backing keys. One is key material that KMS generates. The
+     * other is the external key specified by this parameter. When you use the KMS key in an external key store to
+     * encrypt data, the encryption operation is performed first by KMS using the KMS key material, and then by the
+     * external key manager using the specified external key, a process known as <i>double encryption</i>. For details,
+     * see <a
+     * href="https://docs.aws.amazon.com/kms/latest/developerguide/keystore-external.html#concept-double-encryption"
+     * >Double encryption</a> in the <i>Key Management Service Developer Guide</i>.
+     * </p>
+     * 
+     * @param xksKeyId
+     *        Identifies the <a
+     *        href="https://docs.aws.amazon.com/kms/latest/developerguide/keystore-external.html#concept-external-key"
+     *        >external key</a> that serves as key material for the KMS key in an <a
+     *        href="https://docs.aws.amazon.com/kms/latest/developerguide/keystore-external.html">external key
+     *        store</a>. Specify the ID that the <a
+     *        href="https://docs.aws.amazon.com/kms/latest/developerguide/keystore-external.html#concept-xks-proxy"
+     *        >external key store proxy</a> uses to refer to the external key. For help, see the documentation for your
+     *        external key store proxy.</p>
+     *        <p>
+     *        This parameter is required for a KMS key with an <code>Origin</code> value of
+     *        <code>EXTERNAL_KEY_STORE</code>. It is not valid for KMS keys with any other <code>Origin</code> value.
+     *        </p>
+     *        <p>
+     *        The external key must be an existing 256-bit AES symmetric encryption key hosted outside of Amazon Web
+     *        Services in an external key manager associated with the external key store specified by the
+     *        <code>CustomKeyStoreId</code> parameter. This key must be enabled and configured to perform encryption and
+     *        decryption. Each KMS key in an external key store must use a different external key. For details, see <a
+     *        href="https://docs.aws.amazon.com/create-xks-keys.html#xks-key-requirements">Requirements for a KMS key in
+     *        an external key store</a> in the <i>Key Management Service Developer Guide</i>.
+     *        </p>
+     *        <p>
+     *        Each KMS key in an external key store is associated two backing keys. One is key material that KMS
+     *        generates. The other is the external key specified by this parameter. When you use the KMS key in an
+     *        external key store to encrypt data, the encryption operation is performed first by KMS using the KMS key
+     *        material, and then by the external key manager using the specified external key, a process known as
+     *        <i>double encryption</i>. For details, see <a href=
+     *        "https://docs.aws.amazon.com/kms/latest/developerguide/keystore-external.html#concept-double-encryption"
+     *        >Double encryption</a> in the <i>Key Management Service Developer Guide</i>.
+     */
+
+    public void setXksKeyId(String xksKeyId) {
+        this.xksKeyId = xksKeyId;
+    }
+
+    /**
+     * <p>
+     * Identifies the <a
+     * href="https://docs.aws.amazon.com/kms/latest/developerguide/keystore-external.html#concept-external-key">external
+     * key</a> that serves as key material for the KMS key in an <a
+     * href="https://docs.aws.amazon.com/kms/latest/developerguide/keystore-external.html">external key store</a>.
+     * Specify the ID that the <a
+     * href="https://docs.aws.amazon.com/kms/latest/developerguide/keystore-external.html#concept-xks-proxy">external
+     * key store proxy</a> uses to refer to the external key. For help, see the documentation for your external key
+     * store proxy.
+     * </p>
+     * <p>
+     * This parameter is required for a KMS key with an <code>Origin</code> value of <code>EXTERNAL_KEY_STORE</code>. It
+     * is not valid for KMS keys with any other <code>Origin</code> value.
+     * </p>
+     * <p>
+     * The external key must be an existing 256-bit AES symmetric encryption key hosted outside of Amazon Web Services
+     * in an external key manager associated with the external key store specified by the <code>CustomKeyStoreId</code>
+     * parameter. This key must be enabled and configured to perform encryption and decryption. Each KMS key in an
+     * external key store must use a different external key. For details, see <a
+     * href="https://docs.aws.amazon.com/create-xks-keys.html#xks-key-requirements">Requirements for a KMS key in an
+     * external key store</a> in the <i>Key Management Service Developer Guide</i>.
+     * </p>
+     * <p>
+     * Each KMS key in an external key store is associated two backing keys. One is key material that KMS generates. The
+     * other is the external key specified by this parameter. When you use the KMS key in an external key store to
+     * encrypt data, the encryption operation is performed first by KMS using the KMS key material, and then by the
+     * external key manager using the specified external key, a process known as <i>double encryption</i>. For details,
+     * see <a
+     * href="https://docs.aws.amazon.com/kms/latest/developerguide/keystore-external.html#concept-double-encryption"
+     * >Double encryption</a> in the <i>Key Management Service Developer Guide</i>.
+     * </p>
+     * 
+     * @return Identifies the <a
+     *         href="https://docs.aws.amazon.com/kms/latest/developerguide/keystore-external.html#concept-external-key"
+     *         >external key</a> that serves as key material for the KMS key in an <a
+     *         href="https://docs.aws.amazon.com/kms/latest/developerguide/keystore-external.html">external key
+     *         store</a>. Specify the ID that the <a
+     *         href="https://docs.aws.amazon.com/kms/latest/developerguide/keystore-external.html#concept-xks-proxy"
+     *         >external key store proxy</a> uses to refer to the external key. For help, see the documentation for your
+     *         external key store proxy.</p>
+     *         <p>
+     *         This parameter is required for a KMS key with an <code>Origin</code> value of
+     *         <code>EXTERNAL_KEY_STORE</code>. It is not valid for KMS keys with any other <code>Origin</code> value.
+     *         </p>
+     *         <p>
+     *         The external key must be an existing 256-bit AES symmetric encryption key hosted outside of Amazon Web
+     *         Services in an external key manager associated with the external key store specified by the
+     *         <code>CustomKeyStoreId</code> parameter. This key must be enabled and configured to perform encryption
+     *         and decryption. Each KMS key in an external key store must use a different external key. For details, see
+     *         <a href="https://docs.aws.amazon.com/create-xks-keys.html#xks-key-requirements">Requirements for a KMS
+     *         key in an external key store</a> in the <i>Key Management Service Developer Guide</i>.
+     *         </p>
+     *         <p>
+     *         Each KMS key in an external key store is associated two backing keys. One is key material that KMS
+     *         generates. The other is the external key specified by this parameter. When you use the KMS key in an
+     *         external key store to encrypt data, the encryption operation is performed first by KMS using the KMS key
+     *         material, and then by the external key manager using the specified external key, a process known as
+     *         <i>double encryption</i>. For details, see <a href=
+     *         "https://docs.aws.amazon.com/kms/latest/developerguide/keystore-external.html#concept-double-encryption"
+     *         >Double encryption</a> in the <i>Key Management Service Developer Guide</i>.
+     */
+
+    public String getXksKeyId() {
+        return this.xksKeyId;
+    }
+
+    /**
+     * <p>
+     * Identifies the <a
+     * href="https://docs.aws.amazon.com/kms/latest/developerguide/keystore-external.html#concept-external-key">external
+     * key</a> that serves as key material for the KMS key in an <a
+     * href="https://docs.aws.amazon.com/kms/latest/developerguide/keystore-external.html">external key store</a>.
+     * Specify the ID that the <a
+     * href="https://docs.aws.amazon.com/kms/latest/developerguide/keystore-external.html#concept-xks-proxy">external
+     * key store proxy</a> uses to refer to the external key. For help, see the documentation for your external key
+     * store proxy.
+     * </p>
+     * <p>
+     * This parameter is required for a KMS key with an <code>Origin</code> value of <code>EXTERNAL_KEY_STORE</code>. It
+     * is not valid for KMS keys with any other <code>Origin</code> value.
+     * </p>
+     * <p>
+     * The external key must be an existing 256-bit AES symmetric encryption key hosted outside of Amazon Web Services
+     * in an external key manager associated with the external key store specified by the <code>CustomKeyStoreId</code>
+     * parameter. This key must be enabled and configured to perform encryption and decryption. Each KMS key in an
+     * external key store must use a different external key. For details, see <a
+     * href="https://docs.aws.amazon.com/create-xks-keys.html#xks-key-requirements">Requirements for a KMS key in an
+     * external key store</a> in the <i>Key Management Service Developer Guide</i>.
+     * </p>
+     * <p>
+     * Each KMS key in an external key store is associated two backing keys. One is key material that KMS generates. The
+     * other is the external key specified by this parameter. When you use the KMS key in an external key store to
+     * encrypt data, the encryption operation is performed first by KMS using the KMS key material, and then by the
+     * external key manager using the specified external key, a process known as <i>double encryption</i>. For details,
+     * see <a
+     * href="https://docs.aws.amazon.com/kms/latest/developerguide/keystore-external.html#concept-double-encryption"
+     * >Double encryption</a> in the <i>Key Management Service Developer Guide</i>.
+     * </p>
+     * 
+     * @param xksKeyId
+     *        Identifies the <a
+     *        href="https://docs.aws.amazon.com/kms/latest/developerguide/keystore-external.html#concept-external-key"
+     *        >external key</a> that serves as key material for the KMS key in an <a
+     *        href="https://docs.aws.amazon.com/kms/latest/developerguide/keystore-external.html">external key
+     *        store</a>. Specify the ID that the <a
+     *        href="https://docs.aws.amazon.com/kms/latest/developerguide/keystore-external.html#concept-xks-proxy"
+     *        >external key store proxy</a> uses to refer to the external key. For help, see the documentation for your
+     *        external key store proxy.</p>
+     *        <p>
+     *        This parameter is required for a KMS key with an <code>Origin</code> value of
+     *        <code>EXTERNAL_KEY_STORE</code>. It is not valid for KMS keys with any other <code>Origin</code> value.
+     *        </p>
+     *        <p>
+     *        The external key must be an existing 256-bit AES symmetric encryption key hosted outside of Amazon Web
+     *        Services in an external key manager associated with the external key store specified by the
+     *        <code>CustomKeyStoreId</code> parameter. This key must be enabled and configured to perform encryption and
+     *        decryption. Each KMS key in an external key store must use a different external key. For details, see <a
+     *        href="https://docs.aws.amazon.com/create-xks-keys.html#xks-key-requirements">Requirements for a KMS key in
+     *        an external key store</a> in the <i>Key Management Service Developer Guide</i>.
+     *        </p>
+     *        <p>
+     *        Each KMS key in an external key store is associated two backing keys. One is key material that KMS
+     *        generates. The other is the external key specified by this parameter. When you use the KMS key in an
+     *        external key store to encrypt data, the encryption operation is performed first by KMS using the KMS key
+     *        material, and then by the external key manager using the specified external key, a process known as
+     *        <i>double encryption</i>. For details, see <a href=
+     *        "https://docs.aws.amazon.com/kms/latest/developerguide/keystore-external.html#concept-double-encryption"
+     *        >Double encryption</a> in the <i>Key Management Service Developer Guide</i>.
+     * @return Returns a reference to this object so that method calls can be chained together.
+     */
+
+    public CreateKeyRequest withXksKeyId(String xksKeyId) {
+        setXksKeyId(xksKeyId);
+        return this;
     }
 
     /**
@@ -3245,7 +4109,9 @@ public class CreateKeyRequest extends com.ibm.cloud.objectstorage.AmazonWebServi
         if (getTags() != null)
             sb.append("Tags: ").append(getTags()).append(",");
         if (getMultiRegion() != null)
-            sb.append("MultiRegion: ").append(getMultiRegion());
+            sb.append("MultiRegion: ").append(getMultiRegion()).append(",");
+        if (getXksKeyId() != null)
+            sb.append("XksKeyId: ").append(getXksKeyId());
         sb.append("}");
         return sb.toString();
     }
@@ -3301,6 +4167,10 @@ public class CreateKeyRequest extends com.ibm.cloud.objectstorage.AmazonWebServi
             return false;
         if (other.getMultiRegion() != null && other.getMultiRegion().equals(this.getMultiRegion()) == false)
             return false;
+        if (other.getXksKeyId() == null ^ this.getXksKeyId() == null)
+            return false;
+        if (other.getXksKeyId() != null && other.getXksKeyId().equals(this.getXksKeyId()) == false)
+            return false;
         return true;
     }
 
@@ -3319,6 +4189,7 @@ public class CreateKeyRequest extends com.ibm.cloud.objectstorage.AmazonWebServi
         hashCode = prime * hashCode + ((getBypassPolicyLockoutSafetyCheck() == null) ? 0 : getBypassPolicyLockoutSafetyCheck().hashCode());
         hashCode = prime * hashCode + ((getTags() == null) ? 0 : getTags().hashCode());
         hashCode = prime * hashCode + ((getMultiRegion() == null) ? 0 : getMultiRegion().hashCode());
+        hashCode = prime * hashCode + ((getXksKeyId() == null) ? 0 : getXksKeyId().hashCode());
         return hashCode;
     }
 

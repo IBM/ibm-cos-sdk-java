@@ -1,11 +1,11 @@
 /*
- * Copyright 2017-2022 Amazon.com, Inc. or its affiliates. All Rights Reserved.
- *
+ * Copyright 2018-2023 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * 
  * Licensed under the Apache License, Version 2.0 (the "License"). You may not use this file except in compliance with
  * the License. A copy of the License is located at
- *
+ * 
  * http://aws.amazon.com/apache2.0
- *
+ * 
  * or in the "license" file accompanying this file. This file is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
  * CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions
  * and limitations under the License.
@@ -31,6 +31,9 @@ public class GenerateRandomRequestMarshaller {
             .marshallLocation(MarshallLocation.PAYLOAD).marshallLocationName("NumberOfBytes").build();
     private static final MarshallingInfo<String> CUSTOMKEYSTOREID_BINDING = MarshallingInfo.builder(MarshallingType.STRING)
             .marshallLocation(MarshallLocation.PAYLOAD).marshallLocationName("CustomKeyStoreId").build();
+    // IBM Unsupported
+    // private static final MarshallingInfo<StructuredPojo> RECIPIENT_BINDING = MarshallingInfo.builder(MarshallingType.STRUCTURED)
+    //         .marshallLocation(MarshallLocation.PAYLOAD).marshallLocationName("Recipient").build();
 
     private static final GenerateRandomRequestMarshaller instance = new GenerateRandomRequestMarshaller();
 
@@ -50,6 +53,8 @@ public class GenerateRandomRequestMarshaller {
         try {
             protocolMarshaller.marshall(generateRandomRequest.getNumberOfBytes(), NUMBEROFBYTES_BINDING);
             protocolMarshaller.marshall(generateRandomRequest.getCustomKeyStoreId(), CUSTOMKEYSTOREID_BINDING);
+            // IBM Unsupported
+            // protocolMarshaller.marshall(generateRandomRequest.getRecipient(), RECIPIENT_BINDING);
         } catch (Exception e) {
             throw new SdkClientException("Unable to marshall request to JSON: " + e.getMessage(), e);
         }

@@ -1,11 +1,11 @@
 /*
- * Copyright 2017-2022 Amazon.com, Inc. or its affiliates. All Rights Reserved.
- *
+ * Copyright 2018-2023 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * 
  * Licensed under the Apache License, Version 2.0 (the "License"). You may not use this file except in compliance with
  * the License. A copy of the License is located at
- *
+ * 
  * http://aws.amazon.com/apache2.0
- *
+ * 
  * or in the "license" file accompanying this file. This file is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
  * CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions
  * and limitations under the License.
@@ -54,11 +54,14 @@ public class TagResourceRequest extends com.ibm.cloud.objectstorage.AmazonWebSer
     private String keyId;
     /**
      * <p>
-     * One or more tags.
+     * One or more tags. Each tag consists of a tag key and a tag value. The tag value can be an empty (null) string.
      * </p>
+     * <important>
      * <p>
-     * Each tag consists of a tag key and a tag value. The tag value can be an empty (null) string.
+     * Do not include confidential or sensitive information in this field. This field may be displayed in plaintext in
+     * CloudTrail logs and other output.
      * </p>
+     * </important>
      * <p>
      * You cannot have more than one tag on a KMS key with the same tag key. If you specify an existing tag key with a
      * different tag value, KMS replaces the current tag value with the specified one.
@@ -231,20 +234,26 @@ public class TagResourceRequest extends com.ibm.cloud.objectstorage.AmazonWebSer
 
     /**
      * <p>
-     * One or more tags.
+     * One or more tags. Each tag consists of a tag key and a tag value. The tag value can be an empty (null) string.
      * </p>
+     * <important>
      * <p>
-     * Each tag consists of a tag key and a tag value. The tag value can be an empty (null) string.
+     * Do not include confidential or sensitive information in this field. This field may be displayed in plaintext in
+     * CloudTrail logs and other output.
      * </p>
+     * </important>
      * <p>
      * You cannot have more than one tag on a KMS key with the same tag key. If you specify an existing tag key with a
      * different tag value, KMS replaces the current tag value with the specified one.
      * </p>
-     *
-     * @return One or more tags. </p>
+     * 
+     * @return One or more tags. Each tag consists of a tag key and a tag value. The tag value can be an empty (null)
+     *         string. </p> <important>
      *         <p>
-     *         Each tag consists of a tag key and a tag value. The tag value can be an empty (null) string.
+     *         Do not include confidential or sensitive information in this field. This field may be displayed in
+     *         plaintext in CloudTrail logs and other output.
      *         </p>
+     *         </important>
      *         <p>
      *         You cannot have more than one tag on a KMS key with the same tag key. If you specify an existing tag key
      *         with a different tag value, KMS replaces the current tag value with the specified one.
@@ -259,21 +268,27 @@ public class TagResourceRequest extends com.ibm.cloud.objectstorage.AmazonWebSer
 
     /**
      * <p>
-     * One or more tags.
+     * One or more tags. Each tag consists of a tag key and a tag value. The tag value can be an empty (null) string.
      * </p>
+     * <important>
      * <p>
-     * Each tag consists of a tag key and a tag value. The tag value can be an empty (null) string.
+     * Do not include confidential or sensitive information in this field. This field may be displayed in plaintext in
+     * CloudTrail logs and other output.
      * </p>
+     * </important>
      * <p>
      * You cannot have more than one tag on a KMS key with the same tag key. If you specify an existing tag key with a
      * different tag value, KMS replaces the current tag value with the specified one.
      * </p>
-     *
+     * 
      * @param tags
-     *        One or more tags. </p>
+     *        One or more tags. Each tag consists of a tag key and a tag value. The tag value can be an empty (null)
+     *        string. </p> <important>
      *        <p>
-     *        Each tag consists of a tag key and a tag value. The tag value can be an empty (null) string.
+     *        Do not include confidential or sensitive information in this field. This field may be displayed in
+     *        plaintext in CloudTrail logs and other output.
      *        </p>
+     *        </important>
      *        <p>
      *        You cannot have more than one tag on a KMS key with the same tag key. If you specify an existing tag key
      *        with a different tag value, KMS replaces the current tag value with the specified one.
@@ -290,11 +305,14 @@ public class TagResourceRequest extends com.ibm.cloud.objectstorage.AmazonWebSer
 
     /**
      * <p>
-     * One or more tags.
+     * One or more tags. Each tag consists of a tag key and a tag value. The tag value can be an empty (null) string.
      * </p>
+     * <important>
      * <p>
-     * Each tag consists of a tag key and a tag value. The tag value can be an empty (null) string.
+     * Do not include confidential or sensitive information in this field. This field may be displayed in plaintext in
+     * CloudTrail logs and other output.
      * </p>
+     * </important>
      * <p>
      * You cannot have more than one tag on a KMS key with the same tag key. If you specify an existing tag key with a
      * different tag value, KMS replaces the current tag value with the specified one.
@@ -304,12 +322,15 @@ public class TagResourceRequest extends com.ibm.cloud.objectstorage.AmazonWebSer
      * {@link #setTags(java.util.Collection)} or {@link #withTags(java.util.Collection)} if you want to override the
      * existing values.
      * </p>
-     *
+     * 
      * @param tags
-     *        One or more tags. </p>
+     *        One or more tags. Each tag consists of a tag key and a tag value. The tag value can be an empty (null)
+     *        string. </p> <important>
      *        <p>
-     *        Each tag consists of a tag key and a tag value. The tag value can be an empty (null) string.
+     *        Do not include confidential or sensitive information in this field. This field may be displayed in
+     *        plaintext in CloudTrail logs and other output.
      *        </p>
+     *        </important>
      *        <p>
      *        You cannot have more than one tag on a KMS key with the same tag key. If you specify an existing tag key
      *        with a different tag value, KMS replaces the current tag value with the specified one.
@@ -328,21 +349,27 @@ public class TagResourceRequest extends com.ibm.cloud.objectstorage.AmazonWebSer
 
     /**
      * <p>
-     * One or more tags.
+     * One or more tags. Each tag consists of a tag key and a tag value. The tag value can be an empty (null) string.
      * </p>
+     * <important>
      * <p>
-     * Each tag consists of a tag key and a tag value. The tag value can be an empty (null) string.
+     * Do not include confidential or sensitive information in this field. This field may be displayed in plaintext in
+     * CloudTrail logs and other output.
      * </p>
+     * </important>
      * <p>
      * You cannot have more than one tag on a KMS key with the same tag key. If you specify an existing tag key with a
      * different tag value, KMS replaces the current tag value with the specified one.
      * </p>
-     *
+     * 
      * @param tags
-     *        One or more tags. </p>
+     *        One or more tags. Each tag consists of a tag key and a tag value. The tag value can be an empty (null)
+     *        string. </p> <important>
      *        <p>
-     *        Each tag consists of a tag key and a tag value. The tag value can be an empty (null) string.
+     *        Do not include confidential or sensitive information in this field. This field may be displayed in
+     *        plaintext in CloudTrail logs and other output.
      *        </p>
+     *        </important>
      *        <p>
      *        You cannot have more than one tag on a KMS key with the same tag key. If you specify an existing tag key
      *        with a different tag value, KMS replaces the current tag value with the specified one.

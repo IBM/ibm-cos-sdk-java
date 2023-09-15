@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2022 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2010-2023 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -18,6 +18,9 @@ import com.ibm.cloud.objectstorage.AmazonServiceException;
 import com.ibm.cloud.objectstorage.SdkBaseException;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.regex.Pattern;
+
+import com.ibm.cloud.objectstorage.http.HttpResponse;
 import org.apache.http.HttpStatus;
 
 public class RetryUtils {
@@ -26,6 +29,7 @@ public class RetryUtils {
     static final Set<String> CLOCK_SKEW_ERROR_CODES = new HashSet<String>(6);
     static final Set<String> RETRYABLE_ERROR_CODES = new HashSet<String>(1);
     static final Set<Integer> RETRYABLE_STATUS_CODES = new HashSet<Integer>(4);
+    private static final Pattern WHITESPACE_PATTERN = Pattern.compile("\\s");
 
     static {
         THROTTLING_ERROR_CODES.add("Throttling");
@@ -77,7 +81,8 @@ public class RetryUtils {
      */
     public static boolean isRetryableServiceException(AmazonServiceException exception) {
         return RETRYABLE_STATUS_CODES.contains(exception.getStatusCode()) ||
-               RETRYABLE_ERROR_CODES.contains(exception.getErrorCode());
+               RETRYABLE_ERROR_CODES.contains(exception.getErrorCode()) ||
+               reasonPhraseMatchesErrorCode(exception, RETRYABLE_ERROR_CODES);
     }
 
     /**
@@ -98,7 +103,8 @@ public class RetryUtils {
      */
     public static boolean isThrottlingException(AmazonServiceException exception) {
         return THROTTLING_ERROR_CODES.contains(exception.getErrorCode()) ||
-               exception.getStatusCode() == 429;
+               exception.getStatusCode() == 429 ||
+               reasonPhraseMatchesErrorCode(exception, THROTTLING_ERROR_CODES);
     }
 
     /**
@@ -146,7 +152,8 @@ public class RetryUtils {
      * @return True if the exception is definitely a clock skew error, otherwise false.
      */
     public static boolean isClockSkewError(AmazonServiceException exception) {
-        return CLOCK_SKEW_ERROR_CODES.contains(exception.getErrorCode());
+        return CLOCK_SKEW_ERROR_CODES.contains(exception.getErrorCode()) ||
+               reasonPhraseMatchesErrorCode(exception, CLOCK_SKEW_ERROR_CODES);
     }
 
     private static boolean isAse(SdkBaseException e) {
@@ -157,4 +164,26 @@ public class RetryUtils {
         return (AmazonServiceException) e;
     }
 
+    /**
+     * "All responses to the HEAD request method MUST NOT include a message-body"
+     * (https://datatracker.ietf.org/doc/html/rfc2616#section-4.3). In this scenario, most services are unable to send
+     * well-structured error codes like they normally would in a body, so the SDK will create a best-effort error code
+     * by concatenating the HTTP status code and reason phrase, e.g., {@code "503 Slow Down"}. In some cases, the
+     * reason phrase ({@code "Slow Down"}) may still match our list of error codes that we would normally compare
+     * against (except for minor whitespace differences), e.g., {@code "SlowDown"}.
+     * 
+     * @see com.ibm.cloud.objectstorage.http.DefaultErrorResponseHandler#handle(HttpResponse)
+     */
+    private static boolean reasonPhraseMatchesErrorCode(AmazonServiceException e, Set<String> errorCodes) {
+        String errorCode = e.getErrorCode();
+        if (errorCode != null) {
+            String statusCode = String.valueOf(e.getStatusCode());
+            if (errorCode.startsWith(statusCode)) {
+                String reasonPhrase = errorCode.substring(statusCode.length());
+                reasonPhrase = WHITESPACE_PATTERN.matcher(reasonPhrase).replaceAll("");
+                return errorCodes.contains(reasonPhrase);
+            }
+        }
+        return false;
+    }
 }

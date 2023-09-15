@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2022 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2010-2023 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -82,6 +82,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedList;
@@ -1512,7 +1513,9 @@ public class TransferManager {
 
     private boolean leavesRoot(File localBaseDirectory, String key) {
         try {
-            return !new File(localBaseDirectory, key).getCanonicalPath().startsWith(localBaseDirectory.getCanonicalPath());
+            Path targetPath = new File(localBaseDirectory, key).getCanonicalFile().toPath();
+            Path rootPath = localBaseDirectory.getCanonicalFile().toPath();
+            return !targetPath.startsWith(rootPath);
         } catch (IOException e) {
             throw new RuntimeException("Unable to canonicalize paths",  e);
         }

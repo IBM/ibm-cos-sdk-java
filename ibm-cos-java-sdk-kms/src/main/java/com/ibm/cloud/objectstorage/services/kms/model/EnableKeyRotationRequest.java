@@ -1,11 +1,11 @@
 /*
- * Copyright 2017-2022 Amazon.com, Inc. or its affiliates. All Rights Reserved.
- *
+ * Copyright 2018-2023 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * 
  * Licensed under the Apache License, Version 2.0 (the "License"). You may not use this file except in compliance with
  * the License. A copy of the License is located at
- *
+ * 
  * http://aws.amazon.com/apache2.0
- *
+ * 
  * or in the "license" file accompanying this file. This file is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
  * CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions
  * and limitations under the License.
@@ -27,14 +27,14 @@ public class EnableKeyRotationRequest extends com.ibm.cloud.objectstorage.Amazon
 
     /**
      * <p>
-     * Identifies a symmetric KMS key. You cannot enable automatic rotation of <a
-     * href="https://docs.aws.amazon.com/kms/latest/developerguide/symm-asymm-concepts.html#asymmetric-cmks">asymmetric
-     * KMS keys</a>, KMS keys with <a
+     * Identifies a symmetric encryption KMS key. You cannot enable automatic rotation of <a
+     * href="https://docs.aws.amazon.com/kms/latest/developerguide/symmetric-asymmetric.html">asymmetric KMS keys</a>,
+     * <a href="https://docs.aws.amazon.com/kms/latest/developerguide/hmac.html">HMAC KMS keys</a>, KMS keys with <a
      * href="https://docs.aws.amazon.com/kms/latest/developerguide/importing-keys.html">imported key material</a>, or
      * KMS keys in a <a
      * href="https://docs.aws.amazon.com/kms/latest/developerguide/custom-key-store-overview.html">custom key store</a>.
      * To enable or disable automatic rotation of a set of related <a
-     * href="https://docs.aws.amazon.com/kms/latest/developerguide/multi-region-keys-overview.html#mrk-replica-key"
+     * href="https://docs.aws.amazon.com/kms/latest/developerguide/multi-region-keys-manage.html#multi-region-rotate"
      * >multi-Region keys</a>, set the property on the primary key.
      * </p>
      * <p>
@@ -63,14 +63,14 @@ public class EnableKeyRotationRequest extends com.ibm.cloud.objectstorage.Amazon
 
     /**
      * <p>
-     * Identifies a symmetric KMS key. You cannot enable automatic rotation of <a
-     * href="https://docs.aws.amazon.com/kms/latest/developerguide/symm-asymm-concepts.html#asymmetric-cmks">asymmetric
-     * KMS keys</a>, KMS keys with <a
+     * Identifies a symmetric encryption KMS key. You cannot enable automatic rotation of <a
+     * href="https://docs.aws.amazon.com/kms/latest/developerguide/symmetric-asymmetric.html">asymmetric KMS keys</a>,
+     * <a href="https://docs.aws.amazon.com/kms/latest/developerguide/hmac.html">HMAC KMS keys</a>, KMS keys with <a
      * href="https://docs.aws.amazon.com/kms/latest/developerguide/importing-keys.html">imported key material</a>, or
      * KMS keys in a <a
      * href="https://docs.aws.amazon.com/kms/latest/developerguide/custom-key-store-overview.html">custom key store</a>.
      * To enable or disable automatic rotation of a set of related <a
-     * href="https://docs.aws.amazon.com/kms/latest/developerguide/multi-region-keys-overview.html#mrk-replica-key"
+     * href="https://docs.aws.amazon.com/kms/latest/developerguide/multi-region-keys-manage.html#multi-region-rotate"
      * >multi-Region keys</a>, set the property on the primary key.
      * </p>
      * <p>
@@ -94,16 +94,16 @@ public class EnableKeyRotationRequest extends com.ibm.cloud.objectstorage.Amazon
      * <p>
      * To get the key ID and key ARN for a KMS key, use <a>ListKeys</a> or <a>DescribeKey</a>.
      * </p>
-     *
+     * 
      * @param keyId
-     *        Identifies a symmetric KMS key. You cannot enable automatic rotation of <a
-     *        href="https://docs.aws.amazon.com/kms/latest/developerguide/symm-asymm-concepts.html#asymmetric-cmks"
-     *        >asymmetric KMS keys</a>, KMS keys with <a
-     *        href="https://docs.aws.amazon.com/kms/latest/developerguide/importing-keys.html">imported key
+     *        Identifies a symmetric encryption KMS key. You cannot enable automatic rotation of <a
+     *        href="https://docs.aws.amazon.com/kms/latest/developerguide/symmetric-asymmetric.html">asymmetric KMS
+     *        keys</a>, <a href="https://docs.aws.amazon.com/kms/latest/developerguide/hmac.html">HMAC KMS keys</a>, KMS
+     *        keys with <a href="https://docs.aws.amazon.com/kms/latest/developerguide/importing-keys.html">imported key
      *        material</a>, or KMS keys in a <a
      *        href="https://docs.aws.amazon.com/kms/latest/developerguide/custom-key-store-overview.html">custom key
      *        store</a>. To enable or disable automatic rotation of a set of related <a href=
-     *        "https://docs.aws.amazon.com/kms/latest/developerguide/multi-region-keys-overview.html#mrk-replica-key"
+     *        "https://docs.aws.amazon.com/kms/latest/developerguide/multi-region-keys-manage.html#multi-region-rotate"
      *        >multi-Region keys</a>, set the property on the primary key.</p>
      *        <p>
      *        Specify the key ID or key ARN of the KMS key.
@@ -133,14 +133,14 @@ public class EnableKeyRotationRequest extends com.ibm.cloud.objectstorage.Amazon
 
     /**
      * <p>
-     * Identifies a symmetric KMS key. You cannot enable automatic rotation of <a
-     * href="https://docs.aws.amazon.com/kms/latest/developerguide/symm-asymm-concepts.html#asymmetric-cmks">asymmetric
-     * KMS keys</a>, KMS keys with <a
+     * Identifies a symmetric encryption KMS key. You cannot enable automatic rotation of <a
+     * href="https://docs.aws.amazon.com/kms/latest/developerguide/symmetric-asymmetric.html">asymmetric KMS keys</a>,
+     * <a href="https://docs.aws.amazon.com/kms/latest/developerguide/hmac.html">HMAC KMS keys</a>, KMS keys with <a
      * href="https://docs.aws.amazon.com/kms/latest/developerguide/importing-keys.html">imported key material</a>, or
      * KMS keys in a <a
      * href="https://docs.aws.amazon.com/kms/latest/developerguide/custom-key-store-overview.html">custom key store</a>.
      * To enable or disable automatic rotation of a set of related <a
-     * href="https://docs.aws.amazon.com/kms/latest/developerguide/multi-region-keys-overview.html#mrk-replica-key"
+     * href="https://docs.aws.amazon.com/kms/latest/developerguide/multi-region-keys-manage.html#multi-region-rotate"
      * >multi-Region keys</a>, set the property on the primary key.
      * </p>
      * <p>
@@ -164,15 +164,16 @@ public class EnableKeyRotationRequest extends com.ibm.cloud.objectstorage.Amazon
      * <p>
      * To get the key ID and key ARN for a KMS key, use <a>ListKeys</a> or <a>DescribeKey</a>.
      * </p>
-     *
-     * @return Identifies a symmetric KMS key. You cannot enable automatic rotation of <a
-     *         href="https://docs.aws.amazon.com/kms/latest/developerguide/symm-asymm-concepts.html#asymmetric-cmks"
-     *         >asymmetric KMS keys</a>, KMS keys with <a
+     * 
+     * @return Identifies a symmetric encryption KMS key. You cannot enable automatic rotation of <a
+     *         href="https://docs.aws.amazon.com/kms/latest/developerguide/symmetric-asymmetric.html">asymmetric KMS
+     *         keys</a>, <a href="https://docs.aws.amazon.com/kms/latest/developerguide/hmac.html">HMAC KMS keys</a>,
+     *         KMS keys with <a
      *         href="https://docs.aws.amazon.com/kms/latest/developerguide/importing-keys.html">imported key
      *         material</a>, or KMS keys in a <a
      *         href="https://docs.aws.amazon.com/kms/latest/developerguide/custom-key-store-overview.html">custom key
      *         store</a>. To enable or disable automatic rotation of a set of related <a href=
-     *         "https://docs.aws.amazon.com/kms/latest/developerguide/multi-region-keys-overview.html#mrk-replica-key"
+     *         "https://docs.aws.amazon.com/kms/latest/developerguide/multi-region-keys-manage.html#multi-region-rotate"
      *         >multi-Region keys</a>, set the property on the primary key.</p>
      *         <p>
      *         Specify the key ID or key ARN of the KMS key.
@@ -202,14 +203,14 @@ public class EnableKeyRotationRequest extends com.ibm.cloud.objectstorage.Amazon
 
     /**
      * <p>
-     * Identifies a symmetric KMS key. You cannot enable automatic rotation of <a
-     * href="https://docs.aws.amazon.com/kms/latest/developerguide/symm-asymm-concepts.html#asymmetric-cmks">asymmetric
-     * KMS keys</a>, KMS keys with <a
+     * Identifies a symmetric encryption KMS key. You cannot enable automatic rotation of <a
+     * href="https://docs.aws.amazon.com/kms/latest/developerguide/symmetric-asymmetric.html">asymmetric KMS keys</a>,
+     * <a href="https://docs.aws.amazon.com/kms/latest/developerguide/hmac.html">HMAC KMS keys</a>, KMS keys with <a
      * href="https://docs.aws.amazon.com/kms/latest/developerguide/importing-keys.html">imported key material</a>, or
      * KMS keys in a <a
      * href="https://docs.aws.amazon.com/kms/latest/developerguide/custom-key-store-overview.html">custom key store</a>.
      * To enable or disable automatic rotation of a set of related <a
-     * href="https://docs.aws.amazon.com/kms/latest/developerguide/multi-region-keys-overview.html#mrk-replica-key"
+     * href="https://docs.aws.amazon.com/kms/latest/developerguide/multi-region-keys-manage.html#multi-region-rotate"
      * >multi-Region keys</a>, set the property on the primary key.
      * </p>
      * <p>
@@ -233,16 +234,16 @@ public class EnableKeyRotationRequest extends com.ibm.cloud.objectstorage.Amazon
      * <p>
      * To get the key ID and key ARN for a KMS key, use <a>ListKeys</a> or <a>DescribeKey</a>.
      * </p>
-     *
+     * 
      * @param keyId
-     *        Identifies a symmetric KMS key. You cannot enable automatic rotation of <a
-     *        href="https://docs.aws.amazon.com/kms/latest/developerguide/symm-asymm-concepts.html#asymmetric-cmks"
-     *        >asymmetric KMS keys</a>, KMS keys with <a
-     *        href="https://docs.aws.amazon.com/kms/latest/developerguide/importing-keys.html">imported key
+     *        Identifies a symmetric encryption KMS key. You cannot enable automatic rotation of <a
+     *        href="https://docs.aws.amazon.com/kms/latest/developerguide/symmetric-asymmetric.html">asymmetric KMS
+     *        keys</a>, <a href="https://docs.aws.amazon.com/kms/latest/developerguide/hmac.html">HMAC KMS keys</a>, KMS
+     *        keys with <a href="https://docs.aws.amazon.com/kms/latest/developerguide/importing-keys.html">imported key
      *        material</a>, or KMS keys in a <a
      *        href="https://docs.aws.amazon.com/kms/latest/developerguide/custom-key-store-overview.html">custom key
      *        store</a>. To enable or disable automatic rotation of a set of related <a href=
-     *        "https://docs.aws.amazon.com/kms/latest/developerguide/multi-region-keys-overview.html#mrk-replica-key"
+     *        "https://docs.aws.amazon.com/kms/latest/developerguide/multi-region-keys-manage.html#multi-region-rotate"
      *        >multi-Region keys</a>, set the property on the primary key.</p>
      *        <p>
      *        Specify the key ID or key ARN of the KMS key.

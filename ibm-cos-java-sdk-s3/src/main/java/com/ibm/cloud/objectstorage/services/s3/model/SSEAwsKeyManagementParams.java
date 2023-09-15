@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2022 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2014-2023 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -18,16 +18,16 @@ import java.io.Serializable;
 public class SSEAwsKeyManagementParams implements Serializable {
 
     /**
-     * @exclude
      * The Amazon Web Services Key Management Key id to be used for Server Side Encryption of
      * the Amazon S3 object.
      */
     private String awsKmsKeyId;
 
-    /*
-     * @exclude
+    /**
      * Specifies the Amazon Web Services KMS Encryption Context to use for object encryption.
-     * The value of this header is a base64-encoded UTF-8 string holding JSON with the encryption context key-value pairs.
+     * The value of this header is a base64-encoded UTF-8 string holding JSON with the encryption context key-value
+     * pairs. This value is stored as object metadata and automatically gets passed on to Amazon Web Services KMS for
+     * future <code>GetObject</code> or <code>CopyObject</code> operations on this object.
      */
     private String awsKmsEncryptionContext;
 

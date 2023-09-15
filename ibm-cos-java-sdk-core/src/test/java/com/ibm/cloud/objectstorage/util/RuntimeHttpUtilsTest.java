@@ -1,5 +1,5 @@
 /*
- * Copyright 2011-2022 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2011-2023 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -135,6 +135,8 @@ public class RuntimeHttpUtilsTest {
             request.setResourcePath("foo/bar");
             RuntimeHttpUtils.convertRequestToUrl(request, false, false);
         }
+
+
 
         private Request<?> newRequest() {
             Request<?> request = new DefaultRequest<Object>("foo");

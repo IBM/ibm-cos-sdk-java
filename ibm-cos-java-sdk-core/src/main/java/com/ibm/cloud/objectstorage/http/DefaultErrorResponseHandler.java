@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2022 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2010-2023 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -31,10 +31,13 @@ import org.xml.sax.SAXException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
+import java.util.Map;
 
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.xpath.XPathExpressionException;
 
 import static com.ibm.cloud.objectstorage.http.AmazonHttpClient.HEADER_SDK_TRANSACTION_ID;
+import static com.ibm.cloud.objectstorage.util.XpathUtils.asString;
 
 /**
  * Implementation of HttpResponseHandler that handles only error responses from Amazon Web Services.
@@ -49,9 +52,34 @@ public class DefaultErrorResponseHandler implements HttpResponseHandler<AmazonSe
     private static final Log log = LogFactory.getLog(DefaultErrorResponseHandler.class);
 
     /**
-     * The list of error response unmarshallers to try to apply to error responses.
+     * The map with key as ErrorCode and value as Unmarshaller to try to apply to error responses.
      */
+    private Map<String, Unmarshaller<AmazonServiceException, Node>> unmarshallerMap;
+
+    /**
+     * Default Unmarshaller that needs to be applied when mapped Unmarshaller for an errorCode is not found.
+     */
+    private Unmarshaller<AmazonServiceException, Node> defaultUnmarshaller;
+
     private List<Unmarshaller<AmazonServiceException, Node>> unmarshallerList;
+
+
+
+    /**
+     * Constructs a new DefaultErrorResponseHandler that will handle error responses from Amazon
+     * services using the specified map of unmarshallers. Unmrarshallers are retrieved from unmarshallerMap
+     *
+     * @param unmarshallerMap The map of unmarshallers where key is errorCode
+     *                        and Value is unmarshaller for that errorCode.
+     * @param defaultUnmarshaller Default or standard Unmarshaller defined for the Service.
+
+     */
+    public DefaultErrorResponseHandler(
+            Map<String, Unmarshaller<AmazonServiceException, Node>>unmarshallerMap,
+            Unmarshaller<AmazonServiceException, Node> defaultUnmarshaller) {
+        this.unmarshallerMap = unmarshallerMap;
+        this.defaultUnmarshaller = defaultUnmarshaller;
+    }
 
     /**
      * Constructs a new DefaultErrorResponseHandler that will handle error responses from Amazon
@@ -86,16 +114,56 @@ public class DefaultErrorResponseHandler implements HttpResponseHandler<AmazonSe
         /*
          * We need to select which exception unmarshaller is the correct one to
          * use from all the possible exceptions this operation can throw.
-         * Currently we rely on the unmarshallers to return null if they can't
+         * Currently, we rely on the unmarshallers to return null if they can't
          * unmarshall the response, but we might need something a little more
          * sophisticated in the future.
          */
+        return unmarshallerMap != null ? exceptionFromMappedUnmarshallers(errorResponse, document)
+                : getExceptionFromList(errorResponse, document);
+    }
+
+    private AmazonServiceException exceptionFromMappedUnmarshallers(HttpResponse errorResponse, Document document)
+            throws Exception {
+
+        Unmarshaller<AmazonServiceException, Node> mappedUnmarshaller = null;
+        String errorCode = parseErrorCodeFromResponse(document);
+        if (errorCode != null) {
+            mappedUnmarshaller = unmarshallerMap.get(errorCode);
+        }
+        Unmarshaller<AmazonServiceException, Node> unmarshaller = mappedUnmarshaller != null
+                ? mappedUnmarshaller : defaultUnmarshaller;
+        return unmarshaller != null ? getAmazonServiceException(errorResponse, document, unmarshaller) : null;
+    }
+
+    private String parseErrorCodeFromResponse(Document document) throws XPathExpressionException {
+        // Legacy Error Responses
+        String errorCode = asString("Response/Errors/Error/Code", document);
+        if (errorCode == null) {
+            // Standard Error responses.
+            errorCode = asString("ErrorResponse/Error/Code", document);
+        }
+        return errorCode;
+    }
+
+    private AmazonServiceException getExceptionFromList(HttpResponse errorResponse, Document document)
+            throws Exception {
         for (Unmarshaller<AmazonServiceException, Node> unmarshaller : unmarshallerList) {
-            AmazonServiceException ase = unmarshaller.unmarshall(document);
-            if (ase != null) {
-                ase.setStatusCode(errorResponse.getStatusCode());
-                return ase;
+            AmazonServiceException exception = getAmazonServiceException(errorResponse, document, unmarshaller);
+            if(exception != null){
+                return exception;
             }
+        }
+        return null;
+    }
+
+    private AmazonServiceException getAmazonServiceException(HttpResponse errorResponse,
+                                                             Document document,
+                                                             Unmarshaller<AmazonServiceException, Node> unmarshaller)
+            throws Exception {
+        AmazonServiceException ase = unmarshaller.unmarshall(document);
+        if (ase != null) {
+            ase.setStatusCode(errorResponse.getStatusCode());
+            return ase;
         }
         return null;
     }

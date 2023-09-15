@@ -1,11 +1,11 @@
 /*
- * Copyright 2017-2022 Amazon.com, Inc. or its affiliates. All Rights Reserved.
- *
+ * Copyright 2018-2023 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * 
  * Licensed under the Apache License, Version 2.0 (the "License"). You may not use this file except in compliance with
  * the License. A copy of the License is located at
- *
+ * 
  * http://aws.amazon.com/apache2.0
- *
+ * 
  * or in the "license" file accompanying this file. This file is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
  * CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions
  * and limitations under the License.
@@ -27,7 +27,9 @@ public class GenerateDataKeyWithoutPlaintextRequest extends com.ibm.cloud.object
 
     /**
      * <p>
-     * The identifier of the symmetric KMS key that encrypts the data key.
+     * Specifies the symmetric encryption KMS key that encrypts the data key. You cannot specify an asymmetric KMS key
+     * or a KMS key in a custom key store. To get the type and origin of your KMS key, use the <a>DescribeKey</a>
+     * operation.
      * </p>
      * <p>
      * To specify a KMS key, use its key ID, key ARN, alias name, or alias ARN. When using an alias name, prefix it with
@@ -69,15 +71,22 @@ public class GenerateDataKeyWithoutPlaintextRequest extends com.ibm.cloud.object
      * <p>
      * Specifies the encryption context that will be used when encrypting the data key.
      * </p>
+     * <important>
      * <p>
-     * An <i>encryption context</i> is a collection of non-secret key-value pairs that represents additional
+     * Do not include confidential or sensitive information in this field. This field may be displayed in plaintext in
+     * CloudTrail logs and other output.
+     * </p>
+     * </important>
+     * <p>
+     * An <i>encryption context</i> is a collection of non-secret key-value pairs that represent additional
      * authenticated data. When you use an encryption context to encrypt data, you must specify the same (an exact
-     * case-sensitive match) encryption context to decrypt the data. An encryption context is optional when encrypting
-     * with a symmetric KMS key, but it is highly recommended.
+     * case-sensitive match) encryption context to decrypt the data. An encryption context is supported only on
+     * operations with symmetric encryption KMS keys. On operations with symmetric encryption KMS keys, an encryption
+     * context is optional, but it is strongly recommended.
      * </p>
      * <p>
      * For more information, see <a
-     * href="https://docs.aws.amazon.com/kms/latest/developerguide/concepts.html#encrypt_context">Encryption Context</a>
+     * href="https://docs.aws.amazon.com/kms/latest/developerguide/concepts.html#encrypt_context">Encryption context</a>
      * in the <i>Key Management Service Developer Guide</i>.
      * </p>
      */
@@ -113,7 +122,9 @@ public class GenerateDataKeyWithoutPlaintextRequest extends com.ibm.cloud.object
 
     /**
      * <p>
-     * The identifier of the symmetric KMS key that encrypts the data key.
+     * Specifies the symmetric encryption KMS key that encrypts the data key. You cannot specify an asymmetric KMS key
+     * or a KMS key in a custom key store. To get the type and origin of your KMS key, use the <a>DescribeKey</a>
+     * operation.
      * </p>
      * <p>
      * To specify a KMS key, use its key ID, key ARN, alias name, or alias ARN. When using an alias name, prefix it with
@@ -149,9 +160,11 @@ public class GenerateDataKeyWithoutPlaintextRequest extends com.ibm.cloud.object
      * To get the key ID and key ARN for a KMS key, use <a>ListKeys</a> or <a>DescribeKey</a>. To get the alias name and
      * alias ARN, use <a>ListAliases</a>.
      * </p>
-     *
+     * 
      * @param keyId
-     *        The identifier of the symmetric KMS key that encrypts the data key.</p>
+     *        Specifies the symmetric encryption KMS key that encrypts the data key. You cannot specify an asymmetric
+     *        KMS key or a KMS key in a custom key store. To get the type and origin of your KMS key, use the
+     *        <a>DescribeKey</a> operation.</p>
      *        <p>
      *        To specify a KMS key, use its key ID, key ARN, alias name, or alias ARN. When using an alias name, prefix
      *        it with <code>"alias/"</code>. To specify a KMS key in a different Amazon Web Services account, you must
@@ -193,7 +206,9 @@ public class GenerateDataKeyWithoutPlaintextRequest extends com.ibm.cloud.object
 
     /**
      * <p>
-     * The identifier of the symmetric KMS key that encrypts the data key.
+     * Specifies the symmetric encryption KMS key that encrypts the data key. You cannot specify an asymmetric KMS key
+     * or a KMS key in a custom key store. To get the type and origin of your KMS key, use the <a>DescribeKey</a>
+     * operation.
      * </p>
      * <p>
      * To specify a KMS key, use its key ID, key ARN, alias name, or alias ARN. When using an alias name, prefix it with
@@ -229,8 +244,10 @@ public class GenerateDataKeyWithoutPlaintextRequest extends com.ibm.cloud.object
      * To get the key ID and key ARN for a KMS key, use <a>ListKeys</a> or <a>DescribeKey</a>. To get the alias name and
      * alias ARN, use <a>ListAliases</a>.
      * </p>
-     *
-     * @return The identifier of the symmetric KMS key that encrypts the data key.</p>
+     * 
+     * @return Specifies the symmetric encryption KMS key that encrypts the data key. You cannot specify an asymmetric
+     *         KMS key or a KMS key in a custom key store. To get the type and origin of your KMS key, use the
+     *         <a>DescribeKey</a> operation.</p>
      *         <p>
      *         To specify a KMS key, use its key ID, key ARN, alias name, or alias ARN. When using an alias name, prefix
      *         it with <code>"alias/"</code>. To specify a KMS key in a different Amazon Web Services account, you must
@@ -272,7 +289,9 @@ public class GenerateDataKeyWithoutPlaintextRequest extends com.ibm.cloud.object
 
     /**
      * <p>
-     * The identifier of the symmetric KMS key that encrypts the data key.
+     * Specifies the symmetric encryption KMS key that encrypts the data key. You cannot specify an asymmetric KMS key
+     * or a KMS key in a custom key store. To get the type and origin of your KMS key, use the <a>DescribeKey</a>
+     * operation.
      * </p>
      * <p>
      * To specify a KMS key, use its key ID, key ARN, alias name, or alias ARN. When using an alias name, prefix it with
@@ -308,9 +327,11 @@ public class GenerateDataKeyWithoutPlaintextRequest extends com.ibm.cloud.object
      * To get the key ID and key ARN for a KMS key, use <a>ListKeys</a> or <a>DescribeKey</a>. To get the alias name and
      * alias ARN, use <a>ListAliases</a>.
      * </p>
-     *
+     * 
      * @param keyId
-     *        The identifier of the symmetric KMS key that encrypts the data key.</p>
+     *        Specifies the symmetric encryption KMS key that encrypts the data key. You cannot specify an asymmetric
+     *        KMS key or a KMS key in a custom key store. To get the type and origin of your KMS key, use the
+     *        <a>DescribeKey</a> operation.</p>
      *        <p>
      *        To specify a KMS key, use its key ID, key ARN, alias name, or alias ARN. When using an alias name, prefix
      *        it with <code>"alias/"</code>. To specify a KMS key in a different Amazon Web Services account, you must
@@ -356,29 +377,42 @@ public class GenerateDataKeyWithoutPlaintextRequest extends com.ibm.cloud.object
      * <p>
      * Specifies the encryption context that will be used when encrypting the data key.
      * </p>
+     * <important>
      * <p>
-     * An <i>encryption context</i> is a collection of non-secret key-value pairs that represents additional
+     * Do not include confidential or sensitive information in this field. This field may be displayed in plaintext in
+     * CloudTrail logs and other output.
+     * </p>
+     * </important>
+     * <p>
+     * An <i>encryption context</i> is a collection of non-secret key-value pairs that represent additional
      * authenticated data. When you use an encryption context to encrypt data, you must specify the same (an exact
-     * case-sensitive match) encryption context to decrypt the data. An encryption context is optional when encrypting
-     * with a symmetric KMS key, but it is highly recommended.
+     * case-sensitive match) encryption context to decrypt the data. An encryption context is supported only on
+     * operations with symmetric encryption KMS keys. On operations with symmetric encryption KMS keys, an encryption
+     * context is optional, but it is strongly recommended.
      * </p>
      * <p>
      * For more information, see <a
-     * href="https://docs.aws.amazon.com/kms/latest/developerguide/concepts.html#encrypt_context">Encryption Context</a>
+     * href="https://docs.aws.amazon.com/kms/latest/developerguide/concepts.html#encrypt_context">Encryption context</a>
      * in the <i>Key Management Service Developer Guide</i>.
      * </p>
-     *
-     * @return Specifies the encryption context that will be used when encrypting the data key.</p>
+     * 
+     * @return Specifies the encryption context that will be used when encrypting the data key.</p> <important>
      *         <p>
-     *         An <i>encryption context</i> is a collection of non-secret key-value pairs that represents additional
+     *         Do not include confidential or sensitive information in this field. This field may be displayed in
+     *         plaintext in CloudTrail logs and other output.
+     *         </p>
+     *         </important>
+     *         <p>
+     *         An <i>encryption context</i> is a collection of non-secret key-value pairs that represent additional
      *         authenticated data. When you use an encryption context to encrypt data, you must specify the same (an
-     *         exact case-sensitive match) encryption context to decrypt the data. An encryption context is optional
-     *         when encrypting with a symmetric KMS key, but it is highly recommended.
+     *         exact case-sensitive match) encryption context to decrypt the data. An encryption context is supported
+     *         only on operations with symmetric encryption KMS keys. On operations with symmetric encryption KMS keys,
+     *         an encryption context is optional, but it is strongly recommended.
      *         </p>
      *         <p>
      *         For more information, see <a
      *         href="https://docs.aws.amazon.com/kms/latest/developerguide/concepts.html#encrypt_context">Encryption
-     *         Context</a> in the <i>Key Management Service Developer Guide</i>.
+     *         context</a> in the <i>Key Management Service Developer Guide</i>.
      */
 
     public java.util.Map<String, String> getEncryptionContext() {
@@ -392,30 +426,43 @@ public class GenerateDataKeyWithoutPlaintextRequest extends com.ibm.cloud.object
      * <p>
      * Specifies the encryption context that will be used when encrypting the data key.
      * </p>
+     * <important>
      * <p>
-     * An <i>encryption context</i> is a collection of non-secret key-value pairs that represents additional
+     * Do not include confidential or sensitive information in this field. This field may be displayed in plaintext in
+     * CloudTrail logs and other output.
+     * </p>
+     * </important>
+     * <p>
+     * An <i>encryption context</i> is a collection of non-secret key-value pairs that represent additional
      * authenticated data. When you use an encryption context to encrypt data, you must specify the same (an exact
-     * case-sensitive match) encryption context to decrypt the data. An encryption context is optional when encrypting
-     * with a symmetric KMS key, but it is highly recommended.
+     * case-sensitive match) encryption context to decrypt the data. An encryption context is supported only on
+     * operations with symmetric encryption KMS keys. On operations with symmetric encryption KMS keys, an encryption
+     * context is optional, but it is strongly recommended.
      * </p>
      * <p>
      * For more information, see <a
-     * href="https://docs.aws.amazon.com/kms/latest/developerguide/concepts.html#encrypt_context">Encryption Context</a>
+     * href="https://docs.aws.amazon.com/kms/latest/developerguide/concepts.html#encrypt_context">Encryption context</a>
      * in the <i>Key Management Service Developer Guide</i>.
      * </p>
-     *
+     * 
      * @param encryptionContext
-     *        Specifies the encryption context that will be used when encrypting the data key.</p>
+     *        Specifies the encryption context that will be used when encrypting the data key.</p> <important>
      *        <p>
-     *        An <i>encryption context</i> is a collection of non-secret key-value pairs that represents additional
+     *        Do not include confidential or sensitive information in this field. This field may be displayed in
+     *        plaintext in CloudTrail logs and other output.
+     *        </p>
+     *        </important>
+     *        <p>
+     *        An <i>encryption context</i> is a collection of non-secret key-value pairs that represent additional
      *        authenticated data. When you use an encryption context to encrypt data, you must specify the same (an
-     *        exact case-sensitive match) encryption context to decrypt the data. An encryption context is optional when
-     *        encrypting with a symmetric KMS key, but it is highly recommended.
+     *        exact case-sensitive match) encryption context to decrypt the data. An encryption context is supported
+     *        only on operations with symmetric encryption KMS keys. On operations with symmetric encryption KMS keys,
+     *        an encryption context is optional, but it is strongly recommended.
      *        </p>
      *        <p>
      *        For more information, see <a
      *        href="https://docs.aws.amazon.com/kms/latest/developerguide/concepts.html#encrypt_context">Encryption
-     *        Context</a> in the <i>Key Management Service Developer Guide</i>.
+     *        context</a> in the <i>Key Management Service Developer Guide</i>.
      */
 
     public void setEncryptionContext(java.util.Map<String, String> encryptionContext) {
@@ -426,30 +473,43 @@ public class GenerateDataKeyWithoutPlaintextRequest extends com.ibm.cloud.object
      * <p>
      * Specifies the encryption context that will be used when encrypting the data key.
      * </p>
+     * <important>
      * <p>
-     * An <i>encryption context</i> is a collection of non-secret key-value pairs that represents additional
+     * Do not include confidential or sensitive information in this field. This field may be displayed in plaintext in
+     * CloudTrail logs and other output.
+     * </p>
+     * </important>
+     * <p>
+     * An <i>encryption context</i> is a collection of non-secret key-value pairs that represent additional
      * authenticated data. When you use an encryption context to encrypt data, you must specify the same (an exact
-     * case-sensitive match) encryption context to decrypt the data. An encryption context is optional when encrypting
-     * with a symmetric KMS key, but it is highly recommended.
+     * case-sensitive match) encryption context to decrypt the data. An encryption context is supported only on
+     * operations with symmetric encryption KMS keys. On operations with symmetric encryption KMS keys, an encryption
+     * context is optional, but it is strongly recommended.
      * </p>
      * <p>
      * For more information, see <a
-     * href="https://docs.aws.amazon.com/kms/latest/developerguide/concepts.html#encrypt_context">Encryption Context</a>
+     * href="https://docs.aws.amazon.com/kms/latest/developerguide/concepts.html#encrypt_context">Encryption context</a>
      * in the <i>Key Management Service Developer Guide</i>.
      * </p>
-     *
+     * 
      * @param encryptionContext
-     *        Specifies the encryption context that will be used when encrypting the data key.</p>
+     *        Specifies the encryption context that will be used when encrypting the data key.</p> <important>
      *        <p>
-     *        An <i>encryption context</i> is a collection of non-secret key-value pairs that represents additional
+     *        Do not include confidential or sensitive information in this field. This field may be displayed in
+     *        plaintext in CloudTrail logs and other output.
+     *        </p>
+     *        </important>
+     *        <p>
+     *        An <i>encryption context</i> is a collection of non-secret key-value pairs that represent additional
      *        authenticated data. When you use an encryption context to encrypt data, you must specify the same (an
-     *        exact case-sensitive match) encryption context to decrypt the data. An encryption context is optional when
-     *        encrypting with a symmetric KMS key, but it is highly recommended.
+     *        exact case-sensitive match) encryption context to decrypt the data. An encryption context is supported
+     *        only on operations with symmetric encryption KMS keys. On operations with symmetric encryption KMS keys,
+     *        an encryption context is optional, but it is strongly recommended.
      *        </p>
      *        <p>
      *        For more information, see <a
      *        href="https://docs.aws.amazon.com/kms/latest/developerguide/concepts.html#encrypt_context">Encryption
-     *        Context</a> in the <i>Key Management Service Developer Guide</i>.
+     *        context</a> in the <i>Key Management Service Developer Guide</i>.
      * @return Returns a reference to this object so that method calls can be chained together.
      */
 

@@ -1,11 +1,11 @@
 /*
- * Copyright 2017-2022 Amazon.com, Inc. or its affiliates. All Rights Reserved.
- *
+ * Copyright 2018-2023 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * 
  * Licensed under the Apache License, Version 2.0 (the "License"). You may not use this file except in compliance with
  * the License. A copy of the License is located at
- *
+ * 
  * http://aws.amazon.com/apache2.0
- *
+ * 
  * or in the "license" file accompanying this file. This file is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
  * CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions
  * and limitations under the License.
@@ -22,6 +22,12 @@ import com.ibm.cloud.objectstorage.protocol.ProtocolMarshaller;
  * A key-value pair. A tag consists of a tag key and a tag value. Tag keys and tag values are both required, but tag
  * values can be empty (null) strings.
  * </p>
+ * <important>
+ * <p>
+ * Do not include confidential or sensitive information in this field. This field may be displayed in plaintext in
+ * CloudTrail logs and other output.
+ * </p>
+ * </important>
  * <p>
  * For information about the rules that apply to tag keys and tag values, see <a
  * href="https://docs.aws.amazon.com/awsaccountbilling/latest/aboutv2/allocation-tag-restrictions.html">User-Defined Tag

@@ -1,11 +1,11 @@
 /*
- * Copyright 2017-2022 Amazon.com, Inc. or its affiliates. All Rights Reserved.
- *
+ * Copyright 2018-2023 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * 
  * Licensed under the Apache License, Version 2.0 (the "License"). You may not use this file except in compliance with
  * the License. A copy of the License is located at
- *
+ * 
  * http://aws.amazon.com/apache2.0
- *
+ * 
  * or in the "license" file accompanying this file. This file is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
  * CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions
  * and limitations under the License.
@@ -30,8 +30,8 @@ public class ListResourceTagsResult extends com.ibm.cloud.objectstorage.AmazonWe
      * <note>
      * <p>
      * Tagging or untagging a KMS key can allow or deny permission to the KMS key. For details, see <a
-     * href="https://docs.aws.amazon.com/kms/latest/developerguide/abac.html">Using ABAC in KMS</a> in the <i>Key
-     * Management Service Developer Guide</i>.
+     * href="https://docs.aws.amazon.com/kms/latest/developerguide/abac.html">ABAC for KMS</a> in the <i>Key Management
+     * Service Developer Guide</i>.
      * </p>
      * </note>
      */
@@ -62,16 +62,16 @@ public class ListResourceTagsResult extends com.ibm.cloud.objectstorage.AmazonWe
      * <note>
      * <p>
      * Tagging or untagging a KMS key can allow or deny permission to the KMS key. For details, see <a
-     * href="https://docs.aws.amazon.com/kms/latest/developerguide/abac.html">Using ABAC in KMS</a> in the <i>Key
-     * Management Service Developer Guide</i>.
+     * href="https://docs.aws.amazon.com/kms/latest/developerguide/abac.html">ABAC for KMS</a> in the <i>Key Management
+     * Service Developer Guide</i>.
      * </p>
      * </note>
-     *
+     * 
      * @return A list of tags. Each tag consists of a tag key and a tag value.</p> <note>
      *         <p>
      *         Tagging or untagging a KMS key can allow or deny permission to the KMS key. For details, see <a
-     *         href="https://docs.aws.amazon.com/kms/latest/developerguide/abac.html">Using ABAC in KMS</a> in the
-     *         <i>Key Management Service Developer Guide</i>.
+     *         href="https://docs.aws.amazon.com/kms/latest/developerguide/abac.html">ABAC for KMS</a> in the <i>Key
+     *         Management Service Developer Guide</i>.
      *         </p>
      */
 
@@ -89,16 +89,16 @@ public class ListResourceTagsResult extends com.ibm.cloud.objectstorage.AmazonWe
      * <note>
      * <p>
      * Tagging or untagging a KMS key can allow or deny permission to the KMS key. For details, see <a
-     * href="https://docs.aws.amazon.com/kms/latest/developerguide/abac.html">Using ABAC in KMS</a> in the <i>Key
-     * Management Service Developer Guide</i>.
+     * href="https://docs.aws.amazon.com/kms/latest/developerguide/abac.html">ABAC for KMS</a> in the <i>Key Management
+     * Service Developer Guide</i>.
      * </p>
      * </note>
-     *
+     * 
      * @param tags
      *        A list of tags. Each tag consists of a tag key and a tag value.</p> <note>
      *        <p>
      *        Tagging or untagging a KMS key can allow or deny permission to the KMS key. For details, see <a
-     *        href="https://docs.aws.amazon.com/kms/latest/developerguide/abac.html">Using ABAC in KMS</a> in the <i>Key
+     *        href="https://docs.aws.amazon.com/kms/latest/developerguide/abac.html">ABAC for KMS</a> in the <i>Key
      *        Management Service Developer Guide</i>.
      *        </p>
      */
@@ -119,8 +119,8 @@ public class ListResourceTagsResult extends com.ibm.cloud.objectstorage.AmazonWe
      * <note>
      * <p>
      * Tagging or untagging a KMS key can allow or deny permission to the KMS key. For details, see <a
-     * href="https://docs.aws.amazon.com/kms/latest/developerguide/abac.html">Using ABAC in KMS</a> in the <i>Key
-     * Management Service Developer Guide</i>.
+     * href="https://docs.aws.amazon.com/kms/latest/developerguide/abac.html">ABAC for KMS</a> in the <i>Key Management
+     * Service Developer Guide</i>.
      * </p>
      * </note>
      * <p>
@@ -133,7 +133,7 @@ public class ListResourceTagsResult extends com.ibm.cloud.objectstorage.AmazonWe
      *        A list of tags. Each tag consists of a tag key and a tag value.</p> <note>
      *        <p>
      *        Tagging or untagging a KMS key can allow or deny permission to the KMS key. For details, see <a
-     *        href="https://docs.aws.amazon.com/kms/latest/developerguide/abac.html">Using ABAC in KMS</a> in the <i>Key
+     *        href="https://docs.aws.amazon.com/kms/latest/developerguide/abac.html">ABAC for KMS</a> in the <i>Key
      *        Management Service Developer Guide</i>.
      *        </p>
      * @return Returns a reference to this object so that method calls can be chained together.
@@ -156,16 +156,16 @@ public class ListResourceTagsResult extends com.ibm.cloud.objectstorage.AmazonWe
      * <note>
      * <p>
      * Tagging or untagging a KMS key can allow or deny permission to the KMS key. For details, see <a
-     * href="https://docs.aws.amazon.com/kms/latest/developerguide/abac.html">Using ABAC in KMS</a> in the <i>Key
-     * Management Service Developer Guide</i>.
+     * href="https://docs.aws.amazon.com/kms/latest/developerguide/abac.html">ABAC for KMS</a> in the <i>Key Management
+     * Service Developer Guide</i>.
      * </p>
      * </note>
-     *
+     * 
      * @param tags
      *        A list of tags. Each tag consists of a tag key and a tag value.</p> <note>
      *        <p>
      *        Tagging or untagging a KMS key can allow or deny permission to the KMS key. For details, see <a
-     *        href="https://docs.aws.amazon.com/kms/latest/developerguide/abac.html">Using ABAC in KMS</a> in the <i>Key
+     *        href="https://docs.aws.amazon.com/kms/latest/developerguide/abac.html">ABAC for KMS</a> in the <i>Key
      *        Management Service Developer Guide</i>.
      *        </p>
      * @return Returns a reference to this object so that method calls can be chained together.

@@ -1,11 +1,11 @@
 /*
- * Copyright 2017-2022 Amazon.com, Inc. or its affiliates. All Rights Reserved.
- *
+ * Copyright 2018-2023 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * 
  * Licensed under the Apache License, Version 2.0 (the "License"). You may not use this file except in compliance with
  * the License. A copy of the License is located at
- *
+ * 
  * http://aws.amazon.com/apache2.0
- *
+ * 
  * or in the "license" file accompanying this file. This file is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
  * CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions
  * and limitations under the License.
@@ -27,26 +27,56 @@ public class GenerateRandomRequest extends com.ibm.cloud.objectstorage.AmazonWeb
 
     /**
      * <p>
-     * The length of the byte string.
+     * The length of the random byte string. This parameter is required.
      * </p>
      */
     private Integer numberOfBytes;
     /**
      * <p>
-     * Generates the random byte string in the CloudHSM cluster that is associated with the specified <a
-     * href="https://docs.aws.amazon.com/kms/latest/developerguide/custom-key-store-overview.html">custom key store</a>.
-     * To find the ID of a custom key store, use the <a>DescribeCustomKeyStores</a> operation.
+     * Generates the random byte string in the CloudHSM cluster that is associated with the specified CloudHSM key
+     * store. To find the ID of a custom key store, use the <a>DescribeCustomKeyStores</a> operation.
+     * </p>
+     * <p>
+     * External key store IDs are not valid for this parameter. If you specify the ID of an external key store,
+     * <code>GenerateRandom</code> throws an <code>UnsupportedOperationException</code>.
      * </p>
      */
     private String customKeyStoreId;
+    /**
+     * <p>
+     * A signed <a
+     * href="https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/nitro-enclave-how.html#term-attestdoc">attestation
+     * document</a> from an Amazon Web Services Nitro enclave and the encryption algorithm to use with the enclave's
+     * public key. The only valid encryption algorithm is <code>RSAES_OAEP_SHA_256</code>.
+     * </p>
+     * <p>
+     * This parameter only supports attestation documents for Amazon Web Services Nitro Enclaves. To include this
+     * parameter, use the <a
+     * href="https://docs.aws.amazon.com/enclaves/latest/user/developing-applications.html#sdk">Amazon Web Services
+     * Nitro Enclaves SDK</a> or any Amazon Web Services SDK.
+     * </p>
+     * <p>
+     * When you use this parameter, instead of returning plaintext bytes, KMS encrypts the plaintext bytes under the
+     * public key in the attestation document, and returns the resulting ciphertext in the
+     * <code>CiphertextForRecipient</code> field in the response. This ciphertext can be decrypted only with the private
+     * key in the enclave. The <code>Plaintext</code> field in the response is null or empty.
+     * </p>
+     * <p>
+     * For information about the interaction between KMS and Amazon Web Services Nitro Enclaves, see <a
+     * href="https://docs.aws.amazon.com/kms/latest/developerguide/services-nitro-enclaves.html">How Amazon Web Services
+     * Nitro Enclaves uses KMS</a> in the <i>Key Management Service Developer Guide</i>.
+     * </p>
+     */
+    // IBM Unsupported
+    // private RecipientInfo recipient;
 
     /**
      * <p>
-     * The length of the byte string.
+     * The length of the random byte string. This parameter is required.
      * </p>
-     *
+     * 
      * @param numberOfBytes
-     *        The length of the byte string.
+     *        The length of the random byte string. This parameter is required.
      */
 
     public void setNumberOfBytes(Integer numberOfBytes) {
@@ -55,10 +85,10 @@ public class GenerateRandomRequest extends com.ibm.cloud.objectstorage.AmazonWeb
 
     /**
      * <p>
-     * The length of the byte string.
+     * The length of the random byte string. This parameter is required.
      * </p>
-     *
-     * @return The length of the byte string.
+     * 
+     * @return The length of the random byte string. This parameter is required.
      */
 
     public Integer getNumberOfBytes() {
@@ -67,11 +97,11 @@ public class GenerateRandomRequest extends com.ibm.cloud.objectstorage.AmazonWeb
 
     /**
      * <p>
-     * The length of the byte string.
+     * The length of the random byte string. This parameter is required.
      * </p>
-     *
+     * 
      * @param numberOfBytes
-     *        The length of the byte string.
+     *        The length of the random byte string. This parameter is required.
      * @return Returns a reference to this object so that method calls can be chained together.
      */
 
@@ -82,15 +112,20 @@ public class GenerateRandomRequest extends com.ibm.cloud.objectstorage.AmazonWeb
 
     /**
      * <p>
-     * Generates the random byte string in the CloudHSM cluster that is associated with the specified <a
-     * href="https://docs.aws.amazon.com/kms/latest/developerguide/custom-key-store-overview.html">custom key store</a>.
-     * To find the ID of a custom key store, use the <a>DescribeCustomKeyStores</a> operation.
+     * Generates the random byte string in the CloudHSM cluster that is associated with the specified CloudHSM key
+     * store. To find the ID of a custom key store, use the <a>DescribeCustomKeyStores</a> operation.
      * </p>
-     *
+     * <p>
+     * External key store IDs are not valid for this parameter. If you specify the ID of an external key store,
+     * <code>GenerateRandom</code> throws an <code>UnsupportedOperationException</code>.
+     * </p>
+     * 
      * @param customKeyStoreId
-     *        Generates the random byte string in the CloudHSM cluster that is associated with the specified <a
-     *        href="https://docs.aws.amazon.com/kms/latest/developerguide/custom-key-store-overview.html">custom key
-     *        store</a>. To find the ID of a custom key store, use the <a>DescribeCustomKeyStores</a> operation.
+     *        Generates the random byte string in the CloudHSM cluster that is associated with the specified CloudHSM
+     *        key store. To find the ID of a custom key store, use the <a>DescribeCustomKeyStores</a> operation.</p>
+     *        <p>
+     *        External key store IDs are not valid for this parameter. If you specify the ID of an external key store,
+     *        <code>GenerateRandom</code> throws an <code>UnsupportedOperationException</code>.
      */
 
     public void setCustomKeyStoreId(String customKeyStoreId) {
@@ -99,14 +134,19 @@ public class GenerateRandomRequest extends com.ibm.cloud.objectstorage.AmazonWeb
 
     /**
      * <p>
-     * Generates the random byte string in the CloudHSM cluster that is associated with the specified <a
-     * href="https://docs.aws.amazon.com/kms/latest/developerguide/custom-key-store-overview.html">custom key store</a>.
-     * To find the ID of a custom key store, use the <a>DescribeCustomKeyStores</a> operation.
+     * Generates the random byte string in the CloudHSM cluster that is associated with the specified CloudHSM key
+     * store. To find the ID of a custom key store, use the <a>DescribeCustomKeyStores</a> operation.
      * </p>
-     *
-     * @return Generates the random byte string in the CloudHSM cluster that is associated with the specified <a
-     *         href="https://docs.aws.amazon.com/kms/latest/developerguide/custom-key-store-overview.html">custom key
-     *         store</a>. To find the ID of a custom key store, use the <a>DescribeCustomKeyStores</a> operation.
+     * <p>
+     * External key store IDs are not valid for this parameter. If you specify the ID of an external key store,
+     * <code>GenerateRandom</code> throws an <code>UnsupportedOperationException</code>.
+     * </p>
+     * 
+     * @return Generates the random byte string in the CloudHSM cluster that is associated with the specified CloudHSM
+     *         key store. To find the ID of a custom key store, use the <a>DescribeCustomKeyStores</a> operation.</p>
+     *         <p>
+     *         External key store IDs are not valid for this parameter. If you specify the ID of an external key store,
+     *         <code>GenerateRandom</code> throws an <code>UnsupportedOperationException</code>.
      */
 
     public String getCustomKeyStoreId() {
@@ -115,15 +155,20 @@ public class GenerateRandomRequest extends com.ibm.cloud.objectstorage.AmazonWeb
 
     /**
      * <p>
-     * Generates the random byte string in the CloudHSM cluster that is associated with the specified <a
-     * href="https://docs.aws.amazon.com/kms/latest/developerguide/custom-key-store-overview.html">custom key store</a>.
-     * To find the ID of a custom key store, use the <a>DescribeCustomKeyStores</a> operation.
+     * Generates the random byte string in the CloudHSM cluster that is associated with the specified CloudHSM key
+     * store. To find the ID of a custom key store, use the <a>DescribeCustomKeyStores</a> operation.
      * </p>
-     *
+     * <p>
+     * External key store IDs are not valid for this parameter. If you specify the ID of an external key store,
+     * <code>GenerateRandom</code> throws an <code>UnsupportedOperationException</code>.
+     * </p>
+     * 
      * @param customKeyStoreId
-     *        Generates the random byte string in the CloudHSM cluster that is associated with the specified <a
-     *        href="https://docs.aws.amazon.com/kms/latest/developerguide/custom-key-store-overview.html">custom key
-     *        store</a>. To find the ID of a custom key store, use the <a>DescribeCustomKeyStores</a> operation.
+     *        Generates the random byte string in the CloudHSM cluster that is associated with the specified CloudHSM
+     *        key store. To find the ID of a custom key store, use the <a>DescribeCustomKeyStores</a> operation.</p>
+     *        <p>
+     *        External key store IDs are not valid for this parameter. If you specify the ID of an external key store,
+     *        <code>GenerateRandom</code> throws an <code>UnsupportedOperationException</code>.
      * @return Returns a reference to this object so that method calls can be chained together.
      */
 
@@ -131,6 +176,167 @@ public class GenerateRandomRequest extends com.ibm.cloud.objectstorage.AmazonWeb
         setCustomKeyStoreId(customKeyStoreId);
         return this;
     }
+
+    /**
+     * <p>
+     * A signed <a
+     * href="https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/nitro-enclave-how.html#term-attestdoc">attestation
+     * document</a> from an Amazon Web Services Nitro enclave and the encryption algorithm to use with the enclave's
+     * public key. The only valid encryption algorithm is <code>RSAES_OAEP_SHA_256</code>.
+     * </p>
+     * <p>
+     * This parameter only supports attestation documents for Amazon Web Services Nitro Enclaves. To include this
+     * parameter, use the <a
+     * href="https://docs.aws.amazon.com/enclaves/latest/user/developing-applications.html#sdk">Amazon Web Services
+     * Nitro Enclaves SDK</a> or any Amazon Web Services SDK.
+     * </p>
+     * <p>
+     * When you use this parameter, instead of returning plaintext bytes, KMS encrypts the plaintext bytes under the
+     * public key in the attestation document, and returns the resulting ciphertext in the
+     * <code>CiphertextForRecipient</code> field in the response. This ciphertext can be decrypted only with the private
+     * key in the enclave. The <code>Plaintext</code> field in the response is null or empty.
+     * </p>
+     * <p>
+     * For information about the interaction between KMS and Amazon Web Services Nitro Enclaves, see <a
+     * href="https://docs.aws.amazon.com/kms/latest/developerguide/services-nitro-enclaves.html">How Amazon Web Services
+     * Nitro Enclaves uses KMS</a> in the <i>Key Management Service Developer Guide</i>.
+     * </p>
+     * 
+     * @param recipient
+     *        A signed <a
+     *        href="https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/nitro-enclave-how.html#term-attestdoc"
+     *        >attestation document</a> from an Amazon Web Services Nitro enclave and the encryption algorithm to use
+     *        with the enclave's public key. The only valid encryption algorithm is <code>RSAES_OAEP_SHA_256</code>.
+     *        </p>
+     *        <p>
+     *        This parameter only supports attestation documents for Amazon Web Services Nitro Enclaves. To include this
+     *        parameter, use the <a
+     *        href="https://docs.aws.amazon.com/enclaves/latest/user/developing-applications.html#sdk">Amazon Web
+     *        Services Nitro Enclaves SDK</a> or any Amazon Web Services SDK.
+     *        </p>
+     *        <p>
+     *        When you use this parameter, instead of returning plaintext bytes, KMS encrypts the plaintext bytes under
+     *        the public key in the attestation document, and returns the resulting ciphertext in the
+     *        <code>CiphertextForRecipient</code> field in the response. This ciphertext can be decrypted only with the
+     *        private key in the enclave. The <code>Plaintext</code> field in the response is null or empty.
+     *        </p>
+     *        <p>
+     *        For information about the interaction between KMS and Amazon Web Services Nitro Enclaves, see <a
+     *        href="https://docs.aws.amazon.com/kms/latest/developerguide/services-nitro-enclaves.html">How Amazon Web
+     *        Services Nitro Enclaves uses KMS</a> in the <i>Key Management Service Developer Guide</i>.
+     */
+    // IBM Unsupported
+    // public void setRecipient(RecipientInfo recipient) {
+    //     this.recipient = recipient;
+    // }
+
+    /**
+     * <p>
+     * A signed <a
+     * href="https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/nitro-enclave-how.html#term-attestdoc">attestation
+     * document</a> from an Amazon Web Services Nitro enclave and the encryption algorithm to use with the enclave's
+     * public key. The only valid encryption algorithm is <code>RSAES_OAEP_SHA_256</code>.
+     * </p>
+     * <p>
+     * This parameter only supports attestation documents for Amazon Web Services Nitro Enclaves. To include this
+     * parameter, use the <a
+     * href="https://docs.aws.amazon.com/enclaves/latest/user/developing-applications.html#sdk">Amazon Web Services
+     * Nitro Enclaves SDK</a> or any Amazon Web Services SDK.
+     * </p>
+     * <p>
+     * When you use this parameter, instead of returning plaintext bytes, KMS encrypts the plaintext bytes under the
+     * public key in the attestation document, and returns the resulting ciphertext in the
+     * <code>CiphertextForRecipient</code> field in the response. This ciphertext can be decrypted only with the private
+     * key in the enclave. The <code>Plaintext</code> field in the response is null or empty.
+     * </p>
+     * <p>
+     * For information about the interaction between KMS and Amazon Web Services Nitro Enclaves, see <a
+     * href="https://docs.aws.amazon.com/kms/latest/developerguide/services-nitro-enclaves.html">How Amazon Web Services
+     * Nitro Enclaves uses KMS</a> in the <i>Key Management Service Developer Guide</i>.
+     * </p>
+     * 
+     * @return A signed <a
+     *         href="https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/nitro-enclave-how.html#term-attestdoc"
+     *         >attestation document</a> from an Amazon Web Services Nitro enclave and the encryption algorithm to use
+     *         with the enclave's public key. The only valid encryption algorithm is <code>RSAES_OAEP_SHA_256</code>.
+     *         </p>
+     *         <p>
+     *         This parameter only supports attestation documents for Amazon Web Services Nitro Enclaves. To include
+     *         this parameter, use the <a
+     *         href="https://docs.aws.amazon.com/enclaves/latest/user/developing-applications.html#sdk">Amazon Web
+     *         Services Nitro Enclaves SDK</a> or any Amazon Web Services SDK.
+     *         </p>
+     *         <p>
+     *         When you use this parameter, instead of returning plaintext bytes, KMS encrypts the plaintext bytes under
+     *         the public key in the attestation document, and returns the resulting ciphertext in the
+     *         <code>CiphertextForRecipient</code> field in the response. This ciphertext can be decrypted only with the
+     *         private key in the enclave. The <code>Plaintext</code> field in the response is null or empty.
+     *         </p>
+     *         <p>
+     *         For information about the interaction between KMS and Amazon Web Services Nitro Enclaves, see <a
+     *         href="https://docs.aws.amazon.com/kms/latest/developerguide/services-nitro-enclaves.html">How Amazon Web
+     *         Services Nitro Enclaves uses KMS</a> in the <i>Key Management Service Developer Guide</i>.
+     */
+
+    // IBM Unsupported
+    // public RecipientInfo getRecipient() {
+    //     return this.recipient;
+    // }
+
+    /**
+     * <p>
+     * A signed <a
+     * href="https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/nitro-enclave-how.html#term-attestdoc">attestation
+     * document</a> from an Amazon Web Services Nitro enclave and the encryption algorithm to use with the enclave's
+     * public key. The only valid encryption algorithm is <code>RSAES_OAEP_SHA_256</code>.
+     * </p>
+     * <p>
+     * This parameter only supports attestation documents for Amazon Web Services Nitro Enclaves. To include this
+     * parameter, use the <a
+     * href="https://docs.aws.amazon.com/enclaves/latest/user/developing-applications.html#sdk">Amazon Web Services
+     * Nitro Enclaves SDK</a> or any Amazon Web Services SDK.
+     * </p>
+     * <p>
+     * When you use this parameter, instead of returning plaintext bytes, KMS encrypts the plaintext bytes under the
+     * public key in the attestation document, and returns the resulting ciphertext in the
+     * <code>CiphertextForRecipient</code> field in the response. This ciphertext can be decrypted only with the private
+     * key in the enclave. The <code>Plaintext</code> field in the response is null or empty.
+     * </p>
+     * <p>
+     * For information about the interaction between KMS and Amazon Web Services Nitro Enclaves, see <a
+     * href="https://docs.aws.amazon.com/kms/latest/developerguide/services-nitro-enclaves.html">How Amazon Web Services
+     * Nitro Enclaves uses KMS</a> in the <i>Key Management Service Developer Guide</i>.
+     * </p>
+     * 
+     * @param recipient
+     *        A signed <a
+     *        href="https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/nitro-enclave-how.html#term-attestdoc"
+     *        >attestation document</a> from an Amazon Web Services Nitro enclave and the encryption algorithm to use
+     *        with the enclave's public key. The only valid encryption algorithm is <code>RSAES_OAEP_SHA_256</code>.
+     *        </p>
+     *        <p>
+     *        This parameter only supports attestation documents for Amazon Web Services Nitro Enclaves. To include this
+     *        parameter, use the <a
+     *        href="https://docs.aws.amazon.com/enclaves/latest/user/developing-applications.html#sdk">Amazon Web
+     *        Services Nitro Enclaves SDK</a> or any Amazon Web Services SDK.
+     *        </p>
+     *        <p>
+     *        When you use this parameter, instead of returning plaintext bytes, KMS encrypts the plaintext bytes under
+     *        the public key in the attestation document, and returns the resulting ciphertext in the
+     *        <code>CiphertextForRecipient</code> field in the response. This ciphertext can be decrypted only with the
+     *        private key in the enclave. The <code>Plaintext</code> field in the response is null or empty.
+     *        </p>
+     *        <p>
+     *        For information about the interaction between KMS and Amazon Web Services Nitro Enclaves, see <a
+     *        href="https://docs.aws.amazon.com/kms/latest/developerguide/services-nitro-enclaves.html">How Amazon Web
+     *        Services Nitro Enclaves uses KMS</a> in the <i>Key Management Service Developer Guide</i>.
+     * @return Returns a reference to this object so that method calls can be chained together.
+     */
+    // IBM Unsupported
+    // public GenerateRandomRequest withRecipient(RecipientInfo recipient) {
+    //     setRecipient(recipient);
+    //     return this;
+    // }
 
     /**
      * Returns a string representation of this object. This is useful for testing and debugging. Sensitive data will be
@@ -147,7 +353,10 @@ public class GenerateRandomRequest extends com.ibm.cloud.objectstorage.AmazonWeb
         if (getNumberOfBytes() != null)
             sb.append("NumberOfBytes: ").append(getNumberOfBytes()).append(",");
         if (getCustomKeyStoreId() != null)
-            sb.append("CustomKeyStoreId: ").append(getCustomKeyStoreId());
+            sb.append("CustomKeyStoreId: ").append(getCustomKeyStoreId()).append(",");
+        // IBM Unsupported
+        // if (getRecipient() != null)
+        //     sb.append("Recipient: ").append(getRecipient());
         sb.append("}");
         return sb.toString();
     }
@@ -170,6 +379,11 @@ public class GenerateRandomRequest extends com.ibm.cloud.objectstorage.AmazonWeb
             return false;
         if (other.getCustomKeyStoreId() != null && other.getCustomKeyStoreId().equals(this.getCustomKeyStoreId()) == false)
             return false;
+        // IBM Unsupported
+        // if (other.getRecipient() == null ^ this.getRecipient() == null)
+        //     return false;
+        // if (other.getRecipient() != null && other.getRecipient().equals(this.getRecipient()) == false)
+        //     return false;
         return true;
     }
 
@@ -180,6 +394,8 @@ public class GenerateRandomRequest extends com.ibm.cloud.objectstorage.AmazonWeb
 
         hashCode = prime * hashCode + ((getNumberOfBytes() == null) ? 0 : getNumberOfBytes().hashCode());
         hashCode = prime * hashCode + ((getCustomKeyStoreId() == null) ? 0 : getCustomKeyStoreId().hashCode());
+        // IBM Unsupported
+        // hashCode = prime * hashCode + ((getRecipient() == null) ? 0 : getRecipient().hashCode());
         return hashCode;
     }
 

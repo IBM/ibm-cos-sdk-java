@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2022 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2010-2023 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -20,7 +20,6 @@ import java.security.SecureRandom;
 
 import com.ibm.cloud.objectstorage.regions.Region;
 import com.ibm.cloud.objectstorage.regions.Regions;
-//import com.ibm.cloud.objectstorage.services.s3.AmazonS3EncryptionV2; # unused import
 import com.ibm.cloud.objectstorage.services.s3.internal.crypto.CryptoRuntime;
 
 /**
@@ -307,7 +306,8 @@ public class CryptoConfiguration implements Cloneable,Serializable {
         boolean preferBC = (cryptoMode == CryptoMode.AuthenticatedEncryption)
                            || (cryptoMode == CryptoMode.StrictAuthenticatedEncryption);
 
-        boolean haveOverride = (cryptoProvider != null && alwaysUseCryptoProvider);
+        boolean haveOverride = (cryptoProvider != null && alwaysUseCryptoProvider)
+                || CryptoRuntime.preferDefaultSecurityProvider();
 
         if (preferBC && !haveOverride) {
             if (!CryptoRuntime.isBouncyCastleAvailable()) {

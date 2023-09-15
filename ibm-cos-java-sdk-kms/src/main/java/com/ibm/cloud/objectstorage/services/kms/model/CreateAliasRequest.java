@@ -1,11 +1,11 @@
 /*
- * Copyright 2017-2022 Amazon.com, Inc. or its affiliates. All Rights Reserved.
- *
+ * Copyright 2018-2023 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * 
  * Licensed under the Apache License, Version 2.0 (the "License"). You may not use this file except in compliance with
  * the License. A copy of the License is located at
- *
+ * 
  * http://aws.amazon.com/apache2.0
- *
+ * 
  * or in the "license" file accompanying this file. This file is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
  * CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions
  * and limitations under the License.
@@ -30,6 +30,12 @@ public class CreateAliasRequest extends com.ibm.cloud.objectstorage.AmazonWebSer
      * Specifies the alias name. This value must begin with <code>alias/</code> followed by a name, such as
      * <code>alias/ExampleAlias</code>.
      * </p>
+     * <important>
+     * <p>
+     * Do not include confidential or sensitive information in this field. This field may be displayed in plaintext in
+     * CloudTrail logs and other output.
+     * </p>
+     * </important>
      * <p>
      * The <code>AliasName</code> value must be string of 1-256 characters. It can contain only alphanumeric characters,
      * forward slashes (/), underscores (_), and dashes (-). The alias name cannot begin with <code>alias/aws/</code>.
@@ -82,6 +88,12 @@ public class CreateAliasRequest extends com.ibm.cloud.objectstorage.AmazonWebSer
      * Specifies the alias name. This value must begin with <code>alias/</code> followed by a name, such as
      * <code>alias/ExampleAlias</code>.
      * </p>
+     * <important>
+     * <p>
+     * Do not include confidential or sensitive information in this field. This field may be displayed in plaintext in
+     * CloudTrail logs and other output.
+     * </p>
+     * </important>
      * <p>
      * The <code>AliasName</code> value must be string of 1-256 characters. It can contain only alphanumeric characters,
      * forward slashes (/), underscores (_), and dashes (-). The alias name cannot begin with <code>alias/aws/</code>.
@@ -89,10 +101,15 @@ public class CreateAliasRequest extends com.ibm.cloud.objectstorage.AmazonWebSer
      * href="https://docs.aws.amazon.com/kms/latest/developerguide/concepts.html#aws-managed-cmk">Amazon Web Services
      * managed keys</a>.
      * </p>
-     *
+     * 
      * @param aliasName
      *        Specifies the alias name. This value must begin with <code>alias/</code> followed by a name, such as
-     *        <code>alias/ExampleAlias</code>. </p>
+     *        <code>alias/ExampleAlias</code>. </p> <important>
+     *        <p>
+     *        Do not include confidential or sensitive information in this field. This field may be displayed in
+     *        plaintext in CloudTrail logs and other output.
+     *        </p>
+     *        </important>
      *        <p>
      *        The <code>AliasName</code> value must be string of 1-256 characters. It can contain only alphanumeric
      *        characters, forward slashes (/), underscores (_), and dashes (-). The alias name cannot begin with
@@ -110,6 +127,12 @@ public class CreateAliasRequest extends com.ibm.cloud.objectstorage.AmazonWebSer
      * Specifies the alias name. This value must begin with <code>alias/</code> followed by a name, such as
      * <code>alias/ExampleAlias</code>.
      * </p>
+     * <important>
+     * <p>
+     * Do not include confidential or sensitive information in this field. This field may be displayed in plaintext in
+     * CloudTrail logs and other output.
+     * </p>
+     * </important>
      * <p>
      * The <code>AliasName</code> value must be string of 1-256 characters. It can contain only alphanumeric characters,
      * forward slashes (/), underscores (_), and dashes (-). The alias name cannot begin with <code>alias/aws/</code>.
@@ -117,9 +140,14 @@ public class CreateAliasRequest extends com.ibm.cloud.objectstorage.AmazonWebSer
      * href="https://docs.aws.amazon.com/kms/latest/developerguide/concepts.html#aws-managed-cmk">Amazon Web Services
      * managed keys</a>.
      * </p>
-     *
+     * 
      * @return Specifies the alias name. This value must begin with <code>alias/</code> followed by a name, such as
-     *         <code>alias/ExampleAlias</code>. </p>
+     *         <code>alias/ExampleAlias</code>. </p> <important>
+     *         <p>
+     *         Do not include confidential or sensitive information in this field. This field may be displayed in
+     *         plaintext in CloudTrail logs and other output.
+     *         </p>
+     *         </important>
      *         <p>
      *         The <code>AliasName</code> value must be string of 1-256 characters. It can contain only alphanumeric
      *         characters, forward slashes (/), underscores (_), and dashes (-). The alias name cannot begin with
@@ -137,6 +165,12 @@ public class CreateAliasRequest extends com.ibm.cloud.objectstorage.AmazonWebSer
      * Specifies the alias name. This value must begin with <code>alias/</code> followed by a name, such as
      * <code>alias/ExampleAlias</code>.
      * </p>
+     * <important>
+     * <p>
+     * Do not include confidential or sensitive information in this field. This field may be displayed in plaintext in
+     * CloudTrail logs and other output.
+     * </p>
+     * </important>
      * <p>
      * The <code>AliasName</code> value must be string of 1-256 characters. It can contain only alphanumeric characters,
      * forward slashes (/), underscores (_), and dashes (-). The alias name cannot begin with <code>alias/aws/</code>.
@@ -144,10 +178,15 @@ public class CreateAliasRequest extends com.ibm.cloud.objectstorage.AmazonWebSer
      * href="https://docs.aws.amazon.com/kms/latest/developerguide/concepts.html#aws-managed-cmk">Amazon Web Services
      * managed keys</a>.
      * </p>
-     *
+     * 
      * @param aliasName
      *        Specifies the alias name. This value must begin with <code>alias/</code> followed by a name, such as
-     *        <code>alias/ExampleAlias</code>. </p>
+     *        <code>alias/ExampleAlias</code>. </p> <important>
+     *        <p>
+     *        Do not include confidential or sensitive information in this field. This field may be displayed in
+     *        plaintext in CloudTrail logs and other output.
+     *        </p>
+     *        </important>
      *        <p>
      *        The <code>AliasName</code> value must be string of 1-256 characters. It can contain only alphanumeric
      *        characters, forward slashes (/), underscores (_), and dashes (-). The alias name cannot begin with

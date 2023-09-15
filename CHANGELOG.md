@@ -1,5 +1,14 @@
 # CHANGELOG
 
+## 2.13.2
+
+### Content
+
+#### Defect Fixes
+
+* AWS Patches aligned to version 1.12.470 of the AWS Java SDK
+* Update dependencies
+
 ## 2.13.1
 
 ### Content

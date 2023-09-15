@@ -45,6 +45,11 @@ public class EnvironmentVariableHelper {
         modifiableMap.put(key, value);
     }
 
+    public void remove(String key) {
+        mutated = true;
+        modifiableMap.remove(key);
+    }
+
     public void reset() {
         if (mutated) {
             synchronized (this) {

@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2022 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2010-2023 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -119,10 +119,6 @@ public enum Region {
      * The EU (Frankfurt) Amazon S3 Region. This region uses Amazon S3 servers
      * located in Frankfurt.
      * <p>
-     * The EU (Frankfurt) Region requires Amazon Web Services V4 authentication, therefore when
-     * accessing buckets inside this region, you need to explicitly configure
-     * the "eu-central-1" endpoint for the AmazonS3Client in order to enable V4
-     * signing:
      *
      * <pre>
      * AmazonS3Client s3 = new AmazonS3Client();
@@ -131,19 +127,30 @@ public enum Region {
      *
      * </p>
      *
-     * @see AmazonS3Client#setEndpoint(String)
      * @see AmazonS3Client#setRegion(com.ibm.cloud.objectstorage.regions.Region)
      */
     EU_Frankfurt("eu-central-1"),
 
     /**
+     * The EU (Zurich) Amazon S3 Region. This region uses Amazon S3 servers
+     * located in Zurich.
+     * <p>
+     *
+     * <pre>
+     * AmazonS3Client s3 = new AmazonS3Client();
+     * s3.setRegion(RegionUtils.getRegion("eu-central-2"));
+     * </pre>
+     *
+     * </p>
+     *
+     * @see AmazonS3Client#setRegion(com.ibm.cloud.objectstorage.regions.Region)
+     */
+    EU_Zurich("eu-central-2"),
+
+    /**
      * The EU (Stockholm) Amazon S3 Region. This region uses Amazon S3 servers
      * located in Stockholm.
      * <p>
-     * The EU (Stockholm) Region requires Amazon Web Services V4 authentication, therefore when
-     * accessing buckets inside this region, you need to explicitly configure
-     * the "eu-north-1" endpoint for the AmazonS3Client in order to enable V4
-     * signing:
      *
      * <pre>
      * AmazonS3Client s3 = new AmazonS3Client();
@@ -152,7 +159,6 @@ public enum Region {
      *
      * </p>
      *
-     * @see AmazonS3Client#setEndpoint(String)
      * @see AmazonS3Client#setRegion(com.ibm.cloud.objectstorage.regions.Region)
      */
     EU_North_1("eu-north-1"),
@@ -161,10 +167,6 @@ public enum Region {
      * The EU (Milan) Amazon S3 Region. This region uses Amazon S3 servers
      * located in Milan.
      * <p>
-     * The EU (Milan) Region requires Amazon Web Services V4 authentication, therefore when
-     * accessing buckets inside this region, you need to explicitly configure
-     * the "eu-south-1" endpoint for the AmazonS3Client in order to enable V4
-     * signing:
      *
      * <pre>
      * AmazonS3Client s3 = new AmazonS3Client();
@@ -173,10 +175,25 @@ public enum Region {
      *
      * </p>
      *
-     * @see AmazonS3Client#setEndpoint(String)
      * @see AmazonS3Client#setRegion(com.ibm.cloud.objectstorage.regions.Region)
      */
     EU_South_1("eu-south-1"),
+
+    /**
+     * The EU (Spain) Amazon S3 Region. This region uses Amazon S3 servers
+     * located in Spain.
+     * <p>
+     *
+     * <pre>
+     * AmazonS3Client s3 = new AmazonS3Client();
+     * s3.setRegion(RegionUtils.getRegion("eu-south-2"));
+     * </pre>
+     *
+     * </p>
+     *
+     * @see AmazonS3Client#setRegion(com.ibm.cloud.objectstorage.regions.Region)
+     */
+    EU_South_2("eu-south-2"),
 
     /**
      * The Asia Pacific (Hong Kong) Region. This region uses Amazon S3 servers located
@@ -227,6 +244,18 @@ public enum Region {
     AP_Jakarta("ap-southeast-3"),
 
     /**
+     * The Asia Pacific (Melbourne) Region. This region uses Amazon S3 servers
+     * located in Melbourne, Australia.
+     * <p>
+     * When using buckets in this region, set the client endpoint to
+     * <code>s3-ap-southeast-4.amazonaws.com</code> on all requests to these buckets
+     * to reduce any latency experienced after the first hour of creating a
+     * bucket in this region.
+     * </p>
+     */
+    AP_Melbourne("ap-southeast-4"),
+
+    /**
      * The Asia Pacific (Tokyo) Region. This region uses Amazon S3 servers
      * located in Tokyo.
      * <p>
@@ -267,6 +296,18 @@ public enum Region {
      * </p>
      */
     AP_Mumbai("ap-south-1"),
+
+    /**
+     * The Asia Pacific (Hyderabad) Region. This region uses Amazon S3 servers
+     * located in Hyderabad.
+     * <p>
+     * When using buckets in this region, set the client endpoint to
+     * <code>s3.ap-south-2.amazonaws.com</code> on all requests to these
+     * buckets to reduce any latency experienced after the first hour of
+     * creating a bucket in this region.
+     * </p>
+     */
+    AP_Hyderabad("ap-south-2"),
 
     /**
      * The South America (Sao Paulo) Region. This region uses Amazon S3 servers
@@ -315,20 +356,18 @@ public enum Region {
     /**
      * The Middle East (Bahrain) Region. This region uses Amazon S3 servers
      * located in Bahrain.
-     * <p>
-     * When using buckets in this region, you must set the client endpoint to
-     * <code>s3.me-south-1.amazonaws.com</code>.
-     * </p>
      */
     ME_Bahrain("me-south-1"),
 
     /**
+     * The Middle East (UAE) Region. This region uses Amazon S3 servers
+     * located in UAE.
+     */
+    ME_UAE("me-central-1"),
+
+    /**
      * The Africa South (Cape Town) Region. This region uses Amazon S3 servers
      * located in Cape Town.
-     * <p>
-     * When using buckets in this region, you must set the client endpoint to
-     * <code>s3.af-south-1.amazonaws.com</code>.
-     * </p>
      */
     AF_CapeTown("af-south-1"),
 
@@ -337,7 +376,7 @@ public enum Region {
      * located in Virginia.
      * <p>
      * When using buckets in this region, you must set the client endpoint to
-     * <code>s3.us-iso-east-1.c2c.ic.gov</code>.
+     * <code>s3.us-iso-east-1.c2s.ic.gov</code>.
      * </p>
      */
     US_ISO_EAST_1("us-iso-east-1"),
@@ -357,7 +396,7 @@ public enum Region {
      * located in Colorado.
      * <p>
      * When using buckets in this region, you must set the client endpoint to
-     * <code>s3.us-iso-west-1.c2c.ic.gov</code>.
+     * <code>s3.us-iso-west-1.c2s.ic.gov</code>.
      * </p>
      */
     US_ISO_WEST_1("us-iso-west-1")

@@ -1,11 +1,11 @@
 /*
- * Copyright 2017-2022 Amazon.com, Inc. or its affiliates. All Rights Reserved.
- *
+ * Copyright 2018-2023 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * 
  * Licensed under the Apache License, Version 2.0 (the "License"). You may not use this file except in compliance with
  * the License. A copy of the License is located at
- *
+ * 
  * http://aws.amazon.com/apache2.0
- *
+ * 
  * or in the "license" file accompanying this file. This file is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
  * CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions
  * and limitations under the License.
@@ -50,12 +50,10 @@ public class ListRetirableGrantsRequest extends com.ibm.cloud.objectstorage.Amaz
      * <p>
      * To specify the retiring principal, use the <a
      * href="https://docs.aws.amazon.com/general/latest/gr/aws-arns-and-namespaces.html">Amazon Resource Name (ARN)</a>
-     * of an Amazon Web Services principal. Valid Amazon Web Services principals include Amazon Web Services accounts
-     * (root), IAM users, federated users, and assumed role users. For examples of the ARN syntax for specifying a
-     * principal, see <a
-     * href="https://docs.aws.amazon.com/general/latest/gr/aws-arns-and-namespaces.html#arn-syntax-iam">Amazon Web
-     * Services Identity and Access Management (IAM)</a> in the Example ARNs section of the <i>Amazon Web Services
-     * General Reference</i>.
+     * of an Amazon Web Services principal. Valid principals include Amazon Web Services accounts, IAM users, IAM roles,
+     * federated users, and assumed role users. For help with the ARN syntax for a principal, see <a
+     * href="https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_identifiers.html#identifiers-arns">IAM ARNs</a>
+     * in the <i> <i>Identity and Access Management User Guide</i> </i>.
      * </p>
      */
     private String retiringPrincipal;
@@ -180,26 +178,23 @@ public class ListRetirableGrantsRequest extends com.ibm.cloud.objectstorage.Amaz
      * <p>
      * To specify the retiring principal, use the <a
      * href="https://docs.aws.amazon.com/general/latest/gr/aws-arns-and-namespaces.html">Amazon Resource Name (ARN)</a>
-     * of an Amazon Web Services principal. Valid Amazon Web Services principals include Amazon Web Services accounts
-     * (root), IAM users, federated users, and assumed role users. For examples of the ARN syntax for specifying a
-     * principal, see <a
-     * href="https://docs.aws.amazon.com/general/latest/gr/aws-arns-and-namespaces.html#arn-syntax-iam">Amazon Web
-     * Services Identity and Access Management (IAM)</a> in the Example ARNs section of the <i>Amazon Web Services
-     * General Reference</i>.
+     * of an Amazon Web Services principal. Valid principals include Amazon Web Services accounts, IAM users, IAM roles,
+     * federated users, and assumed role users. For help with the ARN syntax for a principal, see <a
+     * href="https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_identifiers.html#identifiers-arns">IAM ARNs</a>
+     * in the <i> <i>Identity and Access Management User Guide</i> </i>.
      * </p>
-     *
+     * 
      * @param retiringPrincipal
      *        The retiring principal for which to list grants. Enter a principal in your Amazon Web Services
      *        account.</p>
      *        <p>
      *        To specify the retiring principal, use the <a
      *        href="https://docs.aws.amazon.com/general/latest/gr/aws-arns-and-namespaces.html">Amazon Resource Name
-     *        (ARN)</a> of an Amazon Web Services principal. Valid Amazon Web Services principals include Amazon Web
-     *        Services accounts (root), IAM users, federated users, and assumed role users. For examples of the ARN
-     *        syntax for specifying a principal, see <a
-     *        href="https://docs.aws.amazon.com/general/latest/gr/aws-arns-and-namespaces.html#arn-syntax-iam">Amazon
-     *        Web Services Identity and Access Management (IAM)</a> in the Example ARNs section of the <i>Amazon Web
-     *        Services General Reference</i>.
+     *        (ARN)</a> of an Amazon Web Services principal. Valid principals include Amazon Web Services accounts, IAM
+     *        users, IAM roles, federated users, and assumed role users. For help with the ARN syntax for a principal,
+     *        see <a
+     *        href="https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_identifiers.html#identifiers-arns">IAM
+     *        ARNs</a> in the <i> <i>Identity and Access Management User Guide</i> </i>.
      */
 
     public void setRetiringPrincipal(String retiringPrincipal) {
@@ -213,25 +208,22 @@ public class ListRetirableGrantsRequest extends com.ibm.cloud.objectstorage.Amaz
      * <p>
      * To specify the retiring principal, use the <a
      * href="https://docs.aws.amazon.com/general/latest/gr/aws-arns-and-namespaces.html">Amazon Resource Name (ARN)</a>
-     * of an Amazon Web Services principal. Valid Amazon Web Services principals include Amazon Web Services accounts
-     * (root), IAM users, federated users, and assumed role users. For examples of the ARN syntax for specifying a
-     * principal, see <a
-     * href="https://docs.aws.amazon.com/general/latest/gr/aws-arns-and-namespaces.html#arn-syntax-iam">Amazon Web
-     * Services Identity and Access Management (IAM)</a> in the Example ARNs section of the <i>Amazon Web Services
-     * General Reference</i>.
+     * of an Amazon Web Services principal. Valid principals include Amazon Web Services accounts, IAM users, IAM roles,
+     * federated users, and assumed role users. For help with the ARN syntax for a principal, see <a
+     * href="https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_identifiers.html#identifiers-arns">IAM ARNs</a>
+     * in the <i> <i>Identity and Access Management User Guide</i> </i>.
      * </p>
-     *
+     * 
      * @return The retiring principal for which to list grants. Enter a principal in your Amazon Web Services
      *         account.</p>
      *         <p>
      *         To specify the retiring principal, use the <a
      *         href="https://docs.aws.amazon.com/general/latest/gr/aws-arns-and-namespaces.html">Amazon Resource Name
-     *         (ARN)</a> of an Amazon Web Services principal. Valid Amazon Web Services principals include Amazon Web
-     *         Services accounts (root), IAM users, federated users, and assumed role users. For examples of the ARN
-     *         syntax for specifying a principal, see <a
-     *         href="https://docs.aws.amazon.com/general/latest/gr/aws-arns-and-namespaces.html#arn-syntax-iam">Amazon
-     *         Web Services Identity and Access Management (IAM)</a> in the Example ARNs section of the <i>Amazon Web
-     *         Services General Reference</i>.
+     *         (ARN)</a> of an Amazon Web Services principal. Valid principals include Amazon Web Services accounts, IAM
+     *         users, IAM roles, federated users, and assumed role users. For help with the ARN syntax for a principal,
+     *         see <a
+     *         href="https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_identifiers.html#identifiers-arns">IAM
+     *         ARNs</a> in the <i> <i>Identity and Access Management User Guide</i> </i>.
      */
 
     public String getRetiringPrincipal() {
@@ -245,26 +237,23 @@ public class ListRetirableGrantsRequest extends com.ibm.cloud.objectstorage.Amaz
      * <p>
      * To specify the retiring principal, use the <a
      * href="https://docs.aws.amazon.com/general/latest/gr/aws-arns-and-namespaces.html">Amazon Resource Name (ARN)</a>
-     * of an Amazon Web Services principal. Valid Amazon Web Services principals include Amazon Web Services accounts
-     * (root), IAM users, federated users, and assumed role users. For examples of the ARN syntax for specifying a
-     * principal, see <a
-     * href="https://docs.aws.amazon.com/general/latest/gr/aws-arns-and-namespaces.html#arn-syntax-iam">Amazon Web
-     * Services Identity and Access Management (IAM)</a> in the Example ARNs section of the <i>Amazon Web Services
-     * General Reference</i>.
+     * of an Amazon Web Services principal. Valid principals include Amazon Web Services accounts, IAM users, IAM roles,
+     * federated users, and assumed role users. For help with the ARN syntax for a principal, see <a
+     * href="https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_identifiers.html#identifiers-arns">IAM ARNs</a>
+     * in the <i> <i>Identity and Access Management User Guide</i> </i>.
      * </p>
-     *
+     * 
      * @param retiringPrincipal
      *        The retiring principal for which to list grants. Enter a principal in your Amazon Web Services
      *        account.</p>
      *        <p>
      *        To specify the retiring principal, use the <a
      *        href="https://docs.aws.amazon.com/general/latest/gr/aws-arns-and-namespaces.html">Amazon Resource Name
-     *        (ARN)</a> of an Amazon Web Services principal. Valid Amazon Web Services principals include Amazon Web
-     *        Services accounts (root), IAM users, federated users, and assumed role users. For examples of the ARN
-     *        syntax for specifying a principal, see <a
-     *        href="https://docs.aws.amazon.com/general/latest/gr/aws-arns-and-namespaces.html#arn-syntax-iam">Amazon
-     *        Web Services Identity and Access Management (IAM)</a> in the Example ARNs section of the <i>Amazon Web
-     *        Services General Reference</i>.
+     *        (ARN)</a> of an Amazon Web Services principal. Valid principals include Amazon Web Services accounts, IAM
+     *        users, IAM roles, federated users, and assumed role users. For help with the ARN syntax for a principal,
+     *        see <a
+     *        href="https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_identifiers.html#identifiers-arns">IAM
+     *        ARNs</a> in the <i> <i>Identity and Access Management User Guide</i> </i>.
      * @return Returns a reference to this object so that method calls can be chained together.
      */
 

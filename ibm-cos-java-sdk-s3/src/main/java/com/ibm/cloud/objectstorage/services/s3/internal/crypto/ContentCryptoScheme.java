@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2022 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2013-2023 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -207,6 +207,11 @@ public abstract class ContentCryptoScheme {
         // reasons).
         if (alwaysUseProvider) {
             return Cipher.getInstance(algorithm, provider);
+        }
+
+        // Otherwise, if the user has specified a global preference for the default Provider chain, that takes precedence.
+        if (CryptoRuntime.preferDefaultSecurityProvider()) {
+            return Cipher.getInstance(algorithm);
         }
 
         // Otherwise, if this crypto scheme prefers a particular provider (AesGcm prefers

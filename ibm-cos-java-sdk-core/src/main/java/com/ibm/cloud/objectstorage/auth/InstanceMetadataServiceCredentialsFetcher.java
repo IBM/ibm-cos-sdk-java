@@ -1,5 +1,5 @@
 /*
- * Copyright 2011-2022 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2011-2023 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,11 +33,13 @@ final class InstanceMetadataServiceCredentialsFetcher extends BaseCredentialsFet
     private final EC2ResourceFetcher resourceFetcher;
 
     InstanceMetadataServiceCredentialsFetcher() {
+        super(SdkClock.STANDARD, true);
         this.resourceFetcher = InstanceMetadataServiceResourceFetcher.getInstance();
     }
 
     @SdkTestInternalApi
-    InstanceMetadataServiceCredentialsFetcher(EC2ResourceFetcher resourceFetcher) {
+    InstanceMetadataServiceCredentialsFetcher(SdkClock clock, EC2ResourceFetcher resourceFetcher) {
+        super(clock, true);
         this.resourceFetcher = resourceFetcher;
     }
 
