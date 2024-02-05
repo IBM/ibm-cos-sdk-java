@@ -44,7 +44,7 @@
       <version>${httpcomponents.httpclient.version}</version>
     </dependency>
     <dependency>
-      <groupId>software.amazon.ion</groupId>
+      <groupId>com.amazon.ion</groupId>
       <artifactId>ion-java</artifactId>
       <version>${ion.java.version}</version>
     </dependency>
