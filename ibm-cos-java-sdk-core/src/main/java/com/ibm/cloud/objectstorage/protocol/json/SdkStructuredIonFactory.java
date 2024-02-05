@@ -41,11 +41,11 @@ import java.nio.ByteBuffer;
 import java.util.Collections;
 import java.util.Date;
 import java.util.Map;
-import software.amazon.ion.IonSystem;
-import software.amazon.ion.system.IonBinaryWriterBuilder;
-import software.amazon.ion.system.IonSystemBuilder;
-import software.amazon.ion.system.IonTextWriterBuilder;
-import software.amazon.ion.system.IonWriterBuilder;
+import com.amazon.ion.IonSystem;
+import com.amazon.ion.system.IonBinaryWriterBuilder;
+import com.amazon.ion.system.IonSystemBuilder;
+import com.amazon.ion.system.IonTextWriterBuilder;
+import com.amazon.ion.system.IonWriterBuilder;
 
 @SdkInternalApi
 class SdkStructuredIonFactory extends SdkStructuredJsonFactoryImpl {

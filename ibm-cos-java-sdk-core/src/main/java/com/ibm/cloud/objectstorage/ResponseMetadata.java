@@ -32,6 +32,8 @@ public class ResponseMetadata {
 
     protected final Map<String, String> metadata;
 
+    public static final String IBM_PROTECTION_MANAGEMENT_STATE = "IBM_PROTECTION_MANAGEMENT_STATE";
+
     /**
      * Creates a new ResponseMetadata object from a specified map of raw
      * metadata information.
@@ -64,6 +66,17 @@ public class ResponseMetadata {
      */
     public String getRequestId() {
         return metadata.get(AWS_REQUEST_ID);
+    }
+
+    /**
+     * Returns the IBM Protection Management State contained in this response metadata object.
+     * Indicates whether this bucket has an active protection management state. This header
+     * is only included if protection management is activated on a bucket.
+     *
+     * @return The AWS request ID contained in this response metadata object.
+     */
+    public String getIbmProtectionManagementState() {
+        return metadata.get(IBM_PROTECTION_MANAGEMENT_STATE);
     }
 
     @Override

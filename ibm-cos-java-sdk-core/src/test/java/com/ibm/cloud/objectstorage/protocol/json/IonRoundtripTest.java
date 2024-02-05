@@ -34,10 +34,10 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 
-import software.amazon.ion.IonException;
-import software.amazon.ion.IonSystem;
-import software.amazon.ion.system.IonBinaryWriterBuilder;
-import software.amazon.ion.system.IonSystemBuilder;
+import com.amazon.ion.IonException;
+import com.amazon.ion.IonSystem;
+import com.amazon.ion.system.IonBinaryWriterBuilder;
+import com.amazon.ion.system.IonSystemBuilder;
 
 import com.fasterxml.jackson.core.JsonToken;
 

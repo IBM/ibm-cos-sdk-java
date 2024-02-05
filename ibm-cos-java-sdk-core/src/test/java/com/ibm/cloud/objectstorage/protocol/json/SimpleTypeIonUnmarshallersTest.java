@@ -42,7 +42,7 @@ import com.ibm.cloud.objectstorage.transform.SimpleTypeIonUnmarshallers.StringIo
 import com.ibm.cloud.objectstorage.util.StringInputStream;
 import com.fasterxml.jackson.core.JsonParser;
 
-import software.amazon.ion.system.IonSystemBuilder;
+import com.amazon.ion.system.IonSystemBuilder;
 
 public class SimpleTypeIonUnmarshallersTest {
     @Test

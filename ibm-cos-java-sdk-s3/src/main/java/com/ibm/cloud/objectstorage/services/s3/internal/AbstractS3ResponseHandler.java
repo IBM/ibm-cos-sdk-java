@@ -87,11 +87,13 @@ public abstract class AbstractS3ResponseHandler<T>
         String awsRequestId = response.getHeaders().get(Headers.REQUEST_ID);
         String hostId = response.getHeaders().get(Headers.EXTENDED_REQUEST_ID);
         String cloudFrontId = response.getHeaders().get(Headers.CLOUD_FRONT_ID);
+        String IbmProtectionManagementState = response.getHeaders().get(Headers.IBM_PROTECTION_MANAGEMENT_STATE);
 
         Map<String, String> metadataMap = new HashMap<String, String>();
         metadataMap.put(ResponseMetadata.AWS_REQUEST_ID, awsRequestId);
         metadataMap.put(S3ResponseMetadata.HOST_ID, hostId);
         metadataMap.put(S3ResponseMetadata.CLOUD_FRONT_ID, cloudFrontId);
+        metadataMap.put(ResponseMetadata.IBM_PROTECTION_MANAGEMENT_STATE, IbmProtectionManagementState);
         awsResponse.setResponseMetadata(new S3ResponseMetadata(metadataMap));
 
         return awsResponse;

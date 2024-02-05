@@ -84,13 +84,9 @@ public class EC2MetadataUtils {
     private static final ObjectMapper mapper = new ObjectMapper();
     static {
         mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-        try {
-            mapper.setPropertyNamingStrategy(PropertyNamingStrategies.UPPER_CAMEL_CASE);
-        } catch (LinkageError e) {
-            // If a customer is using an older Jackson version than 2.12.x, fall back to the old (deprecated)
-            // name for the same property that might cause deadlocks.
-            mapper.setPropertyNamingStrategy(PropertyNamingStrategy.PASCAL_CASE_TO_CAMEL_CASE);
-        }
+        // If a customer is using an older Jackson version than 2.12.x, it will throw an error
+        // and an upgrade to a newer version above 2.16.x is recommended
+        mapper.setPropertyNamingStrategy(PropertyNamingStrategies.UPPER_CAMEL_CASE);
     }
 
     private static final Log log = LogFactory.getLog(EC2MetadataUtils.class);

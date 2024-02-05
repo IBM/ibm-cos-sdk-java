@@ -29,7 +29,7 @@ import java.net.URLStreamHandler;
 import org.junit.Before;
 import org.junit.Test;
 
-import software.amazon.ion.system.IonSystemBuilder;
+import com.amazon.ion.system.IonSystemBuilder;
 
 public class IonFactoryTest {
     private IonFactory factory;

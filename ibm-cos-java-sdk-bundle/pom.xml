@@ -5,7 +5,7 @@
     <parent>
         <groupId>com.ibm.cos</groupId>
         <artifactId>ibm-cos-java-sdk-pom</artifactId>
-        <version>2.13.3</version>
+        <version>2.13.4</version>
     </parent>
     <groupId>com.ibm.cos</groupId>
     <artifactId>ibm-cos-java-sdk-bundle</artifactId>
@@ -42,7 +42,7 @@
                             <include>com.fasterxml.jackson.dataformat:jackson-dataformat-cbor</include>
                             <include>org.apache.httpcomponents:*</include>
                             <include>commons-codec:commons-codec</include>
-                            <include>software.amazon.ion:ion-java</include>
+                            <include>com.amazon.ion:ion-java</include>
                             <include>commons-logging:commons-logging</include>
                             <include>com.ibm.cos:*</include>
                         </includes>
@@ -65,7 +65,7 @@
                             <shadedPattern>com.ibm.cloud.objectstorage.thirdparty.apache.codec</shadedPattern>
                         </relocation>
                         <relocation>
-                            <pattern>software.amazon.ion</pattern>
+                            <pattern>com.amazon.ion</pattern>
                             <shadedPattern>com.ibm.cloud.objectstorage.thirdparty.ion</shadedPattern>
                         </relocation>
                         <relocation>

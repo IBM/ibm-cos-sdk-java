@@ -41,13 +41,9 @@ public class JsonErrorUnmarshaller extends AbstractErrorUnmarshaller<JsonNode> {
     static {
         MAPPER = new ObjectMapper();
         MAPPER.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-        try {
-            MAPPER.setPropertyNamingStrategy(PropertyNamingStrategies.UPPER_CAMEL_CASE);
-        } catch (LinkageError e) {
-            // If a customer is using an older Jackson version than 2.12.x, fall back to the old (deprecated)
-            // name for the same property that might cause deadlocks.
-            MAPPER.setPropertyNamingStrategy(PropertyNamingStrategy.PASCAL_CASE_TO_CAMEL_CASE);
-        }
+        // If a customer is using an older Jackson version than 2.12.x, it will throw an error
+        // and an upgrade to a newer version above 2.16.x is recommended
+        MAPPER.setPropertyNamingStrategy(PropertyNamingStrategies.UPPER_CAMEL_CASE);
     }
 
     /**

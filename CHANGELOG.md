@@ -1,5 +1,15 @@
 # CHANGELOG
 
+## 2.13.4
+
+### Content
+
+#### Defect Fixes
+
+* COSSDK-105275: <https://github.com/IBM/ibm-cos-sdk-java/issues/65>
+* COSSDK-105276: <https://github.com/IBM/ibm-cos-sdk-java/issues/64>
+* Internal fixes and improvements
+
 ## 2.13.3
 
 ### Content

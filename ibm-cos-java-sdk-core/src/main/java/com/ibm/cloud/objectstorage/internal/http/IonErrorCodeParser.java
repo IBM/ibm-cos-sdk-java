@@ -23,9 +23,9 @@ import com.ibm.cloud.objectstorage.http.HttpResponse;
 import com.ibm.cloud.objectstorage.protocol.json.JsonContent;
 import com.ibm.cloud.objectstorage.util.IOUtils;
 
-import software.amazon.ion.IonReader;
-import software.amazon.ion.IonSystem;
-import software.amazon.ion.IonType;
+import com.amazon.ion.IonReader;
+import com.amazon.ion.IonSystem;
+import com.amazon.ion.IonType;
 
 @SdkInternalApi
 public class IonErrorCodeParser implements ErrorCodeParser {

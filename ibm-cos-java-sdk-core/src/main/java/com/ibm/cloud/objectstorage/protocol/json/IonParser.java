@@ -30,8 +30,8 @@ import com.fasterxml.jackson.core.JsonTokenId;
 import com.fasterxml.jackson.core.ObjectCodec;
 import com.fasterxml.jackson.core.Version;
 
-import software.amazon.ion.IonReader;
-import software.amazon.ion.IonType;
+import com.amazon.ion.IonReader;
+import com.amazon.ion.IonType;
 
 final class IonParser extends JsonParser {
     private enum State {

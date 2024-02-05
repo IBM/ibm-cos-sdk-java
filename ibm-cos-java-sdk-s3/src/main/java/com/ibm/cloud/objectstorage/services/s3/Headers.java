@@ -60,6 +60,9 @@ public interface Headers {
     public static final String IBM_TRANSITION = "x-ibm-transition";
     public static final String IBM_RESTORED_COPY_STORAGE_CLASS = "x-ibm-restored-copy-storage-class";
 
+    /** IBM Protection Management header */
+    public static final String IBM_PROTECTION_MANAGEMENT_STATE = "x-ibm-protection-management-state";
+
     /*
      * Amazon HTTP Headers
      */

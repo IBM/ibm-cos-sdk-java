@@ -21,7 +21,7 @@ import java.io.InputStream;
 import java.io.Reader;
 import java.net.URL;
 
-import software.amazon.ion.IonSystem;
+import com.amazon.ion.IonSystem;
 
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonParseException;
