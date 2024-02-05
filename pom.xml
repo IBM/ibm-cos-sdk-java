@@ -47,7 +47,7 @@
       <jackson.databind.version>2.15.3</jackson.databind.version>
       <jackson.cbor.version>2.15.3</jackson.cbor.version>
       <asynchttp.version>4.1.5</asynchttp.version>
-      <ion.java.version>1.5.1</ion.java.version>
+      <ion.java.version>1.11.1</ion.java.version>
       <junit.version>4.13.2</junit.version>
       <easymock.version>3.6</easymock.version>
       <commons.logging.version>1.2</commons.logging.version>
