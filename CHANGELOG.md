@@ -1,5 +1,17 @@
 # CHANGELOG
 
+## 2.14.0
+
+### Content
+
+#### Features
+
+* Tag Based Filtering for Object Expiration
+
+#### Defect Fixes
+
+* Update dependencies
+
 ## 2.13.6
 
 ### Content
