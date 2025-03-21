@@ -1,5 +1,5 @@
 /*
- * Copyright 2011-2023 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2011-2024 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,6 +29,7 @@ import java.net.URI;
  */
 @SdkInternalApi
 final class InstanceMetadataServiceCredentialsFetcher extends BaseCredentialsFetcher implements CredentialsEndpointRetryPolicy {
+    private static final String PROVIDER_NAME = "InstanceProfileCredentialsProvider";
 
     private final EC2ResourceFetcher resourceFetcher;
 

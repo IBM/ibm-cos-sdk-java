@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2023 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2019-2024 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"). You may not use this file except in compliance with
  * the License. A copy of the License is located at
@@ -54,22 +54,29 @@ import com.ibm.cloud.objectstorage.auth.DefaultAWSCredentialsProviderChain;
  * We recommend that you use the Amazon Web Services SDKs to make programmatic API calls to KMS.
  * </p>
  * <p>
- * Clients must support TLS (Transport Layer Security) 1.0. We recommend TLS 1.2. Clients must also support cipher
- * suites with Perfect Forward Secrecy (PFS) such as Ephemeral Diffie-Hellman (DHE) or Elliptic Curve Ephemeral
- * Diffie-Hellman (ECDHE). Most modern systems such as Java 7 and later support these modes.
+ * If you need to use FIPS 140-2 validated cryptographic modules when communicating with Amazon Web Services, use the
+ * FIPS endpoint in your preferred Amazon Web Services Region. For more information about the available FIPS endpoints,
+ * see <a href="https://docs.aws.amazon.com/general/latest/gr/kms.html#kms_region">Service endpoints</a> in the Key
+ * Management Service topic of the <i>Amazon Web Services General Reference</i>.
+ * </p>
+ * <p>
+ * All KMS API calls must be signed and be transmitted using Transport Layer Security (TLS). KMS recommends you always
+ * use the latest supported TLS version. Clients must also support cipher suites with Perfect Forward Secrecy (PFS) such
+ * as Ephemeral Diffie-Hellman (DHE) or Elliptic Curve Ephemeral Diffie-Hellman (ECDHE). Most modern systems such as
+ * Java 7 and later support these modes.
  * </p>
  * <p>
  * <b>Signing Requests</b>
  * </p>
  * <p>
- * Requests must be signed by using an access key ID and a secret access key. We strongly recommend that you <i>do
- * not</i> use your Amazon Web Services account (root) access key ID and secret key for everyday work with KMS. Instead,
- * use the access key ID and secret access key for an IAM user. You can also use the Amazon Web Services Security Token
- * Service to generate temporary security credentials that you can use to sign requests.
+ * Requests must be signed using an access key ID and a secret access key. We strongly recommend that you do not use
+ * your Amazon Web Services account root access key ID and secret access key for everyday work. You can use the access
+ * key ID and secret access key for an IAM user or you can use the Security Token Service (STS) to generate temporary
+ * security credentials and use those to sign requests.
  * </p>
  * <p>
- * All KMS operations require <a href="https://docs.aws.amazon.com/general/latest/gr/signature-version-4.html">Signature
- * Version 4</a>.
+ * All KMS requests must be signed with <a
+ * href="https://docs.aws.amazon.com/general/latest/gr/signature-version-4.html">Signature Version 4</a>.
  * </p>
  * <p>
  * <b>Logging API Requests</b>
@@ -339,6 +346,20 @@ public class AWSKMSAsyncClient extends AWSKMSClient implements AWSKMSAsync {
         super(asyncClientParams);
         this.executorService = asyncClientParams.getExecutor();
     }
+
+    /**
+     * Constructs a new asynchronous client to invoke service methods on KMS using the specified parameters.
+     *
+     * @param asyncClientParams
+     *        Object providing client parameters.
+     * @param endpointDiscoveryEnabled
+     *        true will enable endpoint discovery if the service supports it.
+     */
+//    IBM Unsupported endPointDiscoveryEnabled
+//    AWSKMSAsyncClient(AwsAsyncClientParams asyncClientParams, boolean endpointDiscoveryEnabled) {
+//        super(asyncClientParams, endpointDiscoveryEnabled);
+//        this.executorService = asyncClientParams.getExecutor();
+//    }
 
     /**
      * Constructs a new asynchronous client to invoke service methods on KMS using the specified parameters.
@@ -2073,6 +2094,40 @@ public class AWSKMSAsyncClient extends AWSKMSClient implements AWSKMSAsync {
     //         }
     //     });
     // }
+
+//    IBM Unsupported
+//    @Override
+//    public java.util.concurrent.Future<VerifyMacResult> verifyMacAsync(VerifyMacRequest request) {
+//
+//        return verifyMacAsync(request, null);
+//    }
+//
+//    @Override
+//    public java.util.concurrent.Future<VerifyMacResult> verifyMacAsync(final VerifyMacRequest request,
+//            final com.ibm.cloud.objectstorage.handlers.AsyncHandler<VerifyMacRequest, VerifyMacResult> asyncHandler) {
+//        final VerifyMacRequest finalRequest = beforeClientExecution(request);
+//
+//        return executorService.submit(new java.util.concurrent.Callable<VerifyMacResult>() {
+//            @Override
+//            public VerifyMacResult call() throws Exception {
+//                VerifyMacResult result = null;
+//
+//                try {
+//                    result = executeVerifyMac(finalRequest);
+//                } catch (Exception ex) {
+//                    if (asyncHandler != null) {
+//                        asyncHandler.onError(ex);
+//                    }
+//                    throw ex;
+//                }
+//
+//                if (asyncHandler != null) {
+//                    asyncHandler.onSuccess(finalRequest, result);
+//                }
+//                return result;
+//            }
+//        });
+//    }
 
     /**
      * Shuts down the client, releasing all managed resources. This includes forcibly terminating all pending

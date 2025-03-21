@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2023 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2019-2024 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"). You may not use this file except in compliance with
  * the License. A copy of the License is located at
@@ -18,7 +18,7 @@ import javax.annotation.Generated;
 import com.ibm.cloud.objectstorage.AmazonWebServiceRequest;
 
 /**
- *
+ * 
  * @see <a href="http://docs.aws.amazon.com/goto/WebAPI/kms-2014-11-01/GetKeyPolicy" target="_top">AWS API
  *      Documentation</a>
  */
@@ -54,8 +54,8 @@ public class GetKeyPolicyRequest extends com.ibm.cloud.objectstorage.AmazonWebSe
     private String keyId;
     /**
      * <p>
-     * Specifies the name of the key policy. The only valid name is <code>default</code>. To get the names of key
-     * policies, use <a>ListKeyPolicies</a>.
+     * Specifies the name of the key policy. If no policy name is specified, the default value is <code>default</code>.
+     * The only valid name is <code>default</code>. To get the names of key policies, use <a>ListKeyPolicies</a>.
      * </p>
      */
     private String policyName;
@@ -85,7 +85,7 @@ public class GetKeyPolicyRequest extends com.ibm.cloud.objectstorage.AmazonWebSe
      * <p>
      * To get the key ID and key ARN for a KMS key, use <a>ListKeys</a> or <a>DescribeKey</a>.
      * </p>
-     *
+     * 
      * @param keyId
      *        Gets the key policy for the specified KMS key.</p>
      *        <p>
@@ -139,7 +139,7 @@ public class GetKeyPolicyRequest extends com.ibm.cloud.objectstorage.AmazonWebSe
      * <p>
      * To get the key ID and key ARN for a KMS key, use <a>ListKeys</a> or <a>DescribeKey</a>.
      * </p>
-     *
+     * 
      * @return Gets the key policy for the specified KMS key.</p>
      *         <p>
      *         Specify the key ID or key ARN of the KMS key.
@@ -192,7 +192,7 @@ public class GetKeyPolicyRequest extends com.ibm.cloud.objectstorage.AmazonWebSe
      * <p>
      * To get the key ID and key ARN for a KMS key, use <a>ListKeys</a> or <a>DescribeKey</a>.
      * </p>
-     *
+     * 
      * @param keyId
      *        Gets the key policy for the specified KMS key.</p>
      *        <p>
@@ -225,13 +225,14 @@ public class GetKeyPolicyRequest extends com.ibm.cloud.objectstorage.AmazonWebSe
 
     /**
      * <p>
-     * Specifies the name of the key policy. The only valid name is <code>default</code>. To get the names of key
-     * policies, use <a>ListKeyPolicies</a>.
+     * Specifies the name of the key policy. If no policy name is specified, the default value is <code>default</code>.
+     * The only valid name is <code>default</code>. To get the names of key policies, use <a>ListKeyPolicies</a>.
      * </p>
-     *
+     * 
      * @param policyName
-     *        Specifies the name of the key policy. The only valid name is <code>default</code>. To get the names of key
-     *        policies, use <a>ListKeyPolicies</a>.
+     *        Specifies the name of the key policy. If no policy name is specified, the default value is
+     *        <code>default</code>. The only valid name is <code>default</code>. To get the names of key policies, use
+     *        <a>ListKeyPolicies</a>.
      */
 
     public void setPolicyName(String policyName) {
@@ -240,12 +241,13 @@ public class GetKeyPolicyRequest extends com.ibm.cloud.objectstorage.AmazonWebSe
 
     /**
      * <p>
-     * Specifies the name of the key policy. The only valid name is <code>default</code>. To get the names of key
-     * policies, use <a>ListKeyPolicies</a>.
+     * Specifies the name of the key policy. If no policy name is specified, the default value is <code>default</code>.
+     * The only valid name is <code>default</code>. To get the names of key policies, use <a>ListKeyPolicies</a>.
      * </p>
-     *
-     * @return Specifies the name of the key policy. The only valid name is <code>default</code>. To get the names of
-     *         key policies, use <a>ListKeyPolicies</a>.
+     * 
+     * @return Specifies the name of the key policy. If no policy name is specified, the default value is
+     *         <code>default</code>. The only valid name is <code>default</code>. To get the names of key policies, use
+     *         <a>ListKeyPolicies</a>.
      */
 
     public String getPolicyName() {
@@ -254,13 +256,14 @@ public class GetKeyPolicyRequest extends com.ibm.cloud.objectstorage.AmazonWebSe
 
     /**
      * <p>
-     * Specifies the name of the key policy. The only valid name is <code>default</code>. To get the names of key
-     * policies, use <a>ListKeyPolicies</a>.
+     * Specifies the name of the key policy. If no policy name is specified, the default value is <code>default</code>.
+     * The only valid name is <code>default</code>. To get the names of key policies, use <a>ListKeyPolicies</a>.
      * </p>
-     *
+     * 
      * @param policyName
-     *        Specifies the name of the key policy. The only valid name is <code>default</code>. To get the names of key
-     *        policies, use <a>ListKeyPolicies</a>.
+     *        Specifies the name of the key policy. If no policy name is specified, the default value is
+     *        <code>default</code>. The only valid name is <code>default</code>. To get the names of key policies, use
+     *        <a>ListKeyPolicies</a>.
      * @return Returns a reference to this object so that method calls can be chained together.
      */
 

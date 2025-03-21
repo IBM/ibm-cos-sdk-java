@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2023 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2010-2024 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -36,15 +36,12 @@ import com.ibm.cloud.objectstorage.log.CommonsLogFactory;
 import com.ibm.cloud.objectstorage.metrics.AwsSdkMetrics;
 import com.ibm.cloud.objectstorage.metrics.RequestMetricCollector;
 import com.ibm.cloud.objectstorage.monitoring.MonitoringListener;
-import com.ibm.cloud.objectstorage.monitoring.internal.ClientSideMonitoringRequestHandler;
+import com.ibm.cloud.objectstorage.regions.EndpointToRegion;
 import com.ibm.cloud.objectstorage.regions.Region;
 import com.ibm.cloud.objectstorage.regions.Regions;
-import com.ibm.cloud.objectstorage.util.AWSRequestMetrics;
+import com.ibm.cloud.objectstorage.util.*;
 import com.ibm.cloud.objectstorage.util.AWSRequestMetrics.Field;
-import com.ibm.cloud.objectstorage.util.AwsHostNameUtils;
-import com.ibm.cloud.objectstorage.util.Classes;
-import com.ibm.cloud.objectstorage.util.RuntimeHttpUtils;
-import com.ibm.cloud.objectstorage.util.StringUtils;
+
 import java.net.URI;
 import java.util.Collection;
 import java.util.Collections;
@@ -428,6 +425,7 @@ public abstract class AmazonWebServiceClient {
             throw new IllegalArgumentException("Endpoint does not contain a valid host name: " + uri);
         }
         String service = getServiceNameIntern();
+//        String region = EndpointToRegion.guessRegionNameForEndpointWithDefault(uri.getHost(), getEndpointPrefix(), "us-east-1");
         String region = AwsHostNameUtils.parseRegionName(uri.getHost(), service);
         return computeSignerByServiceRegion(
                 service, region, signerRegionOverride, isRegionIdAsSignerParam);

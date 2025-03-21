@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2023 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2010-2024 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -148,7 +148,12 @@ import org.apache.commons.logging.LogFactory;
  * <p>
  * Transfers can be paused and resumed at a later time. It can also survive JVM
  * crash, provided the information that is required to resume the transfer is
- * given as input to the resume operation. For more information on pause and resume,
+ * given as input to the resume operation. For more information on pause and resume.
+ *
+ * <p>
+ * See <a href="https://docs.aws.amazon.com/sdk-for-java/latest/developer-guide/migration-transfer-manager.html">Migration Guide</a>
+ * for more information.
+ *
  * @see Upload#pause()
  * @see Download#pause()
  * @see TransferManager#resumeUpload(PersistableUpload)

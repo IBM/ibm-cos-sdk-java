@@ -1,5 +1,5 @@
 /*
- * Copyright 2011-2023 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2011-2024 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -15,6 +15,7 @@
 package com.ibm.cloud.objectstorage.http;
 
 import com.ibm.cloud.objectstorage.AmazonWebServiceClient;
+import com.ibm.cloud.objectstorage.Protocol;
 import com.ibm.cloud.objectstorage.annotation.NotThreadSafe;
 import com.ibm.cloud.objectstorage.auth.AWSCredentials;
 import com.ibm.cloud.objectstorage.auth.AWSCredentialsProvider;
@@ -56,6 +57,8 @@ public class ExecutionContext {
      * auto-resolving V4-required regions.
      */
     private AuthErrorRetryStrategy authErrorRetryStrategy;
+
+    private Protocol clientProtocol;
 
     private ClientExecutionAbortTrackerTask clientExecutionTrackerTask = NoOpClientExecutionAbortTrackerTask.INSTANCE;
 
@@ -186,6 +189,14 @@ public class ExecutionContext {
      */
     public void setAuthErrorRetryStrategy(AuthErrorRetryStrategy authErrorRetryStrategy) {
         this.authErrorRetryStrategy = authErrorRetryStrategy;
+    }
+
+    public Protocol getClientProtocol() {
+        return clientProtocol;
+    }
+
+    public void setClientProtocol(Protocol clientProtocol) {
+        this.clientProtocol = clientProtocol;
     }
 
     public ClientExecutionAbortTrackerTask getClientExecutionTrackerTask() {

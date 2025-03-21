@@ -1,5 +1,5 @@
 /*
- * Copyright 2011-2023 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2011-2024 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -41,6 +41,9 @@ public class TokenBucket {
     private double lastThrottleTime;
 
     private double timeWindow;
+
+    // For testing only, writes and reads are *not* synchronized
+    private long lastWaitTimeMs;
 
     public interface Clock {
         double time();
@@ -327,6 +330,7 @@ public class TokenBucket {
     // Package private for testing
     void sleep(double seconds) {
         long millisToSleep = (long) (seconds * 1000);
+        lastWaitTimeMs = millisToSleep;
         try {
             Thread.sleep(millisToSleep);
         } catch (InterruptedException ie) {
@@ -404,5 +408,10 @@ public class TokenBucket {
     @SdkTestInternalApi
     synchronized void setFillRate(double fillRate) {
         this.fillRate = fillRate;
+    }
+
+    @SdkTestInternalApi
+    long getLastWaitTimeMs() {
+        return lastWaitTimeMs;
     }
 }

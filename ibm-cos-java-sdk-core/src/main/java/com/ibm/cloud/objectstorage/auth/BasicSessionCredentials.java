@@ -1,5 +1,5 @@
 /*
- * Copyright 2011-2023 Amazon Technologies, Inc.
+ * Copyright 2011-2024 Amazon Technologies, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,7 +22,7 @@ public class BasicSessionCredentials implements AWSSessionCredentials {
     private final String awsAccessKey;
     private final String awsSecretKey;
     private final String sessionToken;
-    
+
     public BasicSessionCredentials(String awsAccessKey, String awsSecretKey, String sessionToken) {
         this.awsAccessKey = awsAccessKey;
         this.awsSecretKey = awsSecretKey;
@@ -40,5 +40,4 @@ public class BasicSessionCredentials implements AWSSessionCredentials {
     public String getSessionToken() {
         return sessionToken;
     }
-
 }

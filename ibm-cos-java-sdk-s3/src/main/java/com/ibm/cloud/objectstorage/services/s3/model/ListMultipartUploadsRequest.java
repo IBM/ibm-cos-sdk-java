@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2023 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2010-2024 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -114,15 +114,22 @@ public class ListMultipartUploadsRequest extends AmazonWebServiceRequest impleme
      */
     private String encodingType;
 
+    //IBM unsupported
+    //private String expectedBucketOwner;
 
     // IBM-Specific
     /**
      * Optional parameter setting the mirror-destination on a WORM enabled bucket.
      */
     private String wormMirrorDestination;
+	    /**
+     * If enabled, the requester is charged for conducting this operation from
+     * Requester Pays Buckets.
+     */
+//    IBM Unsupported
+//    private boolean isRequesterPays;
 
-    //IBM unsupported
-    //private String expectedBucketOwner;
+
 
 
     /**
@@ -666,5 +673,39 @@ public class ListMultipartUploadsRequest extends AmazonWebServiceRequest impleme
         setWormMirrorDestination(wormMirrorDestination);
         return this;
     }
+	/**
+     * Returns whether the requester knows that they will be charged for the request.
+     *
+     * @return true if the user has enabled Requester Pays option for
+     *         conducting this operation from Requester Pays Bucket.
+     */
+//    IBM Unsupported
+//    public boolean isRequesterPays() {
+//        return isRequesterPays;
+//    }
 
+    /**
+     * Confirms whether the requester knows that they will be charged for the request. Bucket owners need not specify this
+     * parameter in their requests.
+     *
+     * @param isRequesterPays if Requester Pays option is enabled for the operation.
+     */
+//    IBM Unsupported	 
+//    public void setRequesterPays(boolean isRequesterPays) {
+//        this.isRequesterPays = isRequesterPays;
+//    }
+
+    /**
+     * Confirms whether the requester knows that they will be charged for the request. Bucket owners need not specify this
+     * parameter in their requests.
+     *
+     * @param isRequesterPays if Requester Pays option is enabled for the operation.
+     *
+     * @return The updated ListMultipartUploadsRequest object.
+     */
+//    IBM Unsupported	 
+//    public ListMultipartUploadsRequest withRequesterPays(boolean isRequesterPays) {
+//        setRequesterPays(isRequesterPays);
+//        return this;
+//    }
 }

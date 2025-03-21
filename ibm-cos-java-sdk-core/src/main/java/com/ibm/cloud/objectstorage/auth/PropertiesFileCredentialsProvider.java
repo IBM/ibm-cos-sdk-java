@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2023 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2010-2024 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -32,6 +32,8 @@ import java.io.IOException;
 public class PropertiesFileCredentialsProvider implements
         AWSCredentialsProvider {
 
+    private static final String PROVIDER_NAME = "ProfileCredentialsProvider";
+
     private final String credentialsFilePath;
     private TokenManager tokenManager = null;
 
@@ -57,6 +59,7 @@ public class PropertiesFileCredentialsProvider implements
 
     public AWSCredentials getCredentials() {
         try {
+//			return new PropertiesCredentials(new File(this.credentialsFilePath), PROVIDER_NAME);
             PropertiesCredentials credentials = new PropertiesCredentials(new File(this.credentialsFilePath));
             if (credentials.getApiKey() != null && tokenManager == null) {
                 tokenManager = new DefaultTokenManager(credentials.getApiKey());

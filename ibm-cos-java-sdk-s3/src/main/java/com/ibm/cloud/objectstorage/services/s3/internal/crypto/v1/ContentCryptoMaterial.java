@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2023 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2013-2024 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -14,11 +14,9 @@
  */
 package com.ibm.cloud.objectstorage.services.s3.internal.crypto.v1;
 
-
 import static com.ibm.cloud.objectstorage.services.s3.model.ExtraMaterialsDescription.NONE;
 import static com.ibm.cloud.objectstorage.util.BinaryUtils.copyAllBytesFrom;
 import static com.ibm.cloud.objectstorage.util.Throwables.failure;
-
 
 import java.io.BufferedReader;
 import java.io.IOException;

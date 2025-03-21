@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2023 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2013-2024 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -58,8 +58,16 @@ import org.apache.commons.logging.LogFactory;
  *
  * More information about Amazon EC2 Metadata
  *
+ * <p>
+ * <b>Migrating to AWS SDK for Java v2</b>
+ * <p>
+ * The v2 equivalent of this class is
+ * <a href="https://sdk.amazonaws.com/java/api/latest/software/amazon/awssdk/imds/Ec2MetadataClient.html">Ec2MetadataClient</a>
+ * <p>
+ * See <a href="https://docs.aws.amazon.com/sdk-for-java/latest/developer-guide/migration-imds.html">Migration Guide</a>
+ * for more information.
  * @see <a
- *      href="http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/AESDG-chapter-instancedata.html">Amazon
+ *      href="https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/AESDG-chapter-instancedata.html">Amazon
  *      EC2 User Guide: Instance Metadata</a>
  */
 public class EC2MetadataUtils {
@@ -86,7 +94,7 @@ public class EC2MetadataUtils {
         mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         // If a customer is using an older Jackson version than 2.12.x, it will throw an error
         // and an upgrade to a newer version above 2.16.x is recommended
-        mapper.setPropertyNamingStrategy(PropertyNamingStrategies.UPPER_CAMEL_CASE);
+        PropertyNamingStrategyUtils.configureUpperCamelCase(mapper);
     }
 
     private static final Log log = LogFactory.getLog(EC2MetadataUtils.class);

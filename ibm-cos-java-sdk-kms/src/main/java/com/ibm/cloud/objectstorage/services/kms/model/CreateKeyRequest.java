@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2023 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2019-2024 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"). You may not use this file except in compliance with
  * the License. A copy of the License is located at
@@ -109,18 +109,24 @@ public class CreateKeyRequest extends com.ibm.cloud.objectstorage.AmazonWebServi
      * </li>
      * <li>
      * <p>
-     * For asymmetric KMS keys with RSA key material, specify <code>ENCRYPT_DECRYPT</code> or <code>SIGN_VERIFY</code>.
+     * For asymmetric KMS keys with RSA key pairs, specify <code>ENCRYPT_DECRYPT</code> or <code>SIGN_VERIFY</code>.
      * </p>
      * </li>
      * <li>
      * <p>
-     * For asymmetric KMS keys with ECC key material, specify <code>SIGN_VERIFY</code>.
+     * For asymmetric KMS keys with NIST-recommended elliptic curve key pairs, specify <code>SIGN_VERIFY</code> or
+     * <code>KEY_AGREEMENT</code>.
      * </p>
      * </li>
      * <li>
      * <p>
-     * For asymmetric KMS keys with SM2 key material (China Regions only), specify <code>ENCRYPT_DECRYPT</code> or
-     * <code>SIGN_VERIFY</code>.
+     * For asymmetric KMS keys with <code>ECC_SECG_P256K1</code> key pairs specify <code>SIGN_VERIFY</code>.
+     * </p>
+     * </li>
+     * <li>
+     * <p>
+     * For asymmetric KMS keys with SM2 key pairs (China Regions only), specify <code>ENCRYPT_DECRYPT</code>,
+     * <code>SIGN_VERIFY</code>, or <code>KEY_AGREEMENT</code>.
      * </p>
      * </li>
      * </ul>
@@ -210,7 +216,7 @@ public class CreateKeyRequest extends com.ibm.cloud.objectstorage.AmazonWebServi
      * </li>
      * <li>
      * <p>
-     * Asymmetric RSA key pairs
+     * Asymmetric RSA key pairs (encryption and decryption -or- signing and verification)
      * </p>
      * <ul>
      * <li>
@@ -232,7 +238,7 @@ public class CreateKeyRequest extends com.ibm.cloud.objectstorage.AmazonWebServi
      * </li>
      * <li>
      * <p>
-     * Asymmetric NIST-recommended elliptic curve key pairs
+     * Asymmetric NIST-recommended elliptic curve key pairs (signing and verification -or- deriving shared secrets)
      * </p>
      * <ul>
      * <li>
@@ -254,7 +260,7 @@ public class CreateKeyRequest extends com.ibm.cloud.objectstorage.AmazonWebServi
      * </li>
      * <li>
      * <p>
-     * Other asymmetric elliptic curve key pairs
+     * Other asymmetric elliptic curve key pairs (signing and verification)
      * </p>
      * <ul>
      * <li>
@@ -266,12 +272,12 @@ public class CreateKeyRequest extends com.ibm.cloud.objectstorage.AmazonWebServi
      * </li>
      * <li>
      * <p>
-     * SM2 key pairs (China Regions only)
+     * SM2 key pairs (encryption and decryption -or- signing and verification -or- deriving shared secrets)
      * </p>
      * <ul>
      * <li>
      * <p>
-     * <code>SM2</code>
+     * <code>SM2</code> (China Regions only)
      * </p>
      * </li>
      * </ul>
@@ -343,7 +349,8 @@ public class CreateKeyRequest extends com.ibm.cloud.objectstorage.AmazonWebServi
      * </important>
      * <p>
      * Use this parameter only when you intend to prevent the principal that is making the request from making a
-     * subsequent <a>PutKeyPolicy</a> request on the KMS key.
+     * subsequent <a href="https://docs.aws.amazon.com/kms/latest/APIReference/API_PutKeyPolicy.html">PutKeyPolicy</a>
+     * request on the KMS key.
      * </p>
      */
     private Boolean bypassPolicyLockoutSafetyCheck;
@@ -487,7 +494,7 @@ public class CreateKeyRequest extends com.ibm.cloud.objectstorage.AmazonWebServi
      * href="https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies.html">IAM JSON Policy Reference</a> in
      * the <i> <i>Identity and Access Management User Guide</i> </i>.
      * </p>
-     *
+     * 
      * @param policy
      *        The key policy to attach to the KMS key.</p>
      *        <p>
@@ -577,7 +584,7 @@ public class CreateKeyRequest extends com.ibm.cloud.objectstorage.AmazonWebServi
      * href="https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies.html">IAM JSON Policy Reference</a> in
      * the <i> <i>Identity and Access Management User Guide</i> </i>.
      * </p>
-     *
+     * 
      * @return The key policy to attach to the KMS key.</p>
      *         <p>
      *         If you provide a key policy, it must meet the following criteria:
@@ -666,7 +673,7 @@ public class CreateKeyRequest extends com.ibm.cloud.objectstorage.AmazonWebServi
      * href="https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies.html">IAM JSON Policy Reference</a> in
      * the <i> <i>Identity and Access Management User Guide</i> </i>.
      * </p>
-     *
+     * 
      * @param policy
      *        The key policy to attach to the KMS key.</p>
      *        <p>
@@ -834,22 +841,28 @@ public class CreateKeyRequest extends com.ibm.cloud.objectstorage.AmazonWebServi
      * </li>
      * <li>
      * <p>
-     * For asymmetric KMS keys with RSA key material, specify <code>ENCRYPT_DECRYPT</code> or <code>SIGN_VERIFY</code>.
+     * For asymmetric KMS keys with RSA key pairs, specify <code>ENCRYPT_DECRYPT</code> or <code>SIGN_VERIFY</code>.
      * </p>
      * </li>
      * <li>
      * <p>
-     * For asymmetric KMS keys with ECC key material, specify <code>SIGN_VERIFY</code>.
+     * For asymmetric KMS keys with NIST-recommended elliptic curve key pairs, specify <code>SIGN_VERIFY</code> or
+     * <code>KEY_AGREEMENT</code>.
      * </p>
      * </li>
      * <li>
      * <p>
-     * For asymmetric KMS keys with SM2 key material (China Regions only), specify <code>ENCRYPT_DECRYPT</code> or
-     * <code>SIGN_VERIFY</code>.
+     * For asymmetric KMS keys with <code>ECC_SECG_P256K1</code> key pairs specify <code>SIGN_VERIFY</code>.
+     * </p>
+     * </li>
+     * <li>
+     * <p>
+     * For asymmetric KMS keys with SM2 key pairs (China Regions only), specify <code>ENCRYPT_DECRYPT</code>,
+     * <code>SIGN_VERIFY</code>, or <code>KEY_AGREEMENT</code>.
      * </p>
      * </li>
      * </ul>
-     *
+     * 
      * @param keyUsage
      *        Determines the <a
      *        href="https://docs.aws.amazon.com/kms/latest/developerguide/concepts.html#cryptographic-operations"
@@ -873,19 +886,25 @@ public class CreateKeyRequest extends com.ibm.cloud.objectstorage.AmazonWebServi
      *        </li>
      *        <li>
      *        <p>
-     *        For asymmetric KMS keys with RSA key material, specify <code>ENCRYPT_DECRYPT</code> or
+     *        For asymmetric KMS keys with RSA key pairs, specify <code>ENCRYPT_DECRYPT</code> or
      *        <code>SIGN_VERIFY</code>.
      *        </p>
      *        </li>
      *        <li>
      *        <p>
-     *        For asymmetric KMS keys with ECC key material, specify <code>SIGN_VERIFY</code>.
+     *        For asymmetric KMS keys with NIST-recommended elliptic curve key pairs, specify <code>SIGN_VERIFY</code>
+     *        or <code>KEY_AGREEMENT</code>.
      *        </p>
      *        </li>
      *        <li>
      *        <p>
-     *        For asymmetric KMS keys with SM2 key material (China Regions only), specify <code>ENCRYPT_DECRYPT</code>
-     *        or <code>SIGN_VERIFY</code>.
+     *        For asymmetric KMS keys with <code>ECC_SECG_P256K1</code> key pairs specify <code>SIGN_VERIFY</code>.
+     *        </p>
+     *        </li>
+     *        <li>
+     *        <p>
+     *        For asymmetric KMS keys with SM2 key pairs (China Regions only), specify <code>ENCRYPT_DECRYPT</code>,
+     *        <code>SIGN_VERIFY</code>, or <code>KEY_AGREEMENT</code>.
      *        </p>
      *        </li>
      * @see KeyUsageType
@@ -919,22 +938,28 @@ public class CreateKeyRequest extends com.ibm.cloud.objectstorage.AmazonWebServi
      * </li>
      * <li>
      * <p>
-     * For asymmetric KMS keys with RSA key material, specify <code>ENCRYPT_DECRYPT</code> or <code>SIGN_VERIFY</code>.
+     * For asymmetric KMS keys with RSA key pairs, specify <code>ENCRYPT_DECRYPT</code> or <code>SIGN_VERIFY</code>.
      * </p>
      * </li>
      * <li>
      * <p>
-     * For asymmetric KMS keys with ECC key material, specify <code>SIGN_VERIFY</code>.
+     * For asymmetric KMS keys with NIST-recommended elliptic curve key pairs, specify <code>SIGN_VERIFY</code> or
+     * <code>KEY_AGREEMENT</code>.
      * </p>
      * </li>
      * <li>
      * <p>
-     * For asymmetric KMS keys with SM2 key material (China Regions only), specify <code>ENCRYPT_DECRYPT</code> or
-     * <code>SIGN_VERIFY</code>.
+     * For asymmetric KMS keys with <code>ECC_SECG_P256K1</code> key pairs specify <code>SIGN_VERIFY</code>.
+     * </p>
+     * </li>
+     * <li>
+     * <p>
+     * For asymmetric KMS keys with SM2 key pairs (China Regions only), specify <code>ENCRYPT_DECRYPT</code>,
+     * <code>SIGN_VERIFY</code>, or <code>KEY_AGREEMENT</code>.
      * </p>
      * </li>
      * </ul>
-     *
+     * 
      * @return Determines the <a
      *         href="https://docs.aws.amazon.com/kms/latest/developerguide/concepts.html#cryptographic-operations"
      *         >cryptographic operations</a> for which you can use the KMS key. The default value is
@@ -957,19 +982,25 @@ public class CreateKeyRequest extends com.ibm.cloud.objectstorage.AmazonWebServi
      *         </li>
      *         <li>
      *         <p>
-     *         For asymmetric KMS keys with RSA key material, specify <code>ENCRYPT_DECRYPT</code> or
+     *         For asymmetric KMS keys with RSA key pairs, specify <code>ENCRYPT_DECRYPT</code> or
      *         <code>SIGN_VERIFY</code>.
      *         </p>
      *         </li>
      *         <li>
      *         <p>
-     *         For asymmetric KMS keys with ECC key material, specify <code>SIGN_VERIFY</code>.
+     *         For asymmetric KMS keys with NIST-recommended elliptic curve key pairs, specify <code>SIGN_VERIFY</code>
+     *         or <code>KEY_AGREEMENT</code>.
      *         </p>
      *         </li>
      *         <li>
      *         <p>
-     *         For asymmetric KMS keys with SM2 key material (China Regions only), specify <code>ENCRYPT_DECRYPT</code>
-     *         or <code>SIGN_VERIFY</code>.
+     *         For asymmetric KMS keys with <code>ECC_SECG_P256K1</code> key pairs specify <code>SIGN_VERIFY</code>.
+     *         </p>
+     *         </li>
+     *         <li>
+     *         <p>
+     *         For asymmetric KMS keys with SM2 key pairs (China Regions only), specify <code>ENCRYPT_DECRYPT</code>,
+     *         <code>SIGN_VERIFY</code>, or <code>KEY_AGREEMENT</code>.
      *         </p>
      *         </li>
      * @see KeyUsageType
@@ -1003,22 +1034,28 @@ public class CreateKeyRequest extends com.ibm.cloud.objectstorage.AmazonWebServi
      * </li>
      * <li>
      * <p>
-     * For asymmetric KMS keys with RSA key material, specify <code>ENCRYPT_DECRYPT</code> or <code>SIGN_VERIFY</code>.
+     * For asymmetric KMS keys with RSA key pairs, specify <code>ENCRYPT_DECRYPT</code> or <code>SIGN_VERIFY</code>.
      * </p>
      * </li>
      * <li>
      * <p>
-     * For asymmetric KMS keys with ECC key material, specify <code>SIGN_VERIFY</code>.
+     * For asymmetric KMS keys with NIST-recommended elliptic curve key pairs, specify <code>SIGN_VERIFY</code> or
+     * <code>KEY_AGREEMENT</code>.
      * </p>
      * </li>
      * <li>
      * <p>
-     * For asymmetric KMS keys with SM2 key material (China Regions only), specify <code>ENCRYPT_DECRYPT</code> or
-     * <code>SIGN_VERIFY</code>.
+     * For asymmetric KMS keys with <code>ECC_SECG_P256K1</code> key pairs specify <code>SIGN_VERIFY</code>.
+     * </p>
+     * </li>
+     * <li>
+     * <p>
+     * For asymmetric KMS keys with SM2 key pairs (China Regions only), specify <code>ENCRYPT_DECRYPT</code>,
+     * <code>SIGN_VERIFY</code>, or <code>KEY_AGREEMENT</code>.
      * </p>
      * </li>
      * </ul>
-     *
+     * 
      * @param keyUsage
      *        Determines the <a
      *        href="https://docs.aws.amazon.com/kms/latest/developerguide/concepts.html#cryptographic-operations"
@@ -1042,19 +1079,25 @@ public class CreateKeyRequest extends com.ibm.cloud.objectstorage.AmazonWebServi
      *        </li>
      *        <li>
      *        <p>
-     *        For asymmetric KMS keys with RSA key material, specify <code>ENCRYPT_DECRYPT</code> or
+     *        For asymmetric KMS keys with RSA key pairs, specify <code>ENCRYPT_DECRYPT</code> or
      *        <code>SIGN_VERIFY</code>.
      *        </p>
      *        </li>
      *        <li>
      *        <p>
-     *        For asymmetric KMS keys with ECC key material, specify <code>SIGN_VERIFY</code>.
+     *        For asymmetric KMS keys with NIST-recommended elliptic curve key pairs, specify <code>SIGN_VERIFY</code>
+     *        or <code>KEY_AGREEMENT</code>.
      *        </p>
      *        </li>
      *        <li>
      *        <p>
-     *        For asymmetric KMS keys with SM2 key material (China Regions only), specify <code>ENCRYPT_DECRYPT</code>
-     *        or <code>SIGN_VERIFY</code>.
+     *        For asymmetric KMS keys with <code>ECC_SECG_P256K1</code> key pairs specify <code>SIGN_VERIFY</code>.
+     *        </p>
+     *        </li>
+     *        <li>
+     *        <p>
+     *        For asymmetric KMS keys with SM2 key pairs (China Regions only), specify <code>ENCRYPT_DECRYPT</code>,
+     *        <code>SIGN_VERIFY</code>, or <code>KEY_AGREEMENT</code>.
      *        </p>
      *        </li>
      * @return Returns a reference to this object so that method calls can be chained together.
@@ -1090,22 +1133,28 @@ public class CreateKeyRequest extends com.ibm.cloud.objectstorage.AmazonWebServi
      * </li>
      * <li>
      * <p>
-     * For asymmetric KMS keys with RSA key material, specify <code>ENCRYPT_DECRYPT</code> or <code>SIGN_VERIFY</code>.
+     * For asymmetric KMS keys with RSA key pairs, specify <code>ENCRYPT_DECRYPT</code> or <code>SIGN_VERIFY</code>.
      * </p>
      * </li>
      * <li>
      * <p>
-     * For asymmetric KMS keys with ECC key material, specify <code>SIGN_VERIFY</code>.
+     * For asymmetric KMS keys with NIST-recommended elliptic curve key pairs, specify <code>SIGN_VERIFY</code> or
+     * <code>KEY_AGREEMENT</code>.
      * </p>
      * </li>
      * <li>
      * <p>
-     * For asymmetric KMS keys with SM2 key material (China Regions only), specify <code>ENCRYPT_DECRYPT</code> or
-     * <code>SIGN_VERIFY</code>.
+     * For asymmetric KMS keys with <code>ECC_SECG_P256K1</code> key pairs specify <code>SIGN_VERIFY</code>.
+     * </p>
+     * </li>
+     * <li>
+     * <p>
+     * For asymmetric KMS keys with SM2 key pairs (China Regions only), specify <code>ENCRYPT_DECRYPT</code>,
+     * <code>SIGN_VERIFY</code>, or <code>KEY_AGREEMENT</code>.
      * </p>
      * </li>
      * </ul>
-     *
+     * 
      * @param keyUsage
      *        Determines the <a
      *        href="https://docs.aws.amazon.com/kms/latest/developerguide/concepts.html#cryptographic-operations"
@@ -1129,19 +1178,25 @@ public class CreateKeyRequest extends com.ibm.cloud.objectstorage.AmazonWebServi
      *        </li>
      *        <li>
      *        <p>
-     *        For asymmetric KMS keys with RSA key material, specify <code>ENCRYPT_DECRYPT</code> or
+     *        For asymmetric KMS keys with RSA key pairs, specify <code>ENCRYPT_DECRYPT</code> or
      *        <code>SIGN_VERIFY</code>.
      *        </p>
      *        </li>
      *        <li>
      *        <p>
-     *        For asymmetric KMS keys with ECC key material, specify <code>SIGN_VERIFY</code>.
+     *        For asymmetric KMS keys with NIST-recommended elliptic curve key pairs, specify <code>SIGN_VERIFY</code>
+     *        or <code>KEY_AGREEMENT</code>.
      *        </p>
      *        </li>
      *        <li>
      *        <p>
-     *        For asymmetric KMS keys with SM2 key material (China Regions only), specify <code>ENCRYPT_DECRYPT</code>
-     *        or <code>SIGN_VERIFY</code>.
+     *        For asymmetric KMS keys with <code>ECC_SECG_P256K1</code> key pairs specify <code>SIGN_VERIFY</code>.
+     *        </p>
+     *        </li>
+     *        <li>
+     *        <p>
+     *        For asymmetric KMS keys with SM2 key pairs (China Regions only), specify <code>ENCRYPT_DECRYPT</code>,
+     *        <code>SIGN_VERIFY</code>, or <code>KEY_AGREEMENT</code>.
      *        </p>
      *        </li>
      * @see KeyUsageType
@@ -1175,22 +1230,28 @@ public class CreateKeyRequest extends com.ibm.cloud.objectstorage.AmazonWebServi
      * </li>
      * <li>
      * <p>
-     * For asymmetric KMS keys with RSA key material, specify <code>ENCRYPT_DECRYPT</code> or <code>SIGN_VERIFY</code>.
+     * For asymmetric KMS keys with RSA key pairs, specify <code>ENCRYPT_DECRYPT</code> or <code>SIGN_VERIFY</code>.
      * </p>
      * </li>
      * <li>
      * <p>
-     * For asymmetric KMS keys with ECC key material, specify <code>SIGN_VERIFY</code>.
+     * For asymmetric KMS keys with NIST-recommended elliptic curve key pairs, specify <code>SIGN_VERIFY</code> or
+     * <code>KEY_AGREEMENT</code>.
      * </p>
      * </li>
      * <li>
      * <p>
-     * For asymmetric KMS keys with SM2 key material (China Regions only), specify <code>ENCRYPT_DECRYPT</code> or
-     * <code>SIGN_VERIFY</code>.
+     * For asymmetric KMS keys with <code>ECC_SECG_P256K1</code> key pairs specify <code>SIGN_VERIFY</code>.
+     * </p>
+     * </li>
+     * <li>
+     * <p>
+     * For asymmetric KMS keys with SM2 key pairs (China Regions only), specify <code>ENCRYPT_DECRYPT</code>,
+     * <code>SIGN_VERIFY</code>, or <code>KEY_AGREEMENT</code>.
      * </p>
      * </li>
      * </ul>
-     *
+     * 
      * @param keyUsage
      *        Determines the <a
      *        href="https://docs.aws.amazon.com/kms/latest/developerguide/concepts.html#cryptographic-operations"
@@ -1214,19 +1275,25 @@ public class CreateKeyRequest extends com.ibm.cloud.objectstorage.AmazonWebServi
      *        </li>
      *        <li>
      *        <p>
-     *        For asymmetric KMS keys with RSA key material, specify <code>ENCRYPT_DECRYPT</code> or
+     *        For asymmetric KMS keys with RSA key pairs, specify <code>ENCRYPT_DECRYPT</code> or
      *        <code>SIGN_VERIFY</code>.
      *        </p>
      *        </li>
      *        <li>
      *        <p>
-     *        For asymmetric KMS keys with ECC key material, specify <code>SIGN_VERIFY</code>.
+     *        For asymmetric KMS keys with NIST-recommended elliptic curve key pairs, specify <code>SIGN_VERIFY</code>
+     *        or <code>KEY_AGREEMENT</code>.
      *        </p>
      *        </li>
      *        <li>
      *        <p>
-     *        For asymmetric KMS keys with SM2 key material (China Regions only), specify <code>ENCRYPT_DECRYPT</code>
-     *        or <code>SIGN_VERIFY</code>.
+     *        For asymmetric KMS keys with <code>ECC_SECG_P256K1</code> key pairs specify <code>SIGN_VERIFY</code>.
+     *        </p>
+     *        </li>
+     *        <li>
+     *        <p>
+     *        For asymmetric KMS keys with SM2 key pairs (China Regions only), specify <code>ENCRYPT_DECRYPT</code>,
+     *        <code>SIGN_VERIFY</code>, or <code>KEY_AGREEMENT</code>.
      *        </p>
      *        </li>
      * @return Returns a reference to this object so that method calls can be chained together.
@@ -1430,7 +1497,7 @@ public class CreateKeyRequest extends com.ibm.cloud.objectstorage.AmazonWebServi
      * </li>
      * <li>
      * <p>
-     * Asymmetric RSA key pairs
+     * Asymmetric RSA key pairs (encryption and decryption -or- signing and verification)
      * </p>
      * <ul>
      * <li>
@@ -1452,7 +1519,7 @@ public class CreateKeyRequest extends com.ibm.cloud.objectstorage.AmazonWebServi
      * </li>
      * <li>
      * <p>
-     * Asymmetric NIST-recommended elliptic curve key pairs
+     * Asymmetric NIST-recommended elliptic curve key pairs (signing and verification -or- deriving shared secrets)
      * </p>
      * <ul>
      * <li>
@@ -1474,7 +1541,7 @@ public class CreateKeyRequest extends com.ibm.cloud.objectstorage.AmazonWebServi
      * </li>
      * <li>
      * <p>
-     * Other asymmetric elliptic curve key pairs
+     * Other asymmetric elliptic curve key pairs (signing and verification)
      * </p>
      * <ul>
      * <li>
@@ -1486,12 +1553,12 @@ public class CreateKeyRequest extends com.ibm.cloud.objectstorage.AmazonWebServi
      * </li>
      * <li>
      * <p>
-     * SM2 key pairs (China Regions only)
+     * SM2 key pairs (encryption and decryption -or- signing and verification -or- deriving shared secrets)
      * </p>
      * <ul>
      * <li>
      * <p>
-     * <code>SM2</code>
+     * <code>SM2</code> (China Regions only)
      * </p>
      * </li>
      * </ul>
@@ -1569,7 +1636,7 @@ public class CreateKeyRequest extends com.ibm.cloud.objectstorage.AmazonWebServi
      *        </li>
      *        <li>
      *        <p>
-     *        Asymmetric RSA key pairs
+     *        Asymmetric RSA key pairs (encryption and decryption -or- signing and verification)
      *        </p>
      *        <ul>
      *        <li>
@@ -1591,7 +1658,8 @@ public class CreateKeyRequest extends com.ibm.cloud.objectstorage.AmazonWebServi
      *        </li>
      *        <li>
      *        <p>
-     *        Asymmetric NIST-recommended elliptic curve key pairs
+     *        Asymmetric NIST-recommended elliptic curve key pairs (signing and verification -or- deriving shared
+     *        secrets)
      *        </p>
      *        <ul>
      *        <li>
@@ -1613,7 +1681,7 @@ public class CreateKeyRequest extends com.ibm.cloud.objectstorage.AmazonWebServi
      *        </li>
      *        <li>
      *        <p>
-     *        Other asymmetric elliptic curve key pairs
+     *        Other asymmetric elliptic curve key pairs (signing and verification)
      *        </p>
      *        <ul>
      *        <li>
@@ -1625,12 +1693,12 @@ public class CreateKeyRequest extends com.ibm.cloud.objectstorage.AmazonWebServi
      *        </li>
      *        <li>
      *        <p>
-     *        SM2 key pairs (China Regions only)
+     *        SM2 key pairs (encryption and decryption -or- signing and verification -or- deriving shared secrets)
      *        </p>
      *        <ul>
      *        <li>
      *        <p>
-     *        <code>SM2</code>
+     *        <code>SM2</code> (China Regions only)
      *        </p>
      *        </li>
      *        </ul>
@@ -1714,7 +1782,7 @@ public class CreateKeyRequest extends com.ibm.cloud.objectstorage.AmazonWebServi
      * </li>
      * <li>
      * <p>
-     * Asymmetric RSA key pairs
+     * Asymmetric RSA key pairs (encryption and decryption -or- signing and verification)
      * </p>
      * <ul>
      * <li>
@@ -1736,7 +1804,7 @@ public class CreateKeyRequest extends com.ibm.cloud.objectstorage.AmazonWebServi
      * </li>
      * <li>
      * <p>
-     * Asymmetric NIST-recommended elliptic curve key pairs
+     * Asymmetric NIST-recommended elliptic curve key pairs (signing and verification -or- deriving shared secrets)
      * </p>
      * <ul>
      * <li>
@@ -1758,7 +1826,7 @@ public class CreateKeyRequest extends com.ibm.cloud.objectstorage.AmazonWebServi
      * </li>
      * <li>
      * <p>
-     * Other asymmetric elliptic curve key pairs
+     * Other asymmetric elliptic curve key pairs (signing and verification)
      * </p>
      * <ul>
      * <li>
@@ -1770,12 +1838,12 @@ public class CreateKeyRequest extends com.ibm.cloud.objectstorage.AmazonWebServi
      * </li>
      * <li>
      * <p>
-     * SM2 key pairs (China Regions only)
+     * SM2 key pairs (encryption and decryption -or- signing and verification -or- deriving shared secrets)
      * </p>
      * <ul>
      * <li>
      * <p>
-     * <code>SM2</code>
+     * <code>SM2</code> (China Regions only)
      * </p>
      * </li>
      * </ul>
@@ -1852,7 +1920,7 @@ public class CreateKeyRequest extends com.ibm.cloud.objectstorage.AmazonWebServi
      *         </li>
      *         <li>
      *         <p>
-     *         Asymmetric RSA key pairs
+     *         Asymmetric RSA key pairs (encryption and decryption -or- signing and verification)
      *         </p>
      *         <ul>
      *         <li>
@@ -1874,7 +1942,8 @@ public class CreateKeyRequest extends com.ibm.cloud.objectstorage.AmazonWebServi
      *         </li>
      *         <li>
      *         <p>
-     *         Asymmetric NIST-recommended elliptic curve key pairs
+     *         Asymmetric NIST-recommended elliptic curve key pairs (signing and verification -or- deriving shared
+     *         secrets)
      *         </p>
      *         <ul>
      *         <li>
@@ -1896,7 +1965,7 @@ public class CreateKeyRequest extends com.ibm.cloud.objectstorage.AmazonWebServi
      *         </li>
      *         <li>
      *         <p>
-     *         Other asymmetric elliptic curve key pairs
+     *         Other asymmetric elliptic curve key pairs (signing and verification)
      *         </p>
      *         <ul>
      *         <li>
@@ -1908,12 +1977,12 @@ public class CreateKeyRequest extends com.ibm.cloud.objectstorage.AmazonWebServi
      *         </li>
      *         <li>
      *         <p>
-     *         SM2 key pairs (China Regions only)
+     *         SM2 key pairs (encryption and decryption -or- signing and verification -or- deriving shared secrets)
      *         </p>
      *         <ul>
      *         <li>
      *         <p>
-     *         <code>SM2</code>
+     *         <code>SM2</code> (China Regions only)
      *         </p>
      *         </li>
      *         </ul>
@@ -1997,7 +2066,7 @@ public class CreateKeyRequest extends com.ibm.cloud.objectstorage.AmazonWebServi
      * </li>
      * <li>
      * <p>
-     * Asymmetric RSA key pairs
+     * Asymmetric RSA key pairs (encryption and decryption -or- signing and verification)
      * </p>
      * <ul>
      * <li>
@@ -2019,7 +2088,7 @@ public class CreateKeyRequest extends com.ibm.cloud.objectstorage.AmazonWebServi
      * </li>
      * <li>
      * <p>
-     * Asymmetric NIST-recommended elliptic curve key pairs
+     * Asymmetric NIST-recommended elliptic curve key pairs (signing and verification -or- deriving shared secrets)
      * </p>
      * <ul>
      * <li>
@@ -2041,7 +2110,7 @@ public class CreateKeyRequest extends com.ibm.cloud.objectstorage.AmazonWebServi
      * </li>
      * <li>
      * <p>
-     * Other asymmetric elliptic curve key pairs
+     * Other asymmetric elliptic curve key pairs (signing and verification)
      * </p>
      * <ul>
      * <li>
@@ -2053,12 +2122,12 @@ public class CreateKeyRequest extends com.ibm.cloud.objectstorage.AmazonWebServi
      * </li>
      * <li>
      * <p>
-     * SM2 key pairs (China Regions only)
+     * SM2 key pairs (encryption and decryption -or- signing and verification -or- deriving shared secrets)
      * </p>
      * <ul>
      * <li>
      * <p>
-     * <code>SM2</code>
+     * <code>SM2</code> (China Regions only)
      * </p>
      * </li>
      * </ul>
@@ -2136,7 +2205,7 @@ public class CreateKeyRequest extends com.ibm.cloud.objectstorage.AmazonWebServi
      *        </li>
      *        <li>
      *        <p>
-     *        Asymmetric RSA key pairs
+     *        Asymmetric RSA key pairs (encryption and decryption -or- signing and verification)
      *        </p>
      *        <ul>
      *        <li>
@@ -2158,7 +2227,8 @@ public class CreateKeyRequest extends com.ibm.cloud.objectstorage.AmazonWebServi
      *        </li>
      *        <li>
      *        <p>
-     *        Asymmetric NIST-recommended elliptic curve key pairs
+     *        Asymmetric NIST-recommended elliptic curve key pairs (signing and verification -or- deriving shared
+     *        secrets)
      *        </p>
      *        <ul>
      *        <li>
@@ -2180,7 +2250,7 @@ public class CreateKeyRequest extends com.ibm.cloud.objectstorage.AmazonWebServi
      *        </li>
      *        <li>
      *        <p>
-     *        Other asymmetric elliptic curve key pairs
+     *        Other asymmetric elliptic curve key pairs (signing and verification)
      *        </p>
      *        <ul>
      *        <li>
@@ -2192,12 +2262,12 @@ public class CreateKeyRequest extends com.ibm.cloud.objectstorage.AmazonWebServi
      *        </li>
      *        <li>
      *        <p>
-     *        SM2 key pairs (China Regions only)
+     *        SM2 key pairs (encryption and decryption -or- signing and verification -or- deriving shared secrets)
      *        </p>
      *        <ul>
      *        <li>
      *        <p>
-     *        <code>SM2</code>
+     *        <code>SM2</code> (China Regions only)
      *        </p>
      *        </li>
      *        </ul>
@@ -2283,7 +2353,7 @@ public class CreateKeyRequest extends com.ibm.cloud.objectstorage.AmazonWebServi
      * </li>
      * <li>
      * <p>
-     * Asymmetric RSA key pairs
+     * Asymmetric RSA key pairs (encryption and decryption -or- signing and verification)
      * </p>
      * <ul>
      * <li>
@@ -2305,7 +2375,7 @@ public class CreateKeyRequest extends com.ibm.cloud.objectstorage.AmazonWebServi
      * </li>
      * <li>
      * <p>
-     * Asymmetric NIST-recommended elliptic curve key pairs
+     * Asymmetric NIST-recommended elliptic curve key pairs (signing and verification -or- deriving shared secrets)
      * </p>
      * <ul>
      * <li>
@@ -2327,7 +2397,7 @@ public class CreateKeyRequest extends com.ibm.cloud.objectstorage.AmazonWebServi
      * </li>
      * <li>
      * <p>
-     * Other asymmetric elliptic curve key pairs
+     * Other asymmetric elliptic curve key pairs (signing and verification)
      * </p>
      * <ul>
      * <li>
@@ -2339,12 +2409,12 @@ public class CreateKeyRequest extends com.ibm.cloud.objectstorage.AmazonWebServi
      * </li>
      * <li>
      * <p>
-     * SM2 key pairs (China Regions only)
+     * SM2 key pairs (encryption and decryption -or- signing and verification -or- deriving shared secrets)
      * </p>
      * <ul>
      * <li>
      * <p>
-     * <code>SM2</code>
+     * <code>SM2</code> (China Regions only)
      * </p>
      * </li>
      * </ul>
@@ -2422,7 +2492,7 @@ public class CreateKeyRequest extends com.ibm.cloud.objectstorage.AmazonWebServi
      *        </li>
      *        <li>
      *        <p>
-     *        Asymmetric RSA key pairs
+     *        Asymmetric RSA key pairs (encryption and decryption -or- signing and verification)
      *        </p>
      *        <ul>
      *        <li>
@@ -2444,7 +2514,8 @@ public class CreateKeyRequest extends com.ibm.cloud.objectstorage.AmazonWebServi
      *        </li>
      *        <li>
      *        <p>
-     *        Asymmetric NIST-recommended elliptic curve key pairs
+     *        Asymmetric NIST-recommended elliptic curve key pairs (signing and verification -or- deriving shared
+     *        secrets)
      *        </p>
      *        <ul>
      *        <li>
@@ -2466,7 +2537,7 @@ public class CreateKeyRequest extends com.ibm.cloud.objectstorage.AmazonWebServi
      *        </li>
      *        <li>
      *        <p>
-     *        Other asymmetric elliptic curve key pairs
+     *        Other asymmetric elliptic curve key pairs (signing and verification)
      *        </p>
      *        <ul>
      *        <li>
@@ -2478,12 +2549,12 @@ public class CreateKeyRequest extends com.ibm.cloud.objectstorage.AmazonWebServi
      *        </li>
      *        <li>
      *        <p>
-     *        SM2 key pairs (China Regions only)
+     *        SM2 key pairs (encryption and decryption -or- signing and verification -or- deriving shared secrets)
      *        </p>
      *        <ul>
      *        <li>
      *        <p>
-     *        <code>SM2</code>
+     *        <code>SM2</code> (China Regions only)
      *        </p>
      *        </li>
      *        </ul>
@@ -2567,7 +2638,7 @@ public class CreateKeyRequest extends com.ibm.cloud.objectstorage.AmazonWebServi
      * </li>
      * <li>
      * <p>
-     * Asymmetric RSA key pairs
+     * Asymmetric RSA key pairs (encryption and decryption -or- signing and verification)
      * </p>
      * <ul>
      * <li>
@@ -2589,7 +2660,7 @@ public class CreateKeyRequest extends com.ibm.cloud.objectstorage.AmazonWebServi
      * </li>
      * <li>
      * <p>
-     * Asymmetric NIST-recommended elliptic curve key pairs
+     * Asymmetric NIST-recommended elliptic curve key pairs (signing and verification -or- deriving shared secrets)
      * </p>
      * <ul>
      * <li>
@@ -2611,7 +2682,7 @@ public class CreateKeyRequest extends com.ibm.cloud.objectstorage.AmazonWebServi
      * </li>
      * <li>
      * <p>
-     * Other asymmetric elliptic curve key pairs
+     * Other asymmetric elliptic curve key pairs (signing and verification)
      * </p>
      * <ul>
      * <li>
@@ -2623,12 +2694,12 @@ public class CreateKeyRequest extends com.ibm.cloud.objectstorage.AmazonWebServi
      * </li>
      * <li>
      * <p>
-     * SM2 key pairs (China Regions only)
+     * SM2 key pairs (encryption and decryption -or- signing and verification -or- deriving shared secrets)
      * </p>
      * <ul>
      * <li>
      * <p>
-     * <code>SM2</code>
+     * <code>SM2</code> (China Regions only)
      * </p>
      * </li>
      * </ul>
@@ -2706,7 +2777,7 @@ public class CreateKeyRequest extends com.ibm.cloud.objectstorage.AmazonWebServi
      *        </li>
      *        <li>
      *        <p>
-     *        Asymmetric RSA key pairs
+     *        Asymmetric RSA key pairs (encryption and decryption -or- signing and verification)
      *        </p>
      *        <ul>
      *        <li>
@@ -2728,7 +2799,8 @@ public class CreateKeyRequest extends com.ibm.cloud.objectstorage.AmazonWebServi
      *        </li>
      *        <li>
      *        <p>
-     *        Asymmetric NIST-recommended elliptic curve key pairs
+     *        Asymmetric NIST-recommended elliptic curve key pairs (signing and verification -or- deriving shared
+     *        secrets)
      *        </p>
      *        <ul>
      *        <li>
@@ -2750,7 +2822,7 @@ public class CreateKeyRequest extends com.ibm.cloud.objectstorage.AmazonWebServi
      *        </li>
      *        <li>
      *        <p>
-     *        Other asymmetric elliptic curve key pairs
+     *        Other asymmetric elliptic curve key pairs (signing and verification)
      *        </p>
      *        <ul>
      *        <li>
@@ -2762,12 +2834,12 @@ public class CreateKeyRequest extends com.ibm.cloud.objectstorage.AmazonWebServi
      *        </li>
      *        <li>
      *        <p>
-     *        SM2 key pairs (China Regions only)
+     *        SM2 key pairs (encryption and decryption -or- signing and verification -or- deriving shared secrets)
      *        </p>
      *        <ul>
      *        <li>
      *        <p>
-     *        <code>SM2</code>
+     *        <code>SM2</code> (China Regions only)
      *        </p>
      *        </li>
      *        </ul>
@@ -3201,7 +3273,8 @@ public class CreateKeyRequest extends com.ibm.cloud.objectstorage.AmazonWebServi
      * </important>
      * <p>
      * Use this parameter only when you intend to prevent the principal that is making the request from making a
-     * subsequent <a>PutKeyPolicy</a> request on the KMS key.
+     * subsequent <a href="https://docs.aws.amazon.com/kms/latest/APIReference/API_PutKeyPolicy.html">PutKeyPolicy</a>
+     * request on the KMS key.
      * </p>
      * 
      * @param bypassPolicyLockoutSafetyCheck
@@ -3218,7 +3291,9 @@ public class CreateKeyRequest extends com.ibm.cloud.objectstorage.AmazonWebServi
      *        </important>
      *        <p>
      *        Use this parameter only when you intend to prevent the principal that is making the request from making a
-     *        subsequent <a>PutKeyPolicy</a> request on the KMS key.
+     *        subsequent <a
+     *        href="https://docs.aws.amazon.com/kms/latest/APIReference/API_PutKeyPolicy.html">PutKeyPolicy</a> request
+     *        on the KMS key.
      */
 
     public void setBypassPolicyLockoutSafetyCheck(Boolean bypassPolicyLockoutSafetyCheck) {
@@ -3242,7 +3317,8 @@ public class CreateKeyRequest extends com.ibm.cloud.objectstorage.AmazonWebServi
      * </important>
      * <p>
      * Use this parameter only when you intend to prevent the principal that is making the request from making a
-     * subsequent <a>PutKeyPolicy</a> request on the KMS key.
+     * subsequent <a href="https://docs.aws.amazon.com/kms/latest/APIReference/API_PutKeyPolicy.html">PutKeyPolicy</a>
+     * request on the KMS key.
      * </p>
      * 
      * @return Skips ("bypasses") the key policy lockout safety check. The default value is false.</p> <important>
@@ -3258,7 +3334,9 @@ public class CreateKeyRequest extends com.ibm.cloud.objectstorage.AmazonWebServi
      *         </important>
      *         <p>
      *         Use this parameter only when you intend to prevent the principal that is making the request from making a
-     *         subsequent <a>PutKeyPolicy</a> request on the KMS key.
+     *         subsequent <a
+     *         href="https://docs.aws.amazon.com/kms/latest/APIReference/API_PutKeyPolicy.html">PutKeyPolicy</a> request
+     *         on the KMS key.
      */
 
     public Boolean getBypassPolicyLockoutSafetyCheck() {
@@ -3282,7 +3360,8 @@ public class CreateKeyRequest extends com.ibm.cloud.objectstorage.AmazonWebServi
      * </important>
      * <p>
      * Use this parameter only when you intend to prevent the principal that is making the request from making a
-     * subsequent <a>PutKeyPolicy</a> request on the KMS key.
+     * subsequent <a href="https://docs.aws.amazon.com/kms/latest/APIReference/API_PutKeyPolicy.html">PutKeyPolicy</a>
+     * request on the KMS key.
      * </p>
      * 
      * @param bypassPolicyLockoutSafetyCheck
@@ -3299,7 +3378,9 @@ public class CreateKeyRequest extends com.ibm.cloud.objectstorage.AmazonWebServi
      *        </important>
      *        <p>
      *        Use this parameter only when you intend to prevent the principal that is making the request from making a
-     *        subsequent <a>PutKeyPolicy</a> request on the KMS key.
+     *        subsequent <a
+     *        href="https://docs.aws.amazon.com/kms/latest/APIReference/API_PutKeyPolicy.html">PutKeyPolicy</a> request
+     *        on the KMS key.
      * @return Returns a reference to this object so that method calls can be chained together.
      */
 
@@ -3325,7 +3406,8 @@ public class CreateKeyRequest extends com.ibm.cloud.objectstorage.AmazonWebServi
      * </important>
      * <p>
      * Use this parameter only when you intend to prevent the principal that is making the request from making a
-     * subsequent <a>PutKeyPolicy</a> request on the KMS key.
+     * subsequent <a href="https://docs.aws.amazon.com/kms/latest/APIReference/API_PutKeyPolicy.html">PutKeyPolicy</a>
+     * request on the KMS key.
      * </p>
      * 
      * @return Skips ("bypasses") the key policy lockout safety check. The default value is false.</p> <important>
@@ -3341,7 +3423,9 @@ public class CreateKeyRequest extends com.ibm.cloud.objectstorage.AmazonWebServi
      *         </important>
      *         <p>
      *         Use this parameter only when you intend to prevent the principal that is making the request from making a
-     *         subsequent <a>PutKeyPolicy</a> request on the KMS key.
+     *         subsequent <a
+     *         href="https://docs.aws.amazon.com/kms/latest/APIReference/API_PutKeyPolicy.html">PutKeyPolicy</a> request
+     *         on the KMS key.
      */
 
     public Boolean isBypassPolicyLockoutSafetyCheck() {
@@ -3675,7 +3759,7 @@ public class CreateKeyRequest extends com.ibm.cloud.objectstorage.AmazonWebServi
      * You can create a symmetric or asymmetric multi-Region key, and you can create a multi-Region key with imported
      * key material. However, you cannot create a multi-Region key in a custom key store.
      * </p>
-     *
+     * 
      * @param multiRegion
      *        Creates a multi-Region primary key that you can replicate into other Amazon Web Services Regions. You
      *        cannot change this value after you create the KMS key. </p>
@@ -3731,7 +3815,7 @@ public class CreateKeyRequest extends com.ibm.cloud.objectstorage.AmazonWebServi
      * You can create a symmetric or asymmetric multi-Region key, and you can create a multi-Region key with imported
      * key material. However, you cannot create a multi-Region key in a custom key store.
      * </p>
-     *
+     * 
      * @return Creates a multi-Region primary key that you can replicate into other Amazon Web Services Regions. You
      *         cannot change this value after you create the KMS key. </p>
      *         <p>
@@ -3786,7 +3870,7 @@ public class CreateKeyRequest extends com.ibm.cloud.objectstorage.AmazonWebServi
      * You can create a symmetric or asymmetric multi-Region key, and you can create a multi-Region key with imported
      * key material. However, you cannot create a multi-Region key in a custom key store.
      * </p>
-     *
+     * 
      * @param multiRegion
      *        Creates a multi-Region primary key that you can replicate into other Amazon Web Services Regions. You
      *        cannot change this value after you create the KMS key. </p>
@@ -3844,7 +3928,7 @@ public class CreateKeyRequest extends com.ibm.cloud.objectstorage.AmazonWebServi
      * You can create a symmetric or asymmetric multi-Region key, and you can create a multi-Region key with imported
      * key material. However, you cannot create a multi-Region key in a custom key store.
      * </p>
-     *
+     * 
      * @return Creates a multi-Region primary key that you can replicate into other Amazon Web Services Regions. You
      *         cannot change this value after you create the KMS key. </p>
      *         <p>

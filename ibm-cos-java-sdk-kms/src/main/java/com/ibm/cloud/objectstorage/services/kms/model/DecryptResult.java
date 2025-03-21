@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2023 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2019-2024 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"). You may not use this file except in compliance with
  * the License. A copy of the License is located at
@@ -68,7 +68,7 @@ public class DecryptResult extends com.ibm.cloud.objectstorage.AmazonWebServiceR
      * href="https://docs.aws.amazon.com/kms/latest/developerguide/concepts.html#key-id-key-ARN">key ARN</a>) of the KMS
      * key that was used to decrypt the ciphertext.
      * </p>
-     *
+     * 
      * @param keyId
      *        The Amazon Resource Name (<a
      *        href="https://docs.aws.amazon.com/kms/latest/developerguide/concepts.html#key-id-key-ARN">key ARN</a>) of
@@ -85,7 +85,7 @@ public class DecryptResult extends com.ibm.cloud.objectstorage.AmazonWebServiceR
      * href="https://docs.aws.amazon.com/kms/latest/developerguide/concepts.html#key-id-key-ARN">key ARN</a>) of the KMS
      * key that was used to decrypt the ciphertext.
      * </p>
-     *
+     * 
      * @return The Amazon Resource Name (<a
      *         href="https://docs.aws.amazon.com/kms/latest/developerguide/concepts.html#key-id-key-ARN">key ARN</a>) of
      *         the KMS key that was used to decrypt the ciphertext.
@@ -101,7 +101,7 @@ public class DecryptResult extends com.ibm.cloud.objectstorage.AmazonWebServiceR
      * href="https://docs.aws.amazon.com/kms/latest/developerguide/concepts.html#key-id-key-ARN">key ARN</a>) of the KMS
      * key that was used to decrypt the ciphertext.
      * </p>
-     *
+     * 
      * @param keyId
      *        The Amazon Resource Name (<a
      *        href="https://docs.aws.amazon.com/kms/latest/developerguide/concepts.html#key-id-key-ARN">key ARN</a>) of

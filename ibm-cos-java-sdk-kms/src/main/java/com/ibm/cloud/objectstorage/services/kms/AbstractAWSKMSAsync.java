@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2023 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2019-2024 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"). You may not use this file except in compliance with
  * the License. A copy of the License is located at
@@ -15,6 +15,8 @@ package com.ibm.cloud.objectstorage.services.kms;
 import javax.annotation.Generated;
 
 import com.ibm.cloud.objectstorage.services.kms.model.*;
+
+import java.lang.UnsupportedOperationException;
 
 /**
  * Abstract implementation of {@code AWSKMSAsync}. Convenient method forms pass through to the corresponding overload
@@ -595,6 +597,30 @@ public class AbstractAWSKMSAsync extends AbstractAWSKMS implements AWSKMSAsync {
 
         throw new java.lang.UnsupportedOperationException();
     }
+//    @Override
+//    public java.util.concurrent.Future<VerifyResult> verifyAsync(VerifyRequest request) {
+//
+//        return verifyAsync(request, null);
+//    }
 
+//    @Override
+//    public java.util.concurrent.Future<VerifyResult> verifyAsync(VerifyRequest request,
+//                                                                 com.ibm.cloud.objectstorage.handlers.AsyncHandler<VerifyRequest, VerifyResult> asyncHandler) {
+//
+//        throw new java.lang.UnsupportedOperationException();
+//    }
+
+//    IBM Unsupported
+//    @Override
+//    public java.util.concurrent.Future<VerifyMacResult> verifyMacAsync(VerifyMacRequest request) {
+//
+//        return verifyMacAsync(request, null);
+//    }
+//
+//    @Override
+//    public java.util.concurrent.Future<VerifyMacResult> verifyMacAsync(VerifyMacRequest request,
+//            com.ibm.cloud.objectstorage.handlers.AsyncHandler<VerifyMacRequest, VerifyMacResult> asyncHandler) {
+//
+//        throw new java.lang.UnsupportedOperationException();
+//    }
 }
-

@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2023 Amazon Technologies, Inc.
+ * Copyright 2014-2024 Amazon Technologies, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,6 +16,7 @@ package com.ibm.cloud.objectstorage.http.conn.ssl;
 
 import com.ibm.cloud.objectstorage.annotation.ThreadSafe;
 import com.ibm.cloud.objectstorage.http.apache.utils.HttpContextUtils;
+import com.ibm.cloud.objectstorage.internal.InputShutdownCheckingSslSocket;
 import com.ibm.cloud.objectstorage.internal.SdkMetricsSocket;
 import com.ibm.cloud.objectstorage.internal.SdkSSLMetricsSocket;
 import com.ibm.cloud.objectstorage.internal.SdkSSLSocket;
@@ -155,7 +156,7 @@ public class SdkTLSSocketFactory extends SSLConnectionSocketFactory {
         }
 
         if (connectedSocket instanceof SSLSocket) {
-            SdkSSLSocket sslSocket = new SdkSSLSocket((SSLSocket) connectedSocket);
+            SdkSSLSocket sslSocket = new InputShutdownCheckingSslSocket(new SdkSSLSocket((SSLSocket) connectedSocket));
             return AwsSdkMetrics.isHttpSocketReadMetricEnabled() ? new SdkSSLMetricsSocket(sslSocket) : sslSocket;
         }
         SdkSocket sdkSocket = new SdkSocket(connectedSocket);

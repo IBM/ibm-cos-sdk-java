@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2023 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2015-2024 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -17,6 +17,7 @@ package com.ibm.cloud.objectstorage.transform;
 import com.ibm.cloud.objectstorage.AmazonServiceException;
 import com.ibm.cloud.objectstorage.annotation.SdkInternalApi;
 import com.ibm.cloud.objectstorage.annotation.ThreadSafe;
+import com.ibm.cloud.objectstorage.util.PropertyNamingStrategyUtils;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -43,7 +44,7 @@ public class JsonErrorUnmarshaller extends AbstractErrorUnmarshaller<JsonNode> {
         MAPPER.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         // If a customer is using an older Jackson version than 2.12.x, it will throw an error
         // and an upgrade to a newer version above 2.16.x is recommended
-        MAPPER.setPropertyNamingStrategy(PropertyNamingStrategies.UPPER_CAMEL_CASE);
+        PropertyNamingStrategyUtils.configureUpperCamelCase(MAPPER);
     }
 
     /**

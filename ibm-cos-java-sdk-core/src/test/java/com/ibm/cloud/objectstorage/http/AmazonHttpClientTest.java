@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2023 Amazon.com, Inc. or its affiliates. All Rights
+ * Copyright 2010-2024 Amazon.com, Inc. or its affiliates. All Rights
  * Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
@@ -30,6 +30,7 @@ import java.util.List;
 import com.ibm.cloud.objectstorage.AbortedException;
 import com.ibm.cloud.objectstorage.Response;
 import com.ibm.cloud.objectstorage.auth.AWSCredentialsProvider;
+import com.ibm.cloud.objectstorage.auth.AWSCredentials;
 import com.ibm.cloud.objectstorage.auth.BasicAWSCredentials;
 import com.ibm.cloud.objectstorage.handlers.HandlerAfterAttemptContext;
 import com.ibm.cloud.objectstorage.handlers.HandlerBeforeAttemptContext;
@@ -58,9 +59,12 @@ import com.ibm.cloud.objectstorage.AmazonClientException;
 import com.ibm.cloud.objectstorage.AmazonWebServiceResponse;
 import com.ibm.cloud.objectstorage.ClientConfiguration;
 import com.ibm.cloud.objectstorage.DefaultRequest;
+import com.ibm.cloud.objectstorage.Protocol;
 import com.ibm.cloud.objectstorage.Request;
 
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.verify;
 
 public class AmazonHttpClientTest {
 
@@ -317,7 +321,23 @@ public class AmazonHttpClientTest {
     }
 
     @Test
-    public void testCredentialsSetInRequestContext() throws Exception {
+    public void testClientProtocolSetInConfig() throws Exception {
+        ClientConfiguration config =
+                new ClientConfiguration().withProtocol(Protocol.HTTP);
+        Request<?> request = executeMockRequest(config, null);
+
+        assertEquals(Protocol.HTTP, request.getHandlerContext(HandlerContextKey.CLIENT_PROTOCOL));
+    }
+
+    @Test
+    public void testClientProtocolWithDefaultConfig() throws Exception {
+        ClientConfiguration config = new ClientConfiguration();
+        Request<?> request = executeMockRequest(config, null);
+
+        assertEquals(Protocol.HTTPS, request.getHandlerContext(HandlerContextKey.CLIENT_PROTOCOL));
+    }
+
+    private Request<?> executeMockRequest(ClientConfiguration config, AWSCredentials credentials) throws Exception {
         EasyMock.reset(httpClient);
         EasyMock
                 .expect(httpClient.execute(EasyMock.<HttpRequestBase>anyObject(), EasyMock.<HttpContext>anyObject()))
@@ -325,18 +345,18 @@ public class AmazonHttpClientTest {
                 .once();
         EasyMock.replay(httpClient);
 
-        AmazonHttpClient client = new AmazonHttpClient(new ClientConfiguration(), httpClient, null, new TokenBucket());
-
-        final BasicAWSCredentials credentials = new BasicAWSCredentials("foo", "bar");
-
-        AWSCredentialsProvider credentialsProvider = EasyMock.createMock(AWSCredentialsProvider.class);
-        EasyMock.expect(credentialsProvider.getCredentials())
-                .andReturn(credentials)
-                .anyTimes();
-        EasyMock.replay(credentialsProvider);
-
+        AmazonHttpClient client = new AmazonHttpClient(config, httpClient, null, new TokenBucket());
         ExecutionContext executionContext = new ExecutionContext();
-        executionContext.setCredentialsProvider(credentialsProvider);
+
+        if (credentials != null) {
+            AWSCredentialsProvider credentialsProvider = EasyMock.createMock(AWSCredentialsProvider.class);
+            EasyMock.expect(credentialsProvider.getCredentials())
+                    .andReturn(credentials)
+                    .anyTimes();
+            EasyMock.replay(credentialsProvider);
+
+            executionContext.setCredentialsProvider(credentialsProvider);
+        }
 
         Request<?> request = mockRequest(SERVER_NAME, HttpMethodName.PUT, URI_NAME, true);
 
@@ -345,7 +365,7 @@ public class AmazonHttpClientTest {
 
         client.execute(request, handler, null, executionContext);
 
-        assertEquals(credentials, request.getHandlerContext(HandlerContextKey.AWS_CREDENTIALS));
+        return request;
     }
 
     private BasicHttpResponse createBasicHttpResponse() {

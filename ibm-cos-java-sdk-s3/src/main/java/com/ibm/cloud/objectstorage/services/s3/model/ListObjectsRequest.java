@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2023 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2010-2024 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -14,6 +14,9 @@
  */
 package com.ibm.cloud.objectstorage.services.s3.model;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 import com.ibm.cloud.objectstorage.AmazonWebServiceRequest;
 import com.ibm.cloud.objectstorage.services.s3.AmazonS3Client;
@@ -145,8 +148,7 @@ public class ListObjectsRequest extends AmazonWebServiceRequest implements
      * If enabled, the requester is charged for conducting this operation from
      * Requester Pays Buckets.
      */
-    // IBM unsupported
-    // private boolean isRequesterPays;
+//     private boolean isRequesterPays;
 
     // IBM-Specific
     /**
@@ -156,6 +158,13 @@ public class ListObjectsRequest extends AmazonWebServiceRequest implements
 
     //IBM unsupported
     //private String expectedBucketOwner;
+
+    /**
+    * Optional parameter indicating to include some attributes of an object in
+    * the response.
+    */
+    // IBM Unsupported
+    // private List<String> optionalObjectAttributes;
 
     /**
      * Constructs a new {@link ListObjectsRequest} object.
@@ -169,7 +178,6 @@ public class ListObjectsRequest extends AmazonWebServiceRequest implements
     /**
      * Constructs a new {@link ListObjectsRequest} object and
      * initializes all required and optional object fields.
-     *
      * When using this action with an access point, you must direct requests to the access point hostname. The
      * access point hostname takes the form
      * <i>AccessPointName</i>-<i>AccountId</i>.s3-accesspoint.<i>Region</i>.amazonaws.com. When using this action
@@ -679,9 +687,9 @@ public class ListObjectsRequest extends AmazonWebServiceRequest implements
      * @return true if the user has enabled Requester Pays option for
      *         conducting this operation from Requester Pays Bucket.
      */
-    //public boolean isRequesterPays() {
-    //    return isRequesterPays;
-    //}
+//    public boolean isRequesterPays() {
+//        return isRequesterPays;
+//    }
 
     /**
      * Used for conducting this operation from a Requester Pays Bucket. If
@@ -699,9 +707,9 @@ public class ListObjectsRequest extends AmazonWebServiceRequest implements
      * @param isRequesterPays
      *            Enable Requester Pays option for the operation.
      */
-    //public void setRequesterPays(boolean isRequesterPays) {
-    //    this.isRequesterPays = isRequesterPays;
-    //}
+//    public void setRequesterPays(boolean isRequesterPays) {
+//        this.isRequesterPays = isRequesterPays;
+//    }
 
     /**
      * Used for conducting this operation from a Requester Pays Bucket. If
@@ -723,10 +731,10 @@ public class ListObjectsRequest extends AmazonWebServiceRequest implements
      *
      * @return The updated ListObjectsRequest object.
      */
-    //public ListObjectsRequest withRequesterPays(boolean isRequesterPays) {
-    //    setRequesterPays(isRequesterPays);
-    //    return this;
-    //}
+//    public ListObjectsRequest withRequesterPays(boolean isRequesterPays) {
+//        setRequesterPays(isRequesterPays);
+//        return this;
+//    }
 
     // IBM-specific
     /**

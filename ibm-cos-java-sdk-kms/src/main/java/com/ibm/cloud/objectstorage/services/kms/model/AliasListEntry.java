@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2023 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2019-2024 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"). You may not use this file except in compliance with
  * the License. A copy of the License is located at
@@ -64,7 +64,7 @@ public class AliasListEntry implements Serializable, Cloneable, StructuredPojo {
      * <p>
      * String that contains the alias. This value begins with <code>alias/</code>.
      * </p>
-     *
+     * 
      * @param aliasName
      *        String that contains the alias. This value begins with <code>alias/</code>.
      */
@@ -144,7 +144,7 @@ public class AliasListEntry implements Serializable, Cloneable, StructuredPojo {
      * <p>
      * String that contains the key identifier of the KMS key associated with the alias.
      * </p>
-     *
+     * 
      * @param targetKeyId
      *        String that contains the key identifier of the KMS key associated with the alias.
      */
@@ -157,7 +157,7 @@ public class AliasListEntry implements Serializable, Cloneable, StructuredPojo {
      * <p>
      * String that contains the key identifier of the KMS key associated with the alias.
      * </p>
-     *
+     * 
      * @return String that contains the key identifier of the KMS key associated with the alias.
      */
 
@@ -169,7 +169,7 @@ public class AliasListEntry implements Serializable, Cloneable, StructuredPojo {
      * <p>
      * String that contains the key identifier of the KMS key associated with the alias.
      * </p>
-     *
+     * 
      * @param targetKeyId
      *        String that contains the key identifier of the KMS key associated with the alias.
      * @return Returns a reference to this object so that method calls can be chained together.

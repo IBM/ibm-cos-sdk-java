@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2023 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2019-2024 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"). You may not use this file except in compliance with
  * the License. A copy of the License is located at
@@ -18,7 +18,7 @@ import javax.annotation.Generated;
 import com.ibm.cloud.objectstorage.AmazonWebServiceRequest;
 
 /**
- *
+ * 
  * @see <a href="http://docs.aws.amazon.com/goto/WebAPI/kms-2014-11-01/EnableKey" target="_top">AWS API
  *      Documentation</a>
  */
@@ -132,7 +132,7 @@ public class EnableKeyRequest extends com.ibm.cloud.objectstorage.AmazonWebServi
      * <p>
      * To get the key ID and key ARN for a KMS key, use <a>ListKeys</a> or <a>DescribeKey</a>.
      * </p>
-     *
+     * 
      * @return Identifies the KMS key to enable.</p>
      *         <p>
      *         Specify the key ID or key ARN of the KMS key.
@@ -185,7 +185,7 @@ public class EnableKeyRequest extends com.ibm.cloud.objectstorage.AmazonWebServi
      * <p>
      * To get the key ID and key ARN for a KMS key, use <a>ListKeys</a> or <a>DescribeKey</a>.
      * </p>
-     *
+     * 
      * @param keyId
      *        Identifies the KMS key to enable.</p>
      *        <p>

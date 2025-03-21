@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2023 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2019-2024 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"). You may not use this file except in compliance with
  * the License. A copy of the License is located at
@@ -18,7 +18,7 @@ import javax.annotation.Generated;
 import com.ibm.cloud.objectstorage.AmazonWebServiceRequest;
 
 /**
- *
+ * 
  * @see <a href="http://docs.aws.amazon.com/goto/WebAPI/kms-2014-11-01/PutKeyPolicy" target="_top">AWS API
  *      Documentation</a>
  */
@@ -54,7 +54,8 @@ public class PutKeyPolicyRequest extends com.ibm.cloud.objectstorage.AmazonWebSe
     private String keyId;
     /**
      * <p>
-     * The name of the key policy. The only valid value is <code>default</code>.
+     * The name of the key policy. If no policy name is specified, the default value is <code>default</code>. The only
+     * valid value is <code>default</code>.
      * </p>
      */
     private String policyName;
@@ -135,7 +136,8 @@ public class PutKeyPolicyRequest extends com.ibm.cloud.objectstorage.AmazonWebSe
      * </important>
      * <p>
      * Use this parameter only when you intend to prevent the principal that is making the request from making a
-     * subsequent <a>PutKeyPolicy</a> request on the KMS key.
+     * subsequent <a href="https://docs.aws.amazon.com/kms/latest/APIReference/API_PutKeyPolicy.html">PutKeyPolicy</a>
+     * request on the KMS key.
      * </p>
      */
     private Boolean bypassPolicyLockoutSafetyCheck;
@@ -165,7 +167,7 @@ public class PutKeyPolicyRequest extends com.ibm.cloud.objectstorage.AmazonWebSe
      * <p>
      * To get the key ID and key ARN for a KMS key, use <a>ListKeys</a> or <a>DescribeKey</a>.
      * </p>
-     *
+     * 
      * @param keyId
      *        Sets the key policy on the specified KMS key.</p>
      *        <p>
@@ -219,7 +221,7 @@ public class PutKeyPolicyRequest extends com.ibm.cloud.objectstorage.AmazonWebSe
      * <p>
      * To get the key ID and key ARN for a KMS key, use <a>ListKeys</a> or <a>DescribeKey</a>.
      * </p>
-     *
+     * 
      * @return Sets the key policy on the specified KMS key.</p>
      *         <p>
      *         Specify the key ID or key ARN of the KMS key.
@@ -272,7 +274,7 @@ public class PutKeyPolicyRequest extends com.ibm.cloud.objectstorage.AmazonWebSe
      * <p>
      * To get the key ID and key ARN for a KMS key, use <a>ListKeys</a> or <a>DescribeKey</a>.
      * </p>
-     *
+     * 
      * @param keyId
      *        Sets the key policy on the specified KMS key.</p>
      *        <p>
@@ -305,11 +307,13 @@ public class PutKeyPolicyRequest extends com.ibm.cloud.objectstorage.AmazonWebSe
 
     /**
      * <p>
-     * The name of the key policy. The only valid value is <code>default</code>.
+     * The name of the key policy. If no policy name is specified, the default value is <code>default</code>. The only
+     * valid value is <code>default</code>.
      * </p>
-     *
+     * 
      * @param policyName
-     *        The name of the key policy. The only valid value is <code>default</code>.
+     *        The name of the key policy. If no policy name is specified, the default value is <code>default</code>. The
+     *        only valid value is <code>default</code>.
      */
 
     public void setPolicyName(String policyName) {
@@ -318,10 +322,12 @@ public class PutKeyPolicyRequest extends com.ibm.cloud.objectstorage.AmazonWebSe
 
     /**
      * <p>
-     * The name of the key policy. The only valid value is <code>default</code>.
+     * The name of the key policy. If no policy name is specified, the default value is <code>default</code>. The only
+     * valid value is <code>default</code>.
      * </p>
-     *
-     * @return The name of the key policy. The only valid value is <code>default</code>.
+     * 
+     * @return The name of the key policy. If no policy name is specified, the default value is <code>default</code>.
+     *         The only valid value is <code>default</code>.
      */
 
     public String getPolicyName() {
@@ -330,11 +336,13 @@ public class PutKeyPolicyRequest extends com.ibm.cloud.objectstorage.AmazonWebSe
 
     /**
      * <p>
-     * The name of the key policy. The only valid value is <code>default</code>.
+     * The name of the key policy. If no policy name is specified, the default value is <code>default</code>. The only
+     * valid value is <code>default</code>.
      * </p>
-     *
+     * 
      * @param policyName
-     *        The name of the key policy. The only valid value is <code>default</code>.
+     *        The name of the key policy. If no policy name is specified, the default value is <code>default</code>. The
+     *        only valid value is <code>default</code>.
      * @return Returns a reference to this object so that method calls can be chained together.
      */
 
@@ -727,7 +735,8 @@ public class PutKeyPolicyRequest extends com.ibm.cloud.objectstorage.AmazonWebSe
      * </important>
      * <p>
      * Use this parameter only when you intend to prevent the principal that is making the request from making a
-     * subsequent <a>PutKeyPolicy</a> request on the KMS key.
+     * subsequent <a href="https://docs.aws.amazon.com/kms/latest/APIReference/API_PutKeyPolicy.html">PutKeyPolicy</a>
+     * request on the KMS key.
      * </p>
      * 
      * @param bypassPolicyLockoutSafetyCheck
@@ -744,7 +753,9 @@ public class PutKeyPolicyRequest extends com.ibm.cloud.objectstorage.AmazonWebSe
      *        </important>
      *        <p>
      *        Use this parameter only when you intend to prevent the principal that is making the request from making a
-     *        subsequent <a>PutKeyPolicy</a> request on the KMS key.
+     *        subsequent <a
+     *        href="https://docs.aws.amazon.com/kms/latest/APIReference/API_PutKeyPolicy.html">PutKeyPolicy</a> request
+     *        on the KMS key.
      */
 
     public void setBypassPolicyLockoutSafetyCheck(Boolean bypassPolicyLockoutSafetyCheck) {
@@ -768,7 +779,8 @@ public class PutKeyPolicyRequest extends com.ibm.cloud.objectstorage.AmazonWebSe
      * </important>
      * <p>
      * Use this parameter only when you intend to prevent the principal that is making the request from making a
-     * subsequent <a>PutKeyPolicy</a> request on the KMS key.
+     * subsequent <a href="https://docs.aws.amazon.com/kms/latest/APIReference/API_PutKeyPolicy.html">PutKeyPolicy</a>
+     * request on the KMS key.
      * </p>
      * 
      * @return Skips ("bypasses") the key policy lockout safety check. The default value is false.</p> <important>
@@ -784,7 +796,9 @@ public class PutKeyPolicyRequest extends com.ibm.cloud.objectstorage.AmazonWebSe
      *         </important>
      *         <p>
      *         Use this parameter only when you intend to prevent the principal that is making the request from making a
-     *         subsequent <a>PutKeyPolicy</a> request on the KMS key.
+     *         subsequent <a
+     *         href="https://docs.aws.amazon.com/kms/latest/APIReference/API_PutKeyPolicy.html">PutKeyPolicy</a> request
+     *         on the KMS key.
      */
 
     public Boolean getBypassPolicyLockoutSafetyCheck() {
@@ -808,7 +822,8 @@ public class PutKeyPolicyRequest extends com.ibm.cloud.objectstorage.AmazonWebSe
      * </important>
      * <p>
      * Use this parameter only when you intend to prevent the principal that is making the request from making a
-     * subsequent <a>PutKeyPolicy</a> request on the KMS key.
+     * subsequent <a href="https://docs.aws.amazon.com/kms/latest/APIReference/API_PutKeyPolicy.html">PutKeyPolicy</a>
+     * request on the KMS key.
      * </p>
      * 
      * @param bypassPolicyLockoutSafetyCheck
@@ -825,7 +840,9 @@ public class PutKeyPolicyRequest extends com.ibm.cloud.objectstorage.AmazonWebSe
      *        </important>
      *        <p>
      *        Use this parameter only when you intend to prevent the principal that is making the request from making a
-     *        subsequent <a>PutKeyPolicy</a> request on the KMS key.
+     *        subsequent <a
+     *        href="https://docs.aws.amazon.com/kms/latest/APIReference/API_PutKeyPolicy.html">PutKeyPolicy</a> request
+     *        on the KMS key.
      * @return Returns a reference to this object so that method calls can be chained together.
      */
 
@@ -851,7 +868,8 @@ public class PutKeyPolicyRequest extends com.ibm.cloud.objectstorage.AmazonWebSe
      * </important>
      * <p>
      * Use this parameter only when you intend to prevent the principal that is making the request from making a
-     * subsequent <a>PutKeyPolicy</a> request on the KMS key.
+     * subsequent <a href="https://docs.aws.amazon.com/kms/latest/APIReference/API_PutKeyPolicy.html">PutKeyPolicy</a>
+     * request on the KMS key.
      * </p>
      * 
      * @return Skips ("bypasses") the key policy lockout safety check. The default value is false.</p> <important>
@@ -867,7 +885,9 @@ public class PutKeyPolicyRequest extends com.ibm.cloud.objectstorage.AmazonWebSe
      *         </important>
      *         <p>
      *         Use this parameter only when you intend to prevent the principal that is making the request from making a
-     *         subsequent <a>PutKeyPolicy</a> request on the KMS key.
+     *         subsequent <a
+     *         href="https://docs.aws.amazon.com/kms/latest/APIReference/API_PutKeyPolicy.html">PutKeyPolicy</a> request
+     *         on the KMS key.
      */
 
     public Boolean isBypassPolicyLockoutSafetyCheck() {

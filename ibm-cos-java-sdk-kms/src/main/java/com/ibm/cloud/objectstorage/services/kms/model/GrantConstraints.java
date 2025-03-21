@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2023 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2019-2024 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"). You may not use this file except in compliance with
  * the License. A copy of the License is located at
@@ -50,7 +50,7 @@ import com.ibm.cloud.objectstorage.protocol.ProtocolMarshaller;
  * >kms:EncryptionContext:</a> in the <i> <i>Key Management Service Developer Guide</i> </i>.
  * </p>
  * </important>
- *
+ * 
  * @see <a href="http://docs.aws.amazon.com/goto/WebAPI/kms-2014-11-01/GrantConstraints" target="_top">AWS API
  *      Documentation</a>
  */
@@ -85,7 +85,7 @@ public class GrantConstraints implements Serializable, Cloneable, StructuredPojo
      * request includes the key-value pairs specified in this constraint, although it can include additional key-value
      * pairs.
      * </p>
-     *
+     * 
      * @return A list of key-value pairs that must be included in the encryption context of the <a
      *         href="https://docs.aws.amazon.com/kms/latest/developerguide/concepts.html#cryptographic-operations"
      *         >cryptographic operation</a> request. The grant allows the cryptographic operation only when the
@@ -108,7 +108,7 @@ public class GrantConstraints implements Serializable, Cloneable, StructuredPojo
      * request includes the key-value pairs specified in this constraint, although it can include additional key-value
      * pairs.
      * </p>
-     *
+     * 
      * @param encryptionContextSubset
      *        A list of key-value pairs that must be included in the encryption context of the <a
      *        href="https://docs.aws.amazon.com/kms/latest/developerguide/concepts.html#cryptographic-operations"
@@ -130,7 +130,7 @@ public class GrantConstraints implements Serializable, Cloneable, StructuredPojo
      * request includes the key-value pairs specified in this constraint, although it can include additional key-value
      * pairs.
      * </p>
-     *
+     * 
      * @param encryptionContextSubset
      *        A list of key-value pairs that must be included in the encryption context of the <a
      *        href="https://docs.aws.amazon.com/kms/latest/developerguide/concepts.html#cryptographic-operations"
@@ -180,7 +180,7 @@ public class GrantConstraints implements Serializable, Cloneable, StructuredPojo
      * operation</a> request. The grant allows the operation only when the encryption context in the request is the same
      * as the encryption context specified in this constraint.
      * </p>
-     *
+     * 
      * @return A list of key-value pairs that must match the encryption context in the <a
      *         href="https://docs.aws.amazon.com/kms/latest/developerguide/concepts.html#cryptographic-operations"
      *         >cryptographic operation</a> request. The grant allows the operation only when the encryption context in
@@ -201,7 +201,7 @@ public class GrantConstraints implements Serializable, Cloneable, StructuredPojo
      * operation</a> request. The grant allows the operation only when the encryption context in the request is the same
      * as the encryption context specified in this constraint.
      * </p>
-     *
+     * 
      * @param encryptionContextEquals
      *        A list of key-value pairs that must match the encryption context in the <a
      *        href="https://docs.aws.amazon.com/kms/latest/developerguide/concepts.html#cryptographic-operations"
@@ -221,7 +221,7 @@ public class GrantConstraints implements Serializable, Cloneable, StructuredPojo
      * operation</a> request. The grant allows the operation only when the encryption context in the request is the same
      * as the encryption context specified in this constraint.
      * </p>
-     *
+     * 
      * @param encryptionContextEquals
      *        A list of key-value pairs that must match the encryption context in the <a
      *        href="https://docs.aws.amazon.com/kms/latest/developerguide/concepts.html#cryptographic-operations"

@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2023 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2019-2024 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"). You may not use this file except in compliance with
  * the License. A copy of the License is located at
@@ -16,7 +16,7 @@ import java.io.Serializable;
 import javax.annotation.Generated;
 
 /**
- *
+ * 
  * @see <a href="http://docs.aws.amazon.com/goto/WebAPI/kms-2014-11-01/GetParametersForImport" target="_top">AWS API
  *      Documentation</a>
  */
@@ -60,7 +60,7 @@ public class GetParametersForImportResult extends com.ibm.cloud.objectstorage.Am
      * key to use in a subsequent <a>ImportKeyMaterial</a> request. This is the same KMS key specified in the
      * <code>GetParametersForImport</code> request.
      * </p>
-     *
+     * 
      * @param keyId
      *        The Amazon Resource Name (<a
      *        href="https://docs.aws.amazon.com/kms/latest/developerguide/concepts.html#key-id-key-ARN">key ARN</a>) of
@@ -79,7 +79,7 @@ public class GetParametersForImportResult extends com.ibm.cloud.objectstorage.Am
      * key to use in a subsequent <a>ImportKeyMaterial</a> request. This is the same KMS key specified in the
      * <code>GetParametersForImport</code> request.
      * </p>
-     *
+     * 
      * @return The Amazon Resource Name (<a
      *         href="https://docs.aws.amazon.com/kms/latest/developerguide/concepts.html#key-id-key-ARN">key ARN</a>) of
      *         the KMS key to use in a subsequent <a>ImportKeyMaterial</a> request. This is the same KMS key specified
@@ -97,7 +97,7 @@ public class GetParametersForImportResult extends com.ibm.cloud.objectstorage.Am
      * key to use in a subsequent <a>ImportKeyMaterial</a> request. This is the same KMS key specified in the
      * <code>GetParametersForImport</code> request.
      * </p>
-     *
+     * 
      * @param keyId
      *        The Amazon Resource Name (<a
      *        href="https://docs.aws.amazon.com/kms/latest/developerguide/concepts.html#key-id-key-ARN">key ARN</a>) of

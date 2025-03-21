@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2023 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2019-2024 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"). You may not use this file except in compliance with
  * the License. A copy of the License is located at
@@ -26,52 +26,63 @@ import com.ibm.cloud.objectstorage.services.kms.model.*;
  * {@link com.ibm.cloud.objectstorage.services.kms.AbstractAWSKMS} instead.
  * </p>
  * <p>
- * <fullname>AWS Key Management Service</fullname>
+ * <fullname>Key Management Service</fullname>
  * <p>
- * AWS Key Management Service (AWS KMS) is an encryption and key management web service. This guide describes the AWS
- * KMS operations that you can call programmatically. For general information about AWS KMS, see the <a
- * href="https://docs.aws.amazon.com/kms/latest/developerguide/"> <i>AWS Key Management Service Developer Guide</i>
- * </a>.
+ * Key Management Service (KMS) is an encryption and key management web service. This guide describes the KMS operations
+ * that you can call programmatically. For general information about KMS, see the <a
+ * href="https://docs.aws.amazon.com/kms/latest/developerguide/"> <i>Key Management Service Developer Guide</i> </a>.
  * </p>
  * <note>
  * <p>
- * AWS provides SDKs that consist of libraries and sample code for various programming languages and platforms (Java,
- * Ruby, .Net, macOS, Android, etc.). The SDKs provide a convenient way to create programmatic access to AWS KMS and
- * other AWS services. For example, the SDKs take care of tasks such as signing requests (see below), managing errors,
- * and retrying requests automatically. For more information about the AWS SDKs, including how to download and install
- * them, see <a href="http://aws.amazon.com/tools/">Tools for Amazon Web Services</a>.
+ * KMS has replaced the term <i>customer master key (CMK)</i> with <i>KMS key</i> and <i>KMS key</i>. The concept has
+ * not changed. To prevent breaking changes, KMS is keeping some variations of this term.
+ * </p>
+ * <p>
+ * Amazon Web Services provides SDKs that consist of libraries and sample code for various programming languages and
+ * platforms (Java, Ruby, .Net, macOS, Android, etc.). The SDKs provide a convenient way to create programmatic access
+ * to KMS and other Amazon Web Services services. For example, the SDKs take care of tasks such as signing requests (see
+ * below), managing errors, and retrying requests automatically. For more information about the Amazon Web Services
+ * SDKs, including how to download and install them, see <a href="http://aws.amazon.com/tools/">Tools for Amazon Web
+ * Services</a>.
  * </p>
  * </note>
  * <p>
- * We recommend that you use the AWS SDKs to make programmatic API calls to AWS KMS.
+ * We recommend that you use the Amazon Web Services SDKs to make programmatic API calls to KMS.
  * </p>
  * <p>
- * Clients must support TLS (Transport Layer Security) 1.0. We recommend TLS 1.2. Clients must also support cipher
- * suites with Perfect Forward Secrecy (PFS) such as Ephemeral Diffie-Hellman (DHE) or Elliptic Curve Ephemeral
- * Diffie-Hellman (ECDHE). Most modern systems such as Java 7 and later support these modes.
+ * If you need to use FIPS 140-2 validated cryptographic modules when communicating with Amazon Web Services, use the
+ * FIPS endpoint in your preferred Amazon Web Services Region. For more information about the available FIPS endpoints,
+ * see <a href="https://docs.aws.amazon.com/general/latest/gr/kms.html#kms_region">Service endpoints</a> in the Key
+ * Management Service topic of the <i>Amazon Web Services General Reference</i>.
+ * </p>
+ * <p>
+ * All KMS API calls must be signed and be transmitted using Transport Layer Security (TLS). KMS recommends you always
+ * use the latest supported TLS version. Clients must also support cipher suites with Perfect Forward Secrecy (PFS) such
+ * as Ephemeral Diffie-Hellman (DHE) or Elliptic Curve Ephemeral Diffie-Hellman (ECDHE). Most modern systems such as
+ * Java 7 and later support these modes.
  * </p>
  * <p>
  * <b>Signing Requests</b>
  * </p>
  * <p>
- * Requests must be signed by using an access key ID and a secret access key. We strongly recommend that you <i>do
- * not</i> use your AWS account (root) access key ID and secret key for everyday work with AWS KMS. Instead, use the
- * access key ID and secret access key for an IAM user. You can also use the AWS Security Token Service to generate
- * temporary security credentials that you can use to sign requests.
+ * Requests must be signed using an access key ID and a secret access key. We strongly recommend that you do not use
+ * your Amazon Web Services account root access key ID and secret access key for everyday work. You can use the access
+ * key ID and secret access key for an IAM user or you can use the Security Token Service (STS) to generate temporary
+ * security credentials and use those to sign requests.
  * </p>
  * <p>
- * All AWS KMS operations require <a
+ * All KMS requests must be signed with <a
  * href="https://docs.aws.amazon.com/general/latest/gr/signature-version-4.html">Signature Version 4</a>.
  * </p>
  * <p>
  * <b>Logging API Requests</b>
  * </p>
  * <p>
- * AWS KMS supports AWS CloudTrail, a service that logs AWS API calls and related events for your AWS account and
- * delivers them to an Amazon S3 bucket that you specify. By using the information collected by CloudTrail, you can
- * determine what requests were made to AWS KMS, who made the request, when it was made, and so on. To learn more about
- * CloudTrail, including how to turn it on and find your log files, see the <a
- * href="https://docs.aws.amazon.com/awscloudtrail/latest/userguide/">AWS CloudTrail User Guide</a>.
+ * KMS supports CloudTrail, a service that logs Amazon Web Services API calls and related events for your Amazon Web
+ * Services account and delivers them to an Amazon S3 bucket that you specify. By using the information collected by
+ * CloudTrail, you can determine what requests were made to KMS, who made the request, when it was made, and so on. To
+ * learn more about CloudTrail, including how to turn it on and find your log files, see the <a
+ * href="https://docs.aws.amazon.com/awscloudtrail/latest/userguide/">CloudTrail User Guide</a>.
  * </p>
  * <p>
  * <b>Additional Resources</b>
@@ -82,8 +93,9 @@ import com.ibm.cloud.objectstorage.services.kms.model.*;
  * <ul>
  * <li>
  * <p>
- * <a href="https://docs.aws.amazon.com/general/latest/gr/aws-security-credentials.html">AWS Security Credentials</a> -
- * This topic provides general information about the types of credentials used for accessing AWS.
+ * <a href="https://docs.aws.amazon.com/general/latest/gr/aws-security-credentials.html">Amazon Web Services Security
+ * Credentials</a> - This topic provides general information about the types of credentials used to access Amazon Web
+ * Services.
  * </p>
  * </li>
  * <li>
@@ -195,13 +207,35 @@ public interface AWSKMS {
 
     /**
      * <p>
-     * Cancels the deletion of a customer master key (CMK). When this operation is successful, the CMK is set to the
-     * <code>Disabled</code> state. To enable a CMK, use <a>EnableKey</a>.
+     * Cancels the deletion of a KMS key. When this operation succeeds, the key state of the KMS key is
+     * <code>Disabled</code>. To enable the KMS key, use <a>EnableKey</a>.
      * </p>
      * <p>
-     * For more information about scheduling and canceling deletion of a CMK, see <a
-     * href="http://docs.aws.amazon.com/kms/latest/developerguide/deleting-keys.html">Deleting Customer Master Keys</a>
-     * in the <i>AWS Key Management Service Developer Guide</i>.
+     * For more information about scheduling and canceling deletion of a KMS key, see <a
+     * href="https://docs.aws.amazon.com/kms/latest/developerguide/deleting-keys.html">Deleting KMS keys</a> in the
+     * <i>Key Management Service Developer Guide</i>.
+     * </p>
+     * <p>
+     * The KMS key that you use for this operation must be in a compatible key state. For details, see <a
+     * href="https://docs.aws.amazon.com/kms/latest/developerguide/key-state.html">Key states of KMS keys</a> in the
+     * <i>Key Management Service Developer Guide</i>.
+     * </p>
+     * <p>
+     * <b>Cross-account use</b>: No. You cannot perform this operation on a KMS key in a different Amazon Web Services
+     * account.
+     * </p>
+     * <p>
+     * <b>Required permissions</b>: <a
+     * href="https://docs.aws.amazon.com/kms/latest/developerguide/kms-api-permissions-reference.html"
+     * >kms:CancelKeyDeletion</a> (key policy)
+     * </p>
+     * <p>
+     * <b>Related operations</b>: <a>ScheduleKeyDeletion</a>
+     * </p>
+     * <p>
+     * <b>Eventual consistency</b>: The KMS API follows an eventual consistency model. For more information, see <a
+     * href="https://docs.aws.amazon.com/kms/latest/developerguide/programming-eventual-consistency.html">KMS eventual
+     * consistency</a>.
      * </p>
      * 
      * @param cancelKeyDeletionRequest
@@ -209,17 +243,35 @@ public interface AWSKMS {
      * @throws NotFoundException
      *         The request was rejected because the specified entity or resource could not be found.
      * @throws InvalidArnException
-     *         The request was rejected because a specified ARN was not valid.
+     *         The request was rejected because a specified ARN, or an ARN in a key policy, is not valid.
      * @throws DependencyTimeoutException
-     *         The system timed out while trying to fulfill the request. The request can be retried.
+     *         The system timed out while trying to fulfill the request. You can retry the request.
      * @throws KMSInternalException
      *         The request was rejected because an internal exception occurred. The request can be retried.
      * @throws KMSInvalidStateException
      *         The request was rejected because the state of the specified resource is not valid for this request.</p>
      *         <p>
-     *         For more information about how key state affects the use of a CMK, see <a
-     *         href="http://docs.aws.amazon.com/kms/latest/developerguide/key-state.html">How Key State Affects Use of a
-     *         Customer Master Key</a> in the <i>AWS Key Management Service Developer Guide</i>.
+     *         This exceptions means one of the following:
+     *         </p>
+     *         <ul>
+     *         <li>
+     *         <p>
+     *         The key state of the KMS key is not compatible with the operation.
+     *         </p>
+     *         <p>
+     *         To find the key state, use the <a>DescribeKey</a> operation. For more information about which key states
+     *         are compatible with each KMS operation, see <a
+     *         href="https://docs.aws.amazon.com/kms/latest/developerguide/key-state.html">Key states of KMS keys</a> in
+     *         the <i> <i>Key Management Service Developer Guide</i> </i>.
+     *         </p>
+     *         </li>
+     *         <li>
+     *         <p>
+     *         For cryptographic operations on KMS keys in custom key stores, this exception represents a general
+     *         failure with many possible causes. To identify the cause, see the error message that accompanies the
+     *         exception.
+     *         </p>
+     *         </li>
      * @sample AWSKMS.CancelKeyDeletion
      * @see <a href="http://docs.aws.amazon.com/goto/WebAPI/kms-2014-11-01/CancelKeyDeletion" target="_top">AWS API
      *      Documentation</a>
@@ -228,17 +280,22 @@ public interface AWSKMS {
 
     /**
      * <p>
-     * Creates a display name for a customer master key. An alias can be used to identify a key and should be unique.
-     * The console enforces a one-to-one mapping between the alias and a key. An alias name can contain only
-     * alphanumeric characters, forward slashes (/), underscores (_), and dashes (-). An alias must start with the word
-     * "alias" followed by a forward slash (alias/). An alias that begins with "aws" after the forward slash
-     * (alias/aws...) is reserved by Amazon Web Services (AWS).
+     * Connects or reconnects a <a
+     * href="https://docs.aws.amazon.com/kms/latest/developerguide/custom-key-store-overview.html">custom key store</a>
+     * to its backing key store. For an CloudHSM key store, <code>ConnectCustomKeyStore</code> connects the key store to
+     * its associated CloudHSM cluster. For an external key store, <code>ConnectCustomKeyStore</code> connects the key
+     * store to the external key store proxy that communicates with your external key manager.
      * </p>
      * <p>
-     * The alias and the key it is mapped to must be in the same AWS account and the same region.
+     * The custom key store must be connected before you can create KMS keys in the key store or use the KMS keys it
+     * contains. You can disconnect and reconnect a custom key store at any time.
      * </p>
      * <p>
-     * To map an alias to a different key, call <a>UpdateAlias</a>.
+     * The connection process for a custom key store can take an extended amount of time to complete. This operation
+     * starts the connection process, but it does not wait for it to complete. When it succeeds, this operation quickly
+     * returns an HTTP 200 response and a JSON object with no properties. However, this response does not indicate that
+     * the custom key store is connected. To get the connection state of the custom key store, use the
+     * <a>DescribeCustomKeyStores</a> operation.
      * </p>
      * 
      * @param createAliasRequest
@@ -271,13 +328,11 @@ public interface AWSKMS {
 
     /**
      * <p>
-     * Adds a grant to a key to specify who can use the key and under what conditions. Grants are alternate permission
-     * mechanisms to key policies.
+     * <b>External key store</b>
      * </p>
      * <p>
-     * For more information about grants, see <a
-     * href="http://docs.aws.amazon.com/kms/latest/developerguide/grants.html">Grants</a> in the <i>AWS Key Management
-     * Service Developer Guide</i>.
+     * When you connect an external key store that uses public endpoint connectivity, KMS tests its ability to
+     * communicate with your external key manager by sending a request via the external key store proxy.
      * </p>
      * 
      * @param createGrantRequest
@@ -312,23 +367,22 @@ public interface AWSKMS {
 
     /**
      * <p>
-     * Creates a customer master key (CMK).
+     * <b>Required permissions</b>: <a
+     * href="https://docs.aws.amazon.com/kms/latest/developerguide/kms-api-permissions-reference.html"
+     * >kms:ConnectCustomKeyStore</a> (IAM policy)
      * </p>
      * <p>
-     * You can use a CMK to encrypt small amounts of data (4 KiB or less) directly, but CMKs are more commonly used to
-     * encrypt data encryption keys (DEKs), which are used to encrypt raw data. For more information about DEKs and the
-     * difference between CMKs and DEKs, see the following:
+     * <b>Related operations</b>
      * </p>
      * <ul>
      * <li>
      * <p>
-     * The <a>GenerateDataKey</a> operation
+     * <a>CreateCustomKeyStore</a>
      * </p>
      * </li>
      * <li>
      * <p>
-     * <a href="http://docs.aws.amazon.com/kms/latest/developerguide/concepts.html">AWS Key Management Service
-     * Concepts</a> in the <i>AWS Key Management Service Developer Guide</i>
+     * <a>DeleteCustomKeyStore</a>
      * </p>
      * </li>
      * </ul>
@@ -373,27 +427,24 @@ public interface AWSKMS {
      * <ul>
      * <li>
      * <p>
-     * <a>GenerateDataKey</a>
+     * <a>DescribeCustomKeyStores</a>
      * </p>
      * </li>
      * <li>
      * <p>
-     * <a>GenerateDataKeyWithoutPlaintext</a>
+     * <a>DisconnectCustomKeyStore</a>
      * </p>
      * </li>
      * <li>
      * <p>
-     * <a>Encrypt</a>
+     * <a>UpdateCustomKeyStore</a>
      * </p>
      * </li>
      * </ul>
      * <p>
-     * Note that if a caller has been granted access permissions to all keys (through, for example, IAM user policies
-     * that grant <code>Decrypt</code> permission on all resources), then ciphertext encrypted by using keys in other
-     * accounts where the key grants access to the caller can be decrypted. To remedy this, we recommend that you do not
-     * grant <code>Decrypt</code> access in an IAM user policy. Instead grant <code>Decrypt</code> access only in key
-     * policies. If you must grant <code>Decrypt</code> access in an IAM user policy, you should scope the resource to
-     * specific keys or to specific trusted accounts.
+     * <b>Eventual consistency</b>: The KMS API follows an eventual consistency model. For more information, see <a
+     * href="https://docs.aws.amazon.com/kms/latest/developerguide/programming-eventual-consistency.html">KMS eventual
+     * consistency</a>.
      * </p>
      * 
      * @param decryptRequest
@@ -437,32 +488,80 @@ public interface AWSKMS {
      *         The request was rejected because the specified entity or resource could not be found.
      * @throws KMSInternalException
      *         The request was rejected because an internal exception occurred. The request can be retried.
-     * @throws KMSInvalidStateException
-     *         The request was rejected because the state of the specified resource is not valid for this request.</p>
+     * @throws CloudHsmClusterInvalidConfigurationException
+     *         The request was rejected because the associated CloudHSM cluster did not meet the configuration
+     *         requirements for an CloudHSM key store.</p>
+     *         <ul>
+     *         <li>
      *         <p>
-     *         For more information about how key state affects the use of a CMK, see <a
-     *         href="http://docs.aws.amazon.com/kms/latest/developerguide/key-state.html">How Key State Affects Use of a
-     *         Customer Master Key</a> in the <i>AWS Key Management Service Developer Guide</i>.
-     * @sample AWSKMS.DeleteAlias
-     * @see <a href="http://docs.aws.amazon.com/goto/WebAPI/kms-2014-11-01/DeleteAlias" target="_top">AWS API
+     *         The CloudHSM cluster must be configured with private subnets in at least two different Availability Zones
+     *         in the Region.
+     *         </p>
+     *         </li>
+     *         <li>
+     *         <p>
+     *         The <a href="https://docs.aws.amazon.com/cloudhsm/latest/userguide/configure-sg.html">security group for
+     *         the cluster</a> (cloudhsm-cluster-<i>&lt;cluster-id&gt;</i>-sg) must include inbound rules and outbound
+     *         rules that allow TCP traffic on ports 2223-2225. The <b>Source</b> in the inbound rules and the
+     *         <b>Destination</b> in the outbound rules must match the security group ID. These rules are set by default
+     *         when you create the CloudHSM cluster. Do not delete or change them. To get information about a particular
+     *         security group, use the <a
+     *         href="https://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_DescribeSecurityGroups.html"
+     *         >DescribeSecurityGroups</a> operation.
+     *         </p>
+     *         </li>
+     *         <li>
+     *         <p>
+     *         The CloudHSM cluster must contain at least as many HSMs as the operation requires. To add HSMs, use the
+     *         CloudHSM <a
+     *         href="https://docs.aws.amazon.com/cloudhsm/latest/APIReference/API_CreateHsm.html">CreateHsm</a>
+     *         operation.
+     *         </p>
+     *         <p>
+     *         For the <a>CreateCustomKeyStore</a>, <a>UpdateCustomKeyStore</a>, and <a>CreateKey</a> operations, the
+     *         CloudHSM cluster must have at least two active HSMs, each in a different Availability Zone. For the
+     *         <a>ConnectCustomKeyStore</a> operation, the CloudHSM must contain at least one active HSM.
+     *         </p>
+     *         </li>
+     *         </ul>
+     *         <p>
+     *         For information about the requirements for an CloudHSM cluster that is associated with an CloudHSM key
+     *         store, see <a
+     *         href="https://docs.aws.amazon.com/kms/latest/developerguide/create-keystore.html#before-keystore"
+     *         >Assemble the Prerequisites</a> in the <i>Key Management Service Developer Guide</i>. For information
+     *         about creating a private subnet for an CloudHSM cluster, see <a
+     *         href="https://docs.aws.amazon.com/cloudhsm/latest/userguide/create-subnets.html">Create a Private
+     *         Subnet</a> in the <i>CloudHSM User Guide</i>. For information about cluster security groups, see <a
+     *         href="https://docs.aws.amazon.com/cloudhsm/latest/userguide/configure-sg.html">Configure a Default
+     *         Security Group</a> in the <i> <i>CloudHSM User Guide</i> </i>.
+     * @sample AWSKMS.ConnectCustomKeyStore
+     * @see <a href="http://docs.aws.amazon.com/goto/WebAPI/kms-2014-11-01/ConnectCustomKeyStore" target="_top">AWS API
      *      Documentation</a>
      */
     DeleteAliasResult deleteAlias(DeleteAliasRequest deleteAliasRequest);
 
     /**
      * <p>
-     * Deletes key material that you previously imported and makes the specified customer master key (CMK) unusable. For
-     * more information about importing key material into AWS KMS, see <a
-     * href="http://docs.aws.amazon.com/kms/latest/developerguide/importing-keys.html">Importing Key Material</a> in the
-     * <i>AWS Key Management Service Developer Guide</i>.
+     * Creates a friendly name for a KMS key.
+     * </p>
+     * <note>
+     * <p>
+     * Adding, deleting, or updating an alias can allow or deny permission to the KMS key. For details, see <a
+     * href="https://docs.aws.amazon.com/kms/latest/developerguide/abac.html">ABAC for KMS</a> in the <i>Key Management
+     * Service Developer Guide</i>.
+     * </p>
+     * </note>
+     * <p>
+     * You can use an alias to identify a KMS key in the KMS console, in the <a>DescribeKey</a> operation and in <a
+     * href="https://docs.aws.amazon.com/kms/latest/developerguide/concepts.html#cryptographic-operations">cryptographic
+     * operations</a>, such as <a>Encrypt</a> and <a>GenerateDataKey</a>. You can also change the KMS key that's
+     * associated with the alias (<a>UpdateAlias</a>) or delete the alias (<a>DeleteAlias</a>) at any time. These
+     * operations don't affect the underlying KMS key.
      * </p>
      * <p>
-     * When the specified CMK is in the <code>PendingDeletion</code> state, this operation does not change the CMK's
-     * state. Otherwise, it changes the CMK's state to <code>PendingImport</code>.
-     * </p>
-     * <p>
-     * After you delete key material, you can use <a>ImportKeyMaterial</a> to reimport the same key material into the
-     * CMK.
+     * You can associate the alias with any customer managed key in the same Amazon Web Services Region. Each alias is
+     * associated with only one KMS key at a time, but a KMS key can have multiple aliases. A valid KMS key is required.
+     * You can't create an alias without a KMS key.
      * </p>
      * 
      * @param deleteImportedKeyMaterialRequest
@@ -492,7 +591,9 @@ public interface AWSKMS {
 
     /**
      * <p>
-     * Provides detailed information about the specified customer master key.
+     * <a
+     * href="https://docs.aws.amazon.com/kms/latest/developerguide/kms-api-permissions-reference.html">kms:CreateAlias
+     * </a> on the KMS key (key policy).
      * </p>
      * 
      * @param describeKeyRequest
@@ -513,30 +614,58 @@ public interface AWSKMS {
 
     /**
      * <p>
-     * Sets the state of a customer master key (CMK) to disabled, thereby preventing its use for cryptographic
-     * operations. For more information about how key state affects the use of a CMK, see <a
-     * href="http://docs.aws.amazon.com/kms/latest/developerguide/key-state.html">How Key State Affects the Use of a
-     * Customer Master Key</a> in the <i>AWS Key Management Service Developer Guide</i>.
+     * <a>UpdateAlias</a>
+     * </p>
+     * </li>
+     * </ul>
+     * <p>
+     * <b>Eventual consistency</b>: The KMS API follows an eventual consistency model. For more information, see <a
+     * href="https://docs.aws.amazon.com/kms/latest/developerguide/programming-eventual-consistency.html">KMS eventual
+     * consistency</a>.
      * </p>
      * 
-     * @param disableKeyRequest
-     * @return Result of the DisableKey operation returned by the service.
+     * @param createAliasRequest
+     * @return Result of the CreateAlias operation returned by the service.
+     * @throws DependencyTimeoutException
+     *         The system timed out while trying to fulfill the request. You can retry the request.
+     * @throws AlreadyExistsException
+     *         The request was rejected because it attempted to create a resource that already exists.
      * @throws NotFoundException
      *         The request was rejected because the specified entity or resource could not be found.
-     * @throws InvalidArnException
-     *         The request was rejected because a specified ARN was not valid.
-     * @throws DependencyTimeoutException
-     *         The system timed out while trying to fulfill the request. The request can be retried.
+     * @throws InvalidAliasNameException
+     *         The request was rejected because the specified alias name is not valid.
      * @throws KMSInternalException
      *         The request was rejected because an internal exception occurred. The request can be retried.
+     * @throws LimitExceededException
+     *         The request was rejected because a quota was exceeded. For more information, see <a
+     *         href="https://docs.aws.amazon.com/kms/latest/developerguide/limits.html">Quotas</a> in the <i>Key
+     *         Management Service Developer Guide</i>.
      * @throws KMSInvalidStateException
      *         The request was rejected because the state of the specified resource is not valid for this request.</p>
      *         <p>
-     *         For more information about how key state affects the use of a CMK, see <a
-     *         href="http://docs.aws.amazon.com/kms/latest/developerguide/key-state.html">How Key State Affects Use of a
-     *         Customer Master Key</a> in the <i>AWS Key Management Service Developer Guide</i>.
-     * @sample AWSKMS.DisableKey
-     * @see <a href="http://docs.aws.amazon.com/goto/WebAPI/kms-2014-11-01/DisableKey" target="_top">AWS API
+     *         This exceptions means one of the following:
+     *         </p>
+     *         <ul>
+     *         <li>
+     *         <p>
+     *         The key state of the KMS key is not compatible with the operation.
+     *         </p>
+     *         <p>
+     *         To find the key state, use the <a>DescribeKey</a> operation. For more information about which key states
+     *         are compatible with each KMS operation, see <a
+     *         href="https://docs.aws.amazon.com/kms/latest/developerguide/key-state.html">Key states of KMS keys</a> in
+     *         the <i> <i>Key Management Service Developer Guide</i> </i>.
+     *         </p>
+     *         </li>
+     *         <li>
+     *         <p>
+     *         For cryptographic operations on KMS keys in custom key stores, this exception represents a general
+     *         failure with many possible causes. To identify the cause, see the error message that accompanies the
+     *         exception.
+     *         </p>
+     *         </li>
+     * @sample AWSKMS.CreateAlias
+     * @see <a href="http://docs.aws.amazon.com/goto/WebAPI/kms-2014-11-01/CreateAlias" target="_top">AWS API
      *      Documentation</a>
      */
     DisableKeyResult disableKey(DisableKeyRequest disableKeyRequest);
@@ -789,6 +918,8 @@ public interface AWSKMS {
      *      Documentation</a>
      */
     GenerateDataKeyResult generateDataKey(GenerateDataKeyRequest generateDataKeyRequest);
+//    IBM Unsupported
+//    GenerateDataKeyPairResult generateDataKeyPair(GenerateDataKeyPairRequest request);
 
     /**
      * <p>
@@ -1273,7 +1404,6 @@ public interface AWSKMS {
      *      Documentation</a>
      */
     ReEncryptResult reEncrypt(ReEncryptRequest reEncryptRequest);
-
     /**
      * <p>
      * Retires a grant. To clean up, you can retire a grant when you're done using it. You should revoke a grant when
@@ -1405,6 +1535,9 @@ public interface AWSKMS {
      */
     ScheduleKeyDeletionResult scheduleKeyDeletion(ScheduleKeyDeletionRequest scheduleKeyDeletionRequest);
 
+//    IBM Unsupported
+//    SignResult sign(SignRequest request);
+
     /**
      * <p>
      * Adds or overwrites one or more tags for the specified customer master key (CMK).
@@ -1514,6 +1647,9 @@ public interface AWSKMS {
      */
     UpdateAliasResult updateAlias(UpdateAliasRequest updateAliasRequest);
 
+//    IBM Unsupported
+//    UpdateCustomKeyStoreResult updateCustomKeyStore(UpdateCustomKeyStoreRequest request);
+
     /**
      * <p>
      * Updates the description of a customer master key (CMK).
@@ -1547,6 +1683,11 @@ public interface AWSKMS {
      * has been shutdown, it should not be used to make any more requests.
      */
     void shutdown();
+
+//    IBM Unsupported
+//    UpdatePrimaryRegionResult updatePrimaryRegion(UpdatePrimaryRegionRequest request);
+//    VerifyResult verify(VerifyRequest request);
+//    VerifyMacResult verifyMac(VerifyMacRequest request);
 
     /**
      * Returns additional metadata for a previously executed successful request, typically used for debugging issues

@@ -1,5 +1,5 @@
 /*
- * Copyright 2011-2023 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2011-2024 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -75,7 +75,7 @@ public class TokenBucketTest {
         long elapsed = System.nanoTime() - a;
 
         assertThat(acquired, equalTo(true));
-        assertThat(TimeUnit.NANOSECONDS.toSeconds(elapsed), equalTo(1L));
+        assertThat(tb.getLastWaitTimeMs(), equalTo(1000L));
         assertThat(tb.getCurrentCapacity(), equalTo(-1.0));
     }
 
@@ -144,7 +144,7 @@ public class TokenBucketTest {
         assertThat(acquired, equalTo(false));
         assertThat(tb.getCurrentCapacity(), equalTo(4.0));
         // The method call should be nowhere near a millisecond
-        assertThat(TimeUnit.NANOSECONDS.toSeconds(elapsed), equalTo(0L));
+        assertThat(tb.getLastWaitTimeMs(), equalTo(0L));
     }
 
     @Test

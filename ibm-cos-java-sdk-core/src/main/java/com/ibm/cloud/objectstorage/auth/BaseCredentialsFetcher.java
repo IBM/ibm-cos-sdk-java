@@ -1,5 +1,5 @@
 /*
- * Copyright 2011-2023 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2011-2024 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -139,6 +139,7 @@ abstract class BaseCredentialsFetcher {
 
         JsonNode accessKey;
         JsonNode secretKey;
+        JsonNode accountId;
         JsonNode node;
         JsonNode token;
         try {
@@ -157,7 +158,8 @@ abstract class BaseCredentialsFetcher {
 
             if (null != token) {
                 credentials = new BasicSessionCredentials(accessKey.asText(),
-                                                          secretKey.asText(), token.asText());
+                                                          secretKey.asText(),
+                                                          token.asText());
             } else {
                 credentials = new BasicAWSCredentials(accessKey.asText(),
                                                       secretKey.asText());

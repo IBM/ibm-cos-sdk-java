@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2023 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2019-2024 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"). You may not use this file except in compliance with
  * the License. A copy of the License is located at
@@ -18,7 +18,7 @@ import javax.annotation.Generated;
 import com.ibm.cloud.objectstorage.AmazonWebServiceRequest;
 
 /**
- *
+ * 
  * @see <a href="http://docs.aws.amazon.com/goto/WebAPI/kms-2014-11-01/UpdateAlias" target="_top">AWS API
  *      Documentation</a>
  */
@@ -198,7 +198,7 @@ public class UpdateAliasRequest extends com.ibm.cloud.objectstorage.AmazonWebSer
      * <p>
      * To verify that the alias is mapped to the correct KMS key, use <a>ListAliases</a>.
      * </p>
-     *
+     * 
      * @param targetKeyId
      *        Identifies the <a
      *        href="https://docs.aws.amazon.com/kms/latest/developerguide/concepts.html#customer-cmk">customer managed
@@ -276,7 +276,7 @@ public class UpdateAliasRequest extends com.ibm.cloud.objectstorage.AmazonWebSer
      * <p>
      * To verify that the alias is mapped to the correct KMS key, use <a>ListAliases</a>.
      * </p>
-     *
+     * 
      * @return Identifies the <a
      *         href="https://docs.aws.amazon.com/kms/latest/developerguide/concepts.html#customer-cmk">customer managed
      *         key</a> to associate with the alias. You don't have permission to associate an alias with an <a
@@ -353,7 +353,7 @@ public class UpdateAliasRequest extends com.ibm.cloud.objectstorage.AmazonWebSer
      * <p>
      * To verify that the alias is mapped to the correct KMS key, use <a>ListAliases</a>.
      * </p>
-     *
+     * 
      * @param targetKeyId
      *        Identifies the <a
      *        href="https://docs.aws.amazon.com/kms/latest/developerguide/concepts.html#customer-cmk">customer managed

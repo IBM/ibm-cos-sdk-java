@@ -1,5 +1,5 @@
 /*
- * Copyright 2011-2023 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2011-2024 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,6 +33,8 @@ import com.ibm.cloud.objectstorage.AmazonClientException;
 import com.ibm.cloud.objectstorage.AmazonServiceException;
 import com.ibm.cloud.objectstorage.SDKGlobalConfiguration;
 import com.ibm.cloud.objectstorage.SdkClientException;
+import com.ibm.cloud.objectstorage.auth.profile.internal.BasicProfileConfigFileLoader;
+import com.ibm.cloud.objectstorage.profile.path.AwsProfileFileLocationProvider;
 import com.ibm.cloud.objectstorage.util.VersionInfoUtils;
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import com.github.tomakehurst.wiremock.stubbing.Scenario;
@@ -41,7 +43,9 @@ import java.net.SocketTimeoutException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Map;
+
 import org.junit.AfterClass;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.ClassRule;
 import org.junit.Ignore;
@@ -50,11 +54,13 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
+import utils.TestProfileFileLocationProvider;
 
 @Ignore
 @RunWith(MockitoJUnitRunner.class)
 public class InstanceMetadataServiceResourceFetcherTest {
 
+    public static final BasicProfileConfigFileLoader CONFIG_FILE_LOADER = BasicProfileConfigFileLoader.INSTANCE;
     @ClassRule
     public static WireMockRule mockServer = new WireMockRule(0);
 
@@ -80,6 +86,11 @@ public class InstanceMetadataServiceResourceFetcherTest {
         resourceFetcher = InstanceMetadataServiceResourceFetcher.getInstance();
         System.setProperty(SDKGlobalConfiguration.EC2_METADATA_SERVICE_OVERRIDE_SYSTEM_PROPERTY,
             "http://localhost:" + mockServer.port());
+    }
+
+    @Before
+    public void methodSetup() {
+        System.clearProperty(SDKGlobalConfiguration.AWS_EC2_METADATA_V1_DISABLED_SYSTEM_PROPERTY);
     }
 
     @AfterClass
@@ -170,7 +181,7 @@ public class InstanceMetadataServiceResourceFetcherTest {
         Mockito.when(mockConnection.connectToEndpoint(eq(endpoint), any(Map.class), eq("GET")))
                .thenCallRealMethod();
 
-        assertEquals(SUCCESS_BODY, new InstanceMetadataServiceResourceFetcher(mockConnection).readResource(endpoint));
+        assertEquals(SUCCESS_BODY, new InstanceMetadataServiceResourceFetcher(mockConnection, CONFIG_FILE_LOADER).readResource(endpoint));
         verify(getRequestedFor(urlPathEqualTo(CREDENTIALS_PATH)).withoutHeader("x-aws-ec2-metadata-token"));
     }
 
@@ -180,11 +191,129 @@ public class InstanceMetadataServiceResourceFetcherTest {
         Mockito.when(mockConnection.connectToEndpoint(eq(tokenEndpoint), any(Map.class), eq("PUT"))).thenThrow(ioException);
 
         try {
-            new InstanceMetadataServiceResourceFetcher(mockConnection).readResource(endpoint);
+            new InstanceMetadataServiceResourceFetcher(mockConnection, CONFIG_FILE_LOADER).readResource(endpoint);
             fail("no exception");
         } catch (SdkClientException exception) {
             assertEquals(exception.getCause(), ioException);
         }
+    }
+
+    @Test
+    public void token404_v1FallbackDisabled_shouldThrowException() throws IOException {
+        generateErrorTokenStub(404);
+        generateStub(200, SUCCESS_BODY);
+        System.setProperty(SDKGlobalConfiguration.AWS_EC2_METADATA_V1_DISABLED_SYSTEM_PROPERTY, "true");
+
+        try {
+            assertEquals(SUCCESS_BODY, resourceFetcher.readResource(endpoint));
+            fail("no exception");
+        } catch (AmazonClientException exception) {
+            assertEquals("Failed to retrieve IMDS token, and fallback to IMDS v1 is disabled via the " +
+                            "AWS_EC2_METADATA_V1_DISABLED environment variable and/or " +
+                            "com.ibm.cloud.objectstorage.sdk.disableEc2MetadataV1 system property " +
+                            "and/or ec2_metadata_v1_disabled profile property.",
+                    exception.getMessage());
+        }
+    }
+
+    @Test
+    public void tokenNonRetryableError_v1FallbackDisabled_shouldThrowException() {
+        generateErrorTokenStub(405);
+        generateStub(200, SUCCESS_BODY);
+        System.setProperty(SDKGlobalConfiguration.AWS_EC2_METADATA_V1_DISABLED_SYSTEM_PROPERTY, "true");
+
+        try {
+            assertEquals(SUCCESS_BODY, resourceFetcher.readResource(endpoint));
+            fail("no exception");
+        } catch (AmazonClientException exception) {
+            assertEquals("Failed to retrieve IMDS token, and fallback to IMDS v1 is disabled via the " +
+                            "AWS_EC2_METADATA_V1_DISABLED environment variable and/or " +
+                            "com.ibm.cloud.objectstorage.sdk.disableEc2MetadataV1 system property and/or ec2_metadata_v1_disabled profile property.",
+                    exception.getMessage());
+        }
+    }
+
+    @Test
+    public void token403_v1FallbackDisabled_shouldThrowException() {
+        generateErrorTokenStub(403);
+        generateStub(200, SUCCESS_BODY);
+        System.setProperty(SDKGlobalConfiguration.AWS_EC2_METADATA_V1_DISABLED_SYSTEM_PROPERTY, "true");
+
+        try {
+            assertEquals(SUCCESS_BODY, resourceFetcher.readResource(endpoint));
+            fail("no exception");
+        } catch (AmazonClientException exception) {
+            assertEquals("Failed to retrieve IMDS token, and fallback to IMDS v1 is disabled via the " +
+                            "AWS_EC2_METADATA_V1_DISABLED environment variable and/or " +
+                            "com.ibm.cloud.objectstorage.sdk.disableEc2MetadataV1 system property and/or ec2_metadata_v1_disabled profile property.",
+                    exception.getMessage());
+        }
+    }
+
+    @Test
+    public void tokenTimeoutException_v1FallbackDisabled_shouldThrowException() throws IOException {
+        generateStub(200, SUCCESS_BODY);
+        Mockito.when(mockConnection.connectToEndpoint(eq(tokenEndpoint), any(Map.class), eq("PUT")))
+                .thenThrow(new SocketTimeoutException());
+
+        Mockito.when(mockConnection.connectToEndpoint(eq(endpoint), any(Map.class), eq("GET")))
+                .thenCallRealMethod();
+
+        System.setProperty(SDKGlobalConfiguration.AWS_EC2_METADATA_V1_DISABLED_SYSTEM_PROPERTY, "true");
+
+        try {
+            assertEquals(SUCCESS_BODY,
+                    new InstanceMetadataServiceResourceFetcher(mockConnection, CONFIG_FILE_LOADER).readResource(endpoint));
+            fail("no exception");
+        } catch (AmazonClientException exception) {
+            assertEquals("Failed to retrieve IMDS token, and fallback to IMDS v1 is disabled via the " +
+                            "AWS_EC2_METADATA_V1_DISABLED environment variable and/or " +
+                            "com.ibm.cloud.objectstorage.sdk.disableEc2MetadataV1 system property and/or ec2_metadata_v1_disabled profile property.",
+                    exception.getMessage());
+        }
+    }
+
+    @Test
+    public void tokenNonRetryableError_v1FallbackDisabledInProfilePath_shouldThrowException() throws IOException {
+        AwsProfileFileLocationProvider profileFileLocationProvider =
+                new TestProfileFileLocationProvider("Ec2MetadataV1Disabled.tst", "/resources/profileconfig/");
+        BasicProfileConfigFileLoader configFileLoader = new BasicProfileConfigFileLoader(profileFileLocationProvider);
+
+        generateStub(200, SUCCESS_BODY);
+        Mockito.when(mockConnection.connectToEndpoint(eq(tokenEndpoint), any(Map.class), eq("PUT")))
+                .thenThrow(new SocketTimeoutException());
+        Mockito.when(mockConnection.connectToEndpoint(eq(endpoint), any(Map.class), eq("GET")))
+                .thenCallRealMethod();
+
+        // Even if the system setting is set to false, the profile file will still be checked.
+        System.setProperty(SDKGlobalConfiguration.AWS_EC2_METADATA_V1_DISABLED_SYSTEM_PROPERTY, "false");
+        try {
+            new InstanceMetadataServiceResourceFetcher(mockConnection,configFileLoader)
+                    .readResource(endpoint);
+            fail("no exception");
+        } catch (AmazonClientException exception) {
+            assertEquals("Failed to retrieve IMDS token, and fallback to IMDS v1 is disabled via the" +
+                            " AWS_EC2_METADATA_V1_DISABLED environment variable" +
+                            " and/or com.ibm.cloud.objectstorage.sdk.disableEc2MetadataV1 system property and/or ec2_metadata_v1_disabled profile property.",
+                    exception.getMessage());
+        }
+    }
+
+    @Test
+    public void tokenNonRetryableError_whenV1FallbackNotDisabledInProfilePath_shouldFallbackToInsecureWorkflow() throws IOException {
+        generateErrorTokenStub(405);
+        generateStub(200, SUCCESS_BODY);
+        Mockito.when(mockConnection.connectToEndpoint(eq(tokenEndpoint), any(Map.class), eq("PUT")))
+                .thenThrow(new SocketTimeoutException());
+        Mockito.when(mockConnection.connectToEndpoint(eq(endpoint), any(Map.class), eq("GET")))
+                .thenCallRealMethod();
+
+        AwsProfileFileLocationProvider profileFileLocationProvider =
+                new TestProfileFileLocationProvider("Ec2MetadataV1Enabled.tst", "/resources/profileconfig/");
+        BasicProfileConfigFileLoader configFileLoader = new BasicProfileConfigFileLoader(profileFileLocationProvider);
+
+        System.setProperty(SDKGlobalConfiguration.AWS_EC2_METADATA_V1_DISABLED_SYSTEM_PROPERTY, "false");
+        assertEquals(SUCCESS_BODY, new InstanceMetadataServiceResourceFetcher(mockConnection,configFileLoader).readResource(endpoint));
     }
 
     @Test

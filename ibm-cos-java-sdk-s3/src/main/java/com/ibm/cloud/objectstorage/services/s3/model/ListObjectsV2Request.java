@@ -1,5 +1,5 @@
 /*
- * Copyright 2011-2023 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2011-2024 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -17,6 +17,9 @@ package com.ibm.cloud.objectstorage.services.s3.model;
 import com.ibm.cloud.objectstorage.AmazonWebServiceRequest;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Request to retrieve a listing of objects in an S3 bucket.
@@ -107,8 +110,16 @@ public class ListObjectsV2Request extends AmazonWebServiceRequest implements Ser
 
     
 //IBM unsupported
+//    private boolean isRequesterPays;
 //    private String expectedBucketOwner;
-//
+
+    /**
+     * Optional parameter indicating to include some attributes of an object in
+     * the response.
+     */
+//    IBM Unsupported
+//    private List<String> optionalObjectAttributes;
+
 //    public String getExpectedBucketOwner() {
 //        return expectedBucketOwner;
 //    }
@@ -305,7 +316,7 @@ public class ListObjectsV2Request extends AmazonWebServiceRequest implements Ser
      * same string between the prefix and the first occurrence of the delimiter
      * to be rolled up into a single result element in the
      * {@link ListObjectsV2Result#getCommonPrefixes()} list.
-     * Returns this {@link ListObjectsRequest}, enabling additional method
+     * Returns this {@link ListObjectsV2Request}, enabling additional method
      * calls to be chained together.
      *
      * @param delimiter
@@ -314,7 +325,7 @@ public class ListObjectsV2Request extends AmazonWebServiceRequest implements Ser
      *            the delimiter to be rolled up into a single result element in
      *            the {@link ListObjectsV2Result#getCommonPrefixes()} list.
      *
-     * @return This {@link ListObjectsRequest}, enabling additional method
+     * @return This {@link ListObjectsV2Request}, enabling additional method
      *         calls to be chained together.
      */
     public ListObjectsV2Request withDelimiter(String delimiter) {

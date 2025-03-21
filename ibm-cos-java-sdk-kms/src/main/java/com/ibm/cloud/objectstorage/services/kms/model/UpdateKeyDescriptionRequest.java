@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2023 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2019-2024 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"). You may not use this file except in compliance with
  * the License. A copy of the License is located at
@@ -18,7 +18,7 @@ import javax.annotation.Generated;
 import com.ibm.cloud.objectstorage.AmazonWebServiceRequest;
 
 /**
- *
+ * 
  * @see <a href="http://docs.aws.amazon.com/goto/WebAPI/kms-2014-11-01/UpdateKeyDescription" target="_top">AWS API
  *      Documentation</a>
  */
@@ -90,7 +90,7 @@ public class UpdateKeyDescriptionRequest extends com.ibm.cloud.objectstorage.Ama
      * <p>
      * To get the key ID and key ARN for a KMS key, use <a>ListKeys</a> or <a>DescribeKey</a>.
      * </p>
-     *
+     * 
      * @param keyId
      *        Updates the description of the specified KMS key.</p>
      *        <p>
@@ -144,7 +144,7 @@ public class UpdateKeyDescriptionRequest extends com.ibm.cloud.objectstorage.Ama
      * <p>
      * To get the key ID and key ARN for a KMS key, use <a>ListKeys</a> or <a>DescribeKey</a>.
      * </p>
-     *
+     * 
      * @return Updates the description of the specified KMS key.</p>
      *         <p>
      *         Specify the key ID or key ARN of the KMS key.
@@ -197,7 +197,7 @@ public class UpdateKeyDescriptionRequest extends com.ibm.cloud.objectstorage.Ama
      * <p>
      * To get the key ID and key ARN for a KMS key, use <a>ListKeys</a> or <a>DescribeKey</a>.
      * </p>
-     *
+     * 
      * @param keyId
      *        Updates the description of the specified KMS key.</p>
      *        <p>

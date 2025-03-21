@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2023 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2015-2024 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -16,6 +16,8 @@ package com.ibm.cloud.objectstorage.handlers;
 
 import com.ibm.cloud.objectstorage.auth.AWSCredentials;
 import com.ibm.cloud.objectstorage.client.builder.AdvancedConfig;
+import com.ibm.cloud.objectstorage.Protocol;
+
 import java.net.URI;
 
 /**
@@ -101,6 +103,11 @@ public class HandlerContextKey<T> {
      * The endpoint configured on the client.
      */
     public static final HandlerContextKey<URI> CLIENT_ENDPOINT = new HandlerContextKey<URI>("ClientEndpoint");
+
+    /**
+     * The protocol configured on the client.
+     */
+    public static final HandlerContextKey<Protocol> CLIENT_PROTOCOL = new HandlerContextKey<Protocol>("ClientProtocol");
 
     private final String name;
 

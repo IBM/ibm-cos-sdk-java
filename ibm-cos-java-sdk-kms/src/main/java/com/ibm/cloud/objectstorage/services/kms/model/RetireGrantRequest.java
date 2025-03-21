@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2023 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2019-2024 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"). You may not use this file except in compliance with
  * the License. A copy of the License is located at
@@ -18,7 +18,7 @@ import javax.annotation.Generated;
 import com.ibm.cloud.objectstorage.AmazonWebServiceRequest;
 
 /**
- *
+ * 
  * @see <a href="http://docs.aws.amazon.com/goto/WebAPI/kms-2014-11-01/RetireGrant" target="_top">AWS API
  *      Documentation</a>
  */
@@ -61,6 +61,17 @@ public class RetireGrantRequest extends com.ibm.cloud.objectstorage.AmazonWebSer
      * </ul>
      */
     private String grantId;
+    /**
+     * <p>
+     * Checks if your request will succeed. <code>DryRun</code> is an optional parameter.
+     * </p>
+     * <p>
+     * To learn more about how to use this parameter, see <a
+     * href="https://docs.aws.amazon.com/kms/latest/developerguide/programming-dryrun.html">Testing your KMS API
+     * calls</a> in the <i>Key Management Service Developer Guide</i>.
+     * </p>
+     */
+    private Boolean dryRun;
 
     /**
      * <p>
@@ -73,7 +84,7 @@ public class RetireGrantRequest extends com.ibm.cloud.objectstorage.AmazonWebSer
      * href="https://docs.aws.amazon.com/kms/latest/developerguide/grants.html#terms-eventual-consistency">Eventual
      * consistency</a> in the <i>Key Management Service Developer Guide</i>.
      * </p>
-     *
+     * 
      * @param grantToken
      *        Identifies the grant to be retired. You can use a grant token to identify a new grant even before it has
      *        achieved eventual consistency.</p>
@@ -99,7 +110,7 @@ public class RetireGrantRequest extends com.ibm.cloud.objectstorage.AmazonWebSer
      * href="https://docs.aws.amazon.com/kms/latest/developerguide/grants.html#terms-eventual-consistency">Eventual
      * consistency</a> in the <i>Key Management Service Developer Guide</i>.
      * </p>
-     *
+     * 
      * @return Identifies the grant to be retired. You can use a grant token to identify a new grant even before it has
      *         achieved eventual consistency.</p>
      *         <p>
@@ -124,7 +135,7 @@ public class RetireGrantRequest extends com.ibm.cloud.objectstorage.AmazonWebSer
      * href="https://docs.aws.amazon.com/kms/latest/developerguide/grants.html#terms-eventual-consistency">Eventual
      * consistency</a> in the <i>Key Management Service Developer Guide</i>.
      * </p>
-     *
+     * 
      * @param grantToken
      *        Identifies the grant to be retired. You can use a grant token to identify a new grant even before it has
      *        achieved eventual consistency.</p>
@@ -148,7 +159,7 @@ public class RetireGrantRequest extends com.ibm.cloud.objectstorage.AmazonWebSer
      * <p>
      * For example: <code>arn:aws:kms:us-east-2:444455556666:key/1234abcd-12ab-34cd-56ef-1234567890ab</code>
      * </p>
-     *
+     * 
      * @param keyId
      *        The key ARN KMS key associated with the grant. To find the key ARN, use the <a>ListKeys</a> operation.</p>
      *        <p>
@@ -166,7 +177,7 @@ public class RetireGrantRequest extends com.ibm.cloud.objectstorage.AmazonWebSer
      * <p>
      * For example: <code>arn:aws:kms:us-east-2:444455556666:key/1234abcd-12ab-34cd-56ef-1234567890ab</code>
      * </p>
-     *
+     * 
      * @return The key ARN KMS key associated with the grant. To find the key ARN, use the <a>ListKeys</a>
      *         operation.</p>
      *         <p>
@@ -184,7 +195,7 @@ public class RetireGrantRequest extends com.ibm.cloud.objectstorage.AmazonWebSer
      * <p>
      * For example: <code>arn:aws:kms:us-east-2:444455556666:key/1234abcd-12ab-34cd-56ef-1234567890ab</code>
      * </p>
-     *
+     * 
      * @param keyId
      *        The key ARN KMS key associated with the grant. To find the key ARN, use the <a>ListKeys</a> operation.</p>
      *        <p>
@@ -209,7 +220,7 @@ public class RetireGrantRequest extends com.ibm.cloud.objectstorage.AmazonWebSer
      * </p>
      * </li>
      * </ul>
-     *
+     * 
      * @param grantId
      *        Identifies the grant to retire. To get the grant ID, use <a>CreateGrant</a>, <a>ListGrants</a>, or
      *        <a>ListRetirableGrants</a>.</p>
@@ -237,7 +248,7 @@ public class RetireGrantRequest extends com.ibm.cloud.objectstorage.AmazonWebSer
      * </p>
      * </li>
      * </ul>
-     *
+     * 
      * @return Identifies the grant to retire. To get the grant ID, use <a>CreateGrant</a>, <a>ListGrants</a>, or
      *         <a>ListRetirableGrants</a>.</p>
      *         <ul>
@@ -264,7 +275,7 @@ public class RetireGrantRequest extends com.ibm.cloud.objectstorage.AmazonWebSer
      * </p>
      * </li>
      * </ul>
-     *
+     * 
      * @param grantId
      *        Identifies the grant to retire. To get the grant ID, use <a>CreateGrant</a>, <a>ListGrants</a>, or
      *        <a>ListRetirableGrants</a>.</p>
@@ -280,6 +291,94 @@ public class RetireGrantRequest extends com.ibm.cloud.objectstorage.AmazonWebSer
     public RetireGrantRequest withGrantId(String grantId) {
         setGrantId(grantId);
         return this;
+    }
+
+    /**
+     * <p>
+     * Checks if your request will succeed. <code>DryRun</code> is an optional parameter.
+     * </p>
+     * <p>
+     * To learn more about how to use this parameter, see <a
+     * href="https://docs.aws.amazon.com/kms/latest/developerguide/programming-dryrun.html">Testing your KMS API
+     * calls</a> in the <i>Key Management Service Developer Guide</i>.
+     * </p>
+     * 
+     * @param dryRun
+     *        Checks if your request will succeed. <code>DryRun</code> is an optional parameter. </p>
+     *        <p>
+     *        To learn more about how to use this parameter, see <a
+     *        href="https://docs.aws.amazon.com/kms/latest/developerguide/programming-dryrun.html">Testing your KMS API
+     *        calls</a> in the <i>Key Management Service Developer Guide</i>.
+     */
+
+    public void setDryRun(Boolean dryRun) {
+        this.dryRun = dryRun;
+    }
+
+    /**
+     * <p>
+     * Checks if your request will succeed. <code>DryRun</code> is an optional parameter.
+     * </p>
+     * <p>
+     * To learn more about how to use this parameter, see <a
+     * href="https://docs.aws.amazon.com/kms/latest/developerguide/programming-dryrun.html">Testing your KMS API
+     * calls</a> in the <i>Key Management Service Developer Guide</i>.
+     * </p>
+     * 
+     * @return Checks if your request will succeed. <code>DryRun</code> is an optional parameter. </p>
+     *         <p>
+     *         To learn more about how to use this parameter, see <a
+     *         href="https://docs.aws.amazon.com/kms/latest/developerguide/programming-dryrun.html">Testing your KMS API
+     *         calls</a> in the <i>Key Management Service Developer Guide</i>.
+     */
+
+    public Boolean getDryRun() {
+        return this.dryRun;
+    }
+
+    /**
+     * <p>
+     * Checks if your request will succeed. <code>DryRun</code> is an optional parameter.
+     * </p>
+     * <p>
+     * To learn more about how to use this parameter, see <a
+     * href="https://docs.aws.amazon.com/kms/latest/developerguide/programming-dryrun.html">Testing your KMS API
+     * calls</a> in the <i>Key Management Service Developer Guide</i>.
+     * </p>
+     * 
+     * @param dryRun
+     *        Checks if your request will succeed. <code>DryRun</code> is an optional parameter. </p>
+     *        <p>
+     *        To learn more about how to use this parameter, see <a
+     *        href="https://docs.aws.amazon.com/kms/latest/developerguide/programming-dryrun.html">Testing your KMS API
+     *        calls</a> in the <i>Key Management Service Developer Guide</i>.
+     * @return Returns a reference to this object so that method calls can be chained together.
+     */
+
+    public RetireGrantRequest withDryRun(Boolean dryRun) {
+        setDryRun(dryRun);
+        return this;
+    }
+
+    /**
+     * <p>
+     * Checks if your request will succeed. <code>DryRun</code> is an optional parameter.
+     * </p>
+     * <p>
+     * To learn more about how to use this parameter, see <a
+     * href="https://docs.aws.amazon.com/kms/latest/developerguide/programming-dryrun.html">Testing your KMS API
+     * calls</a> in the <i>Key Management Service Developer Guide</i>.
+     * </p>
+     * 
+     * @return Checks if your request will succeed. <code>DryRun</code> is an optional parameter. </p>
+     *         <p>
+     *         To learn more about how to use this parameter, see <a
+     *         href="https://docs.aws.amazon.com/kms/latest/developerguide/programming-dryrun.html">Testing your KMS API
+     *         calls</a> in the <i>Key Management Service Developer Guide</i>.
+     */
+
+    public Boolean isDryRun() {
+        return this.dryRun;
     }
 
     /**
@@ -299,7 +398,9 @@ public class RetireGrantRequest extends com.ibm.cloud.objectstorage.AmazonWebSer
         if (getKeyId() != null)
             sb.append("KeyId: ").append(getKeyId()).append(",");
         if (getGrantId() != null)
-            sb.append("GrantId: ").append(getGrantId());
+            sb.append("GrantId: ").append(getGrantId()).append(",");
+        if (getDryRun() != null)
+            sb.append("DryRun: ").append(getDryRun());
         sb.append("}");
         return sb.toString();
     }
@@ -326,6 +427,10 @@ public class RetireGrantRequest extends com.ibm.cloud.objectstorage.AmazonWebSer
             return false;
         if (other.getGrantId() != null && other.getGrantId().equals(this.getGrantId()) == false)
             return false;
+        if (other.getDryRun() == null ^ this.getDryRun() == null)
+            return false;
+        if (other.getDryRun() != null && other.getDryRun().equals(this.getDryRun()) == false)
+            return false;
         return true;
     }
 
@@ -337,6 +442,7 @@ public class RetireGrantRequest extends com.ibm.cloud.objectstorage.AmazonWebSer
         hashCode = prime * hashCode + ((getGrantToken() == null) ? 0 : getGrantToken().hashCode());
         hashCode = prime * hashCode + ((getKeyId() == null) ? 0 : getKeyId().hashCode());
         hashCode = prime * hashCode + ((getGrantId() == null) ? 0 : getGrantId().hashCode());
+        hashCode = prime * hashCode + ((getDryRun() == null) ? 0 : getDryRun().hashCode());
         return hashCode;
     }
 

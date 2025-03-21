@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2023 Amazon Technologies, Inc.
+ * Copyright 2013-2024 Amazon Technologies, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,6 +21,10 @@ import com.ibm.cloud.objectstorage.util.EC2MetadataUtils;
 
 /**
  * Enumeration of region names
+ *
+ * <p>
+ * See <a href="https://docs.aws.amazon.com/sdk-for-java/latest/developer-guide/migration.html">Migration Guide</a>
+ * for more information.
  */
 public enum Regions {
 
@@ -53,12 +57,14 @@ public enum Regions {
     CN_NORTH_1("cn-north-1", "China (Beijing)"),
     CN_NORTHWEST_1("cn-northwest-1", "China (Ningxia)"),
     CA_CENTRAL_1("ca-central-1", "Canada (Central)"),
+    CA_WEST_1("ca-west-1", "Canada West (Calgary)"),
     ME_CENTRAL_1("me-central-1", "Middle East (UAE)"),
     ME_SOUTH_1("me-south-1", "Middle East (Bahrain)"),
     AF_SOUTH_1("af-south-1", "Africa (Cape Town)"),
     US_ISO_EAST_1("us-iso-east-1", "US ISO East"),
     US_ISOB_EAST_1("us-isob-east-1", "US ISOB East (Ohio)"),
-    US_ISO_WEST_1("us-iso-west-1", "US ISO West")
+    US_ISO_WEST_1("us-iso-west-1", "US ISO West"),
+    IL_CENTRAL_1("il-central-1", "Israel (Tel Aviv)")
     ;
 
     /**
@@ -95,14 +101,19 @@ public enum Regions {
      * @param regionName
      *            The name of the region. Ex.: eu-west-1
      * @return Region enum representing the given region name.
+     * @deprecated This method requires the SDK version to be updated to support new regions. Use
+     * {@link RegionUtils#getRegion(String)}, which does not have this limitation.
      */
+    @Deprecated
     public static Regions fromName(String regionName) {
         for (Regions region : Regions.values()) {
             if (region.getName().equals(regionName)) {
                 return region;
             }
         }
-        throw new IllegalArgumentException("Cannot create enum from " + regionName + " value!");
+        throw new IllegalArgumentException("Cannot create enum from " + regionName + " value! "
+                                           + "Use com.ibm.cloud.objectstorage.regions.RegionUtils.getRegion to access regions that "
+                                           + "aren't known to this SDK version.");
     }
 
     /**

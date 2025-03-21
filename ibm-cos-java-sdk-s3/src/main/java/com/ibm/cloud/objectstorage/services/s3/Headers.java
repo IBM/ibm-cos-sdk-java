@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2023 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2010-2024 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -277,11 +277,11 @@ public interface Headers {
 //
 //    String S3_RESTORE_OUTPUT_PATH = "x-amz-restore-output-path";
 //
-   String OBJECT_LOCK_MODE = "x-amz-object-lock-mode";
+    String OBJECT_LOCK_MODE = "x-amz-object-lock-mode";
 
-   String OBJECT_LOCK_RETAIN_UNTIL_DATE = "x-amz-object-lock-retain-until-date";
+    String OBJECT_LOCK_RETAIN_UNTIL_DATE = "x-amz-object-lock-retain-until-date";
 
-   String OBJECT_LOCK_LEGAL_HOLD_STATUS = "x-amz-object-lock-legal-hold";
+    String OBJECT_LOCK_LEGAL_HOLD_STATUS = "x-amz-object-lock-legal-hold";
 //
       String OBJECT_LOCK_TOKEN = "x-amz-bucket-object-lock-token";
 //
@@ -358,4 +358,6 @@ public interface Headers {
 //    String FWD_VERSION_ID = "x-amz-fwd-header-x-amz-version-id";
 //
 //    String FWD_SSE_BUCKET_KEY_ENABLED = "x-amz-fwd-header-x-amz-server-side-encryption-bucket-key-enabled";
+
+    String PUT_OBJECT_IF_NONE_MATCH = "If-None-Match";
 }

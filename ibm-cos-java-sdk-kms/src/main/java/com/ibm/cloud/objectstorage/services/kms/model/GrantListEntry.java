@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2023 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2019-2024 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"). You may not use this file except in compliance with
  * the License. A copy of the License is located at
@@ -21,7 +21,7 @@ import com.ibm.cloud.objectstorage.protocol.ProtocolMarshaller;
  * <p>
  * Contains information about a grant.
  * </p>
- *
+ * 
  * @see <a href="http://docs.aws.amazon.com/goto/WebAPI/kms-2014-11-01/GrantListEntry" target="_top">AWS API
  *      Documentation</a>
  */
@@ -96,7 +96,7 @@ public class GrantListEntry implements Serializable, Cloneable, StructuredPojo {
      * <p>
      * The unique identifier for the KMS key to which the grant applies.
      * </p>
-     *
+     * 
      * @param keyId
      *        The unique identifier for the KMS key to which the grant applies.
      */
@@ -109,7 +109,7 @@ public class GrantListEntry implements Serializable, Cloneable, StructuredPojo {
      * <p>
      * The unique identifier for the KMS key to which the grant applies.
      * </p>
-     *
+     * 
      * @return The unique identifier for the KMS key to which the grant applies.
      */
 
@@ -121,7 +121,7 @@ public class GrantListEntry implements Serializable, Cloneable, StructuredPojo {
      * <p>
      * The unique identifier for the KMS key to which the grant applies.
      * </p>
-     *
+     * 
      * @param keyId
      *        The unique identifier for the KMS key to which the grant applies.
      * @return Returns a reference to this object so that method calls can be chained together.
@@ -269,7 +269,7 @@ public class GrantListEntry implements Serializable, Cloneable, StructuredPojo {
      * "https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_elements_principal.html#principal-services"
      * >service principal</a>, which might represent several different grantee principals.
      * </p>
-     *
+     * 
      * @param granteePrincipal
      *        The identity that gets the permissions in the grant.</p>
      *        <p>
@@ -295,7 +295,7 @@ public class GrantListEntry implements Serializable, Cloneable, StructuredPojo {
      * "https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_elements_principal.html#principal-services"
      * >service principal</a>, which might represent several different grantee principals.
      * </p>
-     *
+     * 
      * @return The identity that gets the permissions in the grant.</p>
      *         <p>
      *         The <code>GranteePrincipal</code> field in the <code>ListGrants</code> response usually contains the user
@@ -320,7 +320,7 @@ public class GrantListEntry implements Serializable, Cloneable, StructuredPojo {
      * "https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_elements_principal.html#principal-services"
      * >service principal</a>, which might represent several different grantee principals.
      * </p>
-     *
+     * 
      * @param granteePrincipal
      *        The identity that gets the permissions in the grant.</p>
      *        <p>
@@ -381,7 +381,7 @@ public class GrantListEntry implements Serializable, Cloneable, StructuredPojo {
      * <p>
      * The Amazon Web Services account under which the grant was issued.
      * </p>
-     *
+     * 
      * @param issuingAccount
      *        The Amazon Web Services account under which the grant was issued.
      */
@@ -394,7 +394,7 @@ public class GrantListEntry implements Serializable, Cloneable, StructuredPojo {
      * <p>
      * The Amazon Web Services account under which the grant was issued.
      * </p>
-     *
+     * 
      * @return The Amazon Web Services account under which the grant was issued.
      */
 
@@ -406,7 +406,7 @@ public class GrantListEntry implements Serializable, Cloneable, StructuredPojo {
      * <p>
      * The Amazon Web Services account under which the grant was issued.
      * </p>
-     *
+     * 
      * @param issuingAccount
      *        The Amazon Web Services account under which the grant was issued.
      * @return Returns a reference to this object so that method calls can be chained together.

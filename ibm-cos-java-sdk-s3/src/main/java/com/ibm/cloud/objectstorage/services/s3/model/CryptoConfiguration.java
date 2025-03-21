@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2023 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2010-2024 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -466,7 +466,7 @@ public class CryptoConfiguration implements Cloneable,Serializable {
 
     /**
      * @exclude
-     * Returns the the KMS region explicitly specified for the AWS KMS client
+     * Returns the the KMS region explicitly specified for the Amazon Web Services KMS client
      * when such client is internally instantiated; or null if no explicit KMS
      * region is specified. This KMS region parameter is ignored when the Amazon Web Services
      * KMS client of the S3 encryption client is explicitly passed in by the

@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2023 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2019-2024 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"). You may not use this file except in compliance with
  * the License. A copy of the License is located at
@@ -16,7 +16,7 @@ import java.io.Serializable;
 import javax.annotation.Generated;
 
 /**
- *
+ * 
  * @see <a href="http://docs.aws.amazon.com/goto/WebAPI/kms-2014-11-01/ReEncrypt" target="_top">AWS API
  *      Documentation</a>
  */
@@ -72,7 +72,7 @@ public class ReEncryptResult extends com.ibm.cloud.objectstorage.AmazonWebServic
      * ByteBuffer.asReadOnlyBuffer() before using or reading from the buffer. This behavior will be changed in a future
      * major version of the SDK.
      * </p>
-     *
+     * 
      * @param ciphertextBlob
      *        The reencrypted data. When you use the HTTP API or the Amazon Web Services CLI, the value is
      *        Base64-encoded. Otherwise, it is not Base64-encoded.
@@ -94,7 +94,7 @@ public class ReEncryptResult extends com.ibm.cloud.objectstorage.AmazonWebServic
      * Doing so will ensure that anyone else using the {@code ByteBuffer} will not be affected by changes to the
      * {@code position}.
      * </p>
-     *
+     * 
      * @return The reencrypted data. When you use the HTTP API or the Amazon Web Services CLI, the value is
      *         Base64-encoded. Otherwise, it is not Base64-encoded.
      */
@@ -118,7 +118,7 @@ public class ReEncryptResult extends com.ibm.cloud.objectstorage.AmazonWebServic
      * ByteBuffer.asReadOnlyBuffer() before using or reading from the buffer. This behavior will be changed in a future
      * major version of the SDK.
      * </p>
-     *
+     * 
      * @param ciphertextBlob
      *        The reencrypted data. When you use the HTTP API or the Amazon Web Services CLI, the value is
      *        Base64-encoded. Otherwise, it is not Base64-encoded.
@@ -134,7 +134,7 @@ public class ReEncryptResult extends com.ibm.cloud.objectstorage.AmazonWebServic
      * <p>
      * Unique identifier of the KMS key used to originally encrypt the data.
      * </p>
-     *
+     * 
      * @param sourceKeyId
      *        Unique identifier of the KMS key used to originally encrypt the data.
      */
@@ -147,7 +147,7 @@ public class ReEncryptResult extends com.ibm.cloud.objectstorage.AmazonWebServic
      * <p>
      * Unique identifier of the KMS key used to originally encrypt the data.
      * </p>
-     *
+     * 
      * @return Unique identifier of the KMS key used to originally encrypt the data.
      */
 
@@ -159,7 +159,7 @@ public class ReEncryptResult extends com.ibm.cloud.objectstorage.AmazonWebServic
      * <p>
      * Unique identifier of the KMS key used to originally encrypt the data.
      * </p>
-     *
+     * 
      * @param sourceKeyId
      *        Unique identifier of the KMS key used to originally encrypt the data.
      * @return Returns a reference to this object so that method calls can be chained together.
@@ -176,7 +176,7 @@ public class ReEncryptResult extends com.ibm.cloud.objectstorage.AmazonWebServic
      * href="https://docs.aws.amazon.com/kms/latest/developerguide/concepts.html#key-id-key-ARN">key ARN</a>) of the KMS
      * key that was used to reencrypt the data.
      * </p>
-     *
+     * 
      * @param keyId
      *        The Amazon Resource Name (<a
      *        href="https://docs.aws.amazon.com/kms/latest/developerguide/concepts.html#key-id-key-ARN">key ARN</a>) of
@@ -193,7 +193,7 @@ public class ReEncryptResult extends com.ibm.cloud.objectstorage.AmazonWebServic
      * href="https://docs.aws.amazon.com/kms/latest/developerguide/concepts.html#key-id-key-ARN">key ARN</a>) of the KMS
      * key that was used to reencrypt the data.
      * </p>
-     *
+     * 
      * @return The Amazon Resource Name (<a
      *         href="https://docs.aws.amazon.com/kms/latest/developerguide/concepts.html#key-id-key-ARN">key ARN</a>) of
      *         the KMS key that was used to reencrypt the data.
@@ -209,7 +209,7 @@ public class ReEncryptResult extends com.ibm.cloud.objectstorage.AmazonWebServic
      * href="https://docs.aws.amazon.com/kms/latest/developerguide/concepts.html#key-id-key-ARN">key ARN</a>) of the KMS
      * key that was used to reencrypt the data.
      * </p>
-     *
+     * 
      * @param keyId
      *        The Amazon Resource Name (<a
      *        href="https://docs.aws.amazon.com/kms/latest/developerguide/concepts.html#key-id-key-ARN">key ARN</a>) of

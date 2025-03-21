@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2023 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2010-2024 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -38,6 +38,9 @@ import java.util.regex.Pattern;
  * read-after-write consistency for PUTS of new objects in Amazon
  * S3 buckets and eventual consistency for overwrite PUTS and DELETES.
  * </p>
+ * <p>
+ * See <a href="https://docs.aws.amazon.com/sdk-for-java/latest/developer-guide/migration.html">Migration Guide</a>
+ * for more information.
  */
 public enum Region {
 
@@ -364,6 +367,29 @@ public enum Region {
      * located in UAE.
      */
     ME_UAE("me-central-1"),
+
+    /**
+     * The Israel (Tel Aviv) Region. This region uses Amazon S3 servers
+     * located in Tel Aviv, Israel.
+     * <p>
+     * When using buckets in this region, set the client endpoint to
+     * <code>s3-il-central-1.amazonaws.com</code> on all requests to these buckets
+     * to reduce any latency experienced after the first hour of creating a
+     * bucket in this region.
+     * </p>
+     */
+    IL_TelAviv("il-central-1"),
+
+    /**
+     * The Canada West (Calgary) Region. This region uses Amazon S3 servers located in Canada West.
+     * <p>
+     * When using buckets in this region, set the client endpoint to
+     * <code>s3.ca-west-1.amazonaws.com</code> on all requests to these buckets
+     * to reduce any latency experienced after the first hour of creating a
+     * bucket in this region.
+     * </p>
+     */
+    CA_Calgary("ca-west-1"),
 
     /**
      * The Africa South (Cape Town) Region. This region uses Amazon S3 servers

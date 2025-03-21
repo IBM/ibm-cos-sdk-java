@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2023 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2010-2024 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -257,6 +257,10 @@ public class ClientConfigurationTest {
         config = new ClientConfiguration();
         assertNull(config.getProxyHost());
 
+        environmentVariableHelper.set("https_proxy", "");
+        config = new ClientConfiguration();
+        assertNull(config.getProxyHost());
+
         environmentVariableHelper.set("https_proxy", "bad-url");
         config = new ClientConfiguration();
         assertNull(config.getProxyHost());
@@ -307,6 +311,10 @@ public class ClientConfigurationTest {
         EnvironmentVariableHelper environmentVariableHelper = new EnvironmentVariableHelper();
         ClientConfiguration config;
 
+        config = new ClientConfiguration();
+        assertEquals(-1, config.getProxyPort());
+
+        environmentVariableHelper.set("https_proxy", "");
         config = new ClientConfiguration();
         assertEquals(-1, config.getProxyPort());
 
@@ -371,6 +379,10 @@ public class ClientConfigurationTest {
         config = new ClientConfiguration();
         assertNull(config.getProxyUsername());
 
+        environmentVariableHelper.set("https_proxy", "");
+        config = new ClientConfiguration();
+        assertNull(config.getProxyUsername());
+
         environmentVariableHelper.set("https_proxy", "bad-url");
         config = new ClientConfiguration();
         assertNull(config.getProxyUsername());
@@ -421,6 +433,10 @@ public class ClientConfigurationTest {
         EnvironmentVariableHelper environmentVariableHelper = new EnvironmentVariableHelper();
         ClientConfiguration config;
 
+        config = new ClientConfiguration();
+        assertNull(config.getProxyPassword());
+
+        environmentVariableHelper.set("https_proxy", "");
         config = new ClientConfiguration();
         assertNull(config.getProxyPassword());
 

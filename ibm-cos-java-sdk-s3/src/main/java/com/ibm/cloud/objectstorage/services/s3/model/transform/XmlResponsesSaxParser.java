@@ -147,7 +147,7 @@ public class XmlResponsesSaxParser {
             }
 
             BufferedReader breader = new BufferedReader(new InputStreamReader(inputStream,
-                Constants.DEFAULT_ENCODING));
+                    Constants.DEFAULT_ENCODING));
             xr.setContentHandler(handler);
             xr.setErrorHandler(handler);
             xr.parse(new InputSource(breader));
@@ -164,7 +164,7 @@ public class XmlResponsesSaxParser {
                 }
             }
             throw new SdkClientException("Failed to parse XML document with handler "
-                + handler.getClass(), t);
+                    + handler.getClass(), t);
         }
     }
 
@@ -190,7 +190,7 @@ public class XmlResponsesSaxParser {
                  */
                 StringBuilder listingDocBuffer = new StringBuilder();
                 BufferedReader br = new BufferedReader(
-                    new InputStreamReader(inputStream, Constants.DEFAULT_ENCODING));
+                        new InputStreamReader(inputStream, Constants.DEFAULT_ENCODING));
 
                 char[] buf = new char[8192];
                 int read = -1;
@@ -208,7 +208,7 @@ public class XmlResponsesSaxParser {
                 String listingDoc = listingDocBuffer.toString().replaceAll("\r", "&#013;");
 
                 sanitizedInputStream = new ByteArrayInputStream(
-                    listingDoc.getBytes(UTF8));
+                        listingDoc.getBytes(UTF8));
 
             } catch (IOException e) {
                 throw e;
@@ -222,7 +222,7 @@ public class XmlResponsesSaxParser {
                     }
                 }
                 throw new SdkClientException("Failed to sanitize XML document destined for handler "
-                    + handler.getClass(), t);
+                        + handler.getClass(), t);
             }
             return sanitizedInputStream;
         }
@@ -655,11 +655,11 @@ public class XmlResponsesSaxParser {
         return handler;
     }
 
-   public GetObjectRetentionResponseHandler parseGetObjectRetentionResponse(InputStream inputStream) throws IOException {
-       GetObjectRetentionResponseHandler handler = new GetObjectRetentionResponseHandler();
-       parseXmlInputStream(handler, inputStream);
-       return handler;
-   }
+    public GetObjectRetentionResponseHandler parseGetObjectRetentionResponse(InputStream inputStream) throws IOException {
+        GetObjectRetentionResponseHandler handler = new GetObjectRetentionResponseHandler();
+        parseXmlInputStream(handler, inputStream);
+        return handler;
+    }
     // ////////////
     // Handlers //
     // ////////////
@@ -715,17 +715,17 @@ public class XmlResponsesSaxParser {
                      * we're returning a list of results that's truncated.
                      */
                     if (objectListing.isTruncated()
-                        && objectListing.getNextMarker() == null) {
+                            && objectListing.getNextMarker() == null) {
 
                         String nextMarker = null;
                         if (!objectListing.getObjectSummaries().isEmpty()) {
                             nextMarker = objectListing.getObjectSummaries()
-                                .get(objectListing.getObjectSummaries().size() - 1)
-                                .getKey();
+                                    .get(objectListing.getObjectSummaries().size() - 1)
+                                    .getKey();
 
                         } else if (!objectListing.getCommonPrefixes().isEmpty()) {
                             nextMarker = objectListing.getCommonPrefixes()
-                                .get(objectListing.getCommonPrefixes().size() - 1);
+                                    .get(objectListing.getCommonPrefixes().size() - 1);
                         } else {
                             log.error("S3 response indicates truncated results, "
                                     + "but contains no object summaries or "
@@ -769,7 +769,7 @@ public class XmlResponsesSaxParser {
                             null : checkForEmptyString(getText()));
                 } else if (name.equals("IsTruncated")) {
                     String isTruncatedStr =
-                        StringUtils.lowerCase(getText());
+                            StringUtils.lowerCase(getText());
 
                     if (isTruncatedStr.startsWith("false")) {
                         objectListing.setTruncated(false);
@@ -778,7 +778,7 @@ public class XmlResponsesSaxParser {
                     } else {
                         throw new IllegalStateException(
                                 "Invalid value for IsTruncated field: "
-                                + isTruncatedStr);
+                                        + isTruncatedStr);
                     }
 
                 } else if (name.equals("Contents")) {
@@ -791,7 +791,7 @@ public class XmlResponsesSaxParser {
                 if (name.equals("Key")) {
                     lastKey = getText();
                     currentObject.setKey(decodeIfSpecified
-                                    (lastKey, shouldSDKDecodeResponse));
+                            (lastKey, shouldSDKDecodeResponse));
                 } else if (name.equals("LastModified")) {
                     currentObject.setLastModified(
                             ServiceUtils.parseIso8601Date(getText()));
@@ -1181,7 +1181,7 @@ public class XmlResponsesSaxParser {
     public static class AccessControlListHandler extends AbstractHandler {
 
         private final AccessControlList accessControlList =
-            new AccessControlList();
+                new AccessControlList();
 
         private Grantee currentGrantee = null;
         private Permission currentPermission = null;
@@ -1210,7 +1210,7 @@ public class XmlResponsesSaxParser {
             else if (in("AccessControlPolicy", "AccessControlList", "Grant")) {
                 if (name.equals("Grantee")) {
                     String type = XmlResponsesSaxParser
-                        .findAttributeValue( "xsi:type", attrs );
+                            .findAttributeValue( "xsi:type", attrs );
 
                     if ("AmazonCustomerByEmail".equals(type)) {
                         currentGrantee = new EmailAddressGrantee(null);
@@ -1269,7 +1269,7 @@ public class XmlResponsesSaxParser {
 
                 } else if (name.equals("DisplayName")) {
                     ((CanonicalGrantee) currentGrantee)
-                        .setDisplayName(getText());
+                            .setDisplayName(getText());
                 }
             }
         }
@@ -1283,7 +1283,7 @@ public class XmlResponsesSaxParser {
     public static class FASPConnectionInfoHandler extends AbstractHandler {
 
         private final FASPConnectionInfo connectionInfo =
-            new FASPConnectionInfo();
+                new FASPConnectionInfo();
 
         /**
          * @return an object representing the ACL document.
@@ -1318,7 +1318,7 @@ public class XmlResponsesSaxParser {
         @Override
         protected void doEndElement(String uri, String name, String qName) {
             if (name.equals("Id")) {
-                 connectionInfo.setAccessKeyId(getText());
+                connectionInfo.setAccessKeyId(getText());
             }
 
             if (name.equals("Secret")) {
@@ -1363,11 +1363,11 @@ public class XmlResponsesSaxParser {
             if (in("BucketLoggingStatus", "LoggingEnabled")) {
                 if (name.equals("TargetBucket")) {
                     bucketLoggingConfiguration
-                        .setDestinationBucketName(getText());
+                            .setDestinationBucketName(getText());
 
                 } else if (name.equals("TargetPrefix")) {
                     bucketLoggingConfiguration
-                        .setLogFilePrefix(getText());
+                            .setLogFilePrefix(getText());
                 }
             }
         }
@@ -1663,7 +1663,7 @@ public class XmlResponsesSaxParser {
                         || name.equals("DeleteMarker")) {
 
                     versionListing.getVersionSummaries()
-                        .add(currentVersionSummary);
+                            .add(currentVersionSummary);
 
                     currentVersionSummary = null;
                 }
@@ -1673,8 +1673,8 @@ public class XmlResponsesSaxParser {
                 if (name.equals("Prefix")) {
                     final String commonPrefix = checkForEmptyString(getText());
                     versionListing.getCommonPrefixes()
-                        .add(shouldSDKDecodeResponse ?
-                                SdkHttpUtils.urlDecode(commonPrefix) : commonPrefix);
+                            .add(shouldSDKDecodeResponse ?
+                                    SdkHttpUtils.urlDecode(commonPrefix) : commonPrefix);
                 }
             }
 
@@ -2236,7 +2236,7 @@ public class XmlResponsesSaxParser {
             }
 
             else if (in("ListMultipartUploadsResult", "Upload", "Owner")
-                  || in("ListMultipartUploadsResult", "Upload", "Initiator")) {
+                    || in("ListMultipartUploadsResult", "Upload", "Initiator")) {
 
                 if (name.equals("ID")) {
                     currentOwner.setId(checkForEmptyString(getText()));
@@ -2362,7 +2362,7 @@ public class XmlResponsesSaxParser {
             }
 
             else if (in("ListPartsResult", "Owner")
-                  || in("ListPartsResult", "Initiator")) {
+                    || in("ListPartsResult", "Initiator")) {
 
                 if (name.equals("ID")) {
                     currentOwner.setId(checkForEmptyString(getText()));
@@ -2460,7 +2460,7 @@ public class XmlResponsesSaxParser {
         private static final String REPLICA_KMS_KEY_ID = "ReplicaKmsKeyID";
         private static final String SOURCE_SELECTION_CRITERIA = "SourceSelectionCriteria";
         private static final String SSE_KMS_ENCRYPTED_OBJECTS = "SseKmsEncryptedObjects";
-        // IBM unsupported         
+        // IBM unsupported
         // private static final String REPLICA_MODIFICATIONS = "ReplicaModifications";
 
         public BucketReplicationConfiguration getConfiguration() {
@@ -2469,7 +2469,7 @@ public class XmlResponsesSaxParser {
 
         @Override
         protected void doStartElement(String uri, String name, String qName,
-                Attributes attrs) {
+                                      Attributes attrs) {
 
             if (in(REPLICATION_CONFIG)) {
                 if (name.equals(RULE)) {
@@ -2478,41 +2478,41 @@ public class XmlResponsesSaxParser {
             } else if (in(REPLICATION_CONFIG, RULE)) {
                 if (name.equals(DESTINATION)) {
                     destinationConfig = new ReplicationDestinationConfig();
-                // IBM Unsupported
-                // } else if (name.equals(SOURCE_SELECTION_CRITERIA)) {
-                //    sourceSelectionCriteria = new SourceSelectionCriteria();
-                // } else if (name.equals(EXISTING_OBJECT_REPLICATION)) {
-                //     existingObjectReplication = new ExistingObjectReplication();                    
+                    // IBM Unsupported
+                    // } else if (name.equals(SOURCE_SELECTION_CRITERIA)) {
+                    //    sourceSelectionCriteria = new SourceSelectionCriteria();
+                    // } else if (name.equals(EXISTING_OBJECT_REPLICATION)) {
+                    //     existingObjectReplication = new ExistingObjectReplication();
                 } else if (name.equals(DELETE_MARKER_REPLICATION)) {
-                   deleteMarkerReplication = new DeleteMarkerReplication();
+                    deleteMarkerReplication = new DeleteMarkerReplication();
                 } else if (name.equals(FILTER)) {
-                   currentFilter = new ReplicationFilter();
-               }
-            // IBM Unsupported
-            // } else if (in(REPLICATION_CONFIG, RULE, DESTINATION)) {
-            //     if (name.equals(ACCESS_CONTROL_TRANSLATION)) {
-            //         accessControlTranslation = new AccessControlTranslation();
-            //     } else if (name.equals(ENCRYPTION_CONFIGURATION)) {
-            //         encryptionConfiguration = new EncryptionConfiguration();
-            //     } else if (name.equals(REPLICATION_TIME)) {
-            //         replicationTime = new ReplicationTime();
-            //     } else if (name.equals(METRICS)) {
-            //         metrics = new Metrics();
-            //     }
-            // } else if (in(REPLICATION_CONFIG, RULE, DESTINATION, REPLICATION_TIME)) {
-            //     if (name.equals(TIME)) {
-            //         replicationTime.setTime(new ReplicationTimeValue());
-            //     }
-            // } else if (in(REPLICATION_CONFIG, RULE, DESTINATION, METRICS)) {
-            //     if (name.equals(EVENT_THRESHOLD)) {
-            //         metrics.setEventThreshold(new ReplicationTimeValue());
-            //     }
-            // } else if (in(REPLICATION_CONFIG, RULE, SOURCE_SELECTION_CRITERIA)) {
-            //     if (name.equals(SSE_KMS_ENCRYPTED_OBJECTS)) {
-            //         sseKmsEncryptedObjects = new SseKmsEncryptedObjects();
-            //     } else if (name.equals(REPLICA_MODIFICATIONS)) {
-            //         replicaModifications = new ReplicaModifications();
-            //     }
+                    currentFilter = new ReplicationFilter();
+                }
+                // IBM Unsupported
+                // } else if (in(REPLICATION_CONFIG, RULE, DESTINATION)) {
+                //     if (name.equals(ACCESS_CONTROL_TRANSLATION)) {
+                //         accessControlTranslation = new AccessControlTranslation();
+                //     } else if (name.equals(ENCRYPTION_CONFIGURATION)) {
+                //         encryptionConfiguration = new EncryptionConfiguration();
+                //     } else if (name.equals(REPLICATION_TIME)) {
+                //         replicationTime = new ReplicationTime();
+                //     } else if (name.equals(METRICS)) {
+                //         metrics = new Metrics();
+                //     }
+                // } else if (in(REPLICATION_CONFIG, RULE, DESTINATION, REPLICATION_TIME)) {
+                //     if (name.equals(TIME)) {
+                //         replicationTime.setTime(new ReplicationTimeValue());
+                //     }
+                // } else if (in(REPLICATION_CONFIG, RULE, DESTINATION, METRICS)) {
+                //     if (name.equals(EVENT_THRESHOLD)) {
+                //         metrics.setEventThreshold(new ReplicationTimeValue());
+                //     }
+                // } else if (in(REPLICATION_CONFIG, RULE, SOURCE_SELECTION_CRITERIA)) {
+                //     if (name.equals(SSE_KMS_ENCRYPTED_OBJECTS)) {
+                //         sseKmsEncryptedObjects = new SseKmsEncryptedObjects();
+                //     } else if (name.equals(REPLICA_MODIFICATIONS)) {
+                //         replicaModifications = new ReplicaModifications();
+                //     }
             } else if (in(REPLICATION_CONFIG, RULE, FILTER)) {
                 if (name.equals(AND)) {
                     andOperandsList = new ArrayList<ReplicationFilterPredicate>();
@@ -2534,7 +2534,7 @@ public class XmlResponsesSaxParser {
 
                     deleteMarkerReplication = null;
                     destinationConfig = null;
-                    //IBM unsupported  
+                    //IBM unsupported
                     // sseKmsEncryptedObjects = null;
                     // accessControlTranslation = null;
                     // encryptionConfiguration = null;
@@ -2549,14 +2549,14 @@ public class XmlResponsesSaxParser {
                     currentRule.setPrefix(getText());
                 } else if (name.equals(PRIORITY)) {
                     currentRule.setPriority(Integer.valueOf(getText()));
-                // IBM Unsupported
-                // } else if (name.equals(EXISTING_OBJECT_REPLICATION)){
-                //     currentRule.setExistingObjectReplication(existingObjectReplication);
+                    // IBM Unsupported
+                    // } else if (name.equals(EXISTING_OBJECT_REPLICATION)){
+                    //     currentRule.setExistingObjectReplication(existingObjectReplication);
                 } else if (name.equals(DELETE_MARKER_REPLICATION)) {
                     currentRule.setDeleteMarkerReplication(deleteMarkerReplication);
-                // IBM unsupported  
-                // } else if (name.equals(SOURCE_SELECTION_CRITERIA)) {
-                // currentRule.setSourceSelectionCriteria(sourceSelectionCriteria);
+                    // IBM unsupported
+                    // } else if (name.equals(SOURCE_SELECTION_CRITERIA)) {
+                    // currentRule.setSourceSelectionCriteria(sourceSelectionCriteria);
                 } else if (name.equals(FILTER)) {
                     currentRule.setFilter(currentFilter);
                     currentFilter = null;
@@ -2599,25 +2599,25 @@ public class XmlResponsesSaxParser {
                 } else if (name.equals(TAG_VALUE)) {
                     currentTagValue = getText();
                 }
-            // IBM unsupported  
-            //    } else if (in(REPLICATION_CONFIG, RULE, SOURCE_SELECTION_CRITERIA)) {
-            //        if (name.equals(SSE_KMS_ENCRYPTED_OBJECTS)) {
-            //            sourceSelectionCriteria.setSseKmsEncryptedObjects(sseKmsEncryptedObjects);
-            //        } else if (name.equals(REPLICA_MODIFICATIONS)) {
-            //            sourceSelectionCriteria.setReplicaModifications(replicaModifications);
-            //        }
-            //    } else if (in(REPLICATION_CONFIG, RULE, SOURCE_SELECTION_CRITERIA, SSE_KMS_ENCRYPTED_OBJECTS)) {
-            //        if (name.equals(STATUS)) {
-            //            sseKmsEncryptedObjects.setStatus(getText());
-            //        }
-            //    } else if (in(REPLICATION_CONFIG, RULE, SOURCE_SELECTION_CRITERIA, REPLICA_MODIFICATIONS)) {
-            //        if (name.equals(STATUS)) {
-            //            replicaModifications.setStatus(getText());
-            //        }
-            // } else if (in(REPLICATION_CONFIG, RULE, EXISTING_OBJECT_REPLICATION)) {
-            //     if (name.equals(STATUS)) {
-            //         existingObjectReplication.setStatus(getText());
-            //     }
+                // IBM unsupported
+                //    } else if (in(REPLICATION_CONFIG, RULE, SOURCE_SELECTION_CRITERIA)) {
+                //        if (name.equals(SSE_KMS_ENCRYPTED_OBJECTS)) {
+                //            sourceSelectionCriteria.setSseKmsEncryptedObjects(sseKmsEncryptedObjects);
+                //        } else if (name.equals(REPLICA_MODIFICATIONS)) {
+                //            sourceSelectionCriteria.setReplicaModifications(replicaModifications);
+                //        }
+                //    } else if (in(REPLICATION_CONFIG, RULE, SOURCE_SELECTION_CRITERIA, SSE_KMS_ENCRYPTED_OBJECTS)) {
+                //        if (name.equals(STATUS)) {
+                //            sseKmsEncryptedObjects.setStatus(getText());
+                //        }
+                //    } else if (in(REPLICATION_CONFIG, RULE, SOURCE_SELECTION_CRITERIA, REPLICA_MODIFICATIONS)) {
+                //        if (name.equals(STATUS)) {
+                //            replicaModifications.setStatus(getText());
+                //        }
+                // } else if (in(REPLICATION_CONFIG, RULE, EXISTING_OBJECT_REPLICATION)) {
+                //     if (name.equals(STATUS)) {
+                //         existingObjectReplication.setStatus(getText());
+                //     }
             } else if (in(REPLICATION_CONFIG, RULE, DELETE_MARKER_REPLICATION)) {
                 if (name.equals(STATUS)) {
                     deleteMarkerReplication.setStatus(getText());
@@ -2640,14 +2640,14 @@ public class XmlResponsesSaxParser {
                 // } else if (name.equals(METRICS)) {
                 //     destinationConfig.setMetrics(metrics);
                 // }
-            // } else if (in(REPLICATION_CONFIG, RULE, DESTINATION, ACCESS_CONTROL_TRANSLATION)) {
-            //     if (name.equals(OWNER)) {
-            //         accessControlTranslation.setOwner(getText());
-            //     }
-            // } else if (in(REPLICATION_CONFIG, RULE, DESTINATION, ENCRYPTION_CONFIGURATION)) {
-            //     if (name.equals(REPLICA_KMS_KEY_ID)) {
-            //         encryptionConfiguration.setReplicaKmsKeyID(getText());
-            //     }
+                // } else if (in(REPLICATION_CONFIG, RULE, DESTINATION, ACCESS_CONTROL_TRANSLATION)) {
+                //     if (name.equals(OWNER)) {
+                //         accessControlTranslation.setOwner(getText());
+                //     }
+                // } else if (in(REPLICATION_CONFIG, RULE, DESTINATION, ENCRYPTION_CONFIGURATION)) {
+                //     if (name.equals(REPLICA_KMS_KEY_ID)) {
+                //         encryptionConfiguration.setReplicaKmsKeyID(getText());
+                //     }
             }
             // } else if (in(REPLICATION_CONFIG, RULE, DESTINATION, REPLICATION_TIME)) {
             //     if (name.equals(STATUS)) {
@@ -2702,7 +2702,7 @@ public class XmlResponsesSaxParser {
             if (in("Tagging")) {
                 if (name.equals("TagSet")) {
                     configuration.getAllTagSets()
-                        .add(new TagSet(currentTagSet));
+                            .add(new TagSet(currentTagSet));
                     currentTagSet = null;
                 }
             }
@@ -2895,75 +2895,75 @@ public class XmlResponsesSaxParser {
 
     /**
      * HTTP/1.1 200 OK
-    x-amz-id-2: Uuag1LuByRx9e6j5Onimru9pO4ZVKnJ2Qz7/C1NPcfTWAtRPfTaOFg==
-    x-amz-request-id: 656c76696e6727732072657175657374
-    Date: Tue, 20 Sep 2012 20:34:56 GMT
-    Content-Length: xxx
-    Connection: keep-alive
-    Server: AmazonS3
+     x-amz-id-2: Uuag1LuByRx9e6j5Onimru9pO4ZVKnJ2Qz7/C1NPcfTWAtRPfTaOFg==
+     x-amz-request-id: 656c76696e6727732072657175657374
+     Date: Tue, 20 Sep 2012 20:34:56 GMT
+     Content-Length: xxx
+     Connection: keep-alive
+     Server: AmazonS3
 
-  <LifecycleConfiguration>
-      <Rule>
-          <ID>logs-rule</ID>
-          <Prefix>logs/</Prefix>
-          <Status>Enabled</Status>
-          <Filter>
-                <Prefix>logs/</Prefix>
-                <Tag>
-                    <Key>key1</Key>
-                    <Value>value1</Value>
-                </Tag>
-                <And>
-                    <Prefix>logs/</Prefix>
-                    <Tag>
-                        <Key>key1</Key>
-                        <Value>value1</Value>
-                    </Tag>
-                    <Tag>
-                        <Key>key1</Key>
-                        <Value>value1</Value>
-                    </Tag>
-                </And>
-          </Filter>
-          <Transition>
-              <Days>30</Days>
-              <StorageClass>STANDARD_IA</StorageClass>
-          </Transition>
-          <Transition>
-              <Days>90</Days>
-              <StorageClass>GLACIER</StorageClass>
-          </Transition>
-          <Expiration>
-              <Days>365</Days>
-          </Expiration>
-          <NoncurrentVersionTransition>
-              <NoncurrentDays>7</NoncurrentDays>
-              <StorageClass>STANDARD_IA</StorageClass>
-          </NoncurrentVersionTransition>
-          <NoncurrentVersionTransition>
-              <NoncurrentDays>14</NoncurrentDays>
-              <StorageClass>GLACIER</StorageClass>
-          </NoncurrentVersionTransition>
-          <NoncurrentVersionExpiration>
-              <NoncurrentDays>365</NoncurrentDays>
-          </NoncurrentVersionExpiration>
+     <LifecycleConfiguration>
+     <Rule>
+     <ID>logs-rule</ID>
+     <Prefix>logs/</Prefix>
+     <Status>Enabled</Status>
+     <Filter>
+     <Prefix>logs/</Prefix>
+     <Tag>
+     <Key>key1</Key>
+     <Value>value1</Value>
+     </Tag>
+     <And>
+     <Prefix>logs/</Prefix>
+     <Tag>
+     <Key>key1</Key>
+     <Value>value1</Value>
+     </Tag>
+     <Tag>
+     <Key>key1</Key>
+     <Value>value1</Value>
+     </Tag>
+     </And>
+     </Filter>
+     <Transition>
+     <Days>30</Days>
+     <StorageClass>STANDARD_IA</StorageClass>
+     </Transition>
+     <Transition>
+     <Days>90</Days>
+     <StorageClass>GLACIER</StorageClass>
+     </Transition>
+     <Expiration>
+     <Days>365</Days>
+     </Expiration>
+     <NoncurrentVersionTransition>
+     <NoncurrentDays>7</NoncurrentDays>
+     <StorageClass>STANDARD_IA</StorageClass>
+     </NoncurrentVersionTransition>
+     <NoncurrentVersionTransition>
+     <NoncurrentDays>14</NoncurrentDays>
+     <StorageClass>GLACIER</StorageClass>
+     </NoncurrentVersionTransition>
+     <NoncurrentVersionExpiration>
+     <NoncurrentDays>365</NoncurrentDays>
+     </NoncurrentVersionExpiration>
      </Rule>
      <Rule>
-         <ID>image-rule</ID>
-         <Prefix>image/</Prefix>
-         <Status>Enabled</Status>
-         <Transition>
-             <Date>2012-12-31T00:00:00.000Z</Date>
-             <StorageClass>GLACIER</StorageClass>
-         </Transition>
-         <Expiration>
-             <Date>2020-12-31T00:00:00.000Z</Date>
-         </Expiration>
-        <AbortIncompleteMultipartUpload>
-            <DaysAfterInitiation>10</DaysAfterInitiation>
-        </AbortIncompleteMultipartUpload>
+     <ID>image-rule</ID>
+     <Prefix>image/</Prefix>
+     <Status>Enabled</Status>
+     <Transition>
+     <Date>2012-12-31T00:00:00.000Z</Date>
+     <StorageClass>GLACIER</StorageClass>
+     </Transition>
+     <Expiration>
+     <Date>2020-12-31T00:00:00.000Z</Date>
+     </Expiration>
+     <AbortIncompleteMultipartUpload>
+     <DaysAfterInitiation>10</DaysAfterInitiation>
+     </AbortIncompleteMultipartUpload>
      </Rule>
-  </LifecycleConfiguration>
+     </LifecycleConfiguration>
      */
     public static class BucketLifecycleConfigurationHandler extends AbstractHandler {
 
@@ -3320,7 +3320,7 @@ public class XmlResponsesSaxParser {
         public ListLegalHoldsResult getlegalHolds() {
             return listLegalHoldsResult;
         }
-        
+
         LegalHold newLegalHold = null;
 
         @Override
@@ -3360,7 +3360,7 @@ public class XmlResponsesSaxParser {
                 if (name.equals("Date")) {
                     newLegalHold.setDate(ServiceUtils.parseRfc822Date(getText()));
                 }
-            } 
+            }
         }
     }
 
@@ -3443,7 +3443,7 @@ public class XmlResponsesSaxParser {
                     filter.setPredicate(new MetricsTagPredicate(new Tag(currentTagKey, currentTagValue)));
                     currentTagKey = null;
                     currentTagValue = null;
-//IBM unsupported                    
+//IBM unsupported
 //                } else if (name.equals("AccessPointArn")) {
 //                    filter.setPredicate(new MetricsAccessPointArnPredicate(getText()));
                 } else if (name.equals("And")) {
@@ -3468,7 +3468,7 @@ public class XmlResponsesSaxParser {
                             new Tag(currentTagKey, currentTagValue)));
                     currentTagKey = null;
                     currentTagValue = null;
-//IBM unsupported                    
+//IBM unsupported
 //                } else if (name.equals("AccessPointArn")) {
 //                    andOperandsList.add(new MetricsAccessPointArnPredicate(getText()));
                 }
@@ -3600,7 +3600,7 @@ public class XmlResponsesSaxParser {
                     andOperandsList.add(new MetricsTagPredicate(new Tag(currentTagKey, currentTagValue)));
                     currentTagKey = null;
                     currentTagValue = null;
-//IBM unsupported                    
+//IBM unsupported
 //                } else if (name.equals("AccessPointArn")) {
 //                    andOperandsList.add(new MetricsAccessPointArnPredicate(getText()));
                 }
@@ -4562,67 +4562,67 @@ public class XmlResponsesSaxParser {
             return result.withObjectLockConfiguration(objectLockConfiguration);
         }
 
-       @Override
-       protected void doStartElement(String uri, String name, String qName, Attributes attrs) {
-           if (in("ObjectLockConfiguration")) {
-               if ("Rule".equals(name)) {
-                   rule = new ObjectLockRule();
-               }
-           } else if (in("ObjectLockConfiguration", "Rule")) {
-               if ("DefaultRetention".equals(name)) {
-                   defaultRetention = new DefaultRetention();
-               }
-           }
-       }
+        @Override
+        protected void doStartElement(String uri, String name, String qName, Attributes attrs) {
+            if (in("ObjectLockConfiguration")) {
+                if ("Rule".equals(name)) {
+                    rule = new ObjectLockRule();
+                }
+            } else if (in("ObjectLockConfiguration", "Rule")) {
+                if ("DefaultRetention".equals(name)) {
+                    defaultRetention = new DefaultRetention();
+                }
+            }
+        }
 
-       @Override
-       protected void doEndElement(String uri, String name, String qName) {
-           if (in("ObjectLockConfiguration")) {
-               if ("ObjectLockEnabled".equals(name)) {
-                   objectLockConfiguration.setObjectLockEnabled(getText());
-               } else if ("Rule".equals(name)) {
-                   objectLockConfiguration.setRule(rule);
-               }
-           } else if (in("ObjectLockConfiguration", "Rule")) {
-               if ("DefaultRetention".equals(name)) {
-                   rule.setDefaultRetention(defaultRetention);
-               }
-           } else if (in("ObjectLockConfiguration", "Rule", "DefaultRetention")) {
-               if ("Mode".equals(name)) {
-                   defaultRetention.setMode(getText());
-               } else if ("Days".equals(name)) {
-                   defaultRetention.setDays(Integer.parseInt(getText()));
-               } else if ("Years".equals(name)) {
-                   defaultRetention.setYears(Integer.parseInt(getText()));
-               }
-           }
-       }
-   }
+        @Override
+        protected void doEndElement(String uri, String name, String qName) {
+            if (in("ObjectLockConfiguration")) {
+                if ("ObjectLockEnabled".equals(name)) {
+                    objectLockConfiguration.setObjectLockEnabled(getText());
+                } else if ("Rule".equals(name)) {
+                    objectLockConfiguration.setRule(rule);
+                }
+            } else if (in("ObjectLockConfiguration", "Rule")) {
+                if ("DefaultRetention".equals(name)) {
+                    rule.setDefaultRetention(defaultRetention);
+                }
+            } else if (in("ObjectLockConfiguration", "Rule", "DefaultRetention")) {
+                if ("Mode".equals(name)) {
+                    defaultRetention.setMode(getText());
+                } else if ("Days".equals(name)) {
+                    defaultRetention.setDays(Integer.parseInt(getText()));
+                } else if ("Years".equals(name)) {
+                    defaultRetention.setYears(Integer.parseInt(getText()));
+                }
+            }
+        }
+    }
 
-   public static class GetObjectRetentionResponseHandler extends AbstractHandler {
-       private GetObjectRetentionResult result = new GetObjectRetentionResult();
+    public static class GetObjectRetentionResponseHandler extends AbstractHandler {
+        private GetObjectRetentionResult result = new GetObjectRetentionResult();
 
-       private ObjectLockRetention retention = new ObjectLockRetention();
+        private ObjectLockRetention retention = new ObjectLockRetention();
 
-       public GetObjectRetentionResult getResult() {
-           return result.withRetention(retention);
-       }
+        public GetObjectRetentionResult getResult() {
+            return result.withRetention(retention);
+        }
 
-       @Override
-       protected void doStartElement(String uri, String name, String qName, Attributes attrs) {
-       }
+        @Override
+        protected void doStartElement(String uri, String name, String qName, Attributes attrs) {
+        }
 
-       @Override
-       protected void doEndElement(String uri, String name, String qName) {
-           if (in("Retention")) {
-               if ("Mode".equals(name)) {
-                   retention.setMode(getText());
-               } else if ("RetainUntilDate".equals(name)) {
-                   retention.setRetainUntilDate(ServiceUtils.parseIso8601Date(getText()));
-               }
-           }
-       }
-   }
+        @Override
+        protected void doEndElement(String uri, String name, String qName) {
+            if (in("Retention")) {
+                if ("Mode".equals(name)) {
+                    retention.setMode(getText());
+                } else if ("RetainUntilDate".equals(name)) {
+                    retention.setRetainUntilDate(ServiceUtils.parseIso8601Date(getText()));
+                }
+            }
+        }
+    }
 
     private static String findAttributeValue(
             String qnameToFind,

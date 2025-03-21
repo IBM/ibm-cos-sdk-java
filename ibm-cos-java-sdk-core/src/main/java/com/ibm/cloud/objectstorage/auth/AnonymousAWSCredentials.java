@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2023 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2010-2024 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -23,6 +23,15 @@ package com.ibm.cloud.objectstorage.auth;
  */
 public class AnonymousAWSCredentials implements AWSCredentials {
 
+    private final String providerName;
+
+    public AnonymousAWSCredentials() {
+        this(null);
+    }
+    public AnonymousAWSCredentials(String providerName) {
+        this.providerName = providerName;
+    }
+
     /* (non-Javadoc)
      * @see com.ibm.cloud.objectstorage.auth.AWSCredentials#getAWSAccessKeyId()
      */
@@ -35,5 +44,9 @@ public class AnonymousAWSCredentials implements AWSCredentials {
      */
     public String getAWSSecretKey() {
         return null;
+    }
+
+    public String getProviderName() {
+        return providerName;
     }
 }

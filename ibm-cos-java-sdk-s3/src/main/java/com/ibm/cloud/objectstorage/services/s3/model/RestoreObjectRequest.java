@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2023 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2010-2024 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -88,7 +88,18 @@ public class RestoreObjectRequest extends AmazonWebServiceRequest implements Ser
      */
     private GlacierJobParameters glacierJobParameters;
 
-    //IBM unsupported
+    /**
+     * Describes the parameters for Select job types.
+     */
+//    IBM Unsupported
+//    private SelectParameters selectParameters;
+
+    /**
+     * Describes the location where the restore job's output is stored.
+     */
+//    IBM Unsupported
+//    private OutputLocation outputLocation;
+	//IBM unsupported
     //private String expectedBucketOwner;
 
     /**
@@ -156,7 +167,7 @@ public class RestoreObjectRequest extends AmazonWebServiceRequest implements Ser
         this.expirationInDays = expirationInDays;
     }
 
-//IBM unsupported
+//    IBM unsupported
 //    public String getExpectedBucketOwner() {
 //        return expectedBucketOwner;
 //    }

@@ -2008,7 +2008,8 @@ public class AmazonS3Client extends AmazonWebServiceClient implements AmazonS3 {
         result.setExpirationTimeRuleId(metadata.getExpirationTimeRuleId());
         result.setETag(metadata.getETag());
         result.setMetadata(metadata);
-        result.setRequesterCharged(metadata.isRequesterCharged());
+        //IBM Unsupported
+        //result.setRequesterCharged(metadata.isRequesterCharged());
         //IBM does not support SSE-KMS
         //result.setBucketKeyEnabled(metadata.getBucketKeyEnabled());
         return result;
@@ -2102,8 +2103,7 @@ public class AmazonS3Client extends AmazonWebServiceClient implements AmazonS3 {
                     // header handlers
                     new ServerSideEncryptionHeaderHandler<CopyObjectResultHandler>(),
                     new S3VersionHeaderHandler<CopyObjectResultHandler>(),
-                    new ObjectExpirationHeaderHandler<CopyObjectResultHandler>(),
-                    new S3RequesterChargedHeaderHandler<CopyObjectResultHandler>());
+                    new ObjectExpirationHeaderHandler<CopyObjectResultHandler>());
             copyObjectResultHandler = invoke(request, handler, destinationBucketName, destinationKey);
         } catch (AmazonS3Exception ase) {
             /*
@@ -2163,7 +2163,6 @@ public class AmazonS3Client extends AmazonWebServiceClient implements AmazonS3 {
         //copyObjectResult.setBucketKeyEnabled(copyObjectResultHandler.getBucketKeyEnabled());
         copyObjectResult.setExpirationTime(copyObjectResultHandler.getExpirationTime());
         copyObjectResult.setExpirationTimeRuleId(copyObjectResultHandler.getExpirationTimeRuleId());
-        copyObjectResult.setRequesterCharged(copyObjectResultHandler.isRequesterCharged());
 
         return copyObjectResult;
     }
@@ -3712,8 +3711,7 @@ public class AmazonS3Client extends AmazonWebServiceClient implements AmazonS3 {
                     // header handlers
                     new ServerSideEncryptionHeaderHandler<CompleteMultipartUploadHandler>(),
                     new ObjectExpirationHeaderHandler<CompleteMultipartUploadHandler>(),
-                    new S3VersionHeaderHandler<CompleteMultipartUploadHandler>(),
-                    new S3RequesterChargedHeaderHandler<CompleteMultipartUploadHandler>());
+                    new S3VersionHeaderHandler<CompleteMultipartUploadHandler>());
             handler = invoke(request, responseHandler, bucketName, key);
             if (handler.getCompleteMultipartUploadResult() != null) {
                 return handler.getCompleteMultipartUploadResult();

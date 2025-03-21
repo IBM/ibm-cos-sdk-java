@@ -23,8 +23,11 @@ import com.ibm.cloud.objectstorage.http.client.ConnectionManagerFactory;
 import com.ibm.cloud.objectstorage.http.conn.SdkPlainSocketFactory;
 import com.ibm.cloud.objectstorage.http.conn.ssl.SdkTLSSocketFactory;
 import com.ibm.cloud.objectstorage.http.settings.HttpClientSettings;
+import com.ibm.cloud.objectstorage.internal.InputShutdownCheckingSslSocket;
 import com.ibm.cloud.objectstorage.internal.SdkSSLContext;
 import javax.net.ssl.KeyManager;
+
+import com.ibm.cloud.objectstorage.internal.SdkSSLSocket;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpHost;
@@ -39,8 +42,8 @@ import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.impl.conn.DefaultSchemePortResolver;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 import org.apache.http.protocol.HttpContext;
-
 import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.KeyManager;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSocket;
 import javax.net.ssl.TrustManager;
@@ -186,6 +189,7 @@ public class ApacheConnectionManagerFactory implements
 
             SSLSocket sslsock = (SSLSocket) ((sock != null) ? sock :
                     createSocket(context));
+            sslsock = new InputShutdownCheckingSslSocket(new SdkSSLSocket(sslsock));
             if (localAddress != null) sslsock.bind(localAddress);
 
 

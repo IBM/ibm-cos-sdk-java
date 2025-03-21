@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2023 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2019-2024 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"). You may not use this file except in compliance with
  * the License. A copy of the License is located at
@@ -14,7 +14,6 @@
 /**
  * <fullname>Key Management Service</fullname>
  * <p>
- * <b>***The KMS feature is not supported on IBM Cloud Object Storage</b>
  * Key Management Service (KMS) is an encryption and key management web service. This guide describes the KMS operations
  * that you can call programmatically. For general information about KMS, see the <a
  * href="https://docs.aws.amazon.com/kms/latest/developerguide/"> <i>Key Management Service Developer Guide</i> </a>.
@@ -37,9 +36,16 @@
  * We recommend that you use the Amazon Web Services SDKs to make programmatic API calls to KMS.
  * </p>
  * <p>
- * Clients must support TLS (Transport Layer Security) 1.0. We recommend TLS 1.2. Clients must also support cipher
- * suites with Perfect Forward Secrecy (PFS) such as Ephemeral Diffie-Hellman (DHE) or Elliptic Curve Ephemeral
- * Diffie-Hellman (ECDHE). Most modern systems such as Java 7 and later support these modes.
+ * If you need to use FIPS 140-2 validated cryptographic modules when communicating with Amazon Web Services, use the
+ * FIPS endpoint in your preferred Amazon Web Services Region. For more information about the available FIPS endpoints,
+ * see <a href="https://docs.aws.amazon.com/general/latest/gr/kms.html#kms_region">Service endpoints</a> in the Key
+ * Management Service topic of the <i>Amazon Web Services General Reference</i>.
+ * </p>
+ * <p>
+ * All KMS API calls must be signed and be transmitted using Transport Layer Security (TLS). KMS recommends you always
+ * use the latest supported TLS version. Clients must also support cipher suites with Perfect Forward Secrecy (PFS) such
+ * as Ephemeral Diffie-Hellman (DHE) or Elliptic Curve Ephemeral Diffie-Hellman (ECDHE). Most modern systems such as
+ * Java 7 and later support these modes.
  * </p>
  * <p>
  * <b>Signing Requests</b>

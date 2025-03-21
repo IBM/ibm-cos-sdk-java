@@ -1,5 +1,5 @@
 /*
- * Copyright 2011-2023 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2011-2024 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,8 +29,14 @@ import org.apache.commons.logging.LogFactory;
  *     <li>
  *         If environment variable "AWS_CONTAINER_CREDENTIALS_RELATIVE_URI" is
  *         set (typically on EC2) it is used to hit the metadata service at the following endpoint: http://169.254.170.2
+ *          (ECS). See {@link ContainerCredentialsProvider} for more
+ *           information.
  *     </li>
  *     <li>
+ *         If environment variable "AWS_CONTAINER_CREDENTIALS_FULL_URI" is
+ *         set it is used to hit a metadata service at that URI. See {@link ContainerCredentialsProvider} for more
+ *         information.
+ *     </li>
  *     <li>
  *         If neither of the above environment variables are specified credentials are attempted to be loaded from Amazon EC2
  *         Instance Metadata Service using the {@link InstanceProfileCredentialsProvider}.

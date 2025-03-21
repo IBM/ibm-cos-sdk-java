@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2023 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2010-2024 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Portions copyright 2006-2009 James Murty. Please see LICENSE.txt
  * for applicable license terms and NOTICE.txt for applicable notices.
@@ -18,9 +18,6 @@
 package com.ibm.cloud.objectstorage.services.s3.model;
 import java.io.Serializable;
 
-import com.ibm.cloud.objectstorage.services.s3.AmazonS3;
-import com.ibm.cloud.objectstorage.services.s3.AmazonS3Client;
-
 /**
  * <p>
  * Represents bucket logging configuration used to control bucket-based server
@@ -36,13 +33,6 @@ import com.ibm.cloud.objectstorage.services.s3.AmazonS3Client;
  * this object represents a <b>disabled</b> logging configuration (as indicated by
  * {@link #isLoggingEnabled()}).
  * <p>
- * Server access logging can be enabled or disabled with
- * {@link AmazonS3Client#setBucketLoggingConfiguration(SetBucketLoggingConfigurationRequest)}
- * and the current status of server access logging for a bucket can be retrieved
- * through {@link AmazonS3Client#getBucketLoggingConfiguration(String)}
- *
- * @see AmazonS3#getBucketLoggingConfiguration(String)
- * @see AmazonS3#setBucketLoggingConfiguration(SetBucketLoggingConfigurationRequest)
  */
 public class BucketLoggingConfiguration implements Serializable {
     private String destinationBucketName = null;
@@ -52,10 +42,6 @@ public class BucketLoggingConfiguration implements Serializable {
      * Creates a new bucket logging configuration, which by default is
      * <b>disabled</b>.
      * <p>
-     * Passing this new object directly to
-     * {@link AmazonS3#setBucketLoggingConfiguration(SetBucketLoggingConfigurationRequest)}
-     * will turn off bucket logging for the specified bucket.
-     * </p>
      */
     public BucketLoggingConfiguration() {}
 

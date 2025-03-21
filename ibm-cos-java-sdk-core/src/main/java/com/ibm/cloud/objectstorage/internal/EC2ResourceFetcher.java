@@ -1,5 +1,5 @@
 /*
- * Copyright 2011-2023 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2011-2024 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -75,6 +75,7 @@ public abstract class EC2ResourceFetcher {
         InputStream inputStream = null;
         Map<String, String> headersToSent = addDefaultHeaders(headers);
         while (true) {
+            InputStream toClose = null;
             try {
                 long start = 0;
                 if (LOG.isDebugEnabled()) {
@@ -86,6 +87,12 @@ public abstract class EC2ResourceFetcher {
                 int statusCode = connection.getResponseCode();
                 if (LOG.isDebugEnabled()) {
                     LOG.debug("Got response code " + statusCode + " from " + method + " " + endpoint);
+                }
+
+                if (statusCode >= 400) {
+                    toClose = connection.getErrorStream();
+                } else {
+                    toClose = connection.getInputStream();
                 }
 
                 if (statusCode == HttpURLConnection.HTTP_OK) {
@@ -114,7 +121,7 @@ public abstract class EC2ResourceFetcher {
                 LOG.debug("An IOException occurred when connecting to service endpoint: " + endpoint + "\n Retrying to connect "
                           + "again.");
             } finally {
-                IOUtils.closeQuietly(inputStream, LOG);
+                IOUtils.closeQuietly(toClose, LOG);
             }
         }
     }

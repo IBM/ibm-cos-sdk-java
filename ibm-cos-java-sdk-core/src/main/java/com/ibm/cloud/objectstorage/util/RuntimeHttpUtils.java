@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2023 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2010-2024 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -20,6 +20,7 @@ import com.ibm.cloud.objectstorage.Request;
 import com.ibm.cloud.objectstorage.SdkClientException;
 import com.ibm.cloud.objectstorage.annotation.SdkProtectedApi;
 
+import com.ibm.cloud.objectstorage.auth.AWSCredentials;
 import com.ibm.cloud.objectstorage.retry.RetryMode;
 import org.apache.http.HttpHost;
 import org.apache.http.HttpResponse;
@@ -50,8 +51,10 @@ public class RuntimeHttpUtils {
     private static final String AWS_EXECUTION_ENV_NAME = "AWS_EXECUTION_ENV";
 
     private static final String RETRY_MODE_PREFIX = "cfg/retry-mode/";
+    private static final String PROVIDER_NAME_PREFIX = "cfg/auth-source#";
 
     private static final String TRACE_ID_ENVIRONMENT_VARIABLE = "_X_AMZN_TRACE_ID";
+    private static final String TRACE_ID_SYSTEM_PROPERTY = "com.ibm.cloud.objectstorage.xray.traceHeader";
     private static final String LAMBDA_FUNCTION_NAME_ENVIRONMENT_VARIABLE = "AWS_LAMBDA_FUNCTION_NAME";
 
 
@@ -115,6 +118,11 @@ public class RuntimeHttpUtils {
     }
 
     public static String getUserAgent(final ClientConfiguration config, final String userAgentMarker) {
+        return getUserAgent(config, userAgentMarker, null);
+    }
+
+    public static String getUserAgent(final ClientConfiguration config, final String userAgentMarker,
+                                      AWSCredentials credentials) {
 
         String userDefinedPrefix = "";
         String userDefinedSuffix = "";
@@ -159,6 +167,14 @@ public class RuntimeHttpUtils {
         } catch (Exception e) {
             // Return an empty string if unable to get environment variable
             return "";
+        }
+    }
+
+    private static String getSystemProperty(String systemProperty) {
+        try {
+            return System.getProperty(systemProperty);
+        } catch (Exception e) {
+            return null;
         }
     }
 
@@ -279,11 +295,18 @@ public class RuntimeHttpUtils {
      */
     public static String getLambdaEnvironmentTraceId() {
         String lambdafunctionName = getEnvironmentVariable(LAMBDA_FUNCTION_NAME_ENVIRONMENT_VARIABLE);
-        String traceId = getEnvironmentVariable(TRACE_ID_ENVIRONMENT_VARIABLE);
-
+        String traceId = traceId();
         if (!StringUtils.isNullOrEmpty(lambdafunctionName) && !StringUtils.isNullOrEmpty(traceId)) {
             return traceId;
         };
         return null;
+    }
+
+    static String traceId() {
+        String traceId = getSystemProperty(TRACE_ID_SYSTEM_PROPERTY);
+        if (traceId == null) {
+            traceId = getEnvironmentVariable(TRACE_ID_ENVIRONMENT_VARIABLE);
+        }
+        return traceId;
     }
 }

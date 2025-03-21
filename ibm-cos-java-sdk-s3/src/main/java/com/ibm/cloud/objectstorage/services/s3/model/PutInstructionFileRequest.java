@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2023 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2014-2024 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -311,13 +311,13 @@ public final class PutInstructionFileRequest extends AmazonWebServiceRequest
      * For more information on Amazon S3 storage classes and available values,
      * see the {@link StorageClass} enumeration.
      * </p>
-     * 
+     *
      * @param storageClass
      *            The storage class to use when storing the new object.
-     * 
+     *
      * @return This {@link PutObjectRequest}, enabling additional method calls
      *         to be chained together.
-     * 
+     *
      * @see #getStorageClass()
      * @see #setStorageClass(StorageClass)
      * @see #setStorageClass(String)

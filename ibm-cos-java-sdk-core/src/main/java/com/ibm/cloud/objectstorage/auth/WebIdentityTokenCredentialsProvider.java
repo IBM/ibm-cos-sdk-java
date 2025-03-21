@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2023 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2010-2024 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -21,6 +21,11 @@ import static com.ibm.cloud.objectstorage.SDKGlobalConfiguration.AWS_ROLE_ARN_EN
 import static com.ibm.cloud.objectstorage.SDKGlobalConfiguration.AWS_ROLE_SESSION_NAME_ENV_VAR;
 import static com.ibm.cloud.objectstorage.SDKGlobalConfiguration.AWS_WEB_IDENTITY_ENV_VAR;
 
+/**
+ * <p>
+ * See <a href="https://docs.aws.amazon.com/sdk-for-java/latest/developer-guide/migration-client-credentials.html">Migration Guide</a>
+ * for more information.
+ */
 public class WebIdentityTokenCredentialsProvider implements AWSCredentialsProvider {
 
     private final AWSCredentialsProvider credentialsProvider;

@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2023 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2010-2024 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -14,7 +14,12 @@
  */
 package com.ibm.cloud.objectstorage.util;
 
+import static com.ibm.cloud.objectstorage.util.IOUtils.closeQuietly;
+
+import com.ibm.cloud.objectstorage.annotation.ThreadSafe;
+import com.ibm.cloud.objectstorage.internal.config.InternalConfig;
 import java.io.InputStream;
+import java.net.URL;
 import java.util.Properties;
 import java.util.jar.JarInputStream;
 
@@ -34,6 +39,9 @@ public class VersionInfoUtils {
     /** The AWS SDK version info file with SDK versioning info */
     static final String VERSION_INFO_FILE = "/com/ibm/cloud/objectstorage/sdk/versionInfo.properties";
 
+    private static final String PRINT_LOCATION_ENV_VAR = "AWS_JAVA_V1_PRINT_LOCATION";
+    private static final String PRINT_LOCATION_SYS_PROP = "aws.java.v1.printLocation";
+
     /** SDK version info */
     private static volatile String version;
 
@@ -47,6 +55,32 @@ public class VersionInfoUtils {
     private static final Log log = LogFactory.getLog(VersionInfoUtils.class);
 
     private static final String UNKNOWN = "unknown";
+
+    static {
+        printSdkLocation();
+    }
+
+    private static void printSdkLocation() {
+        String printJarEnvVar = System.getenv(PRINT_LOCATION_ENV_VAR);
+        String printJarSysProp = System.getProperty(PRINT_LOCATION_SYS_PROP);
+        boolean printJar = isTrue(printJarEnvVar) || isTrue(printJarSysProp);
+
+        if (printJar) {
+            try {
+                URL jarLocation = VersionInfoUtils.class.getProtectionDomain().getCodeSource().getLocation();
+                String message =
+                    "The AWS SDK for Java 1.x core runtime is located at " + jarLocation + "\n"
+                    + "This message was generated because the " + PRINT_LOCATION_ENV_VAR + " environment variable or "
+                    + PRINT_LOCATION_SYS_PROP + " system property were set to 'true'.";
+                log.info(message);
+            } catch (SecurityException e) {
+                String message =
+                    "The AWS SDK for Java 1.x core runtime location could not be printed, because a "
+                    + "security manager did not allow it.";
+                log.error(message, e);
+            }
+        }
+    }
 
     /**
      * Returns the current version for the AWS SDK in which this class is
@@ -297,5 +331,9 @@ public class VersionInfoUtils {
         if (suffix != null && !suffix.isEmpty()) {
             prefix.append(separator).append(suffix);
         }
+    }
+
+    private static boolean isTrue(String string) {
+        return Boolean.parseBoolean(string);
     }
 }

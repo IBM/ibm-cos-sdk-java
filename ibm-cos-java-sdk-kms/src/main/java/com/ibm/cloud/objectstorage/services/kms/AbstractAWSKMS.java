@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2023 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2019-2024 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"). You may not use this file except in compliance with
  * the License. A copy of the License is located at
@@ -15,14 +15,13 @@ package com.ibm.cloud.objectstorage.services.kms;
 import javax.annotation.Generated;
 
 import com.ibm.cloud.objectstorage.services.kms.model.*;
-import com.ibm.cloud.objectstorage.*;
 
 /**
  * Abstract implementation of {@code AWSKMS}. Convenient method forms pass through to the corresponding overload that
  * takes a request object, which throws an {@code UnsupportedOperationException}.
  */
 @Generated("com.amazonaws:aws-java-sdk-code-generator")
-public class AbstractAWSKMS implements AWSKMS {
+public abstract class AbstractAWSKMS implements AWSKMS {
 
     protected AbstractAWSKMS() {
     }
@@ -89,8 +88,8 @@ public class AbstractAWSKMS implements AWSKMS {
     // public DeleteCustomKeyStoreResult deleteCustomKeyStore(DeleteCustomKeyStoreRequest request) {
     //     throw new java.lang.UnsupportedOperationException();
     // }
-
-    @Override
+	
+	@Override
     public DeleteImportedKeyMaterialResult deleteImportedKeyMaterial(DeleteImportedKeyMaterialRequest request) {
         throw new java.lang.UnsupportedOperationException();
     }
@@ -313,6 +312,11 @@ public class AbstractAWSKMS implements AWSKMS {
     //     throw new java.lang.UnsupportedOperationException();
     // }
 
+    // @Override
+    // public VerifyMacResult verifyMac(VerifyMacRequest request) {
+    //     throw new java.lang.UnsupportedOperationException();
+    // }
+
     @Override
     public void shutdown() {
         throw new java.lang.UnsupportedOperationException();
@@ -323,4 +327,5 @@ public class AbstractAWSKMS implements AWSKMS {
         throw new java.lang.UnsupportedOperationException();
     }
 
+    public abstract java.util.concurrent.Future<CreateGrantResult> createGrantAsync(CreateGrantRequest request);
 }

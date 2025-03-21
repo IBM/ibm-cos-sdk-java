@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2023 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2019-2024 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"). You may not use this file except in compliance with
  * the License. A copy of the License is located at
@@ -16,7 +16,7 @@ import java.io.Serializable;
 import javax.annotation.Generated;
 
 /**
- *
+ * 
  * @see <a href="http://docs.aws.amazon.com/goto/WebAPI/kms-2014-11-01/GenerateDataKey" target="_top">AWS API
  *      Documentation</a>
  */
@@ -103,7 +103,7 @@ public class GenerateDataKeyResult extends com.ibm.cloud.objectstorage.AmazonWeb
      * Doing so will ensure that anyone else using the {@code ByteBuffer} will not be affected by changes to the
      * {@code position}.
      * </p>
-     *
+     * 
      * @return The encrypted copy of the data key. When you use the HTTP API or the Amazon Web Services CLI, the value
      *         is Base64-encoded. Otherwise, it is not Base64-encoded.
      */
@@ -127,7 +127,7 @@ public class GenerateDataKeyResult extends com.ibm.cloud.objectstorage.AmazonWeb
      * ByteBuffer.asReadOnlyBuffer() before using or reading from the buffer. This behavior will be changed in a future
      * major version of the SDK.
      * </p>
-     *
+     * 
      * @param ciphertextBlob
      *        The encrypted copy of the data key. When you use the HTTP API or the Amazon Web Services CLI, the value is
      *        Base64-encoded. Otherwise, it is not Base64-encoded.
@@ -159,7 +159,7 @@ public class GenerateDataKeyResult extends com.ibm.cloud.objectstorage.AmazonWeb
      * ByteBuffer.asReadOnlyBuffer() before using or reading from the buffer. This behavior will be changed in a future
      * major version of the SDK.
      * </p>
-     *
+     * 
      * @param plaintext
      *        The plaintext data key. When you use the HTTP API or the Amazon Web Services CLI, the value is
      *        Base64-encoded. Otherwise, it is not Base64-encoded. Use this data key to encrypt your data outside of
@@ -223,7 +223,7 @@ public class GenerateDataKeyResult extends com.ibm.cloud.objectstorage.AmazonWeb
      * ByteBuffer.asReadOnlyBuffer() before using or reading from the buffer. This behavior will be changed in a future
      * major version of the SDK.
      * </p>
-     *
+     * 
      * @param plaintext
      *        The plaintext data key. When you use the HTTP API or the Amazon Web Services CLI, the value is
      *        Base64-encoded. Otherwise, it is not Base64-encoded. Use this data key to encrypt your data outside of
@@ -245,7 +245,7 @@ public class GenerateDataKeyResult extends com.ibm.cloud.objectstorage.AmazonWeb
      * href="https://docs.aws.amazon.com/kms/latest/developerguide/concepts.html#key-id-key-ARN">key ARN</a>) of the KMS
      * key that encrypted the data key.
      * </p>
-     *
+     * 
      * @param keyId
      *        The Amazon Resource Name (<a
      *        href="https://docs.aws.amazon.com/kms/latest/developerguide/concepts.html#key-id-key-ARN">key ARN</a>) of
@@ -262,7 +262,7 @@ public class GenerateDataKeyResult extends com.ibm.cloud.objectstorage.AmazonWeb
      * href="https://docs.aws.amazon.com/kms/latest/developerguide/concepts.html#key-id-key-ARN">key ARN</a>) of the KMS
      * key that encrypted the data key.
      * </p>
-     *
+     * 
      * @return The Amazon Resource Name (<a
      *         href="https://docs.aws.amazon.com/kms/latest/developerguide/concepts.html#key-id-key-ARN">key ARN</a>) of
      *         the KMS key that encrypted the data key.
@@ -278,7 +278,7 @@ public class GenerateDataKeyResult extends com.ibm.cloud.objectstorage.AmazonWeb
      * href="https://docs.aws.amazon.com/kms/latest/developerguide/concepts.html#key-id-key-ARN">key ARN</a>) of the KMS
      * key that encrypted the data key.
      * </p>
-     *
+     * 
      * @param keyId
      *        The Amazon Resource Name (<a
      *        href="https://docs.aws.amazon.com/kms/latest/developerguide/concepts.html#key-id-key-ARN">key ARN</a>) of
@@ -290,6 +290,120 @@ public class GenerateDataKeyResult extends com.ibm.cloud.objectstorage.AmazonWeb
         setKeyId(keyId);
         return this;
     }
+
+    /**
+     * <p>
+     * The plaintext data key encrypted with the public key from the Nitro enclave. This ciphertext can be decrypted
+     * only by using a private key in the Nitro enclave.
+     * </p>
+     * <p>
+     * This field is included in the response only when the <code>Recipient</code> parameter in the request includes a
+     * valid attestation document from an Amazon Web Services Nitro enclave. For information about the interaction
+     * between KMS and Amazon Web Services Nitro Enclaves, see <a
+     * href="https://docs.aws.amazon.com/kms/latest/developerguide/services-nitro-enclaves.html">How Amazon Web Services
+     * Nitro Enclaves uses KMS</a> in the <i>Key Management Service Developer Guide</i>.
+     * </p>
+     * <p>
+     * The AWS SDK for Java performs a Base64 encoding on this field before sending this request to the AWS service.
+     * Users of the SDK should not perform Base64 encoding on this field.
+     * </p>
+     * <p>
+     * Warning: ByteBuffers returned by the SDK are mutable. Changes to the content or position of the byte buffer will
+     * be seen by all objects that have a reference to this object. It is recommended to call ByteBuffer.duplicate() or
+     * ByteBuffer.asReadOnlyBuffer() before using or reading from the buffer. This behavior will be changed in a future
+     * major version of the SDK.
+     * </p>
+     * 
+     * @param ciphertextForRecipient
+     *        The plaintext data key encrypted with the public key from the Nitro enclave. This ciphertext can be
+     *        decrypted only by using a private key in the Nitro enclave. </p>
+     *        <p>
+     *        This field is included in the response only when the <code>Recipient</code> parameter in the request
+     *        includes a valid attestation document from an Amazon Web Services Nitro enclave. For information about the
+     *        interaction between KMS and Amazon Web Services Nitro Enclaves, see <a
+     *        href="https://docs.aws.amazon.com/kms/latest/developerguide/services-nitro-enclaves.html">How Amazon Web
+     *        Services Nitro Enclaves uses KMS</a> in the <i>Key Management Service Developer Guide</i>.
+     */
+// 	  IBM Unsupported
+//    public void setCiphertextForRecipient(java.nio.ByteBuffer ciphertextForRecipient) {
+//        this.ciphertextForRecipient = ciphertextForRecipient;
+//    }
+
+    /**
+     * <p>
+     * The plaintext data key encrypted with the public key from the Nitro enclave. This ciphertext can be decrypted
+     * only by using a private key in the Nitro enclave.
+     * </p>
+     * <p>
+     * This field is included in the response only when the <code>Recipient</code> parameter in the request includes a
+     * valid attestation document from an Amazon Web Services Nitro enclave. For information about the interaction
+     * between KMS and Amazon Web Services Nitro Enclaves, see <a
+     * href="https://docs.aws.amazon.com/kms/latest/developerguide/services-nitro-enclaves.html">How Amazon Web Services
+     * Nitro Enclaves uses KMS</a> in the <i>Key Management Service Developer Guide</i>.
+     * </p>
+     * <p>
+     * {@code ByteBuffer}s are stateful. Calling their {@code get} methods changes their {@code position}. We recommend
+     * using {@link java.nio.ByteBuffer#asReadOnlyBuffer()} to create a read-only view of the buffer with an independent
+     * {@code position}, and calling {@code get} methods on this rather than directly on the returned {@code ByteBuffer}.
+     * Doing so will ensure that anyone else using the {@code ByteBuffer} will not be affected by changes to the
+     * {@code position}.
+     * </p>
+     * 
+     * @return The plaintext data key encrypted with the public key from the Nitro enclave. This ciphertext can be
+     *         decrypted only by using a private key in the Nitro enclave. </p>
+     *         <p>
+     *         This field is included in the response only when the <code>Recipient</code> parameter in the request
+     *         includes a valid attestation document from an Amazon Web Services Nitro enclave. For information about
+     *         the interaction between KMS and Amazon Web Services Nitro Enclaves, see <a
+     *         href="https://docs.aws.amazon.com/kms/latest/developerguide/services-nitro-enclaves.html">How Amazon Web
+     *         Services Nitro Enclaves uses KMS</a> in the <i>Key Management Service Developer Guide</i>.
+     */
+
+// 	  IBM Unsupported
+//    public java.nio.ByteBuffer getCiphertextForRecipient() {
+//        return this.ciphertextForRecipient;
+//    }
+
+    /**
+     * <p>
+     * The plaintext data key encrypted with the public key from the Nitro enclave. This ciphertext can be decrypted
+     * only by using a private key in the Nitro enclave.
+     * </p>
+     * <p>
+     * This field is included in the response only when the <code>Recipient</code> parameter in the request includes a
+     * valid attestation document from an Amazon Web Services Nitro enclave. For information about the interaction
+     * between KMS and Amazon Web Services Nitro Enclaves, see <a
+     * href="https://docs.aws.amazon.com/kms/latest/developerguide/services-nitro-enclaves.html">How Amazon Web Services
+     * Nitro Enclaves uses KMS</a> in the <i>Key Management Service Developer Guide</i>.
+     * </p>
+     * <p>
+     * The AWS SDK for Java performs a Base64 encoding on this field before sending this request to the AWS service.
+     * Users of the SDK should not perform Base64 encoding on this field.
+     * </p>
+     * <p>
+     * Warning: ByteBuffers returned by the SDK are mutable. Changes to the content or position of the byte buffer will
+     * be seen by all objects that have a reference to this object. It is recommended to call ByteBuffer.duplicate() or
+     * ByteBuffer.asReadOnlyBuffer() before using or reading from the buffer. This behavior will be changed in a future
+     * major version of the SDK.
+     * </p>
+     * 
+     * @param ciphertextForRecipient
+     *        The plaintext data key encrypted with the public key from the Nitro enclave. This ciphertext can be
+     *        decrypted only by using a private key in the Nitro enclave. </p>
+     *        <p>
+     *        This field is included in the response only when the <code>Recipient</code> parameter in the request
+     *        includes a valid attestation document from an Amazon Web Services Nitro enclave. For information about the
+     *        interaction between KMS and Amazon Web Services Nitro Enclaves, see <a
+     *        href="https://docs.aws.amazon.com/kms/latest/developerguide/services-nitro-enclaves.html">How Amazon Web
+     *        Services Nitro Enclaves uses KMS</a> in the <i>Key Management Service Developer Guide</i>.
+     * @return Returns a reference to this object so that method calls can be chained together.
+     */
+
+// 	  IBM Unsupported
+//    public GenerateDataKeyResult withCiphertextForRecipient(java.nio.ByteBuffer ciphertextForRecipient) {
+//        setCiphertextForRecipient(ciphertextForRecipient);
+//        return this;
+//    }
 
     /**
      * <p>

@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2023 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2010-2024 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -361,6 +361,22 @@ public class SDKGlobalConfiguration {
     public static final String AWS_EC2_METADATA_DISABLED_SYSTEM_PROPERTY = "com.amazonaws.sdk.disableEc2Metadata";
 
     /**
+     * Environment variable to disable fallback to IMDS v1.
+     */
+    public static final String AWS_EC2_METADATA_V1_DISABLED_ENV_VAR = "AWS_EC2_METADATA_V1_DISABLED";
+
+    /**
+     * System property to disable fallback to IMDS v1.
+     */
+    public static final String AWS_EC2_METADATA_V1_DISABLED_SYSTEM_PROPERTY = "com.ibm.cloud.objectstorage.sdk.disableEc2MetadataV1";
+
+    /**
+     * Profile file property to disable fallback to IMDS v1.
+     */
+    public static final String AWS_EC2_METADATA_V1_DISABLED_PROFILE_PROPERTY = "ec2_metadata_v1_disabled";
+
+
+    /**
      * Environment variable to enable/disable client side monitoring.
      */
     //IBM unsupported
@@ -395,6 +411,7 @@ public class SDKGlobalConfiguration {
      * Environment variable to set the retry mode to use. See {@link RetryMode} for available values
      */
     public static final String AWS_RETRY_MODE_ENV_VAR = "AWS_RETRY_MODE";
+
 
     /**
      * System properties to set the retry max attempts
@@ -443,6 +460,11 @@ public class SDKGlobalConfiguration {
     public static boolean isEc2MetadataDisabled() {
         return isPropertyTrue(System.getProperty(AWS_EC2_METADATA_DISABLED_SYSTEM_PROPERTY)) ||
                isPropertyTrue(System.getenv(AWS_EC2_METADATA_DISABLED_ENV_VAR));
+    }
+
+    public static boolean isEc2MetadataV1Disabled() {
+        return isPropertyTrue(System.getProperty(AWS_EC2_METADATA_V1_DISABLED_SYSTEM_PROPERTY)) ||
+                isPropertyTrue(System.getenv(AWS_EC2_METADATA_V1_DISABLED_ENV_VAR));
     }
 
     private static boolean isPropertyEnabled(final String property) {

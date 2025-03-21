@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2023 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2010-2024 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -31,6 +31,7 @@ import com.ibm.cloud.objectstorage.AmazonServiceException;
 import com.ibm.cloud.objectstorage.AmazonWebServiceRequest;
 import com.ibm.cloud.objectstorage.AmazonWebServiceResponse;
 import com.ibm.cloud.objectstorage.ClientConfiguration;
+import com.ibm.cloud.objectstorage.Protocol;
 import com.ibm.cloud.objectstorage.Request;
 import com.ibm.cloud.objectstorage.RequestClientOptions;
 import com.ibm.cloud.objectstorage.RequestClientOptions.Marker;
@@ -201,6 +202,7 @@ public class AmazonHttpClient {
 
     private final HttpRequestFactory<HttpRequestBase> httpRequestFactory =
             new ApacheHttpRequestFactory();
+
     /**
      * Internal client for sending HTTP requests
      */
@@ -553,6 +555,7 @@ public class AmazonHttpClient {
             request,
             executionContext.getAwsRequestMetrics(),
             responseMetadataCache);
+        executionContext.setClientProtocol(this.config.getProtocol());
         return requestExecutionBuilder()
             .request(request)
             .requestConfig(requestConfig)
@@ -720,6 +723,7 @@ public class AmazonHttpClient {
         private final ExecutionContext executionContext;
         private final List<RequestHandler2> requestHandler2s;
         private final AWSRequestMetrics awsRequestMetrics;
+        private final Protocol clientProtocol;
         //TODO: Call CSMRequestHandler directly in this class since it's CSM aware now
         private RequestHandler2 csmRequestHandler;
 
@@ -735,6 +739,7 @@ public class AmazonHttpClient {
             this.executionContext = executionContext;
             this.requestHandler2s = requestHandler2s;
             this.awsRequestMetrics = executionContext.getAwsRequestMetrics();
+            this.clientProtocol = executionContext.getClientProtocol();
             for (RequestHandler2 requestHandler2 : requestHandler2s) {
                 if (requestHandler2 instanceof ClientSideMonitoringRequestHandler) {
                     csmRequestHandler = requestHandler2;
@@ -844,6 +849,7 @@ public class AmazonHttpClient {
         private void runBeforeRequestHandlers() {
             AWSCredentials credentials = getCredentialsFromContext();
             request.addHandlerContext(HandlerContextKey.AWS_CREDENTIALS, credentials);
+            request.addHandlerContext(HandlerContextKey.CLIENT_PROTOCOL, this.clientProtocol);
             // Apply any additional service specific request handlers that need to be run
             for (RequestHandler2 requestHandler2 : requestHandler2s) {
                 // If the request handler is a type of CredentialsRequestHandler, then set the credentials in the request handler.
@@ -1581,11 +1587,12 @@ public class AmazonHttpClient {
          */
         private void setUserAgent(Request<?> request) {
             RequestClientOptions opts = requestConfig.getRequestClientOptions();
+            AWSCredentials credentials = request.getHandlerContext(HandlerContextKey.AWS_CREDENTIALS);
             if (opts != null) {
                 request.addHeader(HEADER_USER_AGENT, RuntimeHttpUtils
-                        .getUserAgent(config, opts.getClientMarker(Marker.USER_AGENT)));
+                        .getUserAgent(config, opts.getClientMarker(Marker.USER_AGENT), credentials));
             } else {
-                request.addHeader(HEADER_USER_AGENT, RuntimeHttpUtils.getUserAgent(config, null));
+                request.addHeader(HEADER_USER_AGENT, RuntimeHttpUtils.getUserAgent(config, null, credentials));
             }
         }
 

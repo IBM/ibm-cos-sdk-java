@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2023 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2019-2024 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"). You may not use this file except in compliance with
  * the License. A copy of the License is located at
@@ -35,8 +35,8 @@ import javax.annotation.Generated;
  * For encrypting, decrypting, re-encrypting, and generating data keys, the <code>KeyUsage</code> must be
  * <code>ENCRYPT_DECRYPT</code>. For signing and verifying messages, the <code>KeyUsage</code> must be
  * <code>SIGN_VERIFY</code>. For generating and verifying message authentication codes (MACs), the <code>KeyUsage</code>
- * must be <code>GENERATE_VERIFY_MAC</code>. To find the <code>KeyUsage</code> of a KMS key, use the <a>DescribeKey</a>
- * operation.
+ * must be <code>GENERATE_VERIFY_MAC</code>. For deriving key agreement secrets, the <code>KeyUsage</code> must be
+ * <code>KEY_AGREEMENT</code>. To find the <code>KeyUsage</code> of a KMS key, use the <a>DescribeKey</a> operation.
  * </p>
  * <p>
  * To find the encryption or signing algorithms supported for a particular KMS key, use the <a>DescribeKey</a>

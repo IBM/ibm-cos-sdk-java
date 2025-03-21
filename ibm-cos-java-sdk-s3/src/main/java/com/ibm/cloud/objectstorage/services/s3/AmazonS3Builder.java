@@ -1,5 +1,5 @@
 /*
- * Copyright 2011-2023 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2011-2024 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -402,6 +402,24 @@ public abstract class AmazonS3Builder<Subclass extends AmazonS3Builder, TypeToBu
         setForceGlobalBucketAccessEnabled(Boolean.TRUE);
         return getSubclass();
     }
+
+//  IBM Unsupported
+//    /**
+//     * @return The current setting for useArnRegion mode configured in the builder.
+//     */
+//    public Boolean isUseArnRegionEnabled() {
+//        return useArnRegionEnabled;
+//    }
+//
+    /**
+//     * <p>Enables using the region from ARNs on clients built with the builder.</p>
+//
+     * @return This object for method chaining.
+     */
+//    public Subclass enableUseArnRegion() {
+//        this.useArnRegionEnabled = true;
+//        return getSubclass();
+//    }
 
     /**
      * @return Whether us-east-1 should resolve to its regional endpoint or the default global endpoint.

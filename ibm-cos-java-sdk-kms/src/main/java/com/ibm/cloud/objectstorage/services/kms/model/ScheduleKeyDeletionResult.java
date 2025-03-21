@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2023 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2019-2024 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"). You may not use this file except in compliance with
  * the License. A copy of the License is located at
@@ -16,7 +16,7 @@ import java.io.Serializable;
 import javax.annotation.Generated;
 
 /**
- *
+ * 
  * @see <a href="http://docs.aws.amazon.com/goto/WebAPI/kms-2014-11-01/ScheduleKeyDeletion" target="_top">AWS API
  *      Documentation</a>
  */
@@ -69,7 +69,7 @@ public class ScheduleKeyDeletionResult extends com.ibm.cloud.objectstorage.Amazo
      * href="https://docs.aws.amazon.com/kms/latest/developerguide/concepts.html#key-id-key-ARN">key ARN</a>) of the KMS
      * key whose deletion is scheduled.
      * </p>
-     *
+     * 
      * @param keyId
      *        The Amazon Resource Name (<a
      *        href="https://docs.aws.amazon.com/kms/latest/developerguide/concepts.html#key-id-key-ARN">key ARN</a>) of
@@ -86,7 +86,7 @@ public class ScheduleKeyDeletionResult extends com.ibm.cloud.objectstorage.Amazo
      * href="https://docs.aws.amazon.com/kms/latest/developerguide/concepts.html#key-id-key-ARN">key ARN</a>) of the KMS
      * key whose deletion is scheduled.
      * </p>
-     *
+     * 
      * @return The Amazon Resource Name (<a
      *         href="https://docs.aws.amazon.com/kms/latest/developerguide/concepts.html#key-id-key-ARN">key ARN</a>) of
      *         the KMS key whose deletion is scheduled.
@@ -102,7 +102,7 @@ public class ScheduleKeyDeletionResult extends com.ibm.cloud.objectstorage.Amazo
      * href="https://docs.aws.amazon.com/kms/latest/developerguide/concepts.html#key-id-key-ARN">key ARN</a>) of the KMS
      * key whose deletion is scheduled.
      * </p>
-     *
+     * 
      * @param keyId
      *        The Amazon Resource Name (<a
      *        href="https://docs.aws.amazon.com/kms/latest/developerguide/concepts.html#key-id-key-ARN">key ARN</a>) of
@@ -123,7 +123,7 @@ public class ScheduleKeyDeletionResult extends com.ibm.cloud.objectstorage.Amazo
      * If the KMS key is a multi-Region primary key with replica keys, this field does not appear. The deletion date for
      * the primary key isn't known until its last replica key is deleted.
      * </p>
-     *
+     * 
      * @param deletionDate
      *        The date and time after which KMS deletes the KMS key.</p>
      *        <p>
@@ -143,7 +143,7 @@ public class ScheduleKeyDeletionResult extends com.ibm.cloud.objectstorage.Amazo
      * If the KMS key is a multi-Region primary key with replica keys, this field does not appear. The deletion date for
      * the primary key isn't known until its last replica key is deleted.
      * </p>
-     *
+     * 
      * @return The date and time after which KMS deletes the KMS key.</p>
      *         <p>
      *         If the KMS key is a multi-Region primary key with replica keys, this field does not appear. The deletion
@@ -162,7 +162,7 @@ public class ScheduleKeyDeletionResult extends com.ibm.cloud.objectstorage.Amazo
      * If the KMS key is a multi-Region primary key with replica keys, this field does not appear. The deletion date for
      * the primary key isn't known until its last replica key is deleted.
      * </p>
-     *
+     * 
      * @param deletionDate
      *        The date and time after which KMS deletes the KMS key.</p>
      *        <p>
@@ -279,7 +279,7 @@ public class ScheduleKeyDeletionResult extends com.ibm.cloud.objectstorage.Amazo
      * If the KMS key is a multi-Region primary key with replicas, the waiting period begins when the last of its
      * replica keys is deleted. Otherwise, the waiting period begins immediately.
      * </p>
-     *
+     * 
      * @param pendingWindowInDays
      *        The waiting period before the KMS key is deleted. </p>
      *        <p>
@@ -299,7 +299,7 @@ public class ScheduleKeyDeletionResult extends com.ibm.cloud.objectstorage.Amazo
      * If the KMS key is a multi-Region primary key with replicas, the waiting period begins when the last of its
      * replica keys is deleted. Otherwise, the waiting period begins immediately.
      * </p>
-     *
+     * 
      * @return The waiting period before the KMS key is deleted. </p>
      *         <p>
      *         If the KMS key is a multi-Region primary key with replicas, the waiting period begins when the last of
@@ -318,7 +318,7 @@ public class ScheduleKeyDeletionResult extends com.ibm.cloud.objectstorage.Amazo
      * If the KMS key is a multi-Region primary key with replicas, the waiting period begins when the last of its
      * replica keys is deleted. Otherwise, the waiting period begins immediately.
      * </p>
-     *
+     * 
      * @param pendingWindowInDays
      *        The waiting period before the KMS key is deleted. </p>
      *        <p>

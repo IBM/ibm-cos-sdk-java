@@ -1,5 +1,5 @@
 /*
- * Copyright 2010-2023 Amazon.com, Inc. or its affiliates. All Rights
+ * Copyright 2010-2024 Amazon.com, Inc. or its affiliates. All Rights
  * Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
@@ -25,6 +25,7 @@ import com.ibm.cloud.objectstorage.auth.SignerParams;
 import com.ibm.cloud.objectstorage.util.AwsHostNameUtils;
 import com.ibm.cloud.objectstorage.auth.SignerTypeAware;
 import com.ibm.cloud.objectstorage.handlers.HandlerContextKey;
+import com.ibm.cloud.objectstorage.regions.EndpointToRegion;
 import java.net.URI;
 
 public class DefaultSignerProvider extends SignerProvider {
@@ -76,7 +77,7 @@ public class DefaultSignerProvider extends SignerProvider {
     private String getSigningRegionForRequestURI(URI uri) {
         String regionName = awsClient.getSignerRegionOverride();
         if (regionName == null) {
-            regionName = AwsHostNameUtils.parseRegion(uri.getHost(), awsClient.getServiceName());
+            regionName = EndpointToRegion.guessRegionNameForEndpoint(uri.getHost(), awsClient.getEndpointPrefix());
         }
         return regionName;
     }

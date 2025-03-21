@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2023 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2015-2024 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
  * You may not use this file except in compliance with the License.
@@ -34,6 +34,15 @@ public class ReplicationDestinationConfig implements Serializable {
      * uses the storage class of the source object to create object replica.
      */
     private String storageClass;
+
+//    IBM Unsupported
+//    private AccessControlTranslation accessControlTranslation;
+//
+//    private EncryptionConfiguration encryptionConfiguration;
+//
+//    private ReplicationTime replicationTime;
+//
+//    private Metrics metrics;
 
     /**
      * Returns the Amazon S3 bucket ARN where the replicas are present.
@@ -115,6 +124,117 @@ public class ReplicationDestinationConfig implements Serializable {
     public String getStorageClass() {
         return storageClass;
     }
+//    IBM Unsupported
+//    /**
+//     * @return The access control translation.
+//     */
+//    public AccessControlTranslation getAccessControlTranslation() {
+//        return accessControlTranslation;
+//    }
+//
+//    /**
+//     * Sets the access control translation.
+//     *
+//     * @param accessControlTranslation New access control translation.
+//     */
+//    public void setAccessControlTranslation(AccessControlTranslation accessControlTranslation) {
+//        this.accessControlTranslation = accessControlTranslation;
+//    }
+//
+//    /**
+//     * Sets the access control translation.
+//     *
+//     * @param accessControlTranslation New access control translation.
+//     * @return This object for method chaining.
+//     */
+//    public ReplicationDestinationConfig withAccessControlTranslation(AccessControlTranslation accessControlTranslation) {
+//        setAccessControlTranslation(accessControlTranslation);
+//        return this;
+//    }
+//
+//    /**
+//     * @return Container for information regarding encryption based configuration for replicas
+//     */
+//    public EncryptionConfiguration getEncryptionConfiguration() {
+//        return encryptionConfiguration;
+//    }
+//
+//    /**
+//     * Sets the container for information regarding encryption based configuration for replicas
+//     *
+//     * @param encryptionConfiguration New encryption configuration.
+//     */
+//    public void setEncryptionConfiguration(EncryptionConfiguration encryptionConfiguration) {
+//        this.encryptionConfiguration = encryptionConfiguration;
+//    }
+//
+//    /**
+//     * Sets the container for information regarding encryption based configuration for replicas
+//     *
+//     * @param encryptionConfiguration New encryption configuration.
+//     * @return This object for method chaining.
+//     */
+//    public ReplicationDestinationConfig withEncryptionConfiguration(EncryptionConfiguration encryptionConfiguration) {
+//        setEncryptionConfiguration(encryptionConfiguration);
+//        return this;
+//    }
+//
+//    /**
+//     * Return a container specifying the time when all objects and operations on objects are replicated. Must be
+//     * specified together with a <code>Metrics</code> block.
+//     */
+//    public ReplicationTime getReplicationTime() {
+//        return replicationTime;
+//    }
+//
+//    /**
+//     * Set a container specifying the time when all objects and operations on objects are replicated. Must be
+//     * specified together with a <code>Metrics</code> block.
+//     *
+//     * @param replicationTime The replication time.
+//     */
+//    public void setReplicationTime(ReplicationTime replicationTime) {
+//        this.replicationTime = replicationTime;
+//    }
+//
+//    /**
+//     * Set a container specifying the time when all objects and operations on objects are replicated. Must be
+//     * specified together with a <code>Metrics</code> block.
+//     *
+//     * @param replicationTime The replication time.
+//     * @return This object for method chaining.
+//     */
+//    public ReplicationDestinationConfig withReplicationTime(ReplicationTime replicationTime) {
+//        setReplicationTime(replicationTime);
+//        return this;
+//    }
+//
+//    /**
+//     * Returns a container specifying settings for configuring replication metrics and events.
+//     */
+//    public Metrics getMetrics() {
+//        return metrics;
+//    }
+//
+//    /**
+//     * Set a container specifying settings for configuring replication metrics and events.
+//     *
+//     * @param metrics The metrics information.
+//     */
+//    public void setMetrics(Metrics metrics) {
+//        this.metrics = metrics;
+//    }
+//
+//    /**
+//     * Set container specifying settings for configuring replication metrics and events.
+//     *
+//     * @param metrics The metrics information.
+//     * @return This object for method chaining.
+//     */
+//    public ReplicationDestinationConfig withMetrics(Metrics metrics) {
+//        setMetrics(metrics);
+//        return this;
+//    }
 
     @Override
     public String toString() {

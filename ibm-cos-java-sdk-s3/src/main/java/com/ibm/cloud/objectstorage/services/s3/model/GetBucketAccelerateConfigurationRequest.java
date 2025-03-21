@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2023 Amazon Technologies, Inc.
+ * Copyright 2015-2024 Amazon Technologies, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -50,5 +50,4 @@ public class GetBucketAccelerateConfigurationRequest extends
     public void setExpectedBucketOwner(String expectedBucketOwner) {
         withExpectedBucketOwner(expectedBucketOwner);
     }
-
 }

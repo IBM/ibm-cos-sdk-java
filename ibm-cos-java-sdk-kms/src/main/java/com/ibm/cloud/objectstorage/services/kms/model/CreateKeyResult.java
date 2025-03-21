@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2023 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2019-2024 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"). You may not use this file except in compliance with
  * the License. A copy of the License is located at
@@ -16,7 +16,7 @@ import java.io.Serializable;
 import javax.annotation.Generated;
 
 /**
- *
+ * 
  * @see <a href="http://docs.aws.amazon.com/goto/WebAPI/kms-2014-11-01/CreateKey" target="_top">AWS API
  *      Documentation</a>
  */
@@ -34,7 +34,7 @@ public class CreateKeyResult extends com.ibm.cloud.objectstorage.AmazonWebServic
      * <p>
      * Metadata associated with the KMS key.
      * </p>
-     *
+     * 
      * @param keyMetadata
      *        Metadata associated with the KMS key.
      */
@@ -47,7 +47,7 @@ public class CreateKeyResult extends com.ibm.cloud.objectstorage.AmazonWebServic
      * <p>
      * Metadata associated with the KMS key.
      * </p>
-     *
+     * 
      * @return Metadata associated with the KMS key.
      */
 
@@ -59,7 +59,7 @@ public class CreateKeyResult extends com.ibm.cloud.objectstorage.AmazonWebServic
      * <p>
      * Metadata associated with the KMS key.
      * </p>
-     *
+     * 
      * @param keyMetadata
      *        Metadata associated with the KMS key.
      * @return Returns a reference to this object so that method calls can be chained together.

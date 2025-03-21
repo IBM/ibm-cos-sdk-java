@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2023 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2019-2024 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"). You may not use this file except in compliance with
  * the License. A copy of the License is located at
@@ -16,7 +16,7 @@ import java.io.Serializable;
 import javax.annotation.Generated;
 
 /**
- *
+ * 
  * @see <a href="http://docs.aws.amazon.com/goto/WebAPI/kms-2014-11-01/ListResourceTags" target="_top">AWS API
  *      Documentation</a>
  */
@@ -49,7 +49,7 @@ public class ListResourceTagsResult extends com.ibm.cloud.objectstorage.AmazonWe
     /**
      * <p>
      * A flag that indicates whether there are more items in the list. When this value is true, the list in this
-     * response is truncated. To get more items, pass the value of the <code>NextMarker</code> element in thisresponse
+     * response is truncated. To get more items, pass the value of the <code>NextMarker</code> element in this response
      * to the <code>Marker</code> parameter in a subsequent request.
      * </p>
      */
@@ -128,7 +128,7 @@ public class ListResourceTagsResult extends com.ibm.cloud.objectstorage.AmazonWe
      * {@link #setTags(java.util.Collection)} or {@link #withTags(java.util.Collection)} if you want to override the
      * existing values.
      * </p>
-     *
+     * 
      * @param tags
      *        A list of tags. Each tag consists of a tag key and a tag value.</p> <note>
      *        <p>
@@ -240,14 +240,14 @@ public class ListResourceTagsResult extends com.ibm.cloud.objectstorage.AmazonWe
     /**
      * <p>
      * A flag that indicates whether there are more items in the list. When this value is true, the list in this
-     * response is truncated. To get more items, pass the value of the <code>NextMarker</code> element in thisresponse
+     * response is truncated. To get more items, pass the value of the <code>NextMarker</code> element in this response
      * to the <code>Marker</code> parameter in a subsequent request.
      * </p>
-     *
+     * 
      * @param truncated
      *        A flag that indicates whether there are more items in the list. When this value is true, the list in this
-     *        response is truncated. To get more items, pass the value of the <code>NextMarker</code> element in
-     *        thisresponse to the <code>Marker</code> parameter in a subsequent request.
+     *        response is truncated. To get more items, pass the value of the <code>NextMarker</code> element in this
+     *        response to the <code>Marker</code> parameter in a subsequent request.
      */
 
     public void setTruncated(Boolean truncated) {
@@ -257,13 +257,13 @@ public class ListResourceTagsResult extends com.ibm.cloud.objectstorage.AmazonWe
     /**
      * <p>
      * A flag that indicates whether there are more items in the list. When this value is true, the list in this
-     * response is truncated. To get more items, pass the value of the <code>NextMarker</code> element in thisresponse
+     * response is truncated. To get more items, pass the value of the <code>NextMarker</code> element in this response
      * to the <code>Marker</code> parameter in a subsequent request.
      * </p>
-     *
+     * 
      * @return A flag that indicates whether there are more items in the list. When this value is true, the list in this
-     *         response is truncated. To get more items, pass the value of the <code>NextMarker</code> element in
-     *         thisresponse to the <code>Marker</code> parameter in a subsequent request.
+     *         response is truncated. To get more items, pass the value of the <code>NextMarker</code> element in this
+     *         response to the <code>Marker</code> parameter in a subsequent request.
      */
 
     public Boolean getTruncated() {
@@ -273,14 +273,14 @@ public class ListResourceTagsResult extends com.ibm.cloud.objectstorage.AmazonWe
     /**
      * <p>
      * A flag that indicates whether there are more items in the list. When this value is true, the list in this
-     * response is truncated. To get more items, pass the value of the <code>NextMarker</code> element in thisresponse
+     * response is truncated. To get more items, pass the value of the <code>NextMarker</code> element in this response
      * to the <code>Marker</code> parameter in a subsequent request.
      * </p>
-     *
+     * 
      * @param truncated
      *        A flag that indicates whether there are more items in the list. When this value is true, the list in this
-     *        response is truncated. To get more items, pass the value of the <code>NextMarker</code> element in
-     *        thisresponse to the <code>Marker</code> parameter in a subsequent request.
+     *        response is truncated. To get more items, pass the value of the <code>NextMarker</code> element in this
+     *        response to the <code>Marker</code> parameter in a subsequent request.
      * @return Returns a reference to this object so that method calls can be chained together.
      */
 
@@ -292,13 +292,13 @@ public class ListResourceTagsResult extends com.ibm.cloud.objectstorage.AmazonWe
     /**
      * <p>
      * A flag that indicates whether there are more items in the list. When this value is true, the list in this
-     * response is truncated. To get more items, pass the value of the <code>NextMarker</code> element in thisresponse
+     * response is truncated. To get more items, pass the value of the <code>NextMarker</code> element in this response
      * to the <code>Marker</code> parameter in a subsequent request.
      * </p>
-     *
+     * 
      * @return A flag that indicates whether there are more items in the list. When this value is true, the list in this
-     *         response is truncated. To get more items, pass the value of the <code>NextMarker</code> element in
-     *         thisresponse to the <code>Marker</code> parameter in a subsequent request.
+     *         response is truncated. To get more items, pass the value of the <code>NextMarker</code> element in this
+     *         response to the <code>Marker</code> parameter in a subsequent request.
      */
 
     public Boolean isTruncated() {
