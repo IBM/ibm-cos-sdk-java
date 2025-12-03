@@ -817,6 +817,35 @@ public abstract class AbstractAmazonS3 implements AmazonS3 {
     }
 
     @Override
+    public void setBucketReplicationReattempt(String bucketName)
+            throws AmazonServiceException, SdkClientException {
+        setBucketReplicationReattempt(new SetBucketReplicationReattemptRequest(
+                bucketName));
+    }
+
+    @Override
+    public void setBucketReplicationReattempt(
+            SetBucketReplicationReattemptRequest setBucketReplicationReattemptRequest)
+            throws AmazonServiceException, SdkClientException {
+        throw new UnsupportedOperationException("Extend AbstractAmazonS3 to provide an implementation");
+    }
+
+    @Override
+    public ListBucketReplicationFailuresResult listBucketReplicationFailures(String bucketName)
+            throws AmazonServiceException, SdkClientException {
+        ListBucketReplicationFailuresRequest request = new ListBucketReplicationFailuresRequest();
+        request.setBucketName(bucketName);
+        return listBucketReplicationFailures(request);
+    }
+
+    @Override
+    public ListBucketReplicationFailuresResult listBucketReplicationFailures(
+            ListBucketReplicationFailuresRequest listBucketReplicationFailuresRequest)
+            throws AmazonServiceException, SdkClientException {
+        throw new UnsupportedOperationException("Extend AbstractAmazonS3 to provide an implementation");
+    }
+
+    @Override
     public boolean doesObjectExist(String bucketName, String objectName)
             throws AmazonServiceException, SdkClientException {
         throw new UnsupportedOperationException("Extend AbstractAmazonS3 to provide an implementation");

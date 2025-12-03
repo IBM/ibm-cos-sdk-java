@@ -17,16 +17,23 @@
  */
 package com.ibm.cloud.objectstorage.services.s3.model.transform;
 
-import com.ibm.cloud.objectstorage.services.s3.model.*;
-
 import static com.ibm.cloud.objectstorage.util.StringUtils.UTF8;
 
+import com.ibm.cloud.objectstorage.services.s3.model.AbortIncompleteMultipartUpload;
+import com.ibm.cloud.objectstorage.services.s3.model.AccessControlList;
+import com.ibm.cloud.objectstorage.services.s3.model.AmazonS3Exception;
+import com.ibm.cloud.objectstorage.services.s3.model.Bucket;
+import com.ibm.cloud.objectstorage.services.s3.model.BucketAccelerateConfiguration;
+import com.ibm.cloud.objectstorage.services.s3.model.BucketCrossOriginConfiguration;
+import com.ibm.cloud.objectstorage.services.s3.model.BucketLifecycleConfiguration;
 import com.ibm.cloud.objectstorage.services.s3.model.BucketLifecycleConfiguration.NoncurrentVersionExpiration;
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedHashMap;
@@ -63,7 +70,8 @@ import com.ibm.cloud.objectstorage.services.s3.model.inventory.InventoryFilter;
 import com.ibm.cloud.objectstorage.services.s3.model.inventory.InventoryPrefixPredicate;
 import com.ibm.cloud.objectstorage.services.s3.model.inventory.InventoryS3BucketDestination;
 import com.ibm.cloud.objectstorage.services.s3.model.inventory.InventorySchedule;
-
+import com.ibm.cloud.objectstorage.services.s3.model.replication.ContentList;
+import com.ibm.cloud.objectstorage.services.s3.model.replication.ObjectSyncAttempted;
 import com.ibm.cloud.objectstorage.services.s3.model.replication.ReplicationAndOperator;
 import com.ibm.cloud.objectstorage.services.s3.model.replication.ReplicationFilter;
 import com.ibm.cloud.objectstorage.services.s3.model.replication.ReplicationFilterPredicate;
@@ -91,10 +99,64 @@ import com.ibm.cloud.objectstorage.services.s3.internal.ServiceUtils;
 import com.ibm.cloud.objectstorage.services.s3.model.BucketLifecycleConfiguration.NoncurrentVersionTransition;
 import com.ibm.cloud.objectstorage.services.s3.model.BucketLifecycleConfiguration.Rule;
 import com.ibm.cloud.objectstorage.services.s3.model.BucketLifecycleConfiguration.Transition;
+import com.ibm.cloud.objectstorage.services.s3.model.BucketLoggingConfiguration;
+import com.ibm.cloud.objectstorage.services.s3.model.BucketProtectionConfiguration;
+import com.ibm.cloud.objectstorage.services.s3.model.BucketReplicationConfiguration;
+import com.ibm.cloud.objectstorage.services.s3.model.BucketTaggingConfiguration;
+import com.ibm.cloud.objectstorage.services.s3.model.BucketVersioningConfiguration;
+import com.ibm.cloud.objectstorage.services.s3.model.BucketWebsiteConfiguration;
+import com.ibm.cloud.objectstorage.services.s3.model.CORSRule;
 import com.ibm.cloud.objectstorage.services.s3.model.CORSRule.AllowedMethods;
+import com.ibm.cloud.objectstorage.services.s3.model.CanonicalGrantee;
+import com.ibm.cloud.objectstorage.services.s3.model.CompleteMultipartUploadResult;
+import com.ibm.cloud.objectstorage.services.s3.model.CopyObjectResult;
+import com.ibm.cloud.objectstorage.services.s3.model.DefaultRetention;
+import com.ibm.cloud.objectstorage.services.s3.model.DeleteMarkerReplication;
 import com.ibm.cloud.objectstorage.services.s3.model.DeleteObjectsResult.DeletedObject;
+import com.ibm.cloud.objectstorage.services.s3.model.EmailAddressGrantee;
+import com.ibm.cloud.objectstorage.services.s3.model.FASPConnectionInfo;
+import com.ibm.cloud.objectstorage.services.s3.model.GetBucketAnalyticsConfigurationResult;
+import com.ibm.cloud.objectstorage.services.s3.model.GetBucketInventoryConfigurationResult;
+import com.ibm.cloud.objectstorage.services.s3.model.GetBucketMetricsConfigurationResult;
+import com.ibm.cloud.objectstorage.services.s3.model.GetObjectLegalHoldResult;
+import com.ibm.cloud.objectstorage.services.s3.model.GetObjectLockConfigurationResult;
+import com.ibm.cloud.objectstorage.services.s3.model.GetObjectRetentionResult;
+import com.ibm.cloud.objectstorage.services.s3.model.GetObjectTaggingResult;
+import com.ibm.cloud.objectstorage.services.s3.model.Grantee;
+import com.ibm.cloud.objectstorage.services.s3.model.GroupGrantee;
+import com.ibm.cloud.objectstorage.services.s3.model.InitiateMultipartUploadResult;
+import com.ibm.cloud.objectstorage.services.s3.model.LegalHold;
+import com.ibm.cloud.objectstorage.services.s3.model.ListBucketAnalyticsConfigurationsResult;
+import com.ibm.cloud.objectstorage.services.s3.model.ListBucketInventoryConfigurationsResult;
+import com.ibm.cloud.objectstorage.services.s3.model.ListBucketMetricsConfigurationsResult;
+import com.ibm.cloud.objectstorage.services.s3.model.ListBucketReplicationFailuresResult;
+import com.ibm.cloud.objectstorage.services.s3.model.ListBucketsExtendedResponse;
+import com.ibm.cloud.objectstorage.services.s3.model.ListLegalHoldsResult;
+import com.ibm.cloud.objectstorage.services.s3.model.ListObjectsV2Result;
 import com.ibm.cloud.objectstorage.services.s3.model.MultiObjectDeleteException.DeleteError;
+import com.ibm.cloud.objectstorage.services.s3.model.MultipartUpload;
+import com.ibm.cloud.objectstorage.services.s3.model.MultipartUploadListing;
+import com.ibm.cloud.objectstorage.services.s3.model.ObjectListing;
+import com.ibm.cloud.objectstorage.services.s3.model.ObjectLockConfiguration;
+import com.ibm.cloud.objectstorage.services.s3.model.ObjectLockLegalHold;
+import com.ibm.cloud.objectstorage.services.s3.model.ObjectLockRetention;
+import com.ibm.cloud.objectstorage.services.s3.model.ObjectLockRule;
+import com.ibm.cloud.objectstorage.services.s3.model.Owner;
+import com.ibm.cloud.objectstorage.services.s3.model.PartListing;
+import com.ibm.cloud.objectstorage.services.s3.model.PartSummary;
+import com.ibm.cloud.objectstorage.services.s3.model.Permission;
+import com.ibm.cloud.objectstorage.services.s3.model.RedirectRule;
+import com.ibm.cloud.objectstorage.services.s3.model.ReplicationDestinationConfig;
+import com.ibm.cloud.objectstorage.services.s3.model.ReplicationRule;
+import com.ibm.cloud.objectstorage.services.s3.model.RequestPaymentConfiguration;
 import com.ibm.cloud.objectstorage.services.s3.model.RequestPaymentConfiguration.Payer;
+import com.ibm.cloud.objectstorage.services.s3.model.RoutingRule;
+import com.ibm.cloud.objectstorage.services.s3.model.RoutingRuleCondition;
+import com.ibm.cloud.objectstorage.services.s3.model.S3ObjectSummary;
+import com.ibm.cloud.objectstorage.services.s3.model.S3VersionSummary;
+import com.ibm.cloud.objectstorage.services.s3.model.Tag;
+import com.ibm.cloud.objectstorage.services.s3.model.TagSet;
+import com.ibm.cloud.objectstorage.services.s3.model.VersionListing;
 import com.ibm.cloud.objectstorage.util.DateUtils;
 import com.ibm.cloud.objectstorage.util.SdkHttpUtils;
 import com.ibm.cloud.objectstorage.util.StringUtils;
@@ -338,6 +400,23 @@ public class XmlResponsesSaxParser {
     public ListObjectsV2Handler parseListObjectsV2Response(InputStream inputStream, final boolean shouldSDKDecodeResponse)
             throws IOException {
         ListObjectsV2Handler handler = new ListObjectsV2Handler(shouldSDKDecodeResponse);
+        parseXmlInputStream(handler, sanitizeXmlDocument(handler, inputStream));
+
+        return handler;
+    }
+
+    /**
+     * Parses a ListBucketReplicationFailures response XML document from an input stream.
+     *
+     * @param inputStream
+     *            XML data input stream.
+     * @return the XML handler object populated with data parsed from the XML
+     *         stream.
+     * @throws SdkClientException
+     */
+    public ListBucketReplicationFailuresHandler parseListBucketReplicationFailuresResponse(InputStream inputStream, final boolean shouldSDKDecodeResponse)
+            throws IOException {
+        ListBucketReplicationFailuresHandler handler = new ListBucketReplicationFailuresHandler(shouldSDKDecodeResponse);
         parseXmlInputStream(handler, sanitizeXmlDocument(handler, inputStream));
 
         return handler;
@@ -991,6 +1070,116 @@ public class XmlResponsesSaxParser {
                 if (name.equals("Prefix")) {
                     result.getCommonPrefixes().add
                             (decodeIfSpecified(getText(), shouldSDKDecodeResponse));
+                }
+            }
+        }
+    }
+
+    /**
+     * Handler for ListBucketReplicationFailures response XML documents.
+     */
+    public static class ListBucketReplicationFailuresHandler extends AbstractHandler {
+    private final ListBucketReplicationFailuresResult result = new ListBucketReplicationFailuresResult();
+    private ContentList currentContentList;
+    private ObjectSyncAttempted currentObjectSyncAttempted;
+
+    private final boolean shouldSDKDecodeResponse;
+    public ListBucketReplicationFailuresHandler(final boolean shouldSDKDecodeResponse) {
+            this.shouldSDKDecodeResponse = shouldSDKDecodeResponse;
+        }
+    private static final SimpleDateFormat iso8601Formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSX");
+
+    private static Date parseDate(String dateStr) {
+        try {
+            return iso8601Formatter.parse(dateStr);
+        } catch (ParseException e) {
+            throw new RuntimeException("Invalid date format: " + dateStr, e);
+        }
+    }
+
+    public ListBucketReplicationFailuresResult getResult() {
+        if (result.getBucketName() == null) {
+            throw new SdkClientException("Missing required field: Name");
+        }
+        if (result.getKeyCount() == null) {
+            throw new SdkClientException("Missing required field: KeyCount");
+        }
+        if (result.getContents() == null) {
+            throw new SdkClientException("Missing required field: Contents");
+        }
+        return result;
+    }
+
+    @Override
+    protected void doStartElement(String uri, String name, String qName, Attributes attrs) {
+        if (in("ListReplicationFailureResult")) {
+            if (name.equals("Contents")) {
+                currentContentList = new ContentList();
+                currentObjectSyncAttempted = new ObjectSyncAttempted();
+                currentContentList.setObjectSyncAttempted(currentObjectSyncAttempted);
+            }
+        }
+    }
+
+    @Override
+    protected void doEndElement(String uri, String name, String qName) {
+        if (in("ListReplicationFailureResult")) {
+            switch (name) {
+                case "Name":
+                    result.setBucketName(getText());
+                    break;
+                case "FirstSyncAttemptedBefore":
+                    result.setFirstSyncAttemptedBefore(decodeIfSpecified(getText(), shouldSDKDecodeResponse));
+                    break;
+                case "MaxKeys":
+                    result.setMaxKeys(Integer.parseInt(getText()));
+                    break;
+                case "IsTruncated":
+                    result.setIsTruncated(Boolean.parseBoolean(getText()));
+                    break;
+                case "EncodingType":
+                    result.setEncodingType(checkForEmptyString(getText()));
+                    break;
+                case "KeyCount":
+                    result.setKeyCount(Integer.parseInt(getText()));
+                    break;
+                case "ContinuationToken":
+                    result.setContinuationToken(checkForEmptyString(getText()));
+                    break;
+                case "NextContinuationToken":
+                    result.setNextContinuationToken(checkForEmptyString(getText()));
+                    break;
+                case "Contents":
+                    if (result.getContents() == null) {
+                        result.setContents(new ArrayList<>());
+                    }
+                    ContentList contentList = new ContentList();
+                    contentList.setObjectSyncAttempted(currentObjectSyncAttempted);
+                    result.getContents().add(contentList);
+                    currentObjectSyncAttempted = null;
+                    break;
+
+            }
+        } else if (in("ListReplicationFailureResult", "Contents")) {
+            switch (name) {
+                case "Key":
+                    currentObjectSyncAttempted.setKey(checkForEmptyString(getText()));
+                    break;
+                case "VersionId":
+                    currentObjectSyncAttempted.setVersionId(checkForEmptyString(getText()));
+                    break;
+                case "SyncType":
+                    currentObjectSyncAttempted.setSyncType(checkForEmptyString(getText()));
+                    break;
+                case "FirstSyncAttempted":
+                    currentObjectSyncAttempted.setFirstSyncAttempted(parseDate(checkForEmptyString(getText())));
+                    break;
+                case "LastSyncAttempted":
+                    currentObjectSyncAttempted.setLastSyncAttempted(parseDate(checkForEmptyString(getText())));
+                    break;
+                case "SyncFailureCause":
+                    currentObjectSyncAttempted.setSyncFailureCause(checkForEmptyString(getText()));
+                    break;
                 }
             }
         }

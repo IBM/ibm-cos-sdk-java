@@ -6312,6 +6312,7 @@ public interface AmazonS3 extends S3DirectSpi {
      * @see AmazonS3#setBucketReplicationConfiguration(SetBucketReplicationConfigurationRequest)
      * @see AmazonS3#getBucketReplicationConfiguration(String)
      * @see AmazonS3#deleteBucketReplicationConfiguration(String)
+     *
      */
     public void setBucketReplicationConfiguration(String bucketName,
             BucketReplicationConfiguration configuration)
@@ -6500,10 +6501,49 @@ public interface AmazonS3 extends S3DirectSpi {
             throws AmazonServiceException, SdkClientException;
 
     /**
+     * Schedules reattempt of cold replication failures on the next reattempt cycle.
+     *
+     * @param bucketName The name of the bucket.
+     * @throws AmazonServiceException If the request fails from S3 side.
+     * @throws SdkClientException If the client fails to process the request.
+     */
+    public void setBucketReplicationReattempt(String bucketName)
+        throws AmazonServiceException, SdkClientException;
+    /**
+     * Schedules reattempt of cold replication failures on the next reattempt cycle.
+     *
+     * @param setBucketReplicationReattemptRequest The request object containing parameters for reattempt.
+     * @throws AmazonServiceException If the request fails from S3 side.
+     * @throws SdkClientException If the client fails to process the request.
+     */
+    public void setBucketReplicationReattempt(
+            SetBucketReplicationReattemptRequest setBucketReplicationReattemptRequest)
+            throws AmazonServiceException, SdkClientException;
+
+    /**
+     * List long-term replication failures for a given bucket. Specifically, this lists failures from the per-bucket failure queue and does not list short-term failures from the global replication queue that are pending once-per-hour retries.
+     *
+     * @param bucketName The name of the bucket.
+     * @throws AmazonServiceException If the request fails from S3 side.
+     * @throws SdkClientException If the client fails to process the request.
+     */
+    public ListBucketReplicationFailuresResult listBucketReplicationFailures(String bucketName)
+        throws AmazonServiceException, SdkClientException;
+
+    /**
+     *  List long-term replication failures for a given bucket. Specifically, this lists failures from the per-bucket failure queue and does not list short-term failures from the global replication queue that are pending once-per-hour retries.
+     *
+     * @param listBucketReplicationFailuresRequest The request object containing parameters for listing the failures.
+     * @throws AmazonServiceException If the request fails from S3 side.
+     * @throws SdkClientException If the client fails to process the request.
+     */
+    public ListBucketReplicationFailuresResult listBucketReplicationFailures(
+            ListBucketReplicationFailuresRequest listBucketReplicationFailuresRequest)
+            throws AmazonServiceException, SdkClientException;
+
+    /**
      * @param bucketName
      *            Name of bucket that presumably contains object
-     * @param objectName
-     *            Name of object that has to be checked
      * @return result of the search
      * @throws AmazonServiceException
      *             If any errors occurred in Amazon S3 while processing the

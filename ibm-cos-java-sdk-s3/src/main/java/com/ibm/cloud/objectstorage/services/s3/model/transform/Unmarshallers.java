@@ -119,6 +119,25 @@ public class Unmarshallers {
     }
 
     /**
+     * Unmarshaller for the ListBucketReplicationFailures XML response.
+     */
+    public static final class ListBucketReplicationFailuresUnmarshaller implements
+            Unmarshaller<ListBucketReplicationFailuresResult, InputStream> {
+
+        private final boolean shouldSDKDecodeResponse;
+
+        public ListBucketReplicationFailuresUnmarshaller(final boolean shouldSDKDecodeResponse) {
+         this.shouldSDKDecodeResponse = shouldSDKDecodeResponse;
+        }
+
+        public ListBucketReplicationFailuresResult unmarshall(InputStream in) throws Exception {
+
+            return new XmlResponsesSaxParser()
+                    .parseListBucketReplicationFailuresResponse(in, shouldSDKDecodeResponse).getResult();
+        }
+    }
+
+    /**
      * Unmarshaller for the ListVersions XML response.
      */
     public static final class VersionListUnmarshaller implements

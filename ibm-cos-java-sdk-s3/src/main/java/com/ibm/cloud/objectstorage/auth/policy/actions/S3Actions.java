@@ -198,6 +198,16 @@ public enum S3Actions implements Action {
     ListBucketMultipartUploads("s3:ListBucketMultipartUploads"),
 
     /**
+     * Actions for listing the replication failures for a given 
+     * bucket.
+     * <p>
+     * Valid for use with {@link S3BucketResource} resources.
+     *
+     * 
+     */
+    ListBucketReplicationFailures("s3:ListBucketReplicationFailures"),
+
+    /**
      * Action for retrieving the ACL of an Amazon S3 bucket.
      * <p>
      * Valid for use with {@link S3BucketResource} resources.

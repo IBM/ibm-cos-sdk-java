@@ -4,7 +4,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.ibm.cos</groupId>
   <artifactId>ibm-cos-java-sdk-pom</artifactId>
-  <version>2.14.2</version>
+  <version>2.14.3</version>
   <packaging>pom</packaging>
   <name>IBM COS SDK for Java</name>
   <description>The IBM COS Web Services SDK for Java provides Java APIs
@@ -60,7 +60,7 @@
       <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
       <jre.version>1.8</jre.version>
       <httpcomponents.httpclient.version>4.5.14</httpcomponents.httpclient.version>
-      <commons.codec.version>1.17.2</commons.codec.version>
+      <commons.codec.version>1.20.0</commons.codec.version>
       <powermockmodule.version>1.7.4</powermockmodule.version>
       <powermockmockito.version>1.7.4</powermockmockito.version>
       <aspera.version>0.1.163682</aspera.version>

@@ -48,7 +48,6 @@ import com.ibm.cloud.objectstorage.auth.Presigner;
 import com.ibm.cloud.objectstorage.auth.Signer;
 import com.ibm.cloud.objectstorage.auth.SignerFactory;
 import com.ibm.cloud.objectstorage.client.builder.AwsClientBuilder;
-import com.ibm.cloud.objectstorage.client.builder.AdvancedConfig.Key;
 import com.ibm.cloud.objectstorage.event.ProgressEventType;
 import com.ibm.cloud.objectstorage.event.ProgressInputStream;
 import com.ibm.cloud.objectstorage.event.ProgressListener;
@@ -225,6 +224,9 @@ import com.ibm.cloud.objectstorage.services.s3.model.SetBucketTaggingConfigurati
 import com.ibm.cloud.objectstorage.services.s3.model.SetBucketVersioningConfigurationRequest;
 import com.ibm.cloud.objectstorage.services.s3.model.SetBucketWebsiteConfigurationRequest;
 import com.ibm.cloud.objectstorage.services.s3.model.SetObjectAclRequest;
+import com.ibm.cloud.objectstorage.services.s3.model.SetBucketReplicationReattemptRequest;
+import com.ibm.cloud.objectstorage.services.s3.model.ListBucketReplicationFailuresResult;
+import com.ibm.cloud.objectstorage.services.s3.model.ListBucketReplicationFailuresRequest;
 import com.ibm.cloud.objectstorage.services.s3.model.SetObjectTaggingRequest;
 import com.ibm.cloud.objectstorage.services.s3.model.SetObjectTaggingResult;
 import com.ibm.cloud.objectstorage.services.s3.model.SetPublicAccessBlockRequest;
@@ -272,7 +274,6 @@ import com.ibm.cloud.objectstorage.util.Base64;
 import com.ibm.cloud.objectstorage.util.BinaryUtils;
 import com.ibm.cloud.objectstorage.util.CredentialUtils;
 import com.ibm.cloud.objectstorage.util.DateUtils;
-import com.ibm.cloud.objectstorage.util.HostnameValidator;
 import com.ibm.cloud.objectstorage.util.IOUtils;
 import com.ibm.cloud.objectstorage.util.LengthCheckInputStream;
 import com.ibm.cloud.objectstorage.util.Md5Utils;
@@ -281,17 +282,21 @@ import com.ibm.cloud.objectstorage.util.SdkHttpUtils;
 import com.ibm.cloud.objectstorage.util.ServiceClientHolderInputStream;
 import com.ibm.cloud.objectstorage.util.StringUtils;
 import com.ibm.cloud.objectstorage.util.ValidationUtils;
+
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -309,6 +314,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.regex.Matcher;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.client.methods.HttpRequestBase;
@@ -6147,6 +6153,63 @@ public class AmazonS3Client extends AmazonWebServiceClient implements AmazonS3 {
         request.addParameter("replication", null);
 
         invoke(request, voidResponseHandler, bucketName, null);
+    }
+
+    @Override
+    public void setBucketReplicationReattempt(String bucketName)
+            throws AmazonServiceException, SdkClientException {
+        setBucketReplicationReattempt(new SetBucketReplicationReattemptRequest(
+                bucketName));
+    }
+
+    @Override
+    public void setBucketReplicationReattempt(SetBucketReplicationReattemptRequest request) 
+            throws AmazonServiceException, SdkClientException {
+        String bucketName = request.getBucketName();
+        rejectNull(bucketName, "The bucket name parameter must be specified.");
+
+        // Create request, no body needed
+        Request<SetBucketReplicationReattemptRequest> req = createRequest(
+            bucketName, 
+            null,  // no additional URI path
+            request, 
+            HttpMethodName.PUT);  // or PUT, check the API spec
+        // Add operation name (helps internal handlers/logs)
+        req.addHandlerContext(HandlerContextKey.OPERATION_NAME, "PutBucketReplicationReattempt");
+        req.addParameter("ibm-replication-reattempt", null);
+
+        invoke(req, voidResponseHandler, bucketName, null);
+    }
+
+    @Override
+    public ListBucketReplicationFailuresResult listBucketReplicationFailures(String bucketName)
+            throws AmazonServiceException, SdkClientException {
+        ListBucketReplicationFailuresRequest request = new ListBucketReplicationFailuresRequest();
+        request.setBucketName(bucketName);
+        return listBucketReplicationFailures(request);
+    }
+
+    @Override
+    public ListBucketReplicationFailuresResult listBucketReplicationFailures(ListBucketReplicationFailuresRequest request) 
+            throws AmazonServiceException, SdkClientException {
+        String bucketName = request.getBucketName();
+        rejectNull(bucketName, "The bucket name parameter must be specified.");
+
+        // Create request, no body needed
+        Request<ListBucketReplicationFailuresRequest> req = createRequest(
+            bucketName, 
+            null,  // no additional URI path
+            request, 
+            HttpMethodName.GET);  // or PUT, check the API spec
+        req.addHandlerContext(HandlerContextKey.OPERATION_NAME, "ListBucketReplicationFailures");
+        req.addParameter("ibm-replication-failures", null);
+            
+        addParameterIfNotNull(req, "first-sync-attempted-before", request.getFirstSyncAttemptedBefore());
+        addParameterIfNotNull(req, "continuation-token", request.getContinuationToken());
+        addParameterIfNotNull(req, "max-keys", request.getMaxKeys());
+        addParameterIfNotNull(req, "encoding-type", request.getEncodingType());
+
+        return invoke(req, new Unmarshallers.ListBucketReplicationFailuresUnmarshaller(true), request.getBucketName(), null);
     }
 
     // @Override
