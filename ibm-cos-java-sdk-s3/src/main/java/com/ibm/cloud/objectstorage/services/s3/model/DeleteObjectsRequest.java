@@ -79,8 +79,14 @@ public class DeleteObjectsRequest extends AmazonWebServiceRequest implements Ser
      */
     private boolean isRequesterPays;
 
+    /**
+     * Indicates whether S3 Object Lock should bypass Governance-mode restrictions to process this operation. 
+     * To use this header, you must have the <code>s3:BypassGovernanceRetention</code> permission.</p>
+     * <note> <p>This functionality is not supported for directory buckets.</p> </note>.
+     */
+    private boolean bypassGovernanceRetention;
+
     //IBM unsupported
-    //private boolean bypassGovernanceRetention;
     //private String expectedBucketOwner;
 
     /**
@@ -461,6 +467,7 @@ public class DeleteObjectsRequest extends AmazonWebServiceRequest implements Ser
      *
      * @return The updated DeleteObjectsRequest object.
      */
+    
     public DeleteObjectsRequest withRequesterPays(boolean isRequesterPays) {
         setRequesterPays(isRequesterPays);
         return this;
@@ -468,31 +475,30 @@ public class DeleteObjectsRequest extends AmazonWebServiceRequest implements Ser
 
     /**
      * <p>Specifies whether you want to delete this object even if it has a Governance-type Object Lock in place. To use this
-     * header, you must have the <code>s3:PutBucketPublicAccessBlock</code> permission.</p>
+     * header, you must have the <code>s3:BypassGovernanceRetention</code> permission.</p>
      */
-    //IBM unsupported	 
-    //public boolean getBypassGovernanceRetention() {
-    //    return bypassGovernanceRetention;
-    //}
+    public boolean getBypassGovernanceRetention() {
+       return bypassGovernanceRetention;
+    }
 
     /**
      * <p>Specifies whether you want to delete this object even if it has a Governance-type Object Lock in place. To use this
-     * header, you must have the <code>s3:PutBucketPublicAccessBlock</code> permission.</p>
+     * header, you must have the <code>s3:BypassGovernanceRetention</code> permission.</p>
      */
-    //IBM unsupported	 
-    //public DeleteObjectsRequest withBypassGovernanceRetention(boolean bypassGovernanceRetention) {
-    //    this.bypassGovernanceRetention = bypassGovernanceRetention;
-    //    return this;
-    //}
+
+    public DeleteObjectsRequest withBypassGovernanceRetention(boolean bypassGovernanceRetention) {
+       this.bypassGovernanceRetention = bypassGovernanceRetention;
+       return this;
+    }
 
     /**
      * <p>Specifies whether you want to delete this object even if it has a Governance-type Object Lock in place. To use this
-     * header, you must have the <code>s3:PutBucketPublicAccessBlock</code> permission.</p>
+     * header, you must have the <code>s3:BypassGovernanceRetention</code> permission.</p>
      */
-    //IBM unsupported
-    //public void setBypassGovernanceRetention(boolean bypassGovernanceRetention) {
-    //    withBypassGovernanceRetention(bypassGovernanceRetention);
-    //}
+
+    public void setBypassGovernanceRetention(boolean bypassGovernanceRetention) {
+       withBypassGovernanceRetention(bypassGovernanceRetention);
+    }
 
     /**
      * A key to delete, with an optional version attribute.

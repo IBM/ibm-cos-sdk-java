@@ -74,6 +74,13 @@ public class DeleteObjectRequest extends AmazonWebServiceRequest implements Seri
      */
     private boolean isRequesterPays;
 
+    /**
+     * Indicates whether S3 Object Lock should bypass Governance-mode restrictions to process this operation. 
+     * To use this header, you must have the <code>s3:BypassGovernanceRetention</code> permission.</p>
+     * <note> <p>This functionality is not supported for directory buckets.</p> </note>.
+     */
+    private boolean bypassGovernanceRetention;
+
     //IBM unsupported
     //private String expectedBucketOwner;
 
@@ -358,4 +365,16 @@ public class DeleteObjectRequest extends AmazonWebServiceRequest implements Seri
         return this;
     }
 
+    public boolean getBypassGovernanceRetention() {
+        return bypassGovernanceRetention;
+    }
+
+    public DeleteObjectRequest withBypassGovernanceRetention(boolean bypassGovernanceRetention) {
+        this.bypassGovernanceRetention = bypassGovernanceRetention;
+        return this;
+    }
+
+    public void setBypassGovernanceRetention(boolean bypassGovernanceRetention) {
+        withBypassGovernanceRetention(bypassGovernanceRetention);
+    }
 }

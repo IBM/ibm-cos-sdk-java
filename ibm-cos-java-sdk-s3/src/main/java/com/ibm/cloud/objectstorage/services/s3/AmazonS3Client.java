@@ -2334,6 +2334,9 @@ public class AmazonS3Client extends AmazonWebServiceClient implements AmazonS3 {
 
         Request<DeleteObjectRequest> request = createRequest(deleteObjectRequest.getBucketName(), deleteObjectRequest.getKey(), deleteObjectRequest, HttpMethodName.DELETE);
         request.addHandlerContext(HandlerContextKey.OPERATION_NAME, "DeleteObject");
+        if (deleteObjectRequest.getBypassGovernanceRetention()) {
+            request.addHeader(Headers.BYPASS_GOVERNANCE_RETENTION, "true");
+        }
 
         invoke(request, voidResponseHandler, deleteObjectRequest.getBucketName(), deleteObjectRequest.getKey());
     }
@@ -2344,10 +2347,9 @@ public class AmazonS3Client extends AmazonWebServiceClient implements AmazonS3 {
         Request<DeleteObjectsRequest> request = createRequest(deleteObjectsRequest.getBucketName(), null, deleteObjectsRequest, HttpMethodName.POST);
         request.addHandlerContext(HandlerContextKey.OPERATION_NAME, "DeleteObjects");
         request.addParameter("delete", null);
-        //IBM unsupported
-        // if (deleteObjectsRequest.getBypassGovernanceRetention()) {
-        //     request.addHeader(Headers.BYPASS_GOVERNANCE_RETENTION, "true");
-        // }
+        if (deleteObjectsRequest.getBypassGovernanceRetention()) {
+            request.addHeader(Headers.BYPASS_GOVERNANCE_RETENTION, "true");
+        }
 
         if ( deleteObjectsRequest.getMfa() != null ) {
             populateRequestWithMfaDetails(request, deleteObjectsRequest.getMfa());
@@ -2422,10 +2424,9 @@ public class AmazonS3Client extends AmazonWebServiceClient implements AmazonS3 {
         if (deleteVersionRequest.getMfa() != null) {
             populateRequestWithMfaDetails(request, deleteVersionRequest.getMfa());
         }
-        //IBM unsupported
-        // if (deleteVersionRequest.getBypassGovernanceRetention()) {
-        //     request.addHeader(Headers.BYPASS_GOVERNANCE_RETENTION, "true");
-        // }
+        if (deleteVersionRequest.getBypassGovernanceRetention()) {
+            request.addHeader(Headers.BYPASS_GOVERNANCE_RETENTION, "true");
+        }
 
         invoke(request, voidResponseHandler, bucketName, key);
     }
