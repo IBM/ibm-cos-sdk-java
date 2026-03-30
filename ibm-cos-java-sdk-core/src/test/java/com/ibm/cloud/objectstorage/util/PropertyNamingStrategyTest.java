@@ -40,7 +40,7 @@ public class PropertyNamingStrategyTest {
         Mockito.when(mapper.setPropertyNamingStrategy(PropertyNamingStrategies.UPPER_CAMEL_CASE)).thenThrow(new LinkageError());
         PropertyNamingStrategyUtils.configureUpperCamelCase(mapper);
         Mockito.verify(mapper).setPropertyNamingStrategy(PropertyNamingStrategies.UPPER_CAMEL_CASE);
-        Mockito.verify(mapper).setPropertyNamingStrategy(PropertyNamingStrategy.UPPER_CAMEL_CASE);
+        Mockito.verify(mapper).setPropertyNamingStrategy(PropertyNamingStrategies.UPPER_CAMEL_CASE);
     }
 
     @Test(expected=NullPointerException.class)

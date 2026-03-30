@@ -60,25 +60,13 @@ public class TimeoutThreadPoolBuilder {
     }
 
     /**
-     * {@link ScheduledThreadPoolExecutor#setRemoveOnCancelPolicy(boolean)} is not available in Java
-     * 6 so we invoke it with reflection to be able to compile against Java 6.
-     * 
-     * @param executor
+     * Causes tasks to be immediately removed from the work queue at time of cancellation.
+     * This is now a direct call as min JRE is 1.8. {@link ScheduledThreadPoolExecutor#setRemoveOnCancelPolicy(boolean)}
+     * * @param executor The executor to configure
      */
     private static void safeSetRemoveOnCancel(ScheduledThreadPoolExecutor executor) {
-        try {
-            executor.getClass().getMethod("setRemoveOnCancelPolicy", boolean.class).invoke(executor, Boolean.TRUE);
-        } catch (IllegalAccessException e) {
-            throwSetRemoveOnCancelException(e);
-        } catch (IllegalArgumentException e) {
-            throwSetRemoveOnCancelException(e);
-        } catch (InvocationTargetException e) {
-            throwSetRemoveOnCancelException(e.getCause());
-        } catch (NoSuchMethodException e) {
-            throw new SdkClientException("The request timeout feature is only available for Java 1.7 and above.");
-        } catch (SecurityException e) {
-            throw new SdkClientException("The request timeout feature needs additional permissions to function.", e);
-        }
+        // Direct call available since Java 7
+        executor.setRemoveOnCancelPolicy(true);
     }
 
     /**

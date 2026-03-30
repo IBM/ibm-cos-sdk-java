@@ -1,5 +1,17 @@
 # CHANGELOG
 
+## 2.15.1
+
+### Content
+
+#### Features
+
+#### Defect Fixes
+
+* COSSDK-109084: <https://github.com/IBM/ibm-cos-sdk-java/issues/70>
+* COSSDK-109080: <https://github.com/IBM/ibm-cos-sdk-java/issues/74>
+* COSSDK-109049: <https://github.com/IBM/ibm-cos-sdk-java/issues/77>
+
 ## 2.15.0
 
 ### Content
