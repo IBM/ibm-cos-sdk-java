@@ -1,5 +1,13 @@
 # CHANGELOG
 
+## 2.15.2
+
+### Content
+
+#### Defect Fixes
+
+* Deprecation notice for IBM COS SDK Java V1
+
 ## 2.15.1
 
 ### Content
