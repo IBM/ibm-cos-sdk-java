@@ -1,0 +1,3 @@
+com/ibm/cloud/objectstorage/services/kms/smoketests/AWSKMSModuleInjector.class
+com/ibm/cloud/objectstorage/services/kms/smoketests/AWSKMSModuleInjector$AWSKMSModule.class
+com/ibm/cloud/objectstorage/services/kms/smoketests/RunCucumberTest.class
